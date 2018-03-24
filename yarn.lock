@@ -2,13 +2,17 @@
 # yarn lockfile v1
 
 
+fast-deep-equal@gev/fast-deep-equal:
+  version "1.1.1"
+  resolved "https://codeload.github.com/gev/fast-deep-equal/tar.gz/468f2117c83ddc711575220e609ae8c18f48cb7a"
+
 fast-memoize@^2.2.8:
   version "2.2.8"
   resolved "https://registry.yarnpkg.com/fast-memoize/-/fast-memoize-2.2.8.tgz#d7f899f31d037b12d9db4281912f9018575720b1"
 
 ip@gev/ip:
-  version "1.0.0"
-  resolved "https://codeload.github.com/gev/ip/tar.gz/02e799e1e590c8c3a1e9bab5b80174c71f8c0a5a"
+  version "2.0.0"
+  resolved "https://codeload.github.com/gev/ip/tar.gz/79f6ec9c5d7570de36319ef4a922efabe851312e"
 
 js-tokens@^3.0.0:
   version "3.0.2"

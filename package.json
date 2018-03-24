@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
+    "fast-deep-equal": "gev/fast-deep-equal",
     "fast-memoize": "^2.2.8",
     "ip": "gev/ip",
     "redux": "^3.7.2",
