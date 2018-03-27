@@ -2,11 +2,26 @@
 const { combineReducers } = require('redux');
 const { DEVICE, CHANNEL, STATE } = require('./constants');
 
-const reduce = (action) => (state = {}, { type, id, payload }) =>
-  action === type ? { ...state, [id]: { ...state[id], ...payload } } : state;
+const put = (type) => (state = [], action) => {
+  switch (action.type) {
+    case ACTION_ADD:
+      if (type !== action.payload.type) return state;
+      return [...state, action.payload.id];
+    default:
+      return state;
+  }
+};
 
+const pool = (state = {}, { type, id, payload }) => {
+  switch (type) {
+    case ACTION_SET:
+      return { ...state, [id]: { ...state[id], ...payload } };
+    default:
+      return state;
+  }
+};
+    
 module.exports = combineReducers({
-  [CHANNEL]: reduce(CHANNEL),
-  [DEVICE]: reduce(DEVICE),
-  [STATE]: reduce(STATE)
+  [DEVICE]: put(DEVICE),
+  pool
 });
