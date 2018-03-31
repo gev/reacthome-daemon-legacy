@@ -2,12 +2,12 @@
 const fs = require('fs');
 const { createSocket } = require('dgram');
 const { contains } = require('fast-deep-equal');
-const { mac, FILE, ACTION_SET, SERVICE_PORT, SERVICE_GROUP } = require('../constants');
+const { FILE, ACTION_SET, SERVICE_PORT, SERVICE_GROUP } = require('../constants');
 
 const socket = createSocket('udp4');
 
-const send = (payload) => {
-  socket.send(JSON.stringify({ id: mac, type: ACTION_SET, payload }), SERVICE_PORT, SERVICE_GROUP);
+const send = (action) => {
+  socket.send(JSON.stringify(action), SERVICE_PORT, SERVICE_GROUP);
 };
 
 const store = (state) => {
@@ -16,11 +16,28 @@ const store = (state) => {
   });
 };
 
-module.exports = (type, id, payload) => (dispatch, getState) => {
-  const action = { type, id, payload };
-  const prev = getState()[type][id]; 
-  if (prev && contains(prev, payload)) return;
+const apply = (action) => (dispatch, getState) => {
   dispatch(action);
   store(getState());
   send(action);
+};
+
+module.exports.set = (id, payload) => (dispatch, getState) => {
+  const prev = getState()[id];
+  if (prev && contains(prev, payload)) return;
+  dispatch(apply({
+    type: ACTION_SET, id, payload
+  }));
+};
+
+module.exports.add = (id, field, subject) => (dispatch, getState) => {
+  const prev = getState()[id];
+  if (prev && prev[field] && prev[field].includes(subject)) return;
+  dispatch(apply({
+    id,
+    type: ACTION_SET,
+    payload: {
+      [field]: prev[field] ? [...prev[field], subject] : [subject]
+    }
+  }));
 };

@@ -19,6 +19,7 @@ module.exports.SUB_NET_MASK = 0xffffff00;
 module.exports.DISCOVERY_INTERVAL = 1000;
 
 module.exports.STATE = 'state';
+module.exports.DAEMON = 'daemon';
 module.exports.DEVICE = 'device';
 module.exports.CHANNEL = 'channel';
 module.exports.SERVICE = 'service';

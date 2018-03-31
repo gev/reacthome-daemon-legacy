@@ -1,10 +1,10 @@
 
-const set = require('./create');
+const { set, add } = require('./create');
 const { online, offline } = require('./status');
 const { pendingFirmware, updateFirmware } = require('./firmware');
 
 module.exports = {
-  set,
+  set, add,
   online, offline,
   pendingFirmware, updateFirmware
 };
