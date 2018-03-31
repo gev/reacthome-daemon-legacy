@@ -78,7 +78,7 @@ module.exports = ({ dispatch, getState }) => {
                 const buff = Buffer.alloc(15);
                 buff.writeUInt8(ACTION_IP_ADDRESS, 0);
                 Buffer.from(mac).copy(buff, 1, 0, 6);
-                const pool = ((getState()[mac] || {} )[DEVICE] ||).map(ip2int);
+                const pool = ((getState()[mac] || {})[DEVICE] || []).map(ip2int);
                 while (last_ip < IP_ADDRESS_POOL_END) {
                   if (!pool.includes(last_ip)) break;
                   last_ip++;
