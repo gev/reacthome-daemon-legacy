@@ -3,9 +3,8 @@ const path = require('path');
 const { createSocket } = require('dgram');
 const { createReadStream } = require('fs');
 const { createInterface } = require('readline');
-const set = require('./create');
+const { set } = require('./create');
 const {
-  DEVICE,
   ACTION_BOOTLOAD,
   BOOTLOAD_WRITE,
   BOOTLOAD_FINISH,
@@ -19,15 +18,15 @@ const firmwareQueue = {};
 const socket = createSocket('udp4');
 
 module.exports.updateFirmware = (id) => (dispatch, getState) => {
-  const device = getState()[DEVICE][id];
+  const device = getState()[id];
   const queue = firmwareQueue[id];
   console.log(queue.length);
   if (queue && queue.length > 0) {
-    dispatch(set(DEVICE, id, { pending: false, updating: true }));
+    dispatch(set(id, { pending: false, updating: true }));
     socket.send(queue.shift(), DEVICE_PORT, device.ip);
   } else {
     socket.send(Buffer.from([ACTION_BOOTLOAD, BOOTLOAD_FINISH]), DEVICE_PORT, device.ip);
-    dispatch(set(DEVICE, id, { pending: false, updating: false }));
+    dispatch(set(id, { pending: false, updating: false }));
   }
 };
 
@@ -71,7 +70,7 @@ module.exports.pendingFirmware = (id, firmware) => (dispatch) => {
       }
       case '1': {
         firmwareQueue[id] = queue;
-        dispatch(set(DEVICE, id, { pendingFirmware: firmware, pending: true, updating: false }));
+        dispatch(set(id, { pendingFirmware: firmware, pending: true, updating: false }));
         break;
       }
       case '4':

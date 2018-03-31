@@ -13,7 +13,6 @@ const {
   ACTION_BOOTLOAD,
   DISCOVERY_INTERVAL,
   DEVICE,
-  CHANNEL,
   DEVICE_PORT,
   DEVICE_GROUP,
   DEVICE_TYPE_UNKNOWN,
@@ -50,13 +49,13 @@ module.exports = ({ dispatch, getState }) => {
           const index = data[7];
           const value = Boolean(data[8]);
           const channel = `${id}.${index}`;
-          dispatch(set(CHANNEL, channel, { value }));
+          dispatch(set(channel, { value }));
           break;
         }
         case ACTION_DIMMER: {
           const [,,,,,,, index, type, value, velocity] = data;
           const channel = `${id}.${index}`;
-          dispatch(set(CHANNEL, channel, { type, value, velocity }));
+          dispatch(set(channel, { type, value, velocity }));
           break;
         }
         case ACTION_IP_ADDRESS:
@@ -67,8 +66,7 @@ module.exports = ({ dispatch, getState }) => {
           const version = `${data[8]}.${data[9]}`;
           switch (action) {
             case ACTION_IP_ADDRESS: 
-              const devices = getState()[DEVICE] || {};
-              const lookup = ((devices)[id] || {}).ip;
+              const lookup = (getState()[id] || {}).ip;
               if (lookup) {
                 const buff = Buffer.alloc(15);
                 buff.writeUInt8(ACTION_IP_ADDRESS, 0);
@@ -80,14 +78,14 @@ module.exports = ({ dispatch, getState }) => {
                 const buff = Buffer.alloc(15);
                 buff.writeUInt8(ACTION_IP_ADDRESS, 0);
                 Buffer.from(mac).copy(buff, 1, 0, 6);
-                const pool = Object.values(devices).map(i => ip2int(i.ip));
+                const pool = ((getState()[mac] || {} )[DEVICE] ||).map(ip2int);
                 while (last_ip < IP_ADDRESS_POOL_END) {
                   if (!pool.includes(last_ip)) break;
                   last_ip++;
                 };
                 buff.writeUInt32BE(last_ip, 7);
                 buff.writeUInt32BE(SUB_NET_MASK, 11);
-                dispatch(set(DEVICE, id, { ip: int2ip(last_ip) }))
+                dispatch(set(id, { ip: int2ip(last_ip) }))
                 send(buff, DEVICE_GROUP);
               }
               break;
@@ -112,7 +110,7 @@ module.exports = ({ dispatch, getState }) => {
           break;
         }
         case ACTION_FIND_ME: {
-          dispatch(set(DEVICE, id, { finding: !!data[7] }))
+          dispatch(set(id, { finding: !!data[7] }))
           break;
         }
         case ACTION_BOOTLOAD: {
@@ -123,7 +121,7 @@ module.exports = ({ dispatch, getState }) => {
           const reason = data[7];
           switch (reason) {
             case ACTION_BOOTLOAD:
-              dispatch(set(DEVICE, id, { pending: false, updating: false }))
+              dispatch(set(id, { pending: false, updating: false }))
               break;
             default: {
               console.log(data);    

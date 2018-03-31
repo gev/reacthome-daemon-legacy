@@ -43,22 +43,22 @@ module.exports = ({ dispatch, getState }) => {
             });
             break;
           case ACTION_BOOTLOAD: {
-            const device = getState()[DEVICE][action.id];
+            const device = getState()[action.id];
             dispatch(pendingFirmware(action.id, action.pendingFirmware));
             break;
           }  
           case ACTION_FIND_ME: {
-            const device = getState()[DEVICE][action.id];
+            const device = getState()[action.id];
             socket.send(Buffer.from([ACTION_FIND_ME, action.finding]), DEVICE_PORT, device.ip);
             break;
           }
           case ACTION_DO: {
-            const device = getState()[DEVICE][action.id];
+            const device = getState()[action.id];
             socket.send(Buffer.from([ACTION_DO, action.index, action.value]), DEVICE_PORT, device.ip);
             break;
           }
           case ACTION_DIMMER: {
-            const device = getState()[DEVICE][action.id];
+            const device = getState()[action.id];
             switch (action.action) {
               case DIM_TYPE:
                 socket.send(Buffer.from([ACTION_DIMMER, action.index, action.action, action.value]), DEVICE_PORT, device.ip);
