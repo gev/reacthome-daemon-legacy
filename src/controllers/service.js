@@ -13,11 +13,11 @@ const {
   ACTION_SET,
   DEVICE_PORT,
   DISCOVERY_INTERVAL,
+  DAEMON,
   DEVICE,
   SERVICE,
   SERVICE_PORT,
   SERVICE_GROUP,
-  SERVICE_TYPE_DAEMON,
   DIM_FADE,
   DIM_TYPE
 } = require('../constants');
@@ -76,7 +76,7 @@ module.exports = ({ dispatch, getState }) => {
     })
     .on('error', console.error)
     .bind(() => {
-      const data = JSON.stringify({ id: mac, type: ACTION_DISCOVERY, payload: { type: SERVICE_TYPE_DAEMON, version } });
+      const data = JSON.stringify({ id: mac, type: ACTION_DISCOVERY, payload: { type: DAEMON, version } });
       setInterval(() => {
         socket.send(data, SERVICE_PORT, SERVICE_GROUP);
       }, DISCOVERY_INTERVAL);

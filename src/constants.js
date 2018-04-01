@@ -47,8 +47,6 @@ module.exports.BOOTLOAD_FINISH = 0x0f;
 module.exports.ACTION_GET = 'ACTION_GET';
 module.exports.ACTION_SET = 'ACTION_SET';
 
-module.exports.SERVICE_TYPE_DAEMON = 0x00;
-
 module.exports.FIRMWARE_PATH = '/Users/evgeny/workspace';
 module.exports.FIRMWARE_PROJECT = 'pic-sensor.X';
 module.exports.FIRMWARE_BUILD = 'production';
