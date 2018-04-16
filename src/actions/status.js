@@ -6,7 +6,7 @@ const { mac, DEVICE, DISCOVERY_INTERVAL } = require('../constants');
 const timeout = {};
 
 const offline = (id) => (dispatch) => {
-  dispatch(set(id, { online: false, ready: false }));
+  dispatch(set(id, { online: false, ready: false, }));
 };
 
 const online = (id, type, version, ip, ready) => (dispatch, getState) => {

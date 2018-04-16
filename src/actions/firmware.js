@@ -1,6 +1,5 @@
 
 const path = require('path');
-const { createSocket } = require('dgram');
 const { createReadStream } = require('fs');
 const { createInterface } = require('readline');
 const { set } = require('./create');
@@ -13,20 +12,26 @@ const {
   FIRMWARE_PROJECT,
   FIRMWARE_BUILD
 } = require('../constants');
+const { device } = require('../sockets');
 
 const firmwareQueue = {};
-const socket = createSocket('udp4');
 
 module.exports.updateFirmware = (id) => (dispatch, getState) => {
   const device = getState()[id];
   const queue = firmwareQueue[id];
-  console.log(queue.length);
   if (queue && queue.length > 0) {
-    dispatch(set(id, { pending: false, updating: true }));
-    socket.send(queue.shift(), DEVICE_PORT, device.ip);
+    const length = queue.length
+    dispatch(set(id, { pending: false, updating: true, length }));
+    device.sendConfirm(queue.shift(), device.ip, () => {
+      const dev = getState()[id];
+      return !(dev && dev.length === length);
+    });
   } else {
-    socket.send(Buffer.from([ACTION_BOOTLOAD, BOOTLOAD_FINISH]), DEVICE_PORT, device.ip);
     dispatch(set(id, { pending: false, updating: false }));
+    device.sendConfirm(Buffer.from([ACTION_BOOTLOAD, BOOTLOAD_FINISH]), device.ip, () => {
+      const dev = getState()[id];
+      return !(dev && dev.online);
+    });
   }
 };
 

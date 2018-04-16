@@ -18,54 +18,62 @@ const {
   SERVICE,
   SERVICE_PORT,
   SERVICE_GROUP,
+  DIM_ON,
+  DIM_OFF,
+  DIM_SET,
   DIM_FADE,
   DIM_TYPE
 } = require('../constants');
-const { set, offline, online, pendingFirmware, updateFirmware } = require('../actions');
+const {
+  set,
+  offline,
+  online,
+  pendingFirmware,
+  updateFirmware
+} = require('../actions');
+const { device } = require('../sockets');
 
 const rawQue = {};
 
-module.exports = ({ dispatch, getState }) => {
+module.exports.manage = ({ dispatch, getState }) => {
 
   const socket = createSocket('udp4')
     .on('message', (data, { address }) => {
-      function send(action, addr = address) {
-        socket.send(JSON.stringify(action), SERVICE_PORT, addr);
-      };
       try {
         const action = JSON.parse(data);
         switch (action.type) {
           case ACTION_GET:
-            Object.entries(getState()).forEach(([type, v]) => {
-              Object.entries(v).forEach(([id, payload]) => {
-                send({ id: mac, type: ACTION_SET, payload: { id, type, payload } });
-              })
+            Object.entries(getState()).forEach(([id, payload]) => {
+              socket.send(JSON.stringify({ id, type: ACTION_SET, payload }), SERVICE_PORT, address);
             });
             break;
           case ACTION_BOOTLOAD: {
-            const device = getState()[action.id];
             dispatch(pendingFirmware(action.id, action.pendingFirmware));
             break;
           }  
           case ACTION_FIND_ME: {
-            const device = getState()[action.id];
-            socket.send(Buffer.from([ACTION_FIND_ME, action.finding]), DEVICE_PORT, device.ip);
+            const dev = getState()[action.id];
+            device.send(Buffer.from([ACTION_FIND_ME, action.finding]), dev.ip);
             break;
           }
           case ACTION_DO: {
-            const device = getState()[action.id];
-            socket.send(Buffer.from([ACTION_DO, action.index, action.value]), DEVICE_PORT, device.ip);
+            const dev = getState()[action.id];
+            device.send(Buffer.from([ACTION_DO, action.index, action.value]), dev.ip);
             break;
           }
           case ACTION_DIMMER: {
-            const device = getState()[action.id];
+            const dev = getState()[action.id];
             switch (action.action) {
+              case DIM_SET:
               case DIM_TYPE:
-                socket.send(Buffer.from([ACTION_DIMMER, action.index, action.action, action.value]), DEVICE_PORT, device.ip);
+                device.send(Buffer.from([ACTION_DIMMER, action.index, action.action, action.value]), dev.ip);
                 break;
               case DIM_FADE:
-                socket.send(Buffer.from([ACTION_DIMMER, action.index, action.action, action.value, action.velocity]), DEVICE_PORT, device.ip);
+                device.send(Buffer.from([ACTION_DIMMER, action.index, action.action, action.value, action.velocity]), dev.ip);
                 break;
+              case DIM_ON:
+              case DIM_OFF:  
+                device.send(Buffer.from([ACTION_DIMMER, action.index, action.action]), dev.ip);
             }
             break;
           }
