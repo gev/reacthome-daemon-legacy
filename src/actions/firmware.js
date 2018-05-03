@@ -17,18 +17,18 @@ const { device } = require('../sockets');
 const firmwareQueue = {};
 
 module.exports.updateFirmware = (id) => (dispatch, getState) => {
-  const device = getState()[id];
+  const dev = getState()[id];
   const queue = firmwareQueue[id];
   if (queue && queue.length > 0) {
     const length = queue.length
     dispatch(set(id, { pending: false, updating: true, length }));
-    device.sendConfirm(queue.shift(), device.ip, () => {
+    device.sendConfirm(queue.shift(), dev.ip, () => {
       const dev = getState()[id];
       return !(dev && dev.length === length);
     });
   } else {
     dispatch(set(id, { pending: false, updating: false }));
-    device.sendConfirm(Buffer.from([ACTION_BOOTLOAD, BOOTLOAD_FINISH]), device.ip, () => {
+    device.sendConfirm(Buffer.from([ACTION_BOOTLOAD, BOOTLOAD_FINISH]), dev.ip, () => {
       const dev = getState()[id];
       return !(dev && dev.online);
     });

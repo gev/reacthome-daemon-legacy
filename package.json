@@ -6,7 +6,11 @@
     "fast-deep-equal": "gev/fast-deep-equal",
     "fast-memoize": "^2.2.8",
     "ip": "gev/ip",
+    "koa": "^2.5.0",
+    "koa-static": "^4.0.2",
+    "node-fetch": "^2.1.2",
     "redux": "^3.7.2",
-    "redux-thunk": "^2.2.0"
+    "redux-thunk": "^2.2.0",
+    "uuid": "^3.2.1"
   }
 }

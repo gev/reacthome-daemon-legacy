@@ -4,6 +4,10 @@ const {
   POOL,
   ACTION_DI,
   ACTION_DO,
+  ACTION_TEMPERATURE,
+  ACTION_TEMPERATURE_EXT,
+  ACTION_HUMIDITY,
+  ACTION_ILLUMINATION,
   ACTION_DIMMER,
   ACTION_IP_ADDRESS,
   ACTION_MAC_ADDRESS,
@@ -58,6 +62,26 @@ module.exports.manage = ({ dispatch, getState }) => {
           const [,,,,,,, index, type, value, velocity] = data;
           const channel = `${id}/${index}`;
           dispatch(set(channel, { type, value, velocity }));
+          break;
+        }
+        case ACTION_TEMPERATURE: {
+          const temperature = data.readUInt16LE(7) / 100;
+          dispatch(set(id, { temperature }));
+          break;
+        }
+        case ACTION_TEMPERATURE_EXT: {
+          const temperature_ext = data.readUInt16LE(7) / 100;
+          dispatch(set(id, { temperature_ext }));
+          break;
+        }
+        case ACTION_HUMIDITY: {
+          const humidity = data.readUInt16LE(7) / 100;
+          dispatch(set(id, { humidity }));
+          break;
+        }
+        case ACTION_ILLUMINATION: {
+          const illumination = data.readUInt16LE(7) / 100;
+          dispatch(set(id, { illumination }));
           break;
         }
         case ACTION_INITIALIZE: {

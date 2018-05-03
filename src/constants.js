@@ -1,4 +1,5 @@
 
+const path = require('path');
 const { ip, mac } = require('ip')();
 
 module.exports.ip = ip;
@@ -24,11 +25,17 @@ module.exports.DAEMON = 'daemon';
 module.exports.DEVICE = 'device';
 module.exports.CHANNEL = 'channel';
 module.exports.SERVICE = 'service';
+module.exports.IMAGE = 'image';
 
 module.exports.FILE = './tmp/state.json';
+module.exports.asset = (a = '') => path.join(process.cwd(), 'tmp', 'assets', a);
 
 module.exports.ACTION_DO = 0x00;
 module.exports.ACTION_DI = 0x01;
+module.exports.ACTION_TEMPERATURE = 0xc0;
+module.exports.ACTION_TEMPERATURE_EXT = 0xc1;
+module.exports.ACTION_HUMIDITY = 0xc2;
+module.exports.ACTION_ILLUMINATION = 0xc3;
 module.exports.ACTION_DIMMER = 0xd0;
 module.exports.ACTION_DISCOVERY = 0xf0;
 module.exports.ACTION_READY = 0xf1;
@@ -50,6 +57,7 @@ module.exports.BOOTLOAD_FINISH = 0x0f;
 
 module.exports.ACTION_GET = 'ACTION_GET';
 module.exports.ACTION_SET = 'ACTION_SET';
+module.exports.ACTION_DOWNLOAD = 'ACTION_DOWNLOAD';
 
 module.exports.FIRMWARE_PATH = '/Users/evgeny/workspace';
 module.exports.FIRMWARE_PROJECT = 'pic-sensor.X';
