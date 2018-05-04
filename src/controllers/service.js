@@ -1,6 +1,5 @@
 
 const fs = require('fs');
-const { createSocket } = require('dgram');
 const fetch = require('node-fetch');
 const crypto = require('crypto');
 const {
@@ -35,25 +34,21 @@ const {
   pendingFirmware,
   updateFirmware
 } = require('../actions');
-const { device } = require('../sockets');
-
-const rawQue = {};
+const { device, service } = require('../sockets');
 
 module.exports.manage = ({ dispatch, getState }) => {
-
-  const socket = createSocket('udp4')
-    .on('message', (data, { address }) => {
+    service.handle((data, { address }) => {
       try {
         const action = JSON.parse(data);
         switch (action.type) {
           case ACTION_GET: {
             Object.entries(getState()).forEach(([id, payload]) => {
-              socket.send(JSON.stringify({ id, type: ACTION_SET, payload }), SERVICE_PORT, address);
+              service.send(JSON.stringify({ id, type: ACTION_SET, payload }), address);
               Object.values(payload).forEach(v => {
                 if (!v || typeof v !== 'string') return;
                 fs.exists(asset(v), (exists) => {
                   if (!exists) return;
-                  socket.send(JSON.stringify({ type: ACTION_DOWNLOAD, name: v }), SERVICE_PORT, address);
+                  service.send(JSON.stringify({ type: ACTION_DOWNLOAD, name: v }), address);
                 });
               });
             });
@@ -75,7 +70,7 @@ module.exports.manage = ({ dispatch, getState }) => {
                   const ws = fs.createWriteStream(file);
                   ws.on('error', console.error);
                   ws.on('finish', () => {
-                    socket.send(JSON.stringify({ type: ACTION_DOWNLOAD, name }), SERVICE_PORT, SERVICE_GROUP);
+                    service.send(JSON.stringify({ type: ACTION_DOWNLOAD, name }), SERVICE_GROUP);
                   });
                   res.body.pipe(ws);
                 })
@@ -117,13 +112,5 @@ module.exports.manage = ({ dispatch, getState }) => {
       } catch (err) {
         console.error(err);
       }
-    })
-    .on('error', console.error)
-    .bind(() => {
-      const data = JSON.stringify({ id: mac, type: ACTION_DISCOVERY, payload: { type: DAEMON, version } });
-      setInterval(() => {
-        socket.send(data, SERVICE_PORT, SERVICE_GROUP);
-      }, DISCOVERY_INTERVAL);
     });
-
 }

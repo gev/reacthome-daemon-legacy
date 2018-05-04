@@ -1,14 +1,8 @@
 
 const fs = require('fs');
-const { createSocket } = require('dgram');
 const { contains } = require('fast-deep-equal');
 const { FILE, ACTION_SET, SERVICE_PORT, SERVICE_GROUP } = require('../constants');
-
-const socket = createSocket('udp4');
-
-const send = (action) => {
-  socket.send(JSON.stringify(action), SERVICE_PORT, SERVICE_GROUP);
-};
+const { service } = require('../sockets');
 
 const store = (state) => {
   fs.writeFile(FILE, JSON.stringify(state, null, 2), err => {
@@ -19,7 +13,7 @@ const store = (state) => {
 const apply = (action) => (dispatch, getState) => {
   dispatch(action);
   store(getState());
-  send(action);
+  service.send(JSON.stringify(action), SERVICE_GROUP);
 };
 
 module.exports.set = (id, payload) => (dispatch, getState) => {
