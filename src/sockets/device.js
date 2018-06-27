@@ -4,6 +4,7 @@ const {
   ACTION_DISCOVERY,
   DEVICE_GROUP,
   DEVICE_PORT,
+  SERVER_PORT,
   IP_ADDRESS,
 } = require('../constants');
 const socket = require('./socket');
@@ -14,4 +15,4 @@ module.exports = socket((socket) => {
   data.writeUInt32BE(IP_ADDRESS, 1);
   data.writeUInt16BE(socket.address().port, 5);
   return data;  
-}, DISCOVERY_INTERVAL, DEVICE_PORT, DEVICE_GROUP);
+}, DISCOVERY_INTERVAL, DEVICE_PORT, DEVICE_GROUP, SERVER_PORT);  

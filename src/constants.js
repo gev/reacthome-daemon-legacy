@@ -6,6 +6,7 @@ module.exports.ip = ip;
 module.exports.mac = mac;
 module.exports.version = '5.1';
 
+module.exports.SERVER_PORT = 2016;
 module.exports.DEVICE_PORT = 2017;
 module.exports.DEVICE_GROUP = '224.0.0.1';
 
@@ -27,6 +28,21 @@ module.exports.CHANNEL = 'channel';
 module.exports.SERVICE = 'service';
 module.exports.IMAGE = 'image';
 
+module.exports.DO = 'do';
+module.exports.DI = 'di';
+module.exports.DIM = 'dim';
+module.exports.BUTTON = 'button';
+module.exports.SMOCK_SENSOR = 'smock_sensor';
+module.exports.MOTION_SENSOR = 'motion_sensor';
+module.exports.LEAKAGE_SENSOR = 'leakage_sensor';
+module.exports.VALVE_HEATING = 'valve_heating';
+module.exports.VALVE_WATER = 'valve_water';
+module.exports.SOCKET_220 = 'socket_220';
+module.exports.BOILER = 'boiler';
+module.exports.PUMP = 'pump';
+module.exports.FAN = 'fan';
+
+module.exports.DB = './db';
 module.exports.FILE = './tmp/state.json';
 module.exports.asset = (a = '') => path.join(process.cwd(), 'tmp', 'assets', a);
 
@@ -42,9 +58,9 @@ module.exports.ACTION_READY = 0xf1;
 module.exports.ACTION_INITIALIZE = 0xf2;
 module.exports.ACTION_INITIALIZED = 0xf3;
 module.exports.ACTION_FIND_ME = 0xfa;
+module.exports.ACTION_BOOTLOAD = 0xfb;
 module.exports.ACTION_MAC_ADDRESS = 0xfc;
 module.exports.ACTION_IP_ADDRESS = 0xfd;
-module.exports.ACTION_BOOTLOAD = 0xfb;
 module.exports.ACTION_ERROR = 0xff;
 
 module.exports.BOOTLOAD_WRITE = 0x00;
@@ -57,7 +73,15 @@ module.exports.BOOTLOAD_FINISH = 0x0f;
 
 module.exports.ACTION_GET = 'ACTION_GET';
 module.exports.ACTION_SET = 'ACTION_SET';
+
 module.exports.ACTION_DOWNLOAD = 'ACTION_DOWNLOAD';
+
+module.exports.ACTION_LIGHT_ON = 'ACTION_LIGHT_ON';
+module.exports.ACTION_LIGHT_OFF = 'ACTION_LIGHT_OFF';
+module.exports.ACTION_LIGHT_SET = 'ACTION_LIGHT_SET';
+module.exports.ACTION_SITE_LIGHT_OFF = 'ACTION_SITE_LIGHT_OFF';
+module.exports.ACTION_SETPOINT = 'ACTION_SETPOINT';
+module.exports.ACTION_SCENE_RUN = 'ACTION_SCENE_RUN';
 
 module.exports.FIRMWARE_PATH = '/Users/evgeny/workspace';
 module.exports.FIRMWARE_PROJECT = 'pic-sensor.X';
@@ -67,7 +91,7 @@ module.exports.DIM_OFF = 0x0;
 module.exports.DIM_ON = 0x1;
 module.exports.DIM_SET = 0x2;
 module.exports.DIM_FADE = 0x3;
-module.exports.DIM_TYPE = 0x4;
+module.exports.DIM_TYPE = 0x4;  
 
 module.exports.DIM_TYPE_UNPLUGGED = 0x0;
 module.exports.DIM_TYPE_RISING_EDGE = 0x1;
@@ -90,4 +114,5 @@ module.exports.DEVICE_TYPE_DO16 = 0x0b;
 module.exports.DEVICE_TYPE_DI16_DO8 = 0x0c;
 module.exports.DEVICE_TYPE_DO8_DI16 = 0x0d;
 module.exports.DEVICE_TYPE_DIM4 = 0x0e;
+module.exports.DEVICE_TYPE_PLC = 0xfe;
 module.exports.DEVICE_TYPE_BOOTLOADER = 0xff;
