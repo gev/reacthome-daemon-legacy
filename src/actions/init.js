@@ -11,7 +11,7 @@ const {
   DEVICE_TYPE_PLC,
   DISCOVERY_INTERVAL
 } = require('../constants');
-const { set } = require('./create');
+const { set, add } = require('./create');
 const { device } = require('../sockets');
 
 module.exports.initialized = (id) => (dispatch, getState) => {
@@ -19,12 +19,9 @@ module.exports.initialized = (id) => (dispatch, getState) => {
 }
 
 module.exports.initialize = (id) => (dispatch, getState) => {
+  dispatch(add(mac, DEVICE, id));
   dispatch(set(id, { initialized: false }));
   const dev = getState()[id];
-  if (!dev) {
-    dispatch(add(mac, DEVICE, id));
-    return;
-  }
   const a = [ACTION_INITIALIZE];
   switch (dev.type) {
     case DEVICE_TYPE_DO8: {
