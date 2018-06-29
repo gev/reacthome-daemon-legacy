@@ -1,8 +1,10 @@
 
 const {
+  mac,
   DO,
   DIM,
   ACTION_INITIALIZE,
+  DEVICE,
   DEVICE_PORT,
   DEVICE_TYPE_DO8,
   DEVICE_TYPE_DIM4,
@@ -19,7 +21,10 @@ module.exports.initialized = (id) => (dispatch, getState) => {
 module.exports.initialize = (id) => (dispatch, getState) => {
   dispatch(set(id, { initialized: false }));
   const dev = getState()[id];
-  if (!dev) return;
+  if (!dev) {
+    dispatch(add(mac, DEVICE, id));
+    return;
+  }
   const a = [ACTION_INITIALIZE];
   switch (dev.type) {
     case DEVICE_TYPE_DO8: {
