@@ -30,15 +30,15 @@ db.createReadStream()
     state[key] = value;
   })
   .on('end', () => {
-    Object.entries(state).forEach(([k, v]) => {
-      if (Array.isArray(v[FAN])) {
-        v[FAN].forEach(i => {
-          state[i].type = FAN;
-          state[i].site = k;
-          db.put(i, state[i]);
-        })
-      }
-    });
+    // Object.entries(state).forEach(([k, v]) => {
+    //   if (Array.isArray(v[FAN])) {
+    //     v[FAN].forEach(i => {
+    //       state[i].type = FAN;
+    //       state[i].site = k;
+    //       db.put(i, state[i]);
+    //     })
+    //   }
+    // });
     const s = JSON.stringify(state, null, 2);
     writeFileSync(file, s);
     // writeFileSync(tmp, s);
