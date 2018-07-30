@@ -13,7 +13,7 @@ module.exports.DEVICE_GROUP = '224.0.0.1';
 module.exports.SERVICE_PORT = 2018;
 module.exports.SERVICE_GROUP = '224.0.0.2';
 
-module.exports.IP_ADDRESS = 0xc0a81202;
+module.exports.IP_ADDRESS = 0xc0a81201;
 module.exports.IP_ADDRESS_POOL_START = 0xc0a81264;
 module.exports.IP_ADDRESS_POOL_END = 0xc0a812fe;
 module.exports.SUB_NET_MASK = 0xffffff00;
@@ -48,6 +48,8 @@ module.exports.asset = (a = '') => path.join(process.cwd(), 'tmp', 'assets', a);
 
 module.exports.ACTION_DO = 0x00;
 module.exports.ACTION_DI = 0x01;
+module.exports.ACTION_IR = 0x10;
+module.exports.ACTION_DOPPLER = 0xb0;
 module.exports.ACTION_TEMPERATURE = 0xc0;
 module.exports.ACTION_TEMPERATURE_EXT = 0xc1;
 module.exports.ACTION_HUMIDITY = 0xc2;

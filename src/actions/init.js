@@ -2,6 +2,7 @@
 const {
   mac,
   DO,
+  DI,
   DIM,
   ACTION_INITIALIZE,
   DEVICE,
@@ -18,7 +19,7 @@ module.exports.initialized = (id) => (dispatch, getState) => {
   dispatch(set(id, { initialized: true }));
 }
 
-module.exports.initialize = (id) => (dispatch, getState) => {
+module.exports.initialize = (id, data) => (dispatch, getState) => {
   dispatch(add(mac, DEVICE, id));
   dispatch(set(id, { initialized: false }));
   const dev = getState()[id];
@@ -40,13 +41,19 @@ module.exports.initialize = (id) => (dispatch, getState) => {
       break;
     }
     case DEVICE_TYPE_PLC: {
+      for (let i = 1; i <= 36; i++) {
+        const channel = getState()[`${id}/${DI}/${i}`]; 
+        a[i] = (channel && channel.value) || 0;
+      }
       for (let i = 1; i <= 24; i++) {
         const channel = getState()[`${id}/${DO}/${i}`]; 
-        a[i] = (channel && channel.value) || 0;
+        a[i + 36] = (channel && channel.value) || 0;
       }
       break;
     }
-    default: return;
+    default:
+      dispatch(set(id, { initialized: true }));
+      return;
   }
   device.sendConfirm(Buffer.from(a), dev.ip, () => {
     const d = getState()[id];

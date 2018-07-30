@@ -1,12 +1,13 @@
 
 const { set, add } = require('./create');
+const { initialize } = require('./init');
 const { updateFirmware } = require('./firmware');
 const { mac, DEVICE, DISCOVERY_INTERVAL } = require('../constants');
 
 const timeout = {};
 
 const offline = (id) => (dispatch) => {
-  dispatch(set(id, { online: false, ready: false, }));
+  dispatch(set(id, { online: false, ready: false, initialized: false }));
 };
 
 const online = (id, type, version, ip, ready) => (dispatch, getState) => {
@@ -16,6 +17,7 @@ const online = (id, type, version, ip, ready) => (dispatch, getState) => {
   }));
   dispatch(add(mac, DEVICE, id));
   const device = getState()[id];
+  if (!device.initialized) dispatch(initialize(id));
   if (device.pending) dispatch(updateFirmware(id));
   timeout[id] = setTimeout(() => {
     dispatch(offline(id));

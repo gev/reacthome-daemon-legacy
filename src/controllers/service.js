@@ -6,7 +6,10 @@ const {
   mac,
   version,
   asset,
+  DO,
+  DIM,
   ACTION_DO,
+  ACTION_DOPPLER,
   ACTION_DIMMER,
   ACTION_DISCOVERY,
   ACTION_FIND_ME,
@@ -31,7 +34,8 @@ const {
   DIM_OFF,
   DIM_SET,
   DIM_FADE,
-  DIM_TYPE
+  DIM_TYPE,
+  DIM_TYPE_RELAY
 } = require('../constants');
 const {
   set,
@@ -55,7 +59,7 @@ const run = (action, address) => (dispatch, getState) => {
             service.send(JSON.stringify({ type: ACTION_DOWNLOAD, name: v }), address);
           });
         });
-      });
+      }); 
       break;
     }
     case ACTION_SET: {
@@ -93,41 +97,98 @@ const run = (action, address) => (dispatch, getState) => {
     }
     case ACTION_DO: {
       const dev = getState()[action.id];
-      device.send(Buffer.from([ACTION_DO, action.index, action.value]), dev.ip);
+      const id = `${action.id}/${DO}/${action.index}`
+      device.sendConfirm(Buffer.from([ACTION_DO, action.index, action.value]), dev.ip, () => {
+        const channel = getState()[id];
+        return channel && channel.value === action.value;
+      }, 300);
       break;
+    }
+    case ACTION_DOPPLER: {
+      const dev = getState()[action.id];  
+      device.send(Buffer.from([ACTION_DOPPLER, action.gain]), dev.ip);
+      // device.sendConfirm(Buffer.from([ACTION_DOPPLER, action.gain]), dev.ip, () => {
+      //   const dev = getState()[action.id];
+      //   return dev && dev.gain === action.gain;
+      // }, 300);
+  break;
     }
     case ACTION_DIMMER: {
       const dev = getState()[action.id];
+      const id = `${action.id}/${DIM}/${action.index}`;
       switch (action.action) {
         case DIM_SET:
+          device.send(Buffer.from([ACTION_DIMMER, action.index, action.action, action.value]));
+          // device.sendConfirm(Buffer.from([ACTION_DIMMER, action.index, action.action, action.value]), dev.ip, () => {
+          //   const channel = getState()[id];
+          //   return channel && channel.value === action.value;
+          // }, 300);
+          break;
         case DIM_TYPE:
-          device.send(Buffer.from([ACTION_DIMMER, action.index, action.action, action.value]), dev.ip);
+          device.sendConfirm(Buffer.from([ACTION_DIMMER, action.index, action.action, action.value]), dev.ip, () => {
+            const channel = getState()[id];
+            return channel && channel.type === action.value;
+          }, 300);
           break;
         case DIM_FADE:
           device.send(Buffer.from([ACTION_DIMMER, action.index, action.action, action.value, action.velocity]), dev.ip);
+          // device.sendConfirm(Buffer.from([ACTION_DIMMER, action.index, action.action, action.value, action.velocity]), dev.ip, () => {
+          //   const channel = getState()[id];
+          //   return channel && channel.value === action.value;
+          // }, 300);
           break;
         case DIM_ON:
-        case DIM_OFF:  
-          device.send(Buffer.from([ACTION_DIMMER, action.index, action.action]), dev.ip);
+        device.sendConfirm(Buffer.from([ACTION_DIMMER, action.index, action.action]), dev.ip, () => {
+          const channel = getState()[id];
+          return channel && channel.value === 255;
+        }, 300);
+        break;
+      case DIM_OFF:  
+          device.sendConfirm(Buffer.from([ACTION_DIMMER, action.index, action.action]), dev.ip, () => {
+            const channel = getState()[`${action.id}/${DIM}/${action.index}`];
+            return channel && channel.value === 0;
+          }, 300);
+          break;
       }
       break;
     }
     case ACTION_LIGHT_ON: {
       const { id } = action;
       const { bind, last } = getState()[id];
-      const { velocity } = getState()[bind];
+      const { velocity, type } = getState()[bind];
       const [dev,,index] = bind.split('/');
       const { ip } = getState()[dev];
-      device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, last || 255, 150]), ip);
-      break
+      const value = last || 255
+      switch (type) {
+        case DIM_TYPE_RELAY:
+          device.send(Buffer.from([ACTION_DIMMER, index, DIM_ON]), ip);
+          break;
+        default:
+          device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, 150]), ip);
+      }
+      // device.sendConfirm(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, 150]), ip, () => {
+      //   const light = getState()[id];
+      //   return light && light.value === value;
+      // }, 300);
+      break;
     }
     case ACTION_LIGHT_OFF: {
       const { id } = action;
       const { bind } = getState()[id];
-      const { velocity = 128 } = getState()[bind];
+      const { velocity = 128, type } = getState()[bind];
       const [dev,,index] = bind.split('/');
       const { ip } = getState()[dev];
-      device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, 0, 150]), ip);
+      switch (type) {
+        case DIM_TYPE_RELAY:
+          device.send(Buffer.from([ACTION_DIMMER, index, DIM_OFF]), ip);
+          break;
+        default:
+          device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, 0, 150]), ip);
+      }
+      // device.sendConfirm(Buffer.from([ACTION_DIMMER, index, DIM_FADE, 0, 150]), ip, () => {
+      //   const light = getState()[id];
+      //   return light && light.value === 0;
+      // }, 300);
       break;
     }
     case ACTION_LIGHT_SET: {
@@ -137,6 +198,10 @@ const run = (action, address) => (dispatch, getState) => {
       const [dev,,index] = bind.split('/');
       const { ip } = getState()[dev];
       device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, 150]), ip);
+      // device.sendConfirm(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, 150]), ip, () => {
+      //   const light = getState()[id];
+      //   return light && light.value === value;
+      // }, 300);
       dispatch(set(id, { last: value }));
       break;
     }
