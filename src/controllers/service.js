@@ -98,10 +98,11 @@ const run = (action, address) => (dispatch, getState) => {
     case ACTION_DO: {
       const dev = getState()[action.id];
       const id = `${action.id}/${DO}/${action.index}`
-      device.sendConfirm(Buffer.from([ACTION_DO, action.index, action.value]), dev.ip, () => {
-        const channel = getState()[id];
-        return channel && channel.value === action.value;
-      }, 300);
+      device.send(Buffer.from([ACTION_DO, action.index, action.value]), dev.ip);
+      // device.sendConfirm(Buffer.from([ACTION_DO, action.index, action.value]), dev.ip, () => {
+      //   const channel = getState()[id];
+      //   return channel && channel.value === action.value;
+      // }, 300);
       break;
     }
     case ACTION_DOPPLER: {
@@ -125,10 +126,11 @@ const run = (action, address) => (dispatch, getState) => {
           // }, 300);
           break;
         case DIM_TYPE:
-          device.sendConfirm(Buffer.from([ACTION_DIMMER, action.index, action.action, action.value]), dev.ip, () => {
-            const channel = getState()[id];
-            return channel && channel.type === action.value;
-          }, 300);
+          device.send(Buffer.from([ACTION_DIMMER, action.index, action.action, action.value]), dev.ip);
+          // device.sendConfirm(Buffer.from([ACTION_DIMMER, action.index, action.action, action.value]), dev.ip, () => {
+          //   const channel = getState()[id];
+          //   return channel && channel.type === action.value;
+          // }, 300);
           break;
         case DIM_FADE:
           device.send(Buffer.from([ACTION_DIMMER, action.index, action.action, action.value, action.velocity]), dev.ip);
@@ -138,16 +140,18 @@ const run = (action, address) => (dispatch, getState) => {
           // }, 300);
           break;
         case DIM_ON:
-        device.sendConfirm(Buffer.from([ACTION_DIMMER, action.index, action.action]), dev.ip, () => {
-          const channel = getState()[id];
-          return channel && channel.value === 255;
-        }, 300);
-        break;
+          device.send(Buffer.from([ACTION_DIMMER, action.index, action.action]), dev.ip);
+          // device.sendConfirm(Buffer.from([ACTION_DIMMER, action.index, action.action]), dev.ip, () => {
+          //   const channel = getState()[id];
+          //   return channel && channel.value === 255;
+          // }, 300);
+          break;
       case DIM_OFF:  
-          device.sendConfirm(Buffer.from([ACTION_DIMMER, action.index, action.action]), dev.ip, () => {
-            const channel = getState()[`${action.id}/${DIM}/${action.index}`];
-            return channel && channel.value === 0;
-          }, 300);
+        device.send(Buffer.from([ACTION_DIMMER, action.index, action.action]), dev.ip);
+          // device.sendConfirm(Buffer.from([ACTION_DIMMER, action.index, action.action]), dev.ip, () => {
+          //   const channel = getState()[`${action.id}/${DIM}/${action.index}`];
+          //   return channel && channel.value === 0;
+          // }, 300);
           break;
       }
       break;
