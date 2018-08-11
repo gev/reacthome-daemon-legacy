@@ -86,16 +86,18 @@ module.exports.manage = ({ dispatch, getState }) => {
             dispatch(set(site, { light_on: light_on + s}));
             if (parent) toggle(parent, s);
           }
-          const [,,,,,,, index, type, value, velocity] = data;
+          const [,,,,,,, index, type, value, velocity = 150] = data;
           const channel = `${id}/${DIM}/${index}`;
-          const { bind } = getState()[channel];
-          const { site, on = false } = getState()[bind];
-          const on_ = !!value;
-          dispatch(set(channel, { type, value, velocity }));
-          dispatch(set(bind, { on: on_, value }));
-          if (on !== on_) {
-            toggle(site, on ? 1 : -1);
+          const { bind } = getState()[channel] || {};
+          if (bind) {
+            const on_ = !!value;
+            const { site, on = false } = getState()[bind];
+            dispatch(set(bind, { on: on_, value }));
+            if (on !== on_) {
+              toggle(site, on ? 1 : -1);
+            }
           }
+          dispatch(set(channel, { type, value, velocity }));
           break;
         }
         case ACTION_TEMPERATURE: {

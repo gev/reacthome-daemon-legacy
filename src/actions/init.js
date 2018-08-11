@@ -8,7 +8,9 @@ const {
   DEVICE,
   DEVICE_PORT,
   DEVICE_TYPE_DO8,
+  DEVICE_TYPE_DO12,
   DEVICE_TYPE_DIM4,
+  DEVICE_TYPE_DIM8,
   DEVICE_TYPE_PLC,
   DISCOVERY_INTERVAL
 } = require('../constants');
@@ -32,8 +34,23 @@ module.exports.initialize = (id, data) => (dispatch, getState) => {
       }
       break;
     }
+    case DEVICE_TYPE_DO12: {
+      for (let i = 1; i <= 12; i++) {
+        const channel = getState()[`${id}/${DO}/${i}`]; 
+        a[i] = (channel && channel.value) || 0;
+      }
+      break;
+    }
     case DEVICE_TYPE_DIM4: {
       for (let i = 1; i <= 4; i++) {
+        const channel = getState()[`${id}/${DIM}/${i}`]; 
+        a[2 * i - 1] = (channel && channel.type) || 0;
+        a[2 * i] = (channel && channel.value) || 0;
+      }
+      break;
+    }
+    case DEVICE_TYPE_DIM8: {
+      for (let i = 1; i <= 8; i++) {
         const channel = getState()[`${id}/${DIM}/${i}`]; 
         a[2 * i - 1] = (channel && channel.type) || 0;
         a[2 * i] = (channel && channel.value) || 0;
@@ -58,5 +75,5 @@ module.exports.initialize = (id, data) => (dispatch, getState) => {
   device.sendConfirm(Buffer.from(a), dev.ip, () => {
     const d = getState()[id];
     return d && d.initialized;
-  }, 2 * DISCOVERY_INTERVAL);
+  }, 4 * DISCOVERY_INTERVAL);
 };
