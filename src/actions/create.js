@@ -23,7 +23,7 @@ module.exports.add = (id, field, subject) => (dispatch, getState) => {
   const prev = getState()[id];
   if (prev && prev[field] && prev[field].includes(subject)) return;
   dispatch(apply(id, {
-    [field]: prev[field] ? [...prev[field], subject] : [subject]
+    [field]: prev && prev[field] ? [...prev[field], subject] : [subject]
   }));
 };
 
