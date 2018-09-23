@@ -35,7 +35,10 @@ const {
   DIM_SET,
   DIM_FADE,
   DIM_TYPE,
-  DIM_TYPE_RELAY
+  DIM_TYPE_RELAY,
+  ACTION_PNP,
+  PNP_ENABLE,
+  PNP_STEP
 } = require('../constants');
 const {
   set,
@@ -112,7 +115,7 @@ const run = (action, address) => (dispatch, getState) => {
       //   const dev = getState()[action.id];
       //   return dev && dev.gain === action.gain;
       // }, 300);
-  break;
+      break;
     }
     case ACTION_DIMMER: {
       const dev = getState()[action.id];
@@ -146,12 +149,30 @@ const run = (action, address) => (dispatch, getState) => {
           //   return channel && channel.value === 255;
           // }, 300);
           break;
-      case DIM_OFF:  
+      case DIM_OFF:   
         device.send(Buffer.from([ACTION_DIMMER, action.index, action.action]), dev.ip);
           // device.sendConfirm(Buffer.from([ACTION_DIMMER, action.index, action.action]), dev.ip, () => {
           //   const channel = getState()[`${action.id}/${DIM}/${action.index}`];
           //   return channel && channel.value === 0;
           // }, 300);
+          break;
+      }
+      break;
+    }
+    case ACTION_PNP: {
+      const dev = getState()[action.id];
+      dispatch(set(action.id, { t0: Date.now() }));
+      switch (action.action) {
+        case PNP_ENABLE:
+          device.send(Buffer.from([ACTION_PNP, PNP_ENABLE, action.enabled]), dev.ip);
+          break;
+        case PNP_STEP:
+          const buff = Buffer.alloc(5);
+          buff.writeUInt8(ACTION_PNP, 0);
+          buff.writeUInt8(PNP_STEP, 1);
+          buff.writeUInt8(action.direction, 2);
+          buff.writeUInt16BE(action.step, 3);
+          device.send(buff, dev.ip);
           break;
       }
       break;

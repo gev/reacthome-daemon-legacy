@@ -25,11 +25,14 @@ const {
   ACTION_ERROR,
   ACTION_FIND_ME,
   ACTION_BOOTLOAD,
-  DEVICE_GROUP,
+  DEVICE_GROUP, 
   DEVICE_TYPE_UNKNOWN,
   IP_ADDRESS_POOL_START,
   IP_ADDRESS_POOL_END,
-  SUB_NET_MASK
+  SUB_NET_MASK,
+  ACTION_PNP,
+  PNP_ENABLE,
+  PNP_STEP
 } = require('../constants');
 const {
   set,
@@ -141,6 +144,21 @@ module.exports.manage = ({ dispatch, getState }) => {
             value.push(x);
           }
           dispatch(set(id, { value }));
+          break;
+        }
+        case ACTION_PNP: {
+          const [,,,,,,, type] = data;
+          switch (type) {
+            case PNP_ENABLE:
+              const enabled = Boolean(data[8]);
+              dispatch(set(id, { enabled, t1: Date.now() }));
+              break;
+            case PNP_STEP:
+              const [,,,,,,,, direction] = data;
+              const step = data.readUInt16LE(9);
+              dispatch(set(id, { direction, step, t1: Date.now() }));
+              break
+          }
           break;
         }
         case ACTION_INITIALIZE: {
