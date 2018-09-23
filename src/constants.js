@@ -13,7 +13,7 @@ module.exports.DEVICE_GROUP = '224.0.0.1';
 module.exports.SERVICE_PORT = 2018;
 module.exports.SERVICE_GROUP = '224.0.0.2';
 
-module.exports.IP_ADDRESS = 0xc0a8120a;
+module.exports.IP_ADDRESS = 0xc0a81202;
 module.exports.IP_ADDRESS_POOL_START = 0xc0a81264;
 module.exports.IP_ADDRESS_POOL_END = 0xc0a812fe;
 module.exports.SUB_NET_MASK = 0xffffff00;
@@ -84,7 +84,7 @@ module.exports.ACTION_LIGHT_OFF = 'ACTION_LIGHT_OFF';
 module.exports.ACTION_LIGHT_SET = 'ACTION_LIGHT_SET';
 module.exports.ACTION_SITE_LIGHT_OFF = 'ACTION_SITE_LIGHT_OFF';
 module.exports.ACTION_SETPOINT = 'ACTION_SETPOINT';
-module.exports.ACTION_SCENE_RUN = 'ACTION_SCENE_RUN';
+module.exports.ACTION_SCRIPT_RUN = 'ACTION_SCRIPT_RUN';
 
 module.exports.FIRMWARE_PATH = '/Users/evgeny/workspace';
 module.exports.FIRMWARE_PROJECT = 'pic-sensor.X';

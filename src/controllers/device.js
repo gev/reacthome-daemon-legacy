@@ -15,7 +15,7 @@ const {
   ACTION_ILLUMINATION,
   ACTION_DIMMER,
   ACTION_DOPPLER,
-  ACTION_SCENE_RUN,
+  ACTION_SCRIPT_RUN,
   ACTION_IP_ADDRESS,
   ACTION_MAC_ADDRESS,   
   ACTION_DISCOVERY,
@@ -68,9 +68,9 @@ module.exports.manage = ({ dispatch, getState }) => {
           const channel = `${id}/${DI}/${index}`;
           const chan = getState()[channel];
           if (chan) {
-            const { scene } = chan;
-            if (scene && scene[value]) {
-              dispatch(run({ type: ACTION_SCENE_RUN, id: scene[value] }));
+            const { script } = chan;
+            if (script && script[value]) {
+              dispatch(run({ type: ACTION_SCRIPT_RUN, id: script[value] }));
             }
           }
           dispatch(set(channel, { value }));

@@ -22,7 +22,7 @@ const {
   ACTION_LIGHT_SET,
   ACTION_SITE_LIGHT_OFF,
   ACTION_SETPOINT,
-  ACTION_SCENE_RUN,
+  ACTION_SCRIPT_RUN,
   DEVICE_PORT,
   DISCOVERY_INTERVAL,
   DAEMON,
@@ -242,7 +242,7 @@ const run = (action, address) => (dispatch, getState) => {
       dispatch(set(id, { setpoint: value }));
       break;
     }
-    case ACTION_SCENE_RUN: {
+    case ACTION_SCRIPT_RUN: {
       const { id } = action;
       const scene = getState()[id];
       if (Array.isArray(scene.action)) {
