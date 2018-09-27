@@ -32,7 +32,15 @@ const {
   SUB_NET_MASK,
   ACTION_PNP,
   PNP_ENABLE,
-  PNP_STEP
+  PNP_STEP,
+  onOff,
+  onOn,
+  onHold,
+  onDoppler,
+  onHumidity,
+  onIllumination,
+  onTemperature,
+  onTemperatureExt
 } = require('../constants');
 const {
   set,
@@ -47,6 +55,9 @@ const { run } = require('./service');
   
 const ip2int = ip => ip.split('.').reduce((a, b) => (a << 8) | (parseInt(b)), 0) >>> 0;
 const int2ip = ip => `${ip >> 24 & 0xff}.${ip >> 16 & 0xff}.${ip >> 8 & 0xff}.${ip & 0xff}`;
+
+const onDI = [onOff, onOn, onHold];
+const onDO = [onOff, onOn];
 
 let last_ip = IP_ADDRESS_POOL_START;
 
@@ -67,20 +78,27 @@ module.exports.manage = ({ dispatch, getState }) => {
           const value = data[8];
           const channel = `${id}/${DI}/${index}`;
           const chan = getState()[channel];
-          if (chan) {
-            const { script } = chan;
-            if (script && script[value]) {
-              dispatch(run({ type: ACTION_SCRIPT_RUN, id: script[value] }));
+          dispatch(set(channel, { value }));
+          if (chan && (chan.value !== value)) {
+            const script = chan[onDI[value]];
+            if (script) {
+              dispatch(run({ type: ACTION_SCRIPT_RUN, id: script }));
             }
           }
-          dispatch(set(channel, { value }));
           break;
         }
         case ACTION_DO: {
           const index = data[7];
           const value = data[8];
           const channel = `${id}/${DO}/${index}`;
+          const chan = getState()[channel];
           dispatch(set(channel, { value }));
+          if (chan && (chan.value !== value)) {
+            const script = chan[onDO[value]];
+            if (script) {
+              dispatch(run({ type: ACTION_SCRIPT_RUN, id: script }));
+            }
+          }
           break;
         }
         case ACTION_DIMMER: {
@@ -91,49 +109,76 @@ module.exports.manage = ({ dispatch, getState }) => {
           }
           const [,,,,,,, index, type, value, velocity = 150] = data;
           const channel = `${id}/${DIM}/${index}`;
-          const { bind } = getState()[channel] || {};
-          if (bind) {
-            const on_ = !!value;
-            const { site, on = false } = getState()[bind];
-            dispatch(set(bind, { on: on_, value }));
-            if (on !== on_) {
-              toggle(site, on ? 1 : -1);
+          const chan = getState()[channel];
+          dispatch(set(channel, { type, value, velocity }));
+          if (chan) {
+            const { bind } = chan;
+            if (bind) {
+              const on_ = !!value;
+              const { site, on = false } = getState()[bind];
+              dispatch(set(bind, { on: on_, value }));
+              if (on !== on_) {
+                toggle(site, on ? 1 : -1);
+              }
+            }
+            const v = value ? 1 : 0;
+            const v_ = chan.value ? 1 : 0;
+            if (v !== v_) {
+              const script = chan[onDO[v]];
+              if (script) {
+                dispatch(run({ type: ACTION_SCRIPT_RUN, id: script }));
+              }
             }
           }
-          dispatch(set(channel, { type, value, velocity }));
           break;
         }
         case ACTION_TEMPERATURE: {
           const temperature = data.readUInt16LE(7) / 100;
-          const { site } = getState()[id];
+          const { onTemperature, site } = getState()[id];
           if (site) dispatch(set(site, { temperature }));
           dispatch(set(id, { temperature }));
+          if (onTemperature) {
+            dispatch(run({type: ACTION_SCRIPT_RUN, id: onTemperature}));
+          }
           break;
         }
         case ACTION_TEMPERATURE_EXT: {
           const temperature_ext = data.readUInt16LE(7) / 100;
-          const { site } = getState()[id];
+          const { onTemperatureExt, site } = getState()[id];
           if (site) dispatch(set(site, { temperature_ext }));
           dispatch(set(id, { temperature_ext }));
+          if (onTemperatureExt) {
+            dispatch(run({type: ACTION_SCRIPT_RUN, id: onTemperatureExt}));
+          }
           break;
         }
         case ACTION_HUMIDITY: {
           const humidity = data.readUInt16LE(7) / 100;
-          const { site } = getState()[id];
+          const { onHumidity, site } = getState()[id];
           if (site) dispatch(set(site, { humidity }));
           dispatch(set(id, { humidity }));
+          if (onHumidity) {
+            dispatch(run({type: ACTION_SCRIPT_RUN, id: onHumidity}));
+          }
           break;
         }
         case ACTION_ILLUMINATION: {
           const illumination = data.readUInt16LE(7) / 100;
-          const { site } = getState()[id];
+          const { onIllumination, site } = getState()[id];
           if (site) dispatch(set(site, { illumination }));
           dispatch(set(id, { illumination }));
+          if (onIllumination) {
+            dispatch(run({type: ACTION_SCRIPT_RUN, id: onIllumination}));
+          }
           break;
         }
         case ACTION_DOPPLER: {
           const [,,,,,,, value, gain ] = data;
+          const { onDoppler, threshold } = getState()[id];
           dispatch(set(id, { value, gain }));
+          if (onDoppler) {
+            dispatch(run({type: ACTION_SCRIPT_RUN, id: onDoppler}));
+          }
           break;
         }
         case ACTION_IR: {

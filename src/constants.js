@@ -13,7 +13,7 @@ module.exports.DEVICE_GROUP = '224.0.0.1';
 module.exports.SERVICE_PORT = 2018;
 module.exports.SERVICE_GROUP = '224.0.0.2';
 
-module.exports.IP_ADDRESS = 0xc0a81202;
+module.exports.IP_ADDRESS = 0xc0a8120a;
 module.exports.IP_ADDRESS_POOL_START = 0xc0a81264;
 module.exports.IP_ADDRESS_POOL_END = 0xc0a812fe;
 module.exports.SUB_NET_MASK = 0xffffff00;
@@ -84,6 +84,9 @@ module.exports.ACTION_LIGHT_OFF = 'ACTION_LIGHT_OFF';
 module.exports.ACTION_LIGHT_SET = 'ACTION_LIGHT_SET';
 module.exports.ACTION_SITE_LIGHT_OFF = 'ACTION_SITE_LIGHT_OFF';
 module.exports.ACTION_SETPOINT = 'ACTION_SETPOINT';
+module.exports.ACTION_TIMER_START = 'ACTION_TIMER_START';
+module.exports.ACTION_TIMER_STOP = 'ACTION_TIMER_STOP';
+module.exports.ACTION_DOPPLER_HANDLE = 'ACTION_DOPPLER_HANDLE';
 module.exports.ACTION_SCRIPT_RUN = 'ACTION_SCRIPT_RUN';
 
 module.exports.FIRMWARE_PATH = '/Users/evgeny/workspace';
@@ -127,3 +130,15 @@ module.exports.DEVICE_TYPE_PNP = 0xe0;
 module.exports.DEVICE_TYPE_PLC = 0xfe;
 module.exports.DEVICE_TYPE_BOOTLOADER = 0xff;
 module.exports.DEVICE_TYPE_IR_RECEIVER = 0x10;
+
+module.exports.onOff = 'onOff';
+module.exports.onOn = 'onOn';
+module.exports.onHold = 'onHold';
+module.exports.onDoppler = 'onDoppler';
+module.exports.onHighThreshold = 'onHighThreshold';
+module.exports.onLowThreshold = 'onLowThreshold';
+module.exports.onQuiet = 'onQuiet';
+module.exports.onTemperature = 'onTemperature';
+module.exports.onTemperatureExt = 'onTemperatureExt';
+module.exports.onHumidity = 'onHumidity';
+module.exports.onIllumination = 'onIllumination';

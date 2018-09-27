@@ -22,6 +22,9 @@ const {
   ACTION_LIGHT_SET,
   ACTION_SITE_LIGHT_OFF,
   ACTION_SETPOINT,
+  ACTION_TIMER_START,
+  ACTION_TIMER_STOP,
+  ACTION_DOPPLER_HANDLE,
   ACTION_SCRIPT_RUN,
   DEVICE_PORT,
   DISCOVERY_INTERVAL,
@@ -49,6 +52,8 @@ const {
   updateFirmware
 } = require('../actions');
 const { device, service } = require('../sockets');
+
+const timer = {};
 
 const run = (action, address) => (dispatch, getState) => {
   switch (action.type) {
@@ -242,11 +247,45 @@ const run = (action, address) => (dispatch, getState) => {
       dispatch(set(id, { setpoint: value }));
       break;
     }
+    case ACTION_TIMER_START: {
+      const { id, script, time } = action;
+      clearTimeout(timer[id]);
+      timer[id] = setTimeout(() => {
+        dispatch(run({ type: ACTION_SCRIPT_RUN, id: script }));
+        dispatch(set(id, { state: false }));
+      }, time);
+      dispatch(set(id, { time, script, state: true, timestamp: Date.now() }));
+      break;
+    }
+    case ACTION_TIMER_STOP: {
+      const { id } = action;
+      clearTimeout(timer[id]);
+      dispatch(set(id, { state: false }));
+      break;
+    }
+    case ACTION_DOPPLER_HANDLE: {
+      const { id, low, high, onQuiet, onLowThreshold, onHighThreshold } = action;
+      const { value } = getState()[id];
+      if (value >= high) {
+        if (onHighThreshold) {
+          dispatch(run({ type: ACTION_SCRIPT_RUN, id: onHighThreshold }));
+        }
+      } else if (value >= low) {
+        if (onLowThreshold) {
+          dispatch(run({ type: ACTION_SCRIPT_RUN, id: onLowThreshold }));
+        }
+      } else {
+        if (onQuiet) {
+          dispatch(run({ type: ACTION_SCRIPT_RUN, id: onQuiet }));
+        }
+      }
+      break;
+    }
     case ACTION_SCRIPT_RUN: {
       const { id } = action;
-      const scene = getState()[id];
-      if (Array.isArray(scene.action)) {
-        scene.action.forEach(i => {
+      const script = getState()[id];
+      if (Array.isArray(script.action)) {
+        script.action.forEach(i => {
           const { type, payload } = getState()[i];
           dispatch(run({ type, ...payload }));
         })
