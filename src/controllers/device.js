@@ -36,6 +36,7 @@ const {
   onOff,
   onOn,
   onHold,
+  onClick,
   onDoppler,
   onHumidity,
   onIllumination,
@@ -56,7 +57,7 @@ const { run } = require('./service');
 const ip2int = ip => ip.split('.').reduce((a, b) => (a << 8) | (parseInt(b)), 0) >>> 0;
 const int2ip = ip => `${ip >> 24 & 0xff}.${ip >> 16 & 0xff}.${ip >> 8 & 0xff}.${ip & 0xff}`;
 
-const onDI = [onOff, onOn, onHold];
+const onDI = [onOff, onOn, onHold, onClick];
 const onDO = [onOff, onOn];
 
 let last_ip = IP_ADDRESS_POOL_START;
@@ -76,6 +77,7 @@ module.exports.manage = ({ dispatch, getState }) => {
         case ACTION_DI: {
           const index = data[7];
           const value = data[8];
+          // console.log(value);
           const channel = `${id}/${DI}/${index}`;
           const chan = getState()[channel];
           dispatch(set(channel, { value }));

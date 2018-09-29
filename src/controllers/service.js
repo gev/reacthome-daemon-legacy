@@ -20,11 +20,14 @@ const {
   ACTION_LIGHT_ON,
   ACTION_LIGHT_OFF,
   ACTION_LIGHT_SET,
+  ACTION_LIGHT_SET_RELATIVE,
+  ACTION_SITE_LIGHT_SET_RELATIVE,
   ACTION_SITE_LIGHT_OFF,
   ACTION_SETPOINT,
   ACTION_TIMER_START,
   ACTION_TIMER_STOP,
   ACTION_DOPPLER_HANDLE,
+  ACTION_TOGGLE,
   ACTION_SCRIPT_RUN,
   DEVICE_PORT,
   DISCOVERY_INTERVAL,
@@ -41,7 +44,11 @@ const {
   DIM_TYPE_RELAY,
   ACTION_PNP,
   PNP_ENABLE,
-  PNP_STEP
+  PNP_STEP,
+  OPERATOR_PLUS,
+  OPERATOR_MINUS,
+  OPERATOR_MUL,
+  OPERATOR_DIV
 } = require('../constants');
 const {
   set,
@@ -235,12 +242,45 @@ const run = (action, address) => (dispatch, getState) => {
       dispatch(set(id, { last: value }));
       break;
     }
+    case ACTION_LIGHT_SET_RELATIVE: {
+      const { id, operator } = action;
+      const { value, code } = getState()[id];
+      let v;
+      switch (operator) {
+        case OPERATOR_PLUS:
+          v = value + Number(action.value);
+          break;
+        case OPERATOR_MINUS:
+          v = value - Number(action.value);
+          break;
+          case OPERATOR_MUL:
+          v = value * Number(action.value);
+          break;
+          case OPERATOR_DIV:
+          v = value / Number(action.value);
+          break;
+      }
+      if (v < 0) v = 0;
+      if (v > 255) v = 255;
+      if (v === value) return;
+      dispatch(run({ type: ACTION_LIGHT_SET, id, value: v }));
+      break;
+    }
+    case ACTION_SITE_LIGHT_SET_RELATIVE: {
+      const { id, operator, value } = action;
+      dispatch(applySite(id, ({ light_220 = [], light_LED = [] }) => (dispatch) => {
+        light_220.map(i => dispatch(run({ type: ACTION_LIGHT_SET_RELATIVE, id: i, operator, value })));
+        light_LED.map(i => dispatch(run({ type: ACTION_LIGHT_SET_RELATIVE, id: i, operator, value })));
+      }));
+      break;
+    }
     case ACTION_SITE_LIGHT_OFF: {
       const { id } = action;
       dispatch(applySite(id, ({ light_220 = [], light_LED = [] }) => (dispatch) => {
-        light_220.map(i => dispatch(run({ type: ACTION_LIGHT_OFF, id: i})));
-        light_LED.map(i => dispatch(run({ type: ACTION_LIGHT_OFF, id: i})));
+        light_220.map(i => dispatch(run({ type: ACTION_LIGHT_OFF, id: i })));
+        light_LED.map(i => dispatch(run({ type: ACTION_LIGHT_OFF, id: i })));
       }));
+      break;
     }
     case ACTION_SETPOINT: {
       const { id, value } = action;
@@ -277,6 +317,20 @@ const run = (action, address) => (dispatch, getState) => {
       } else {
         if (onQuiet) {
           dispatch(run({ type: ACTION_SCRIPT_RUN, id: onQuiet }));
+        }
+      }
+      break;
+    }
+    case ACTION_TOGGLE: {
+      const { test = [], onOn, onOff } = action;
+      const f = test.reduce((a, b) => a || (getState()[b] || {}).value, false);
+      if (f) {
+        if (onOff) {
+          dispatch(run({ type: ACTION_SCRIPT_RUN, id: onOff }));
+        }
+      } else {
+        if (onOn) {
+          dispatch(run({ type: ACTION_SCRIPT_RUN, id: onOn }));
         }
       }
       break;
