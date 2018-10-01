@@ -341,7 +341,7 @@ const run = (action, address) => (dispatch, getState) => {
     case ACTION_SCRIPT_RUN: {
       const { id } = action;
       const script = getState()[id];
-      if (Array.isArray(script.action)) {
+      if (script && Array.isArray(script.action)) {
         script.action.forEach(i => {
           const { type, payload } = getState()[i];
           dispatch(run({ type, ...payload }));
