@@ -43,7 +43,7 @@ module.exports.PUMP = 'pump';
 module.exports.FAN = 'fan';
 
 module.exports.DB = './db';
-module.exports.FIRMWARE = './FIRMWARE';
+module.exports.FIRMWARE = './firmware';
 module.exports.FILE = './tmp/state.json';
 module.exports.asset = (a = '') => path.join(process.cwd(), 'tmp', 'assets', a);
 
