@@ -22,7 +22,7 @@ const online = (id, type, version, ip, ready) => (dispatch, getState) => {
   timeout[id] = setTimeout(() => {
     dispatch(offline(id));
     delete timeout[id];
-  }, 2 * DISCOVERY_INTERVAL);
+  }, 10 * DISCOVERY_INTERVAL);
 };
 
 module.exports = { offline, online };

@@ -8,9 +8,7 @@ const {
   BOOTLOAD_WRITE,
   BOOTLOAD_FINISH,
   DEVICE_PORT,
-  FIRMWARE_PATH,
-  FIRMWARE_PROJECT,
-  FIRMWARE_BUILD
+  FIRMWARE,
 } = require('../constants');
 const { device } = require('../sockets');
 
@@ -37,7 +35,7 @@ module.exports.updateFirmware = (id) => (dispatch, getState) => {
 
 module.exports.pendingFirmware = (id, firmware) => (dispatch) => {
   const queue = [];
-  const file = path.normalize(path.join(FIRMWARE_PATH, FIRMWARE_PROJECT, 'dist', firmware, FIRMWARE_BUILD, `${FIRMWARE_PROJECT}.${FIRMWARE_BUILD}.hex`));
+  const file = path.normalize(path.join(FIRMWARE, `${firmware}.hex`));
   const lineReader = createInterface({ input: createReadStream(file) });
   let packet;
   let stop = false;

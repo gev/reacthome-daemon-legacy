@@ -201,7 +201,7 @@ const run = (action, address) => (dispatch, getState) => {
           device.send(Buffer.from([ACTION_DIMMER, index, DIM_ON]), ip);
           break;
         default:
-          device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, 150]), ip);
+          device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, 200]), ip);
       }
       // device.sendConfirm(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, 150]), ip, () => {
       //   const light = getState()[id];
@@ -220,7 +220,7 @@ const run = (action, address) => (dispatch, getState) => {
           device.send(Buffer.from([ACTION_DIMMER, index, DIM_OFF]), ip);
           break;
         default:
-          device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, 0, 150]), ip);
+          device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, 0, 200]), ip);
       }
       // device.sendConfirm(Buffer.from([ACTION_DIMMER, index, DIM_FADE, 0, 150]), ip, () => {
       //   const light = getState()[id];
@@ -234,7 +234,7 @@ const run = (action, address) => (dispatch, getState) => {
       const { velocity = 128 } = getState()[bind];
       const [dev,,index] = bind.split('/');
       const { ip } = getState()[dev];
-      device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, 150]), ip);
+      device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, 200]), ip);
       // device.sendConfirm(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, 150]), ip, () => {
       //   const light = getState()[id];
       //   return light && light.value === value;
@@ -309,6 +309,9 @@ const run = (action, address) => (dispatch, getState) => {
       if (value >= high) {
         if (onHighThreshold) {
           dispatch(run({ type: ACTION_SCRIPT_RUN, id: onHighThreshold }));
+        }
+        if (onLowThreshold) {
+          dispatch(run({ type: ACTION_SCRIPT_RUN, id: onLowThreshold }));
         }
       } else if (value >= low) {
         if (onLowThreshold) {

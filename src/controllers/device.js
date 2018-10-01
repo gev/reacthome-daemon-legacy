@@ -77,7 +77,7 @@ module.exports.manage = ({ dispatch, getState }) => {
         case ACTION_DI: {
           const index = data[7];
           const value = data[8];
-          // console.log(value);
+          // console.log(index, value);
           const channel = `${id}/${DI}/${index}`;
           const chan = getState()[channel];
           dispatch(set(channel, { value }));

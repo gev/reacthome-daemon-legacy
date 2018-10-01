@@ -9,8 +9,10 @@ const {
   DEVICE_PORT,
   DEVICE_TYPE_DO8,
   DEVICE_TYPE_DO12,
+  DEVICE_TYPE_DI24,
   DEVICE_TYPE_DIM4,
   DEVICE_TYPE_DIM8,
+  DEVICE_TYPE_SENSOR4,
   DEVICE_TYPE_PLC,
   DISCOVERY_INTERVAL
 } = require('../constants');
@@ -27,6 +29,20 @@ module.exports.initialize = (id, data) => (dispatch, getState) => {
   const dev = getState()[id];
   const a = [ACTION_INITIALIZE];
   switch (dev.type) {
+    case DEVICE_TYPE_SENSOR4: {
+      for (let i = 1; i <= 4; i++) {
+        const channel = getState()[`${id}/${DI}/${i}`]; 
+        a[i] = (channel && channel.value) || 0;
+      }
+      break;
+    }
+    case DEVICE_TYPE_DI24: {
+      for (let i = 1; i <= 24; i++) {
+        const channel = getState()[`${id}/${DI}/${i}`]; 
+        a[i] = (channel && channel.value) || 0;
+      }
+      break;
+    }
     case DEVICE_TYPE_DO8: {
       for (let i = 1; i <= 8; i++) {
         const channel = getState()[`${id}/${DO}/${i}`]; 

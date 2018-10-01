@@ -43,6 +43,7 @@ module.exports.PUMP = 'pump';
 module.exports.FAN = 'fan';
 
 module.exports.DB = './db';
+module.exports.FIRMWARE = './FIRMWARE';
 module.exports.FILE = './tmp/state.json';
 module.exports.asset = (a = '') => path.join(process.cwd(), 'tmp', 'assets', a);
 
@@ -91,10 +92,6 @@ module.exports.ACTION_TIMER_STOP = 'ACTION_TIMER_STOP';
 module.exports.ACTION_DOPPLER_HANDLE = 'ACTION_DOPPLER_HANDLE';
 module.exports.ACTION_TOGGLE = 'ACTION_TOGGLE';
 module.exports.ACTION_SCRIPT_RUN = 'ACTION_SCRIPT_RUN';
-
-module.exports.FIRMWARE_PATH = '/Users/evgeny/workspace';
-module.exports.FIRMWARE_PROJECT = 'pic-sensor.X';
-module.exports.FIRMWARE_BUILD = 'production';
 
 module.exports.DIM_OFF = 0x0;
 module.exports.DIM_ON = 0x1;
