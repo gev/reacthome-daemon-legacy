@@ -292,7 +292,7 @@ const run = (action, address) => (dispatch, getState) => {
       clearTimeout(timer[id]);
       timer[id] = setTimeout(() => {
         dispatch(run({ type: ACTION_SCRIPT_RUN, id: script }));
-        dispatch(set(id, { state: false }));
+        dispatch(set(id, { time: 0, state: false }));
       }, time);
       dispatch(set(id, { time, script, state: true, timestamp: Date.now() }));
       break;
@@ -300,14 +300,14 @@ const run = (action, address) => (dispatch, getState) => {
     case ACTION_TIMER_STOP: {
       const { id } = action;
       clearTimeout(timer[id]);
-      dispatch(set(id, { state: false }));
+      dispatch(set(id, { tame: 0, state: false }));
       break;
     }
     case ACTION_DOPPLER_HANDLE: {
       const { id, low, high, onQuiet, onLowThreshold, onHighThreshold } = action;
       const { value, active } = getState()[id];
-      dispatch(set(id, { active: true }));
       if (value >= high) {
+        dispatch(set(id, { active: true }));
         if (onHighThreshold) {
           dispatch(run({ type: ACTION_SCRIPT_RUN, id: onHighThreshold }));
         }
