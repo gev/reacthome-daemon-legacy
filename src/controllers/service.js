@@ -291,8 +291,8 @@ const run = (action, address) => (dispatch, getState) => {
       const { id, script, time } = action;
       clearTimeout(timer[id]);
       timer[id] = setTimeout(() => {
-        dispatch(run({ type: ACTION_SCRIPT_RUN, id: script }));
         dispatch(set(id, { time: 0, state: false }));
+        dispatch(run({ type: ACTION_SCRIPT_RUN, id: script }));
       }, time);
       dispatch(set(id, { time, script, state: true, timestamp: Date.now() }));
       break;
