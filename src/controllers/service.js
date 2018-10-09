@@ -319,10 +319,9 @@ const run = (action, address) => (dispatch, getState) => {
         if (onLowThreshold) {
           dispatch(run({ type: ACTION_SCRIPT_RUN, id: onLowThreshold }));
         }
-      } else {
+      } else if (active) {
+        dispatch(set(id, { active: false }));
         if (onQuiet) {
-          if (active) {
-            dispatch(set(id, { active: false }));
             dispatch(run({ type: ACTION_SCRIPT_RUN, id: onQuiet }));
           }
         }
