@@ -305,7 +305,7 @@ const run = (action, address) => (dispatch, getState) => {
     }
     case ACTION_DOPPLER_HANDLE: {
       const { id, low, high, onQuiet, onLowThreshold, onHighThreshold } = action;
-      const { value } = getState()[id];
+      const { value, active } = getState()[id];
       dispatch(set(id, { active: true }));
       if (value >= high) {
         if (onHighThreshold) {
@@ -321,9 +321,8 @@ const run = (action, address) => (dispatch, getState) => {
         }
       } else {
         if (onQuiet) {
-          const { active } = getState()[id];
           if (active) {
-            dispatch(set(id, { active: false }))
+            dispatch(set(id, { active: false }));
             dispatch(run({ type: ACTION_SCRIPT_RUN, id: onQuiet }));
           }
         }
