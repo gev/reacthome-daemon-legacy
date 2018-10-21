@@ -14,5 +14,7 @@ module.exports = socket((socket) => {
   data.writeUInt8(ACTION_DISCOVERY, 0);
   data.writeUInt32BE(IP_ADDRESS, 1);
   data.writeUInt16BE(socket.address().port, 5);
-  return data;  
+  return () => {
+    socket.send(data, DEVICE_PORT, DEVICE_GROUP)
+  };
 }, DISCOVERY_INTERVAL, DEVICE_PORT, DEVICE_GROUP, SERVER_PORT);  

@@ -93,12 +93,21 @@ const run = (action, address) => (dispatch, getState) => {
             const ws = fs.createWriteStream(file);
             ws.on('error', console.error);
             ws.on('finish', () => {
-              service.send(JSON.stringify({ type: ACTION_DOWNLOAD, name }), SERVICE_GROUP);
+              service.broadcast(JSON.stringify({ type: ACTION_DOWNLOAD, name }));
             });
             res.body.pipe(ws);
           })
           .catch(console.err);
       });
+      break;
+    }
+    case ACTION_DISCOVERY: {
+      const { multicast } = action.payload;
+      if (multicast) {
+        service.delUnicast(address);
+      } else {
+        service.addUnicast(address);
+      }
       break;
     }
     case ACTION_BOOTLOAD: {

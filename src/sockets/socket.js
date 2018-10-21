@@ -1,7 +1,7 @@
 
 const { createSocket } = require('dgram');
 
-module.exports = (discovery, interval, port, group, listen ) => {
+module.exports = (discovery, interval, port, group, listen) => {
 
   const socket = createSocket('udp4');
   
@@ -18,8 +18,7 @@ module.exports = (discovery, interval, port, group, listen ) => {
   socket
     .on('error', console.error)
     .bind(listen, () => {
-      const data = discovery(socket);
-      setInterval(send, interval, data, group);
+      setInterval(discovery(socket), interval);
     });
   
     const handle = (handler) => {

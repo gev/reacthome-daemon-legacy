@@ -7,7 +7,7 @@ const db = require('../db');
 const apply = (id, payload) => (dispatch, getState) => {
   const action = { id, payload, type: ACTION_SET };
   dispatch(action);
-  service.send(JSON.stringify(action), SERVICE_GROUP);
+  service.broadcast(JSON.stringify(action));
   db.put(id, getState()[id], (err) => {
     if (err) console.log(err);
   });
