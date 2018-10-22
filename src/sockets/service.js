@@ -7,6 +7,7 @@ const {
   ACTION_DISCOVERY,
   SERVICE_GROUP,
   SERVICE_PORT,
+  SERVER_PORT
 } = require('../constants');
 const socket = require('./socket');
 
@@ -27,7 +28,7 @@ const service = socket(
       unicast.forEach(ip => service.send(u, ip));
     }
   },
-  DISCOVERY_INTERVAL, SERVICE_PORT, SERVICE_PORT
+  DISCOVERY_INTERVAL, SERVICE_PORT, SERVER_PORT
 );
 
 service.addUnicast = (ip) => {
