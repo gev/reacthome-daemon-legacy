@@ -17,4 +17,4 @@ module.exports = socket((socket) => {
   return () => {
     socket.send(data, DEVICE_PORT, DEVICE_GROUP)
   };
-}, DISCOVERY_INTERVAL, DEVICE_PORT, DEVICE_GROUP, SERVER_PORT);  
+}, DISCOVERY_INTERVAL, DEVICE_PORT, SERVER_PORT);  

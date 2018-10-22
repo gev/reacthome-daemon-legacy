@@ -27,7 +27,7 @@ const service = socket(
       unicast.forEach(ip => service.send(u, ip));
     }
   },
-  DISCOVERY_INTERVAL, SERVICE_PORT, SERVICE_GROUP
+  DISCOVERY_INTERVAL, SERVICE_PORT, SERVICE_PORT
 );
 
 service.addUnicast = (ip) => {

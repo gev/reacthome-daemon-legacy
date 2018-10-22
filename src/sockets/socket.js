@@ -1,7 +1,7 @@
 
 const { createSocket } = require('dgram');
 
-module.exports = (discovery, interval, port, group, listen) => {
+module.exports = (discovery, interval, port, listen) => {
 
   const socket = createSocket('udp4');
   
