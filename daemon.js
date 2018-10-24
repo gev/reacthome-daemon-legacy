@@ -22,8 +22,8 @@ db.createReadStream()
     const store = createStore(reducer, state);
     store.dispatch(set(mac, { type: DAEMON }));
     app.use(static('./tmp/assets/'));
-    app.use(async (ctx) => {
-      await ctx.next();
+    app.use(async (ctx, next) => {
+      await next();
       console.log(cts.request);
     });
     app.listen(SERVICE_PORT);
