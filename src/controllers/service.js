@@ -66,15 +66,7 @@ const run = (action, address) => (dispatch, getState) => {
   switch (action.type) {
     case ACTION_GET: {
       Object.entries(getState()).forEach(([id, payload]) => {
-        const msg = JSON.stringify({ id, type: ACTION_SET, payload });
-        const sent = msg.length < 1024;
-        if (sent) {
-          service.send(msg, address);
-        } else {
-          Object.entries(payload).forEach(([k, v]) => {
-            service.send(JSON.stringify({ id, type: ACTION_SET, payload: { [k]: v } }), address);
-          });
-        }
+        service.send(JSON.stringify({ id, type: ACTION_SET, payload }), address);
         Object.values(payload).forEach(v => {
           if (!v || typeof v !== 'string') return;
           fs.exists(asset(v), (exists) => {
