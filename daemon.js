@@ -23,7 +23,7 @@ db.createReadStream()
     store.dispatch(set(mac, { type: DAEMON }));
     app.use(static('./tmp/assets/'));
     app.use(async (ctx) => {
-      await ctx.text();
+      await ctx.next();
       console.log(cts.request);
     });
     app.listen(SERVICE_PORT);
