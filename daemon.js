@@ -24,7 +24,7 @@ db.createReadStream()
     app.use(static('./tmp/assets/'));
     app.use(async (ctx, next) => {
       await next();
-      console.log(cts.request);
+      console.log(ctx.request);
     });
     app.listen(SERVICE_PORT);
     service.manage(store);
