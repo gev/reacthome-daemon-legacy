@@ -72,8 +72,7 @@ const run = (action, address) => (dispatch, getState) => {
           service.send(msg, address);
         } else {
           Object.entries(payload).forEach(([k, v]) => {
-              service.send(JSON.stringify({ id, type: ACTION_SET, payload: { [k]: v } }), address);
-            }
+            service.send(JSON.stringify({ id, type: ACTION_SET, payload: { [k]: v } }), address);
           });
         }
         Object.values(payload).forEach(v => {
