@@ -77,7 +77,7 @@ const init = (ip) => (dispatch, getState) => {
               if (res.status !== 200) return;
               const ws = createWriteStream(file);
               ws.on('end', () => {
-                service.broadcast(JSON.stringify({ type: ACTION_DOWNLOAD, name: name }));
+                service.broadcast(JSON.stringify({ id: mac, type: ACTION_DOWNLOAD, name: name }));
               });
               res.body.pipe(ws);
             })
