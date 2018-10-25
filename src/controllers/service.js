@@ -62,7 +62,7 @@ const { device, service } = require('../sockets');
 const timer = {};
 
 const init = () => (dispatch, getState) => {
-  const { ip } = getState()[POOL][id];
+  const { ip } = getState()[id];
   fetch(`http://${ip}:${SERVICE_PORT}/${STATE}/${mac}`)
     .then(response => response.json())
     .then(({ assets = [], state = {} }) => {
