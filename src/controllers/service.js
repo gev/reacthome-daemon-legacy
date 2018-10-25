@@ -61,7 +61,7 @@ const { device, service } = require('../sockets');
 
 const timer = {};
 
-export const init = () => (dispatch, getState) => {
+const init = () => (dispatch, getState) => {
   const { ip } = getState()[POOL][id];
   fetch(`http://${ip}:${SERVICE_PORT}/${STATE}/${mac}`)
     .then(response => response.json())
