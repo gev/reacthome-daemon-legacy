@@ -61,8 +61,7 @@ const { device, service } = require('../sockets');
 
 const timer = {};
 
-const init = () => (dispatch, getState) => {
-  const { ip } = getState()[id];
+const init = (ip) => (dispatch, getState) => {
   fetch(`http://${ip}:${SERVICE_PORT}/${STATE}/${mac}`)
     .then(response => response.json())
     .then(({ assets = [], state = {} }) => {
@@ -88,7 +87,7 @@ const init = () => (dispatch, getState) => {
 const run = (action, address) => (dispatch, getState) => {
   switch (action.type) {
     case ACTION_INIT: {
-      dispatch(init());
+      dispatch(init(address));
       break;
     }
     case ACTION_SET: {
