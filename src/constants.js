@@ -44,12 +44,13 @@ module.exports.FAN = 'fan';
 
 
 module.exports.STATE = 'state';
-module.exports.ASSETS = 'assets';
-module.exports.ASSETS_ = 'tmp/assets';
 
-module.exports.DB = './db';
+module.exports.ASSETS = 'assets';
+module.exports.ASSETS_DIR = path.join('tmp', 'assets');
+module.exports.asset = (a = '') => path.join(process.cwd(), 'tmp', 'assets', a);
+
 module.exports.FIRMWARE = './firmware';
-module.exports.asset = (a = '') => path.join(process.cwd(), 'tmp/assets', a);
+module.exports.DB = './db';
 
 module.exports.ACTION_DO = 0x00;
 module.exports.ACTION_DI = 0x01;
@@ -80,8 +81,7 @@ module.exports.BOOTLOAD_SUCCESS = 0x01;
 module.exports.BOOTLOAD_FINISH = 0x0f;
 
 module.exports.ACTION_SET = 'ACTION_SET';
-module.exports.ACTION_GET = 'ACTION_GET';
-module.exports.ACTION_DOWNLOAD = 'ACTION_DOWNLOAD';
+module.exports.ACTION_INIT = 'ACTION_INIT';
 
 module.exports.ACTION_LIGHT_ON = 'ACTION_LIGHT_ON';
 module.exports.ACTION_LIGHT_OFF = 'ACTION_LIGHT_OFF';

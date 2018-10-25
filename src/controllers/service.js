@@ -14,9 +14,8 @@ const {
   ACTION_DISCOVERY,
   ACTION_FIND_ME,
   ACTION_BOOTLOAD,
-  ACTION_GET,
+  ACTION_INIT,
   ACTION_SET,
-  ACTION_DOWNLOAD,
   ACTION_LIGHT_ON,
   ACTION_LIGHT_OFF,
   ACTION_LIGHT_SET,
@@ -62,43 +61,39 @@ const { device, service } = require('../sockets');
 
 const timer = {};
 
+export const init = () => (dispatch, getState) => {
+  const { ip } = getState()[POOL][id];
+  fetch(`http://${ip}:${SERVICE_PORT}/${STATE}/${mac}`)
+    .then(response => response.json())
+    .then(({ assets = [], state = {} }) => {
+      assets.forEach((name) => {
+        const file = asset(name);
+        exists(file, (ex) => {
+          if (ex) return;
+          fetch(`http://${ip}:${SERVICE_PORT}/${ASSETS}/${name}`)
+            .then(res => {
+              if (res.status !== 200) return;
+              res.body.pipe(createWriteStream(file));
+            })
+            .catch(console.err);
+        });
+      });
+      Object.entries(state).forEach(([k, v]) => {
+        dispatch(set(k, v));
+      });
+    })
+    .catch(console.err);
+};
+
 const run = (action, address) => (dispatch, getState) => {
   switch (action.type) {
-    // case ACTION_GET: {
-    //   Object.entries(getState()).forEach(([id, payload]) => {
-    //     service.send(JSON.stringify({ id, type: ACTION_SET, payload }), address);
-    //     Object.values(payload).forEach(v => {
-    //       if (!v || typeof v !== 'string') return;
-    //       fs.exists(asset(v), (exists) => {
-    //         if (!exists) return;
-    //         service.send(JSON.stringify({ type: ACTION_DOWNLOAD, name: v }), address);
-    //       });
-    //     });
-    //   }); 
-    //   break;
-    // }
+    case ACTION_INIT: {
+      dispatch(init());
+      break;
+    }
     case ACTION_SET: {
       const { id, payload } = action;
       dispatch(set(id, payload));
-      break;
-    }
-    case ACTION_DOWNLOAD: {
-      const { name } = action;
-      const file = asset(name);
-      fs.exists(file, (exists) => {
-        if (exists) return;
-        fetch(`http://${address}:${SERVICE_PORT}/${name}`)
-          .then(res => {
-            if (res.status !== 200) return;
-            const ws = fs.createWriteStream(file);
-            ws.on('error', console.error);
-            ws.on('finish', () => {
-              service.broadcast(JSON.stringify({ type: ACTION_DOWNLOAD, name }));
-            });
-            res.body.pipe(ws);
-          })
-          .catch(console.err);
-      });
       break;
     }
     case ACTION_DISCOVERY: {
