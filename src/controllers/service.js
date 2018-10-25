@@ -16,6 +16,7 @@ const {
   ACTION_BOOTLOAD,
   ACTION_INIT,
   ACTION_SET,
+  ACTION_DOWNLOAD,
   ACTION_LIGHT_ON,
   ACTION_LIGHT_OFF,
   ACTION_LIGHT_SET,
@@ -74,7 +75,11 @@ const init = (ip) => (dispatch, getState) => {
           fetch(`http://${ip}:${SERVICE_PORT}/${ASSETS}/${name}`)
             .then(res => {
               if (res.status !== 200) return;
-              res.body.pipe(createWriteStream(file));
+              const ws = createWriteStream(file);
+              ws.on('end', () => {
+                service.broadcast(JSON.stringify({ type: ACTION_DOWNLOAD, name: name }));
+              });
+              res.body.pipe(ws);
             })
             .catch(console.error);
         });

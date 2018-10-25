@@ -82,6 +82,7 @@ module.exports.BOOTLOAD_FINISH = 0x0f;
 
 module.exports.ACTION_SET = 'ACTION_SET';
 module.exports.ACTION_INIT = 'ACTION_INIT';
+module.exports.ACTION_DOWNLOAD = 'ACTION_DOWNLOAD';
 
 module.exports.ACTION_LIGHT_ON = 'ACTION_LIGHT_ON';
 module.exports.ACTION_LIGHT_OFF = 'ACTION_LIGHT_OFF';
