@@ -47,7 +47,9 @@ const {
   OPERATOR_PLUS,
   OPERATOR_MINUS,
   OPERATOR_MUL,
-  OPERATOR_DIV
+  OPERATOR_DIV,
+  STATE,
+  ASSETS
 } = require('../constants');
 const {
   set,
