@@ -42,10 +42,14 @@ module.exports.BOILER = 'boiler';
 module.exports.PUMP = 'pump';
 module.exports.FAN = 'fan';
 
+
+module.exports.STATE = 'state';
+module.exports.ASSETS = 'assets';
+module.exports.ASSETS_ = 'tmp/assets';
+
 module.exports.DB = './db';
 module.exports.FIRMWARE = './firmware';
-module.exports.FILE = './tmp/state.json';
-module.exports.asset = (a = '') => path.join(process.cwd(), 'tmp', 'assets', a);
+module.exports.asset = (a = '') => path.join(process.cwd(), 'tmp/assets', a);
 
 module.exports.ACTION_DO = 0x00;
 module.exports.ACTION_DI = 0x01;
