@@ -76,14 +76,14 @@ const init = (ip) => (dispatch, getState) => {
               if (res.status !== 200) return;
               res.body.pipe(createWriteStream(file));
             })
-            .catch(console.err);
+            .catch(console.error);
         });
       });
       Object.entries(state).forEach(([k, v]) => {
         dispatch(set(k, v));
       });
     })
-    .catch(console.err);
+    .catch(console.error);
 };
 
 const run = (action, address) => (dispatch, getState) => {
