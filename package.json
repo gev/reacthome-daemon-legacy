@@ -11,6 +11,7 @@
     "fast-memoize": "^2.2.8",
     "ip": "gev/ip",
     "koa": "^2.5.0",
+    "koa-mount": "^4.0.0",
     "koa-static": "^4.0.2",
     "level": "^4.0.0",
     "node-fetch": "^2.1.2",

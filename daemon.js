@@ -1,5 +1,6 @@
 
 const Koa = require('koa');
+const mount = require('koa-mount');
 const static = require('koa-static');
 const { assets, device, service } = require('./src/controllers');
 const createStore = require('./src/store');
@@ -21,11 +22,11 @@ db.createReadStream()
     const app = new Koa();
     const store = createStore(reducer, state);
     store.dispatch(set(mac, { type: DAEMON }));
-    app.use(static('./tmp/assets/'));
-    app.use(async (ctx, next) => {
+    app.use(mount('/assets', static('./tmp/assets/')));
+    app.use(mount('/state', async (ctx, next) => {
       await next();
-      console.log(ctx.request);
-    });
+      ctx.body = JSON.stringify(store.getState());
+    }));
     app.listen(SERVICE_PORT);
     service.manage(store);
     device.manage(store);

@@ -64,19 +64,19 @@ const timer = {};
 
 const run = (action, address) => (dispatch, getState) => {
   switch (action.type) {
-    case ACTION_GET: {
-      Object.entries(getState()).forEach(([id, payload]) => {
-        service.send(JSON.stringify({ id, type: ACTION_SET, payload }), address);
-        Object.values(payload).forEach(v => {
-          if (!v || typeof v !== 'string') return;
-          fs.exists(asset(v), (exists) => {
-            if (!exists) return;
-            service.send(JSON.stringify({ type: ACTION_DOWNLOAD, name: v }), address);
-          });
-        });
-      }); 
-      break;
-    }
+    // case ACTION_GET: {
+    //   Object.entries(getState()).forEach(([id, payload]) => {
+    //     service.send(JSON.stringify({ id, type: ACTION_SET, payload }), address);
+    //     Object.values(payload).forEach(v => {
+    //       if (!v || typeof v !== 'string') return;
+    //       fs.exists(asset(v), (exists) => {
+    //         if (!exists) return;
+    //         service.send(JSON.stringify({ type: ACTION_DOWNLOAD, name: v }), address);
+    //       });
+    //     });
+    //   }); 
+    //   break;
+    // }
     case ACTION_SET: {
       const { id, payload } = action;
       dispatch(set(id, payload));

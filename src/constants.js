@@ -75,9 +75,8 @@ module.exports.BOOTLOAD_WRITE = 0x00;
 module.exports.BOOTLOAD_SUCCESS = 0x01;
 module.exports.BOOTLOAD_FINISH = 0x0f;
 
-module.exports.ACTION_GET = 'ACTION_GET';
 module.exports.ACTION_SET = 'ACTION_SET';
-
+module.exports.ACTION_GET = 'ACTION_GET';
 module.exports.ACTION_DOWNLOAD = 'ACTION_DOWNLOAD';
 
 module.exports.ACTION_LIGHT_ON = 'ACTION_LIGHT_ON';
