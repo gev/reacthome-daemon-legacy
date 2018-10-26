@@ -4,7 +4,7 @@ const {
   DO,
   DI,
   DIM,
-  ACTION_INIT,
+  ACTION_INITIALIZE,
   DEVICE,
   DEVICE_PORT,
   DEVICE_TYPE_DO8,
@@ -27,7 +27,7 @@ module.exports.initialize = (id, data) => (dispatch, getState) => {
   dispatch(add(mac, DEVICE, id));
   dispatch(set(id, { initialized: false }));
   const dev = getState()[id];
-  const a = [ACTION_INIT];
+  const a = [ACTION_INITIALIZE];
   switch (dev.type) {
     case DEVICE_TYPE_SENSOR4: {
       for (let i = 1; i <= 4; i++) {
