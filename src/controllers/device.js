@@ -20,7 +20,7 @@ const {
   ACTION_MAC_ADDRESS,   
   ACTION_DISCOVERY,
   ACTION_READY,
-  ACTION_INIT,
+  ACTION_INITIALIZE,
   ACTION_INITIALIZED,
   ACTION_ERROR,
   ACTION_FIND_ME,
@@ -208,7 +208,7 @@ module.exports.manage = ({ dispatch, getState }) => {
           }
           break;
         }
-        case ACTION_INIT: {
+        case ACTION_INITIALIZE: {
           dispatch(initialize(id));
           break;
         }
