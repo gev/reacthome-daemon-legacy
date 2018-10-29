@@ -1,5 +1,5 @@
 
-const fs = require('fs');
+const { exists, createWriteStream } = require('fs');
 const fetch = require('node-fetch');
 const crypto = require('crypto');
 const {
