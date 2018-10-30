@@ -6,11 +6,9 @@ module.exports = (discovery, interval, port, listen) => {
   const socket = createSocket('udp4');
   
   const send = (packet, ip) => {
-    for (let i = 0; i < 8; i++) {
-      socket.send(packet, port, ip, (err) => {
-        if (err) console.error(error);
-      });
-    }
+    socket.send(packet, port, ip, (err) => {
+      if (err) console.error(error);
+    });
   };
   
   const sendConfirm = (packet, ip, confirm, t = 1000) => {
