@@ -242,6 +242,7 @@ module.exports.manage = ({ dispatch, getState }) => {
           break;
         }
         case ACTION_MAC_ADDRESS: {
+          console.error(id, address, action);
           crypto.randomBytes(7, (err, a) => {
             if (err) console.log(err);
             else {
@@ -256,6 +257,7 @@ module.exports.manage = ({ dispatch, getState }) => {
         case ACTION_READY: 
         case ACTION_DISCOVERY: {
           const type = data[7];
+          console.log(id, address, action);
           const version = `${data[8]}.${data[9]}`;
           dispatch(online(id, type, version, address, action === ACTION_READY));
           break;
