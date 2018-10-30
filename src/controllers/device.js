@@ -65,6 +65,7 @@ let last_ip = IP_ADDRESS_POOL_START;
 module.exports.manage = ({ dispatch, getState }) => {
 
   ((getState()[mac] || {}).device || []).forEach(id => {
+    dispatch(initialize(id));
     dispatch(offline(id));
   });
 
