@@ -23,7 +23,7 @@ module.exports.initialized = (id) => (dispatch, getState) => {
   dispatch(set(id, { initialized: true }));
 }
 
-module.exports.initialize = (id, data) => (dispatch, getState) => {
+module.exports.initialize = (id) => (dispatch, getState) => {
   dispatch(add(mac, DEVICE, id));
   dispatch(set(id, { initialized: false }));
   const dev = getState()[id];
