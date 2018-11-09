@@ -64,6 +64,8 @@ const { device, service } = require('../sockets');
 
 const timer = {};
 
+const VELOCITY = 128;
+
 const init = (ip) => (dispatch, getState) => {
   fetch(`http://${ip}:${SERVICE_PORT}/${STATE}/${mac}`)
     .then(response => response.json())
@@ -211,7 +213,7 @@ const run = (action, address) => (dispatch, getState) => {
           device.send(Buffer.from([ACTION_DIMMER, index, DIM_ON]), ip);
           break;
         default:
-          device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, 200]), ip);
+          device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, VELOCITY]), ip);
       }
       // device.sendConfirm(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, 150]), ip, () => {
       //   const light = getState()[id];
@@ -230,7 +232,7 @@ const run = (action, address) => (dispatch, getState) => {
           device.send(Buffer.from([ACTION_DIMMER, index, DIM_OFF]), ip);
           break;
         default:
-          device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, 0, 200]), ip);
+          device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, 0, VELOCITY]), ip);
       }
       // device.sendConfirm(Buffer.from([ACTION_DIMMER, index, DIM_FADE, 0, 150]), ip, () => {
       //   const light = getState()[id];
@@ -244,7 +246,7 @@ const run = (action, address) => (dispatch, getState) => {
       const { velocity = 128 } = getState()[bind];
       const [dev,,index] = bind.split('/');
       const { ip } = getState()[dev];
-      device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, 200]), ip);
+      device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, VELOCITY]), ip);
       // device.sendConfirm(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, 150]), ip, () => {
       //   const light = getState()[id];
       //   return light && light.value === value;
