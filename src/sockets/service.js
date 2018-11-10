@@ -10,7 +10,7 @@ const {
 } = require('../constants');
 const socket = require('./socket');
 
-let unicast = [];
+const unicast = [];
 
 const discovery = (multicast) => JSON.stringify({
   id: mac,

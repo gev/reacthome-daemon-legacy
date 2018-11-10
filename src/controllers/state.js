@@ -12,11 +12,12 @@ module.exports.init = (s) => state = s;
 module.exports.get = (id) => state[id];
 
 module.exports.set = (id, payload) => {
-  if (state[id]) {
-    Object.assign(state[id], payload)
-  } else {
-    state[id] = payload;
-  }
+  state[id] = { ...state[id], ...payload };
+  // if (state[id]) {
+  //   Object.assign(state[id], payload)
+  // } else {
+  //   state[id] = payload;
+  // }
 };
 
 module.exports.manage = () => mount(`/${STATE}`, async (ctx, next) => {
