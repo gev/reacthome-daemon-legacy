@@ -74,6 +74,7 @@ module.exports.manage = () => {
       const mac = Array.from(data.slice(0, 6));
       const id = mac.map(i => `0${i.toString(16)}`.slice(-2)).join(':');
       const action = data[6];
+      console.log(address, data);
       switch (action) {
         case ACTION_DI: {
           const index = data[7];
