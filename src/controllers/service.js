@@ -53,6 +53,7 @@ const {
   ASSETS
 } = require('../constants');
 const {
+  get,
   set,
   offline,
   online,
@@ -66,7 +67,7 @@ const timer = {};
 
 const VELOCITY = 128;
 
-const init = (ip) => (dispatch, getState) => {
+const init = (ip) => {
   fetch(`http://${ip}:${SERVICE_PORT}/${STATE}/${mac}`)
     .then(response => response.json())
     .then(({ assets = [], state = {} }) => {
@@ -87,21 +88,21 @@ const init = (ip) => (dispatch, getState) => {
         });
       });
       Object.entries(state).forEach(([k, v]) => {
-        dispatch(set(k, v));
+        set(k, v);
       });
     })
     .catch(console.error);
 };
 
-const run = (action, address) => (dispatch, getState) => {
+const run = (action, address) => {
   switch (action.type) {
     case ACTION_INIT: {
-      dispatch(init(address));
+      init(address);
       break;
     }
     case ACTION_SET: {
       const { id, payload } = action;
-      dispatch(set(id, payload));
+      set(id, payload);
       break;
     }
     case ACTION_DISCOVERY: {
@@ -114,69 +115,69 @@ const run = (action, address) => (dispatch, getState) => {
       break;
     }
     case ACTION_BOOTLOAD: {
-      dispatch(pendingFirmware(action.id, action.pendingFirmware));
+      pendingFirmware(action.id, action.pendingFirmware);
       break;
     }  
       case ACTION_FIND_ME: {
-      const dev = getState()[action.id];
+      const dev = get(action.id);
       device.send(Buffer.from([ACTION_FIND_ME, action.finding]), dev.ip);
       break;
     }
     case ACTION_DO: {
-      const dev = getState()[action.id];
+      const dev = get(action.id);
       const id = `${action.id}/${DO}/${action.index}`
       device.send(Buffer.from([ACTION_DO, action.index, action.value]), dev.ip);
       // device.sendConfirm(Buffer.from([ACTION_DO, action.index, action.value]), dev.ip, () => {
-      //   const channel = getState()[id];
+      //   const channel = get(id);
       //   return channel && channel.value === action.value;
       // }, 300);
       break;
     }
     case ACTION_DOPPLER: {
-      const dev = getState()[action.id];  
+      const dev = get(action.id);  
       device.send(Buffer.from([ACTION_DOPPLER, action.gain]), dev.ip);
       // device.sendConfirm(Buffer.from([ACTION_DOPPLER, action.gain]), dev.ip, () => {
-      //   const dev = getState()[action.id];
+      //   const dev = get(action.id);
       //   return dev && dev.gain === action.gain;
       // }, 300);
       break;
     }
     case ACTION_DIMMER: {
-      const dev = getState()[action.id];
+      const dev = get(action.id);
       const id = `${action.id}/${DIM}/${action.index}`;
       switch (action.action) {
         case DIM_SET:
           device.send(Buffer.from([ACTION_DIMMER, action.index, action.action, action.value]));
           // device.sendConfirm(Buffer.from([ACTION_DIMMER, action.index, action.action, action.value]), dev.ip, () => {
-          //   const channel = getState()[id];
+          //   const channel = get(id);
           //   return channel && channel.value === action.value;
           // }, 300);
           break;
         case DIM_TYPE:
           device.send(Buffer.from([ACTION_DIMMER, action.index, action.action, action.value]), dev.ip);
           // device.sendConfirm(Buffer.from([ACTION_DIMMER, action.index, action.action, action.value]), dev.ip, () => {
-          //   const channel = getState()[id];
+          //   const channel = get(id);
           //   return channel && channel.type === action.value;
           // }, 300);
           break;
         case DIM_FADE:
           device.send(Buffer.from([ACTION_DIMMER, action.index, action.action, action.value, action.velocity]), dev.ip);
           // device.sendConfirm(Buffer.from([ACTION_DIMMER, action.index, action.action, action.value, action.velocity]), dev.ip, () => {
-          //   const channel = getState()[id];
+          //   const channel = get(id);
           //   return channel && channel.value === action.value;
           // }, 300);
           break;
         case DIM_ON:
           device.send(Buffer.from([ACTION_DIMMER, action.index, action.action]), dev.ip);
           // device.sendConfirm(Buffer.from([ACTION_DIMMER, action.index, action.action]), dev.ip, () => {
-          //   const channel = getState()[id];
+          //   const channel = get(id);
           //   return channel && channel.value === 255;
           // }, 300);
           break;
       case DIM_OFF:   
         device.send(Buffer.from([ACTION_DIMMER, action.index, action.action]), dev.ip);
           // device.sendConfirm(Buffer.from([ACTION_DIMMER, action.index, action.action]), dev.ip, () => {
-          //   const channel = getState()[`${action.id}/${DIM}/${action.index}`];
+          //   const channel = get(`${action.id}/${DIM}/${action.index}`);
           //   return channel && channel.value === 0;
           // }, 300);
           break;
@@ -184,8 +185,8 @@ const run = (action, address) => (dispatch, getState) => {
       break;
     }
     case ACTION_PNP: {
-      const dev = getState()[action.id];
-      dispatch(set(action.id, { t0: Date.now() }));
+      const dev = get(action.id);
+      set(action.id, { t0: Date.now() });
       switch (action.action) {
         case PNP_ENABLE:
           device.send(Buffer.from([ACTION_PNP, PNP_ENABLE, action.enabled]), dev.ip);
@@ -203,10 +204,10 @@ const run = (action, address) => (dispatch, getState) => {
     }
     case ACTION_LIGHT_ON: {
       const { id } = action;
-      const { bind, last } = getState()[id];
-      const { velocity, type } = getState()[bind];
+      const { bind, last } = get(id);
+      const { velocity, type } = get(bind);
       const [dev,,index] = bind.split('/');
-      const { ip } = getState()[dev];
+      const { ip } = get(dev);
       const value = last || 255
       switch (type) {
         case DIM_TYPE_RELAY:
@@ -216,17 +217,17 @@ const run = (action, address) => (dispatch, getState) => {
           device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, VELOCITY]), ip);
       }
       // device.sendConfirm(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, 150]), ip, () => {
-      //   const light = getState()[id];
+      //   const light = get(id);
       //   return light && light.value === value;
       // }, 300);
       break;
     }
     case ACTION_LIGHT_OFF: {
       const { id } = action;
-      const { bind } = getState()[id];
-      const { velocity = 128, type } = getState()[bind];
+      const { bind } = get(id);
+      const { velocity = 128, type } = [bind];
       const [dev,,index] = bind.split('/');
-      const { ip } = getState()[dev];
+      const { ip } = get(dev);
       switch (type) {
         case DIM_TYPE_RELAY:
           device.send(Buffer.from([ACTION_DIMMER, index, DIM_OFF]), ip);
@@ -235,28 +236,28 @@ const run = (action, address) => (dispatch, getState) => {
           device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, 0, VELOCITY]), ip);
       }
       // device.sendConfirm(Buffer.from([ACTION_DIMMER, index, DIM_FADE, 0, 150]), ip, () => {
-      //   const light = getState()[id];
+      //   const light = get(id);
       //   return light && light.value === 0;
       // }, 300);
       break;
     }
     case ACTION_LIGHT_SET: {
       const { id, value } = action;
-      const { bind } = getState()[id];
-      const { velocity = 128 } = getState()[bind];
+      const { bind } = get(id);
+      const { velocity = 128 } = get(bind);
       const [dev,,index] = bind.split('/');
-      const { ip } = getState()[dev];
+      const { ip } = get(dev);
       device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, VELOCITY]), ip);
       // device.sendConfirm(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, 150]), ip, () => {
-      //   const light = getState()[id];
+      //   const light = get(id);
       //   return light && light.value === value;
       // }, 300);
-      dispatch(set(id, { last: value }));
+      set(id, { last: value });
       break;
     }
     case ACTION_LIGHT_SET_RELATIVE: {
       const { id, operator } = action;
-      const { value, code } = getState()[id];
+      const { value, code } = get(id);
       let v;
       switch (operator) {
         case OPERATOR_PLUS:
@@ -275,91 +276,91 @@ const run = (action, address) => (dispatch, getState) => {
       if (v < 0) v = 0;
       if (v > 255) v = 255;
       if (v === value) return;
-      dispatch(run({ type: ACTION_LIGHT_SET, id, value: v }));
+      run({ type: ACTION_LIGHT_SET, id, value: v });
       break;
     }
     case ACTION_SITE_LIGHT_SET_RELATIVE: {
       const { id, operator, value } = action;
-      dispatch(applySite(id, ({ light_220 = [], light_LED = [] }) => (dispatch) => {
-        light_220.map(i => dispatch(run({ type: ACTION_LIGHT_SET_RELATIVE, id: i, operator, value })));
-        light_LED.map(i => dispatch(run({ type: ACTION_LIGHT_SET_RELATIVE, id: i, operator, value })));
-      }));
+      applySite(id, ({ light_220 = [], light_LED = [] }) => {
+        light_220.map(i => run({ type: ACTION_LIGHT_SET_RELATIVE, id: i, operator, value }));
+        light_LED.map(i => run({ type: ACTION_LIGHT_SET_RELATIVE, id: i, operator, value }));
+      });
       break;
     }
     case ACTION_SITE_LIGHT_OFF: {
       const { id } = action;
-      dispatch(applySite(id, ({ light_220 = [], light_LED = [] }) => (dispatch) => {
-        light_220.map(i => dispatch(run({ type: ACTION_LIGHT_OFF, id: i })));
-        light_LED.map(i => dispatch(run({ type: ACTION_LIGHT_OFF, id: i })));
-      }));
+      applySite(id, ({ light_220 = [], light_LED = [] }) => {
+        light_220.map(i => run({ type: ACTION_LIGHT_OFF, id: i }));
+        light_LED.map(i => run({ type: ACTION_LIGHT_OFF, id: i }));
+      });
       break;
     }
     case ACTION_SETPOINT: {
       const { id, value } = action;
-      dispatch(set(id, { setpoint: value }));
+      set(id, { setpoint: value });
       break;
     }
     case ACTION_TIMER_START: {
       const { id, script, time } = action;
       clearTimeout(timer[id]);
       timer[id] = setTimeout(() => {
-        dispatch(set(id, { time: 0, state: false }));
-        dispatch(run({ type: ACTION_SCRIPT_RUN, id: script }));
+        set(id, { time: 0, state: false });
+        run({ type: ACTION_SCRIPT_RUN, id: script });
       }, time);
-      dispatch(set(id, { time, script, state: true, timestamp: Date.now() }));
+      set(id, { time, script, state: true, timestamp: Date.now() });
       break;
     }
     case ACTION_TIMER_STOP: {
       const { id } = action;
       clearTimeout(timer[id]);
-      dispatch(set(id, { tame: 0, state: false }));
+      set(id, { tame: 0, state: false });
       break;
     }
     case ACTION_DOPPLER_HANDLE: {
       const { id, low, high, onQuiet, onLowThreshold, onHighThreshold } = action;
-      const { value, active } = getState()[id];
+      const { value, active } = get(id);
       if (value >= high) {
-        dispatch(set(id, { active: true }));
+        set(id, { active: true });
         if (onHighThreshold) {
-          dispatch(run({ type: ACTION_SCRIPT_RUN, id: onHighThreshold }));
+          run({ type: ACTION_SCRIPT_RUN, id: onHighThreshold });
         }
         if (onLowThreshold) {
-          dispatch(run({ type: ACTION_SCRIPT_RUN, id: onLowThreshold }));
+          run({ type: ACTION_SCRIPT_RUN, id: onLowThreshold });
         }
       } else if (value >= low) {
-        dispatch(set(id, { active: true }));
+        set(id, { active: true });
         if (onLowThreshold) {
-          dispatch(run({ type: ACTION_SCRIPT_RUN, id: onLowThreshold }));
+          run({ type: ACTION_SCRIPT_RUN, id: onLowThreshold });
         }
       } else if (active) {
-        dispatch(set(id, { active: false }));
+        set(id, { active: false });
         if (onQuiet) {
-          dispatch(run({ type: ACTION_SCRIPT_RUN, id: onQuiet }));
+          run({ type: ACTION_SCRIPT_RUN, id: onQuiet });
         }
       }
       break;
     }
     case ACTION_TOGGLE: {
       const { test = [], onOn, onOff } = action;
-      const f = test.reduce((a, b) => a || (getState()[b] || {}).value, false);
+      const f = test.reduce((a, b) => a || (get(b) || {}).value, false);
       if (f) {
         if (onOff) {
-          dispatch(run({ type: ACTION_SCRIPT_RUN, id: onOff }));
+          run({ type: ACTION_SCRIPT_RUN, id: onOff });
         }
       } else {
         if (onOn) {
-          dispatch(run({ type: ACTION_SCRIPT_RUN, id: onOn }));
+          run({ type: ACTION_SCRIPT_RUN, id: onOn });
         }
       }
       break;
     }
     case ACTION_SCRIPT_RUN: {
       const { id } = action;
-      const script = getState()[id];
+      const script = get(id);
       if (script && Array.isArray(script.action)) {
         script.action.forEach(i => {
-          const { type, payload } = getState()[i];
-          dispatch(run({ type, ...payload }));
+          const { type, payload } = get(i);
+          run({ type, ...payload });
         })
       }
       break;
@@ -367,10 +368,10 @@ const run = (action, address) => (dispatch, getState) => {
   }
 };
 
-module.exports.manage = ({ dispatch, getState }) => {
+module.exports.manage = () => {
     service.handle((data, { address }) => {
       try {
-        dispatch(run(JSON.parse(data), address));
+        run(JSON.parse(data), address);
       } catch (err) {
         console.error(err);
       }

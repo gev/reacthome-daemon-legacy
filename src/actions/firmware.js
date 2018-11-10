@@ -2,7 +2,7 @@
 const path = require('path');
 const { createReadStream } = require('fs');
 const { createInterface } = require('readline');
-const { set } = require('./create');
+const { get, set } = require('./create');
 const {
   ACTION_BOOTLOAD,
   BOOTLOAD_WRITE,
@@ -14,26 +14,26 @@ const { device } = require('../sockets');
 
 const firmwareQueue = {};
 
-module.exports.updateFirmware = (id) => (dispatch, getState) => {
-  const dev = getState()[id];
+module.exports.updateFirmware = (id) => {
+  const dev = get(id);
   const queue = firmwareQueue[id];
   if (queue && queue.length > 0) {
     const length = queue.length
-    dispatch(set(id, { pending: false, updating: true, length }));
+    set(id, { pending: false, updating: true, length });
     device.sendConfirm(queue.shift(), dev.ip, () => {
-      const dev = getState()[id];
+      const dev = get(id);
       return !(dev && dev.length === length);
     });
   } else {
-    dispatch(set(id, { pending: false, updating: false }));
+    set(id, { pending: false, updating: false });
     device.sendConfirm(Buffer.from([ACTION_BOOTLOAD, BOOTLOAD_FINISH]), dev.ip, () => {
-      const dev = getState()[id];
+      const dev = get(id);
       return !(dev && dev.online);
     });
   }
 };
 
-module.exports.pendingFirmware = (id, firmware) => (dispatch) => {
+module.exports.pendingFirmware = (id, firmware) => {
   const queue = [];
   const file = path.normalize(path.join(FIRMWARE, `${firmware}.hex`));
   const lineReader = createInterface({ input: createReadStream(file) });
@@ -73,7 +73,7 @@ module.exports.pendingFirmware = (id, firmware) => (dispatch) => {
       }
       case '1': {
         firmwareQueue[id] = queue;
-        dispatch(set(id, { pendingFirmware: firmware, pending: true, updating: false }));
+        set(id, { pendingFirmware: firmware, pending: true, updating: false });
         break;
       }
       case '4':

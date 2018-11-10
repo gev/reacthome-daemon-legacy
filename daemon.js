@@ -1,8 +1,6 @@
 
 const Koa = require('koa');
 const { state, assets, device, service } = require('./src/controllers');
-const createStore = require('./src/store');
-const reducer = require('./src/reducer');
 const { set } = require('./src/actions');
 const { mac, DAEMON, SERVICE_PORT, ACTION_SET, IMAGE } = require('./src/constants');
 const db = require('./src/db');
@@ -18,11 +16,11 @@ db.createReadStream()
   })
   .on('end', () => {
     const app = new Koa();
-    const store = createStore(reducer, init);
-    store.dispatch(set(mac, { type: DAEMON }));
-    app.use(state.manage(store));
+    state.init(init);
+    set(mac, { type: DAEMON });
+    app.use(state.manage());
     app.use(assets.manage());
     app.listen(SERVICE_PORT);
-    service.manage(store);
-    device.manage(store);
+    service.manage();
+    device.manage();
   });

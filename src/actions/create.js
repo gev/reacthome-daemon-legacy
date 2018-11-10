@@ -2,43 +2,45 @@
 const { contains } = require('fast-deep-equal');
 const { ACTION_SET, SERVICE_PORT, SERVICE_GROUP } = require('../constants');
 const { service } = require('../sockets');
+const state = require('../controllers/state');
 const db = require('../db');
 
-const apply = (id, payload) => (dispatch, getState) => {
-  const action = { id, payload, type: ACTION_SET };
-  dispatch(action);
+module.exports.get = state.get;
+
+const apply = (id, payload) => {
+  state.set(id, payload);
   service.broadcast(JSON.stringify(action));
-  db.put(id, getState()[id], (err) => {
+  db.put(id, get(id), (err) => {
     if (err) console.log(err);
   });
 };
 
-module.exports.set = (id, payload) => (dispatch, getState) => {
-  const prev = getState()[id];
+module.exports.set = (id, payload) => {
+  const prev = state.get(id);
   if (prev && contains(prev, payload)) return;
-  dispatch(apply(id, payload));
+  apply(id, payload);
 };
 
-module.exports.add = (id, field, subject) => (dispatch, getState) => {
-  const prev = getState()[id];
+module.exports.add = (id, field, subject) => {
+  const prev = state.get(id);
   if (prev && prev[field] && prev[field].includes(subject)) return;
-  dispatch(apply(id, {
+  apply(id, {
     [field]: prev && prev[field] ? [...prev[field], subject] : [subject]
-  }));
+  });
 };
 
-module.exports.apply = (id, action) => (dispatch, getState) => {
-  const o = getState()[id];
+module.exports.apply = (id, action) => {
+  const o = state.get(id);
   if (!o) return;
-  dispatch(action(o));
+  action(o);
 };
 
-const applySite = (id, action) => (dispatch, getState) => {
-  const o = getState()[id];
+const applySite = (id, action) => {
+  const o = state.get(id);
   if (!o) return;
-  dispatch(action(o));
+  action(o);
   if (!o.site || o.site.length === 0) return;
-  o.site.forEach(i => dispatch(applySite(i, action)));
+  o.site.forEach(i => applySite(i, action));
 };
 
 module.exports.applySite = applySite;
