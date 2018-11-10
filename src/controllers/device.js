@@ -74,16 +74,14 @@ module.exports.manage = () => {
       const mac = Array.from(data.slice(0, 6));
       const id = mac.map(i => `0${i.toString(16)}`.slice(-2)).join(':');
       const action = data[6];
-      console.log(address, data);
       switch (action) {
         case ACTION_DI: {
           const index = data[7];
           const value = data[8];
-          // console.log(index, value);
           const channel = `${id}/${DI}/${index}`;
           const chan = get(channel);
-          set(channel, { value });
           if (chan && (chan.value !== value)) {
+            set(channel, { value });
             const script = chan[onDI[value]];
             if (script) {
               run({ type: ACTION_SCRIPT_RUN, id: script });
@@ -96,8 +94,8 @@ module.exports.manage = () => {
           const value = data[8];
           const channel = `${id}/${DO}/${index}`;
           const chan = get(channel);
-          set(channel, { value });
           if (chan && (chan.value !== value)) {
+            set(channel, { value });
             const script = chan[onDO[value]];
             if (script) {
               run({ type: ACTION_SCRIPT_RUN, id: script });
