@@ -10,7 +10,7 @@ module.exports.get = state.get;
 const apply = (id, payload) => {
   state.set(id, payload);
   service.broadcast(JSON.stringify({ type: ACTION_SET, id, payload }));
-  db.put(id, get(id), (err) => {
+  db.put(id, state.get(id), (err) => {
     if (err) console.log(err);
   });
 };
