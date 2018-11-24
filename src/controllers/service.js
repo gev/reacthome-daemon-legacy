@@ -67,7 +67,7 @@ const timer = {};
 
 const VELOCITY = 128;
 
-const download (ip, name) => {
+const download = (ip, name) => {
   const file = asset(name);
   exists(file, (ex) => {
     if (ex) return;
