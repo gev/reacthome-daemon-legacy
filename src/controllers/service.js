@@ -67,27 +67,36 @@ const timer = {};
 
 const VELOCITY = 128;
 
+const download (ip, name) => {
+  const file = asset(name);
+  exists(file, (ex) => {
+    if (ex) return;
+    fetch(`http://${ip}:${SERVICE_PORT}/${ASSETS}/${name}`)
+      .then(res => {
+        if (res.status !== 200) return;
+        const ws = createWriteStream(file);
+        ws.on('end', () => {
+          service.broadcast(JSON.stringify({ id: mac, type: ACTION_DOWNLOAD, name: name }));
+        });
+        res.body.pipe(ws);
+      })
+      .catch(console.error);
+  });
+};
+
 const init = (ip) => {
   fetch(`http://${ip}:${SERVICE_PORT}/${STATE}/${mac}`)
     .then(response => response.json())
     .then(({ assets = [], state = {} }) => {
       assets.forEach((name) => {
-        const file = asset(name);
-        exists(file, (ex) => {
-          if (ex) return;
-          fetch(`http://${ip}:${SERVICE_PORT}/${ASSETS}/${name}`)
-            .then(res => {
-              if (res.status !== 200) return;
-              const ws = createWriteStream(file);
-              ws.on('end', () => {
-                service.broadcast(JSON.stringify({ id: mac, type: ACTION_DOWNLOAD, name: name }));
-              });
-              res.body.pipe(ws);
-            })
-            .catch(console.error);
-        });
+        download(ip, name);
       });
       Object.entries(state).forEach(([k, v]) => {
+        if (k === mac) {
+          v.online = true;
+          v.type = DAEMON;
+          v.version = version;
+        }
         set(k, v);
       });
     })
