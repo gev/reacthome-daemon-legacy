@@ -235,7 +235,7 @@ const run = (action, address) => {
       case ACTION_LIGHT_OFF: {
         const { id } = action;
         const { bind } = get(id);
-        const { velocity = 128, type } = [bind];
+        const { velocity = 128, type } = get(bind);
         const [dev,,index] = bind.split('/');
         const { ip } = get(dev);
         switch (type) {
