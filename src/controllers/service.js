@@ -215,8 +215,8 @@ const run = (action, address) => {
         break;
       }
       case ACTION_RGB_SET: {
-        const { value } = action;
-        const { ip } = get(action.id);  
+        const { id, value } = action;
+        const { ip } = get(id);  
         device.send(Buffer.from([ACTION_RGB, 0, (value >> 16) & 0xff, (value >> 8) & 0&ff, value & 0xff ]), ip);
         set(id, { rgb: value });
         break;
