@@ -17,6 +17,8 @@ const {
   ACTION_INIT,
   ACTION_SET,
   ACTION_DOWNLOAD,
+  ACTION_RGB,
+  ACTION_RGB_SET,
   ACTION_LIGHT_ON,
   ACTION_LIGHT_OFF,
   ACTION_LIGHT_SET,
@@ -210,6 +212,13 @@ const run = (action, address) => {
             device.send(buff, dev.ip);
             break;
         }
+        break;
+      }
+      case ACTION_RGB_SET: {
+        const { value } = action;
+        const { ip } = get(action.id);  
+        device.send(Buffer.from([ACTION_RGB, 0, (value >> 16) & 0xff, (value >> 8) & 0&ff, value & 0xff ]), ip);
+        set(id, { rgb: value });
         break;
       }
       case ACTION_LIGHT_ON: {

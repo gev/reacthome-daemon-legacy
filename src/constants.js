@@ -62,6 +62,7 @@ module.exports.ACTION_TEMPERATURE_EXT = 0xc1;
 module.exports.ACTION_HUMIDITY = 0xc2;
 module.exports.ACTION_ILLUMINATION = 0xc3;
 module.exports.ACTION_DIMMER = 0xd0;
+module.exports.ACTION_RGB = 0xe0;
 module.exports.ACTION_DISCOVERY = 0xf0;
 module.exports.ACTION_READY = 0xf1;
 module.exports.ACTION_INITIALIZE = 0xf2;
@@ -84,6 +85,7 @@ module.exports.ACTION_SET = 'ACTION_SET';
 module.exports.ACTION_INIT = 'ACTION_INIT';
 module.exports.ACTION_DOWNLOAD = 'ACTION_DOWNLOAD';
 
+module.exports.ACTION_RGB_SET = 'ACTION_RGB_SET';
 module.exports.ACTION_LIGHT_ON = 'ACTION_LIGHT_ON';
 module.exports.ACTION_LIGHT_OFF = 'ACTION_LIGHT_OFF';
 module.exports.ACTION_LIGHT_SET = 'ACTION_LIGHT_SET';
