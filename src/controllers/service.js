@@ -218,7 +218,7 @@ const run = (action, address) => {
         console.log(action);
         const { id, value } = action;
         const { ip } = get(id);  
-        device.send(Buffer.from([ACTION_RGB, 0, (value >> 16) & 0xff, (value >> 8) & 0&ff, value & 0xff ]), ip);
+        device.send(Buffer.from([ACTION_RGB, 0, (value >> 16) & 0xff, (value >> 8) & 0xff, value & 0xff ]), ip);
         set(id, { rgb: value });
         break;
       }
