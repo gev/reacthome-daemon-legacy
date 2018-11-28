@@ -385,7 +385,7 @@ const run = (action, address) => {
         ircodes.getCode(TV, brand, model, command)
           .then(({ frequency, offset, data }) => {
             if (!data) return;
-            let length = data.length;
+            let length = offset > 1 ? offset : data.length;
             let start = 0;
             if (repeat) {
               start = offset - 1;
