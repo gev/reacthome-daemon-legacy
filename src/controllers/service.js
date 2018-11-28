@@ -396,8 +396,8 @@ const run = (action, address) => {
             buff.writeUInt8(index, 1);
             buff.writeUInt8(0, 2);
             buff.writeUInt16BE(frequency, 3);
-            for (let i = start; i < length; i++) {
-              buff.writeUInt16BE(data[i], i * 2 + 5);
+            for (let i = 0; i < length; i++) {
+              buff.writeUInt16BE(data[i + start], i * 2 + 5);
             }
             device.send(buff, ip);
           })
