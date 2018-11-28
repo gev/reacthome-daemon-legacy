@@ -394,6 +394,7 @@ const run = (action, address) => {
             for (let i = 0; i < data.length; i++) {
               buff.writeUInt16BE(data[i], i * 2 + 5);
             }
+            console.log(data);
             device.send(buff, ip);
           })
           .catch(console.error);
