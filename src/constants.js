@@ -41,6 +41,7 @@ module.exports.SOCKET_220 = 'socket_220';
 module.exports.BOILER = 'boiler';
 module.exports.PUMP = 'pump';
 module.exports.FAN = 'fan';
+module.exports.TV = 'TV';
 
 
 module.exports.STATE = 'state';

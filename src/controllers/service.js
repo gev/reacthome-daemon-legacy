@@ -7,6 +7,7 @@ const {
   mac,
   version,
   asset,
+  TV,
   DO,
   DIM,
   ACTION_DO,
