@@ -2,6 +2,7 @@
 const { exists, createWriteStream } = require('fs');
 const fetch = require('node-fetch');
 const crypto = require('crypto');
+const ircodes = require('reacthome-ircodes');
 const {
   mac,
   version,
@@ -30,6 +31,7 @@ const {
   ACTION_TIMER_STOP,
   ACTION_DOPPLER_HANDLE,
   ACTION_TOGGLE,
+  ACTION_TV,
   ACTION_SCRIPT_RUN,
   DEVICE_PORT,
   DISCOVERY_INTERVAL,
@@ -373,6 +375,12 @@ const run = (action, address) => {
           }
         }
         break;
+      }
+      case ACTION_TV: {
+        const { id, command } = action;
+        const { bind } = get(id);
+        const [dev,,index] = bind.split('/');
+        console.log(id, command, bind, dev, index);
       }
       case ACTION_SCRIPT_RUN: {
         const { id } = action;

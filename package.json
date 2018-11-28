@@ -15,6 +15,7 @@
     "koa-static": "^4.0.2",
     "level": "^4.0.0",
     "node-fetch": "^2.1.2",
+    "reacthome-ircodes": "gev/reacthome-ircodes",
     "uuid": "^3.2.1"
   }
 }

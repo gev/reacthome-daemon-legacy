@@ -97,6 +97,7 @@ module.exports.ACTION_TIMER_START = 'ACTION_TIMER_START';
 module.exports.ACTION_TIMER_STOP = 'ACTION_TIMER_STOP';
 module.exports.ACTION_DOPPLER_HANDLE = 'ACTION_DOPPLER_HANDLE';
 module.exports.ACTION_TOGGLE = 'ACTION_TOGGLE';
+module.exports.ACTION_TV = 'ACTION_TV';
 module.exports.ACTION_SCRIPT_RUN = 'ACTION_SCRIPT_RUN';
 
 module.exports.DIM_OFF = 0x0;
@@ -137,6 +138,7 @@ module.exports.DEVICE_TYPE_PLC = 0xfe;
 module.exports.DEVICE_TYPE_BOOTLOADER = 0xff;
 module.exports.DEVICE_TYPE_IR_RECEIVER = 0x10;
 
+module.exports.onIR = 'onIR';
 module.exports.onOff = 'onOff';
 module.exports.onOn = 'onOn';
 module.exports.onHold = 'onHold';
