@@ -378,19 +378,25 @@ const run = (action, address) => {
         break;
       }
       case ACTION_TV: {
-        const { id, command } = action;
+        const { id, command, repeat } = action;
         const { bind, brand, model } = get(id);
         const [dev,,index] = bind.split('/');
         const { ip } = get(dev);
         ircodes.getCode(TV, brand, model, command)
           .then(({ frequency, offset, data }) => {
             if (!data) return;
-            const buff = Buffer.alloc(data.length * 2 + 5);
+            let length data.length;
+            let start = 0;
+            if (repeat) {
+              start = offset - 1;
+              length = data.length - offset + 1;
+            }
+            const buff = Buffer.alloc(length * 2 + 5);
             buff.writeUInt8(ACTION_IR, 0);
             buff.writeUInt8(index, 1);
             buff.writeUInt8(0, 2);
             buff.writeUInt16BE(frequency, 3);
-            for (let i = 0; i < data.length; i++) {
+            for (let i = start; i < length; i++) {
               buff.writeUInt16BE(data[i], i * 2 + 5);
             }
             device.send(buff, ip);
