@@ -20,6 +20,7 @@ const {
   ACTION_SET,
   ACTION_DOWNLOAD,
   ACTION_RGB,
+  ACTION_IR,
   ACTION_RGB_SET,
   ACTION_LIGHT_ON,
   ACTION_LIGHT_OFF,
@@ -383,8 +384,17 @@ const run = (action, address) => {
         const [dev,,index] = bind.split('/');
         const { ip } = get(dev);
         ircodes.getCode(TV, brand, model, command)
-          .then(code => {
-            console.log(code);
+          .then(({ frequency, offset, data }) => {
+            if (!data) return;
+            const buff = Buffer.alloc(data.length * 2 + 5);
+            buff.writeUInt8(ACTION_IR, 0);
+            buff.writeUInt8(index, 1);
+            buff.writeUInt8(0, 2);
+            buff.writeUInt16BE(frequency, 3);
+            for (let i = 0; i < length; i++) {
+              buff.writeUInt16BE(data[i], i * 2 + 5);
+            }
+            device.send(buff, ip);
           })
           .catch(console.error);
       }
