@@ -219,7 +219,6 @@ const run = (action, address) => {
         break;
       }
       case ACTION_RGB_SET: {
-        console.log(action);
         const { id, value } = action;
         const { ip } = get(id);  
         device.send(Buffer.from([ACTION_RGB, 0, (value >> 16) & 0xff, (value >> 8) & 0xff, value & 0xff ]), ip);
@@ -394,7 +393,6 @@ const run = (action, address) => {
             for (let i = 0; i < data.length; i++) {
               buff.writeUInt16BE(data[i], i * 2 + 5);
             }
-            console.log(data.length, offset, data);
             device.send(buff, ip);
           })
           .catch(console.error);
