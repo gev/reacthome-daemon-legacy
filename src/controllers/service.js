@@ -378,9 +378,14 @@ const run = (action, address) => {
       }
       case ACTION_TV: {
         const { id, command } = action;
-        const { bind } = get(id);
+        const { bind, brand, model } = get(id);
         const [dev,,index] = bind.split('/');
-        console.log(id, command, bind, dev, index);
+        const { ip } = get(dev);
+        ircodes.getCode(TV, brand, model, command)
+          .then(code => {
+            console.log(code);
+          })
+          .catch(console.error);
       }
       case ACTION_SCRIPT_RUN: {
         const { id } = action;
