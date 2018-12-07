@@ -131,7 +131,7 @@ const run = (action, address) => {
         } else {
           service.addUnicast(address);
         }
-        if (type !== MOBILE) {
+        if (id && type !== MOBILE) {
           set(id, { online: true, ip: address, multicast, VERSION });
           add(mac, DEVICE, id);
           clearTimeout(timer[id]);
