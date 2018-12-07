@@ -5,7 +5,7 @@ const crypto = require('crypto');
 const ircodes = require('reacthome-ircodes');
 const {
   mac,
-  version,
+  VERSION,
   asset,
   TV,
   DO,
@@ -103,7 +103,7 @@ const init = (ip) => {
         if (k === mac) {
           v.online = true;
           v.type = DAEMON;
-          v.version = version;
+          v.version = VERSION;
         }
         set(k, v);
       });
@@ -125,14 +125,14 @@ const run = (action, address) => {
       }
       case ACTION_DISCOVERY: {
         const { id, payload } = action;
-        const { multicast, type, version } = payload;
+        const { multicast, type, version: VERSION } = payload;
         if (multicast) {
           service.delUnicast(address);
         } else {
           service.addUnicast(address);
         }
         if (type !== MOBILE) {
-          set(id, { online: true, ip: address, multicast, version });
+          set(id, { online: true, ip: address, multicast, VERSION });
           add(mac, DEVICE, id);
           clearTimeout(timer[id]);
           timer[id] = setTimeout(() => {

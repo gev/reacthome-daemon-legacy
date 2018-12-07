@@ -4,7 +4,7 @@ const { ip, mac } = require('ip')();
 
 module.exports.ip = ip;
 module.exports.mac = mac;
-module.exports.version = '5.1';
+module.exports.VERSION = '5.1';
 
 module.exports.DEVICE_PORT = 2017;
 module.exports.DEVICE_SERVER_PORT = 2016;

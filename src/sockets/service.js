@@ -1,7 +1,7 @@
 
 const {
   mac,
-  version,
+  VERSION,
   DAEMON,
   DISCOVERY_INTERVAL,
   ACTION_DISCOVERY,
@@ -16,7 +16,7 @@ const unicast = [];
 const discovery = (multicast) => JSON.stringify({
   id: mac,
   type: ACTION_DISCOVERY,
-  payload: { type: DAEMON, version, multicast }
+  payload: { type: DAEMON, version: VERSION, multicast }
 })
 
 const service = socket(
