@@ -1,6 +1,6 @@
 
 const { contains } = require('fast-deep-equal');
-const { ACTION_SET, SERVICE_PORT, SERVICE_GROUP } = require('../constants');
+const { ACTION_SET, CLIENT_PORT, CLIENT_GROUP } = require('../constants');
 const { service } = require('../sockets');
 const state = require('../controllers/state');
 const db = require('../db');

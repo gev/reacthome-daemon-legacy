@@ -38,10 +38,11 @@ const {
   DEVICE_PORT,
   DISCOVERY_INTERVAL,
   DAEMON,
+  MOBILE,
   DEVICE,
   SERVICE,
-  SERVICE_PORT,
-  SERVICE_GROUP,
+  CLIENT_PORT,
+  CLIENT_GROUP,
   DIM_ON,
   DIM_OFF,
   DIM_SET,
@@ -61,6 +62,7 @@ const {
 const {
   get,
   set,
+  add,
   offline,
   online,
   applySite,
@@ -77,7 +79,7 @@ const download = (ip, name) => {
   const file = asset(name);
   exists(file, (ex) => {
     if (ex) return;
-    fetch(`http://${ip}:${SERVICE_PORT}/${ASSETS}/${name}`)
+    fetch(`http://${ip}:${CLIENT_PORT}/${ASSETS}/${name}`)
       .then(res => {
         if (res.status !== 200) return;
         const ws = createWriteStream(file);
@@ -91,7 +93,7 @@ const download = (ip, name) => {
 };
 
 const init = (ip) => {
-  fetch(`http://${ip}:${SERVICE_PORT}/${STATE}/${mac}`)
+  fetch(`http://${ip}:${CLIENT_PORT}/${STATE}/${mac}`)
     .then(response => response.json())
     .then(({ assets = [], state = {} }) => {
       assets.forEach((name) => {
@@ -122,11 +124,20 @@ const run = (action, address) => {
         break;
       }
       case ACTION_DISCOVERY: {
-        const { multicast } = action.payload;
+        const { id, payload } = action;
+        const { multicast, type } = payload;
         if (multicast) {
           service.delUnicast(address);
         } else {
           service.addUnicast(address);
+        }
+        if (type !== MOBILE) {
+          set(id, { online: true, ip: address, multicast });
+          add(mac, DEVICE, id);
+          clearTimeout(timer[id]);
+          timer[id] = setTimeout(() => {
+            set(id, { online: false });
+          }, 60 * DISCOVERY_INTERVAL);
         }
         break;
       }

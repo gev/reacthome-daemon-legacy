@@ -6,12 +6,13 @@ module.exports.ip = ip;
 module.exports.mac = mac;
 module.exports.version = '5.1';
 
-module.exports.SERVER_PORT = 2016;
 module.exports.DEVICE_PORT = 2017;
+module.exports.DEVICE_SERVER_PORT = 2016;
 module.exports.DEVICE_GROUP = '224.0.0.1';
 
-module.exports.SERVICE_PORT = 2018;
-module.exports.SERVICE_GROUP = '224.0.0.2';
+module.exports.CLIENT_PORT = 2021;
+module.exports.CLIENT_SERVER_PORT = 2020;
+module.exports.CLIENT_GROUP = '224.0.0.2';
 
 module.exports.IP_ADDRESS = 0xc0a81202;
 module.exports.IP_ADDRESS_POOL_START = 0xc0a81264;
@@ -27,6 +28,8 @@ module.exports.DEVICE = 'device';
 module.exports.CHANNEL = 'channel';
 module.exports.SERVICE = 'service';
 module.exports.IMAGE = 'image';
+module.exports.TOUCH = 'touch';
+module.exports.MOBILE = 'mobile';
 
 module.exports.DO = 'do';
 module.exports.DI = 'di';

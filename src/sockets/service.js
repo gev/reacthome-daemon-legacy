@@ -5,8 +5,9 @@ const {
   DAEMON,
   DISCOVERY_INTERVAL,
   ACTION_DISCOVERY,
-  SERVICE_GROUP,
-  SERVICE_PORT
+  CLIENT_GROUP,
+  CLIENT_PORT,
+  CLIENT_SERVER_PORT
 } = require('../constants');
 const socket = require('./socket');
 
@@ -23,11 +24,11 @@ const service = socket(
     const m = discovery(true);
     const u = discovery(false);
     return () => {
-      service.send(m, SERVICE_GROUP);
+      service.send(m, CLIENT_GROUP);
       unicast.forEach(ip => service.send(u, ip));
     }
   },
-  DISCOVERY_INTERVAL, SERVICE_PORT, SERVICE_PORT
+  DISCOVERY_INTERVAL, CLIENT_PORT, CLIENT_SERVER_PORT
 );
 
 service.addUnicast = (ip) => {
@@ -42,7 +43,7 @@ service.delUnicast = (ip) => {
 };
 
 service.broadcast = (packet) => {
-  service.send(packet, SERVICE_GROUP);
+  service.send(packet, CLIENT_GROUP);
   unicast.forEach(ip => service.send(packet, ip));
 }
 
