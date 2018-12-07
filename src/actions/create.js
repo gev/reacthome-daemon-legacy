@@ -8,12 +8,15 @@ const db = require('../db');
 module.exports.get = state.get;
 
 const apply = (id, payload) => {
-  console.log(id, payload);
   state.set(id, payload);
   service.broadcast(JSON.stringify({ type: ACTION_SET, id, payload }));
-  db.put(id, state.get(id), (err) => {
-    if (err) console.log(err);
-  });
+  try {
+    db.put(id, state.get(id), (err) => {
+      if (err) console.log(err);
+    });
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 module.exports.set = (id, payload) => {
