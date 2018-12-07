@@ -125,14 +125,14 @@ const run = (action, address) => {
       }
       case ACTION_DISCOVERY: {
         const { id, payload } = action;
-        const { multicast, type, version } = payload;
+        const { multicast, type, version, ready } = payload;
         if (multicast) {
           service.delUnicast(address);
         } else {
           service.addUnicast(address);
         }
         if (id && type !== MOBILE) {
-          set(id, { online: true, ip: address, multicast, version });
+          set(id, { online: true, ip: address, type, multicast, version, ready });
           add(mac, DEVICE, id);
           clearTimeout(timer[id]);
           timer[id] = setTimeout(() => {
