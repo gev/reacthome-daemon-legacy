@@ -136,6 +136,7 @@ module.exports.manage = () => {
         }
         case ACTION_TEMPERATURE: {
           const temperature = data.readUInt16LE(7) / 100;
+          console.log(temperature);
           const { onTemperature, site } = get(id);
           if (site) set(site, { temperature });
           set(id, { temperature });
@@ -156,6 +157,7 @@ module.exports.manage = () => {
         }
         case ACTION_HUMIDITY: {
           const humidity = data.readUInt16LE(7) / 100;
+          console.log(temperature);
           const { onHumidity, site } = get(id);
           if (site) set(site, { humidity });
           set(id, { humidity });
