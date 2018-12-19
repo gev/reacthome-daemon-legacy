@@ -380,11 +380,11 @@ const run = (action, address) => {
       }
       case ACTION_THERMOSTAT_HANDLE: {
         const {
-            id, state, mode,
+            id,
             cool_hysteresis, cool_threshold, heat_hysteresis, heat_threshold,
             onHeat, onCool, onStop
         } = action
-        const { setpoint, sensor, mode } = get(id);
+        const { setpoint, sensor, state, mode } = get(id);
         const { temperature } = get(sensor);
         const make = (state, script, mode) => {
           dispatch(set({ state, mode }));
