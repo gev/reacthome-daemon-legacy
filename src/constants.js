@@ -100,6 +100,7 @@ module.exports.ACTION_SETPOINT = 'ACTION_SETPOINT';
 module.exports.ACTION_TIMER_START = 'ACTION_TIMER_START';
 module.exports.ACTION_TIMER_STOP = 'ACTION_TIMER_STOP';
 module.exports.ACTION_DOPPLER_HANDLE = 'ACTION_DOPPLER_HANDLE';
+module.exports.ACTION_THERMOSTAT_HANDLE = 'ACTION_THERMOSTAT_HANDLE';
 module.exports.ACTION_TOGGLE = 'ACTION_TOGGLE';
 module.exports.ACTION_TV = 'ACTION_TV';
 module.exports.ACTION_SCRIPT_RUN = 'ACTION_SCRIPT_RUN';
@@ -160,3 +161,7 @@ module.exports.OPERATOR_PLUS = 'OPERATOR_PLUS';
 module.exports.OPERATOR_MINUS = 'OPERATOR_MINUS';
 module.exports.OPERATOR_MUL = 'OPERATOR_MUL';
 module.exports.OPERATOR_DIV = 'OPERATOR_DIV';
+
+module.exports.HEAT = 'heat';
+module.exports.COOL = 'cool';
+module.exports.STOP = 'stop';

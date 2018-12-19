@@ -32,6 +32,7 @@ const {
   ACTION_TIMER_START,
   ACTION_TIMER_STOP,
   ACTION_DOPPLER_HANDLE,
+  ACTION_THERMOSTAT_HANDLE,
   ACTION_TOGGLE,
   ACTION_TV,
   ACTION_SCRIPT_RUN,
@@ -57,7 +58,10 @@ const {
   OPERATOR_MUL,
   OPERATOR_DIV,
   STATE,
-  ASSETS
+  ASSETS,
+  STOP,
+  HEAT,
+  COOL
 } = require('../constants');
 const {
   get,
@@ -371,6 +375,62 @@ const run = (action, address) => {
           if (onQuiet) {
             run({ type: ACTION_SCRIPT_RUN, id: onQuiet });
           }
+        }
+        break;
+      }
+      case ACTION_THERMOSTAT_HANDLE: {
+        const {
+            id, state, mode,
+            cool_hysteresis, cool_threshold, heat_hysteresis, heat_threshold,
+            onHeat, onCool, onStop
+        } = action
+        const { setpoint, sensor, mode } = get(id);
+        const { temperature } = get(sensor);
+        const make = (state, script, mode) => {
+          dispatch(set({ state, mode }));
+          if (script) {
+            dispatch(run({ type: ACTION_SCRIPT_RUN, script }));
+          }
+        };
+        const stop = make(STOP, onStop, mode);
+        const cool = make(COOL, onCool, COOL);
+        const heat = make(HEAT, onHeat, HEAT);
+        if (temperature > setpoint - (- heat_threshold)) {
+          if (state === HEAT) stop();
+          cool();
+        } else if (temperature < setpoint - cool_threshold) {
+          if (state === COOL) stop();
+          heat();
+        } else {
+          switch (mode) {
+            case HEAT: {
+              if (temperature < setpoint - heat_hysteresis) {
+                heat();
+              } else if (temperature > setpoint - (- heat_hysteresis)) {
+                stop();
+              }
+              break;
+            }
+            case COOL: {
+              if (temperature > setpoint - (- cool_hysteresis)) {
+                cool();
+              } else if (temperature < setpoint - cool_hysteresis) {
+                stop();
+              }
+              break;
+            }
+            default: {
+              if (temperature > setpoint) {
+                cool();
+              } else if (temperature < setpoint) {
+                heat();
+              } else {
+                stop();
+              }
+            }
+          }
+        } else {
+          stop();
         }
         break;
       }
