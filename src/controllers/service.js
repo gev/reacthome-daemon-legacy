@@ -429,8 +429,6 @@ const run = (action, address) => {
               }
             }
           }
-        } else {
-          stop();
         }
         break;
       }
