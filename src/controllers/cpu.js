@@ -11,5 +11,6 @@ module.exports.manage = () => {
         return;
       }
       set(mac, { temperature: data / 1000 });
+    });
   }, 10 * DISCOVERY_INTERVAL);
 };
