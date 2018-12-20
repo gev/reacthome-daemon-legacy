@@ -17,6 +17,7 @@ const firmwareQueue = {};
 module.exports.updateFirmware = (id) => {
   const dev = get(id);
   const queue = firmwareQueue[id];
+  console.log(id, queue);
   if (queue && queue.length > 0) {
     const length = queue.length
     set(id, { pending: false, updating: true, length });
