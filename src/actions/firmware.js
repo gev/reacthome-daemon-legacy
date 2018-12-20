@@ -74,7 +74,6 @@ module.exports.pendingFirmware = (id, firmware) => {
       case '1': {
         firmwareQueue[id] = queue;
         set(id, { pendingFirmware: firmware, pending: true, updating: false });
-        console.log(id, { pendingFirmware: firmware, pending: true, updating: false });
         break;
       }
       case '4':

@@ -16,9 +16,13 @@ const online = (id, type, version, ip, ready) => {
     type, version, ip, online: true, ready
   });
   add(mac, DEVICE, id);
+  console.log(id);
   const device = get(id);
   if (!device.initialized) initialize(id);
-  if (device.pending) updateFirmware(id);
+  if (device.pending) {
+    console.log(device);
+    updateFirmware(id);
+  }
   timeout[id] = setTimeout(() => {
     offline(id);
     delete timeout[id];
