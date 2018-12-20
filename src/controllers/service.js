@@ -21,12 +21,12 @@ const {
   ACTION_DOWNLOAD,
   ACTION_RGB,
   ACTION_IR,
-  ACTION_RGB_SET,
-  ACTION_LIGHT_ON,
-  ACTION_LIGHT_OFF,
-  ACTION_LIGHT_SET,
-  ACTION_LIGHT_SET_RELATIVE,
-  ACTION_SITE_LIGHT_SET_RELATIVE,
+  ACTION_RGB_DIM,
+  ACTION_ON,
+  ACTION_OFF,
+  ACTION_DIM,
+  ACTION_DIM_RELATIVE,
+  ACTION_SITE_LIGHT_DIM_RELATIVE,
   ACTION_SITE_LIGHT_OFF,
   ACTION_SETPOINT,
   ACTION_TIMER_START,
@@ -233,14 +233,14 @@ const run = (action, address) => {
         }
         break;
       }
-      case ACTION_RGB_SET: {
+      case ACTION_RGB_DIM: {
         const { id, value } = action;
         const { ip } = get(id);  
         device.send(Buffer.from([ACTION_RGB, 0, (value >> 16) & 0xff, (value >> 8) & 0xff, value & 0xff ]), ip);
         set(id, { rgb: value });
         break;
       }
-      case ACTION_LIGHT_ON: {
+      case ACTION_ON: {
         const { id } = action;
         const { bind, last } = get(id);
         const { velocity, type } = get(bind);
@@ -260,7 +260,7 @@ const run = (action, address) => {
         // }, 300);
         break;
       }
-      case ACTION_LIGHT_OFF: {
+      case ACTION_OFF: {
         const { id } = action;
         const { bind } = get(id);
         const { velocity = 128, type } = get(bind);
@@ -279,7 +279,7 @@ const run = (action, address) => {
         // }, 300);
         break;
       }
-      case ACTION_LIGHT_SET: {
+      case ACTION_DIM: {
         const { id, value } = action;
         const { bind } = get(id);
         const { velocity = 128 } = get(bind);
@@ -293,7 +293,7 @@ const run = (action, address) => {
         set(id, { last: value });
         break;
       }
-      case ACTION_LIGHT_SET_RELATIVE: {
+      case ACTION_DIM_RELATIVE: {
         const { id, operator } = action;
         const { value, code } = get(id);
         let v;
@@ -314,22 +314,22 @@ const run = (action, address) => {
         if (v < 0) v = 0;
         if (v > 255) v = 255;
         if (v === value) return;
-        run({ type: ACTION_LIGHT_SET, id, value: v });
+        run({ type: ACTION_DIM, id, value: v });
         break;
       }
-      case ACTION_SITE_LIGHT_SET_RELATIVE: {
+      case ACTION_SITE_LIGHT_DIM_RELATIVE: {
         const { id, operator, value } = action;
         applySite(id, ({ light_220 = [], light_LED = [] }) => {
-          light_220.map(i => run({ type: ACTION_LIGHT_SET_RELATIVE, id: i, operator, value }));
-          light_LED.map(i => run({ type: ACTION_LIGHT_SET_RELATIVE, id: i, operator, value }));
+          light_220.map(i => run({ type: ACTION_DIM_RELATIVE, id: i, operator, value }));
+          light_LED.map(i => run({ type: ACTION_DIM_RELATIVE, id: i, operator, value }));
         });
         break;
       }
       case ACTION_SITE_LIGHT_OFF: {
         const { id } = action;
         applySite(id, ({ light_220 = [], light_LED = [] }) => {
-          light_220.map(i => run({ type: ACTION_LIGHT_OFF, id: i }));
-          light_LED.map(i => run({ type: ACTION_LIGHT_OFF, id: i }));
+          light_220.map(i => run({ type: ACTION_OFF, id: i }));
+          light_LED.map(i => run({ type: ACTION_OFF, id: i }));
         });
         break;
       }
