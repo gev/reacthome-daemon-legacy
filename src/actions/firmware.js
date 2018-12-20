@@ -20,7 +20,6 @@ module.exports.updateFirmware = (id) => {
   if (queue && queue.length > 0) {
     const length = queue.length
     set(id, { pending: false, updating: true, length });
-    console.log(id, { pending: false, updating: true, length });
     device.sendConfirm(queue.shift(), dev.ip, () => {
       const dev = get(id);
       return !(dev && dev.length === length);
@@ -75,6 +74,7 @@ module.exports.pendingFirmware = (id, firmware) => {
       case '1': {
         firmwareQueue[id] = queue;
         set(id, { pendingFirmware: firmware, pending: true, updating: false });
+        console.log(id, { pendingFirmware: firmware, pending: true, updating: false });
         break;
       }
       case '4':
