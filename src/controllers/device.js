@@ -273,6 +273,7 @@ module.exports.manage = () => {
           switch (reason) {
             case ACTION_BOOTLOAD:
               set(id, { pending: false, updating: false });
+              console.log(data);
               break;
             default: {
               console.log(data);    
