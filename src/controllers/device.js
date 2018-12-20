@@ -135,7 +135,7 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_TEMPERATURE: {
-          const temperature = data.readUInt16LE(7) / 100 - 2.73;
+          const temperature = (data.readUInt16LE(7) - 273) / 100;
           console.log(temperature);
           const { onTemperature, site } = get(id);
           if (site) set(site, { temperature });
