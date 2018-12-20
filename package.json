@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "copy-firmware": "sh copy-firmware.sh"
+    "firmware": "sh copy-firmware.sh"
   },
   "dependencies": {
     "debounce": "^1.1.0",
