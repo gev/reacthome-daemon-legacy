@@ -71,8 +71,10 @@ module.exports.manage = () => {
 
   device.handle((data, { address }) => {
     try {
-      const mac = Array.from(data.slice(0, 6));
-      const id = mac.map(i => `0${i.toString(16)}`.slice(-2)).join(':');
+      const dev_mac = Array.from(data.slice(0, 6));
+      const id = dev_mac.map(i => `0${i.toString(16)}`.slice(-2)).join(':');
+      set(id, { online: true, ready: false });
+      add(mac, DEVICE, id);
       const action = data[6];
       switch (action) {
         case ACTION_DI: {
@@ -136,7 +138,6 @@ module.exports.manage = () => {
         }
         case ACTION_TEMPERATURE: {
           const temperature = data.readUInt16LE(7) / 100;
-          console.log(id, temperature);
           const { onTemperature, site } = get(id);
           if (site) set(site, { temperature });
           set(id, { temperature });
@@ -222,14 +223,14 @@ module.exports.manage = () => {
           if (lookup) {
             const buff = Buffer.alloc(15);
             buff.writeUInt8(ACTION_IP_ADDRESS, 0);
-            Buffer.from(mac).copy(buff, 1, 0, 6);
+            Buffer.from(dev_mac).copy(buff, 1, 0, 6);
             buff.writeUInt32BE(lookup, 7);
             buff.writeUInt32BE(SUB_NET_MASK, 11);
             device.send(buff, DEVICE_GROUP);
           } else if (last_ip < IP_ADDRESS_POOL_END) {
             const buff = Buffer.alloc(15);
             buff.writeUInt8(ACTION_IP_ADDRESS, 0);
-            Buffer.from(mac).copy(buff, 1, 0, 6);
+            Buffer.from(dev_mac).copy(buff, 1, 0, 6);
             const pool =  Object.values(get(POOL) || {});
             while (last_ip < IP_ADDRESS_POOL_END) {
               if (!pool.includes(last_ip)) break;
