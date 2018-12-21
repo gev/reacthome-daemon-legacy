@@ -6,6 +6,7 @@ const {
   DI,
   DIM,
   POOL,
+  DEVICE,
   ACTION_DI,
   ACTION_DO,
   ACTION_IR,
