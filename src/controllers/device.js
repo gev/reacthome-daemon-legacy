@@ -6,7 +6,6 @@ const {
   DI,
   DIM,
   POOL,
-  DEVICE,
   ACTION_DI,
   ACTION_DO,
   ACTION_IR,
@@ -47,7 +46,6 @@ const {
 const {
   get,
   set,
-  add,
   offline,
   online,
   updateFirmware,
@@ -75,8 +73,6 @@ module.exports.manage = () => {
     try {
       const dev_mac = Array.from(data.slice(0, 6));
       const id = dev_mac.map(i => `0${i.toString(16)}`.slice(-2)).join(':');
-      set(id, { online: true });
-      add(mac, DEVICE, id);
       const action = data[6];
       switch (action) {
         case ACTION_DI: {
