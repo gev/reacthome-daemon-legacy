@@ -46,6 +46,7 @@ const {
 const {
   get,
   set,
+  add,
   offline,
   online,
   updateFirmware,
