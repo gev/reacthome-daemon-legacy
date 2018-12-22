@@ -46,7 +46,7 @@ const count = (site) => {
         //   count_on(site, type, id);
         // } else if (bind) {
         if (bind) {
-          console.log(bind);
+          console.log(get(bind));
           const { value } = get(bind) || {};
           if (value) {
             count_on(site, type, id);
