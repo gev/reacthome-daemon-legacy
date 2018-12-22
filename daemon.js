@@ -1,7 +1,7 @@
 
 const Koa = require('koa');
 const { state, assets, device, service, cpu } = require('./src/controllers');
-const { set, count } = require('./src/actions');
+const { get, set, count } = require('./src/actions');
 const { mac, DAEMON, CLIENT_SERVER_PORT, ACTION_SET, IMAGE } = require('./src/constants');
 const db = require('./src/db');
 
