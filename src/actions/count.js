@@ -24,11 +24,9 @@ const count_off = (site, type, id) => {
   const { count = {}, parent } = get(site);
   const a = count[type];
   if (Array.isArray(a)) {
-    if (a.includes(id)) {
-      console.log(a);
-      console.log(id);
-      delete a[id];
-      console.log(a);
+    const i = a.indexOf(id);
+    if (a >= 0) {
+      delete a[i];
       set(site, { count: { ...count, [type]: a } });
     }
   }
