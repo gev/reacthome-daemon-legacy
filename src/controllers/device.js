@@ -101,13 +101,12 @@ module.exports.manage = () => {
           if (chan) {
             const { bind } = chan;
             if (bind) {
-              const { site, type } = get(bind);
               if (chan.value !== value) {
                 const script = chan[onDO[value]];
                 if (script) {
                   run({ type: ACTION_SCRIPT_RUN, id: script });
                 }
-                count[value](site, type);
+                count[value](bind);
               }
             }
           }
@@ -121,7 +120,6 @@ module.exports.manage = () => {
           if (chan) {
             const { bind } = chan;
             if (bind) {
-              const { site, type } = get(bind);
               const v = value ? 1 : 0;
               const v_ = chan.value ? 1 : 0;
               if (v !== v_) {
@@ -129,7 +127,7 @@ module.exports.manage = () => {
                 if (script) {
                   run({ type: ACTION_SCRIPT_RUN, id: script });
                 }
-                count[v](site, type);
+                count[v](bind);
               }
             }
           }
