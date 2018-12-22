@@ -41,6 +41,7 @@ const count = (site) => {
   Object.entries(o).forEach(([type, a]) => {
     if (Array.isArray(a)) {
       a.forEach(id => {
+        console.log(id);
         const { on, bind } = get(id) || {};
         // if (on === true) {
         //   count_on(site, type, id);
@@ -52,7 +53,7 @@ const count = (site) => {
             console.log(site, type, id);
           }
         }
-      })
+      });
     }
     if (Array.isArray(o.site)) o.site.forEach(i => count(i));
   });
