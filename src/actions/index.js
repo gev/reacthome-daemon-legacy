@@ -1,12 +1,14 @@
 
-const { get, set, add, apply, applySite, count_on, count_off } = require('./create');
+const { get, set, add, apply, applySite } = require('./create');
 const { online, offline } = require('./status');
 const { pendingFirmware, updateFirmware } = require('./firmware');
 const { initialize, initialized } = require('./init');
+const { count_on, count_off } = require('./create');
 
 module.exports = {
-  get, set, add, apply, applySite, count_on, count_off,
+  get, set, add, apply, applySite,
   online, offline,
   pendingFirmware, updateFirmware,
-  initialize, initialized
+  initialize, initialized,
+  count_on, count_off,
 };
