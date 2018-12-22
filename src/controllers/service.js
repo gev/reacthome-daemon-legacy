@@ -46,6 +46,8 @@ const {
   CLIENT_GROUP,
   ON,
   OFF,
+  DIM_ON,
+  DIM_OFF,
   DIM_SET,
   DIM_FADE,
   DIM_TYPE,
