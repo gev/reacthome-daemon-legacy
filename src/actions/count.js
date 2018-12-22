@@ -35,12 +35,14 @@ module.exports.count_off = (id) => {
   count_off(site, type, id);
 };
 
-const count = (site) => {
+const count = (site, pool = []) => {
   const o = get(site) || {};
   o.count = {};
   Object.entries(o).forEach(([type, a]) => {
     if (Array.isArray(a)) {
       a.forEach(id => {
+        if (pool.includes(id)) return;
+        pool.push(id);
         const { on, bind } = get(id) || {};
         // if (on === true) {
         //   count_on(site, type, id);
@@ -53,7 +55,7 @@ const count = (site) => {
         }
       });
     }
-    if (Array.isArray(o.site)) o.site.forEach(i => count(i));
+    if (Array.isArray(o.site)) o.site.forEach(i => count(i, pool));
   });
 }
 
