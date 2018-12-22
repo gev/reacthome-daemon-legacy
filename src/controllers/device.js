@@ -46,6 +46,8 @@ const {
 const {
   get,
   set,
+  count_on,
+  count_off,
   offline,
   online,
   updateFirmware,
@@ -60,6 +62,7 @@ const int2ip = ip => `${ip >> 24 & 0xff}.${ip >> 16 & 0xff}.${ip >> 8 & 0xff}.${
 
 const onDI = [onOff, onOn, onHold, onClick];
 const onDO = [onOff, onOn];
+const count = [count_off, count_on];
 
 let last_ip = IP_ADDRESS_POOL_START;
 
@@ -94,21 +97,23 @@ module.exports.manage = () => {
           const value = data[8];
           const channel = `${id}/${DO}/${index}`;
           const chan = get(channel);
-          if (chan && (chan.value !== value)) {
-            set(channel, { value });
-            const script = chan[onDO[value]];
-            if (script) {
-              run({ type: ACTION_SCRIPT_RUN, id: script });
+          set(channel, { value });
+          if (chan) {
+            const { bind } = chan;
+            if (bind) {
+              const { site, type } = get(bind);
+              if (chan.value !== value) {
+                const script = chan[onDO[value]];
+                if (script) {
+                  run({ type: ACTION_SCRIPT_RUN, id: script });
+                }
+                count[value](site, type);
+              }
             }
           }
           break;
         }
         case ACTION_DIMMER: {
-          function toggle(site, s) {
-            const { light_on = 0, parent } = get(site);
-            set(site, { light_on: light_on + s});
-            if (parent) toggle(parent, s);
-          }
           const [,,,,,,, index, type, value, velocity = 150] = data;
           const channel = `${id}/${DIM}/${index}`;
           const chan = get(channel);
@@ -116,19 +121,15 @@ module.exports.manage = () => {
           if (chan) {
             const { bind } = chan;
             if (bind) {
-              const on_ = !!value;
-              const { site, on = false } = get(bind);
-              set(bind, { on: on_, value });
-              if (on !== on_) {
-                toggle(site, on ? 1 : -1);
-              }
-            }
-            const v = value ? 1 : 0;
-            const v_ = chan.value ? 1 : 0;
-            if (v !== v_) {
-              const script = chan[onDO[v]];
-              if (script) {
-                run({ type: ACTION_SCRIPT_RUN, id: script });
+              const { site, type } = get(bind);
+              const v = value ? 1 : 0;
+              const v_ = chan.value ? 1 : 0;
+              if (v !== v_) {
+                const script = chan[onDO[v]];
+                if (script) {
+                  run({ type: ACTION_SCRIPT_RUN, id: script });
+                }
+                count[v](site, type);
               }
             }
           }
