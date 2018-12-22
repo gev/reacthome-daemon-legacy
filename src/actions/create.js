@@ -33,7 +33,7 @@ module.exports.add = (id, field, subject) => {
   });
 };
 
-const count_on = (site, type) {
+const count_on = (site, type) => {
   const { count = {}, parent } = get(site);
   const n = count[type];
   set(site, { count: { ...count, [type]: (Number.isInteger(n) && n) < 0 ? 0 : n + 1 } });
@@ -42,7 +42,7 @@ const count_on = (site, type) {
 
 module.exports.count_on = count_on;
 
-const count_off = (site, type) {
+const count_off = (site, type) => {
   const { count = {}, parent } = get(site);
   const n = count[type];
   set(site, { count: { ...count, [type]: (Number.isInteger(n) && n) > 0 ? n - 1 : 0 } });
