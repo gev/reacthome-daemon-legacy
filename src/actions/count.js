@@ -1,35 +1,41 @@
 
 const { get, set } = require('./create');
 
-const count_on = (site, type, bind) => {
+const count_on = (site, type, id) => {
   const { count = {}, parent } = get(site);
   const a = count[type];
   if (Array.isArray(a)) {
-    if (!a.includes(bind)) {
-      a.push(bind);
+    if (!a.includes(id)) {
+      a.push(id);
       set(site, { count: { ...count, [type]: a } });
     }
   } else {
-    set(site, { count: { ...count, [type]: [bind] } });
+    set(site, { count: { ...count, [type]: [id] } });
   }
-  if (parent) count_on(parent, type);
+  if (parent) count_on(parent, type, id);
 };
 
-module.exports.count_on = count_on;
+module.exports.count_on = (id) => (
+  const { site, type } = get(id);
+  count_on(site, type, id);
+};
 
-const count_off = (site, type) => {
+const count_off = (id) => {
   const { count = {}, parent } = get(site);
   const a = count[type];
   if (Array.isArray(a)) {
-    if (a.includes(bind)) {
-      delete a[bind];
+    if (a.includes(id)) {
+      delete a[id];
       set(site, { count: { ...count, [type]: a } });
     }
   }
-  if (parent) count_off(parent, type);
+  if (parent) count_off(parent, type, id);
 }
 
-module.exports.count_off = count_off;
+module.exports.count_off = (id) => (
+  const { site, type } = get(id);
+  count_off(site, type, id);
+};
 
 const count = (site) => {
   const o = get(site);
