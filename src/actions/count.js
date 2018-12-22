@@ -41,12 +41,12 @@ const count = (site) => {
   Object.entries(o).forEach(([type, a]) => {
     if (Array.isArray(a)) {
       a.forEach(id => {
-        console.log(id);
         const { on, bind } = get(id) || {};
         // if (on === true) {
         //   count_on(site, type, id);
         // } else if (bind) {
         if (bind) {
+          console.log(bind);
           const { value } = get(bind) || {};
           if (value) {
             count_on(site, type, id);
