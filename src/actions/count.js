@@ -24,7 +24,7 @@ const count_off = (site, type, id) => {
   const a = count[type];
   if (Array.isArray(a)) {
     if (a.includes(id)) {
-      set(site, { count: { ...count, [type]: a.filter(i => a[i] !== id) } });
+      set(site, { count: { ...count, [type]: a.filter(i => i !== id) } });
     }
   }
   if (parent) count_off(parent, type, id);
