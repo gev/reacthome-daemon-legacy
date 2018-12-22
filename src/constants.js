@@ -105,6 +105,8 @@ module.exports.ACTION_TOGGLE = 'ACTION_TOGGLE';
 module.exports.ACTION_TV = 'ACTION_TV';
 module.exports.ACTION_SCRIPT_RUN = 'ACTION_SCRIPT_RUN';
 
+module.exports.OFF = 0x0;
+module.exports.ON = 0x1;
 module.exports.DIM_OFF = 0x0;
 module.exports.DIM_ON = 0x1;
 module.exports.DIM_SET = 0x2;

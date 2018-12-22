@@ -44,12 +44,15 @@ const {
   SERVICE,
   CLIENT_PORT,
   CLIENT_GROUP,
-  DIM_ON,
-  DIM_OFF,
+  ON,
+  OFF,
   DIM_SET,
   DIM_FADE,
   DIM_TYPE,
   DIM_TYPE_RELAY,
+  DIM_TYPE_FALLING_EDGE,
+  DIM_TYPE_RISING_EDGE,
+  DIM_TYPE_PWM,
   ACTION_PNP,
   PNP_ENABLE,
   PNP_STEP,
@@ -248,11 +251,13 @@ const run = (action, address) => {
         const { ip } = get(dev);
         const value = last || 255
         switch (type) {
-          case DIM_TYPE_RELAY:
-            device.send(Buffer.from([ACTION_DIMMER, index, DIM_ON]), ip);
-            break;
-          default:
+          case DIM_TYPE_PWM:
+          case DIM_TYPE_RISING_EDGE:
+          case DIM_TYPE_FALLING_EDGE:
             device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, VELOCITY]), ip);
+          break;
+          default:
+            device.send(Buffer.from([ACTION_DO, index, ON]), ip);
         }
         // device.sendConfirm(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, 150]), ip, () => {
         //   const light = get(id);
@@ -267,11 +272,13 @@ const run = (action, address) => {
         const [dev,,index] = bind.split('/');
         const { ip } = get(dev);
         switch (type) {
-          case DIM_TYPE_RELAY:
-            device.send(Buffer.from([ACTION_DIMMER, index, DIM_OFF]), ip);
+          case DIM_TYPE_PWM:
+          case DIM_TYPE_RISING_EDGE:
+          case DIM_TYPE_FALLING_EDGE:
+            device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, 0, VELOCITY]), ip);
             break;
           default:
-            device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, 0, VELOCITY]), ip);
+            device.send(Buffer.from([ACTION_DO, index, OFF]), ip);
         }
         // device.sendConfirm(Buffer.from([ACTION_DIMMER, index, DIM_FADE, 0, 150]), ip, () => {
         //   const light = get(id);
