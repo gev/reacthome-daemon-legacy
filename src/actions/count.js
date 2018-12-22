@@ -40,11 +40,12 @@ const count = (site) => {
   Object.keys(o).forEach(type => {
     const a = o[type];
     if (Array.isArray(a)) {
-      const { on, bind } = get(id) || {};
       a.forEach(id => {
-        if (on === true) {
-          // count_on(site, type, id);
-        } else if (bind) {
+        const { on, bind } = get(id) || {};
+        // if (on === true) {
+        //   count_on(site, type, id);
+        // } else if (bind) {
+        if (bind) {
           const { value } = get(bind) || {};
           if (value) {
             count_on(site, type, id);
