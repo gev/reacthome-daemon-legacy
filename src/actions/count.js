@@ -37,7 +37,7 @@ module.exports.count_off = (id) => {
 
 const count = (site) => {
   const o = get(site) || {};
-  o.count = [];
+  o.count = {};
   Object.entries(o).forEach(([type, a]) => {
     if (Array.isArray(a)) {
       a.forEach(id => {
