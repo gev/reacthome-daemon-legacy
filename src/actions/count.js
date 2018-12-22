@@ -6,8 +6,7 @@ const count_on = (site, type, id) => {
   const a = count[type];
   if (Array.isArray(a)) {
     if (!a.includes(id)) {
-      a.push(id);
-      set(site, { count: { ...count, [type]: a } });
+      set(site, { count: { ...count, [type]: [...a, id] } });
     }
   } else {
     set(site, { count: { ...count, [type]: [id] } });
@@ -24,10 +23,8 @@ const count_off = (site, type, id) => {
   const { count = {}, parent } = get(site);
   const a = count[type];
   if (Array.isArray(a)) {
-    const i = a.indexOf(id);
-    if (i >= 0) {
-      delete a[i];
-      set(site, { count: { ...count, [type]: a } });
+    if (a.includes(id)) {
+      set(site, { count: { ...count, [type]: a.filter(i => a[i] !== id) } });
     }
   }
   if (parent) count_off(parent, type, id);
