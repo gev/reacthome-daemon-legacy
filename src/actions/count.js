@@ -20,7 +20,7 @@ module.exports.count_on = (id) => {
   count_on(site, type, id);
 };
 
-const count_off = (id) => {
+const count_off = (site, type, id) => {
   const { count = {}, parent } = get(site);
   const a = count[type];
   if (Array.isArray(a)) {
