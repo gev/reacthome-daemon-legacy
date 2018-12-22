@@ -49,6 +49,7 @@ const count = (site) => {
           const { value } = get(bind) || {};
           if (value) {
             count_on(site, type, id);
+            console.log(site, type, id);
           }
         }
       })
