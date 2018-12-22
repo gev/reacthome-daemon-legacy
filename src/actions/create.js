@@ -22,6 +22,7 @@ const apply = (id, payload) => {
 module.exports.set = (id, payload) => {
   const prev = state.get(id);
   if (prev && contains(prev, payload)) return;
+  console.log(id, payload);
   apply(id, payload);
 };
 
