@@ -15,7 +15,7 @@ const count_on = (site, type, id) => {
   if (parent) count_on(parent, type, id);
 };
 
-module.exports.count_on = (id) => (
+module.exports.count_on = (id) => {
   const { site, type } = get(id);
   count_on(site, type, id);
 };
@@ -32,7 +32,7 @@ const count_off = (id) => {
   if (parent) count_off(parent, type, id);
 }
 
-module.exports.count_off = (id) => (
+module.exports.count_off = (id) => {
   const { site, type } = get(id);
   count_off(site, type, id);
 };
