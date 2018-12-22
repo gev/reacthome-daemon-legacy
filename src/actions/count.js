@@ -26,6 +26,7 @@ const count_off = (site, type, id) => {
   if (Array.isArray(a)) {
     if (a.includes(id)) {
       console.log(a);
+      console.log(id);
       delete a[id];
       console.log(a);
       set(site, { count: { ...count, [type]: a } });
