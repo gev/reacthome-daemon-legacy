@@ -55,3 +55,5 @@ const count = (site) => {
     if (Array.isArray(o.site)) o.site.forEach(i => count(i));
   });
 }
+
+module.exports.count = count;
