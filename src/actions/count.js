@@ -37,8 +37,8 @@ module.exports.count_off = (id) => {
 
 const count = (site) => {
   const o = get(site) || {};
-  Object.keys(o).forEach(type => {
-    const a = o[type];
+  o.count = [];
+  Object.entries(o).forEach(([type, a]) => {
     if (Array.isArray(a)) {
       a.forEach(id => {
         const { on, bind } = get(id) || {};
