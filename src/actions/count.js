@@ -25,7 +25,7 @@ const count_off = (site, type, id) => {
   const a = count[type];
   if (Array.isArray(a)) {
     const i = a.indexOf(id);
-    if (a >= 0) {
+    if (i >= 0) {
       delete a[i];
       set(site, { count: { ...count, [type]: a } });
     }
