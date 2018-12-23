@@ -41,8 +41,8 @@ const count = (site, pool = []) => {
   Object.entries(o).forEach(([type, a]) => {
     if (Array.isArray(a)) {
       a.forEach(id => {
-        if (pool.includes(id)) return;
-        pool.push(id);
+        // if (pool.includes(id)) return;
+        // pool.push(id);
         const { on, bind } = get(id) || {};
         // if (on === true) {
         //   count_on(site, type, id);
