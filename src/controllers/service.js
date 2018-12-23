@@ -395,7 +395,7 @@ const run = (action, address) => {
         } = action
         const { setpoint, sensor, state, mode } = get(id);
         const { temperature } = get(sensor);
-        const make = (state, script, mode) => {
+        const make = (state, script, mode) => () => {
           set(id, { state, mode });
           if (script) {
             run({ type: ACTION_SCRIPT_RUN, script });
