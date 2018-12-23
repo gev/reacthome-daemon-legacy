@@ -399,7 +399,7 @@ const run = (action, address) => {
         const make = (state, script, mode) => () => {
           set(id, { state, mode });
           if (script) {
-            console.log(state, mode)
+            console.log(state, mode, script)
             run({ type: ACTION_SCRIPT_RUN, id: script });
           }
         };
