@@ -388,7 +388,6 @@ const run = (action, address) => {
         break;
       }
       case ACTION_THERMOSTAT_HANDLE: {
-        console.log(action);
         const {
             id,
             cool_hysteresis, cool_threshold, heat_hysteresis, heat_threshold,
@@ -396,11 +395,9 @@ const run = (action, address) => {
         } = action
         const { setpoint, sensor, state, mode } = get(id);
         const { temperature } = get(sensor);
-        console.log(setpoint, temperature);
         const make = (state, script, mode) => () => {
           set(id, { state, mode });
           if (script) {
-            console.log(state, mode, script);
             run({ type: ACTION_SCRIPT_RUN, id: script });
           }
         };
