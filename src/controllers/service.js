@@ -405,11 +405,17 @@ const run = (action, address) => {
         const cool = make(COOL, onCool, COOL);
         const heat = make(HEAT, onHeat, HEAT);
         if (temperature > setpoint - (- heat_threshold)) {
-          if (state === HEAT) stop();
-          cool();
+          if (state === HEAT) {
+            stop();
+          } else {
+            cool();
+          }
         } else if (temperature < setpoint - cool_threshold) {
-          if (state === COOL) stop();
-          heat();
+          if (state === COOL) {
+            stop();
+          } else {
+            heat();
+          }
         } else {
           switch (mode) {
             case HEAT: {
