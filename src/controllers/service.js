@@ -400,7 +400,7 @@ const run = (action, address) => {
           set(id, { state, mode });
           if (script) {
             console.log(state, mode)
-            run({ type: ACTION_SCRIPT_RUN, script });
+            run({ type: ACTION_SCRIPT_RUN, id: script });
           }
         };
         const stop = make(STOP, onStop, mode);
