@@ -396,6 +396,7 @@ const run = (action, address) => {
         const { setpoint, sensor, state, mode } = get(id);
         const { temperature } = get(sensor);
         console.log(setpoint, temperature, state, mode);
+        console.log(get(id));
         const make = (state, script, mode) => () => {
           set(id, { state, mode });
           if (script) {
