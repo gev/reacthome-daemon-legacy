@@ -13,16 +13,17 @@ module.exports = (discovery, interval, port, listen) => {
       q = [];
       queue[ip] = q;
       timer[ip] = setInterval(() => {
+        console.log(ip, q.length);
         if (q.length === 0) return;
         socket.send(q.shift(), port, ip, (err) => {
           if (err) console.error(error);
         });
       }, 20);
     }
-    // queue[ip].push(packet);
-    socket.send(packet, port, ip, (err) => {
-      if (err) console.error(error);
-    });
+    queue[ip].push(packet);
+    // socket.send(packet, port, ip, (err) => {
+    //   if (err) console.error(error);
+    // });
 };
   
   const sendConfirm = (packet, ip, confirm, t = 1000) => {
