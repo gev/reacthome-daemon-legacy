@@ -11,21 +11,31 @@ module.exports = (discovery, interval, port, listen, hasQueue) => {
 
   const send = hasQueue
     ? (packet, ip) => {
-      const ts = timestamp[ip];
-      if (ts) {
+      if (!timer[ip]) {
+        q = [];
+        queue[ip] = q;
+        timestamp[ip] = Date.now();
+        timer[ip] = setInterval(() => {
+          if (q.length === 0) return;
+          timestamp[ip] = Date.now();
+          socket.send(q.shift(), port, ip, (err) => {
+            if (err) console.error(error);
+          });
+        }, 20);
+      }
+      if (q.length === 0) {
         const now = Date.now();
-        if (now - ts > 20) {
+        if (now - timestamp[ip] > 20) {
           timestamp[ip] = now;
           socket.send(packet, port, ip, (err) => {
             if (err) console.error(error);
           });
         } else {
-          console.log('waiting', ip);
-          setTimeout(send, 20 - now + ts, packet, ip);
+          queue[ip].push(packet);
         }
       } else {
-        timestamp[ip] = Date.now();
-        send(packet, ip);
+        queue[ip].push(packet);
+        
       }
     }
     : (packet, ip) => {
