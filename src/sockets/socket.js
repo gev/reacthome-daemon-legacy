@@ -13,12 +13,15 @@ module.exports = (discovery, interval, port, listen, hasQueue) => {
     if (!timer[ip]) {
       q = [];
       queue[ip] = q;
+      pause = false;
       timer[ip] = setInterval(() => {
-        if (q.length === 0) return;
+        if (pause || q.length === 0) return;
+        pause = true;
         socket.send(q.shift(), port, ip, (err) => {
           if (err) console.error(error);
+          pause = false
         });
-      }, 5);
+      }, 20);
     }
     queue[ip].push(packet);
   }
