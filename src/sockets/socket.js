@@ -19,6 +19,7 @@ module.exports = (discovery, interval, port, listen, hasQueue) => {
           if (err) console.error(error);
         });
       } else {
+        console.log('waiting');
         setTimeout(send, 20, packet, ip);
       }
     } else {
