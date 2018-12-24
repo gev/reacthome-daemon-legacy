@@ -13,9 +13,7 @@ module.exports = (discovery, interval, port, listen, hasQueue) => {
     if (!timer[ip]) {
       q = [];
       queue[ip] = q;
-      console.error('create', ip);
       timer[ip] = setInterval(() => {
-        console.error('shift', ip, q.length);
         if (q.length === 0) return;
         socket.send(q.shift(), port, ip, (err) => {
           if (err) console.error(error);
@@ -23,7 +21,6 @@ module.exports = (discovery, interval, port, listen, hasQueue) => {
       }, 20);
     }
     queue[ip].push(packet);
-    console.log('push', ip, queue[ip].length);
   }
   : (packet, ip) => {
     socket.send(packet, port, ip, (err) => {
