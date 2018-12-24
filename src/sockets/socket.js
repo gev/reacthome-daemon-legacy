@@ -5,25 +5,25 @@ module.exports = (discovery, interval, port, listen, hasQueue) => {
 
   const timer = {};
   const queue = {};
+  const timestamp = {};
   
   const socket = createSocket('udp4');
 
   const send = hasQueue
     ? (packet, ip) => {
-    if (!timer[ip]) {
-      q = [];
-      queue[ip] = q;
-      pause = false;
-      timer[ip] = setInterval(() => {
-        if (pause || q.length === 0) return;
-        pause = true;
-        socket.send(q.shift(), port, ip, (err) => {
+    const ts = timestamp[ip];
+    if (ts) {
+      if (Date.now() - ts > 20) {
+        socket.send(packet, port, ip, (err) => {
           if (err) console.error(error);
-          pause = false
         });
-      }, 20);
+      } else {
+        setTimeout(send, 20, packet, ip);
+      }
+    } else {
+      timestamp[ip] = Date.now();
+      send(packet, ip);
     }
-    queue[ip].push(packet);
   }
   : (packet, ip) => {
     socket.send(packet, port, ip, (err) => {
