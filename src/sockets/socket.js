@@ -12,13 +12,12 @@ module.exports = (discovery, interval, port, listen, hasQueue) => {
   const send = hasQueue
     ? (packet, ip) => {
       if (!timer[ip]) {
-        q = [];
-        queue[ip] = q;
+        queue[ip] = [];
         timestamp[ip] = Date.now();
         timer[ip] = setInterval(() => {
-          if (q.length === 0) return;
+          if (queue[ip].length === 0) return;
           timestamp[ip] = Date.now();
-          socket.send(q.shift(), port, ip, (err) => {
+          socket.send(queue[ip].shift(), port, ip, (err) => {
             if (err) console.error(error);
           });
         }, 20);
