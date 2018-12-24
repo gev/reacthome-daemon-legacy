@@ -14,14 +14,14 @@ module.exports = (discovery, interval, port, listen, hasQueue) => {
       const ts = timestamp[ip];
       if (ts) {
         const now = Date.now();
-        if (now - ts > 1000) {
+        if (now - ts > 20) {
           timestamp[ip] = now;
           socket.send(packet, port, ip, (err) => {
             if (err) console.error(error);
           });
         } else {
           console.log('waiting', ip);
-          setTimeout(send, 100, packet, ip);
+          setTimeout(send, 20, packet, ip);
         }
       } else {
         timestamp[ip] = Date.now();
