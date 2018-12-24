@@ -22,20 +22,21 @@ module.exports = (discovery, interval, port, listen, hasQueue) => {
             if (err) console.error(error);
           });
         }, 20);
-      }
-      if (q.length === 0) {
-        const now = Date.now();
-        if (now - timestamp[ip] > 20) {
-          timestamp[ip] = now;
-          socket.send(packet, port, ip, (err) => {
-            if (err) console.error(error);
-          });
+      } else {
+        if (queue[ip].length === 0) {
+          const now = Date.now();
+          if (now - timestamp[ip] > 20) {
+            timestamp[ip] = now;
+            socket.send(packet, port, ip, (err) => {
+              if (err) console.error(error);
+            });
+          } else {
+            queue[ip].push(packet);
+          }
         } else {
           queue[ip].push(packet);
         }
-      } else {
-        queue[ip].push(packet);
-        
+        console.log(ip, queue[ip].length);
       }
     }
     : (packet, ip) => {
