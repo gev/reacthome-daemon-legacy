@@ -22,7 +22,7 @@ module.exports = (discovery, interval, port, listen) => {
       }, 1000);
     }
     queue[ip].push(packet);
-    console.log('push', ip, queue[ip].length);
+    console.log('push', ip, queue[ip].length, packet);
     // socket.send(packet, port, ip, (err) => {
     //   if (err) console.error(error);
     // });
