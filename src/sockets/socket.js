@@ -12,17 +12,17 @@ module.exports = (discovery, interval, port, listen) => {
     if (!timer[ip]) {
       q = [];
       queue[ip] = q;
-      console.log('create ', ip);
+      console.log('create', ip);
       timer[ip] = setInterval(() => {
         if (q.length === 0) return;
-        console.log(ip, q.length);
+        console.log('shift', ip, q.length);
         socket.send(q.shift(), port, ip, (err) => {
           if (err) console.error(error);
         });
       }, 100);
     }
-    console.log('push ', ip);
     queue[ip].push(packet);
+    console.log('push', ip, queue[ip].length);
     // socket.send(packet, port, ip, (err) => {
     //   if (err) console.error(error);
     // });
