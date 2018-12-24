@@ -376,7 +376,7 @@ const run = (action, address) => {
         const { id } = action;
         const { state } = get(id);
         if (!state) {
-          set(id, { timestamp: Date.now() state: true });
+          set(id, { timestamp: Date.now(), state: true });
         }
         break;
       }
@@ -384,7 +384,7 @@ const run = (action, address) => {
         const { id } = action;
         const { state } = get(id);
         if (state) {
-          set(id, { timestamp: Date.now() state: false });
+          set(id, { timestamp: Date.now(), state: false });
         }
         break;
       }
