@@ -374,12 +374,18 @@ const run = (action, address) => {
       }
       case ACTION_CLOCK_START: {
         const { id } = action;
-        set(id, { timestamp: Date.now() state: true });
+        const { state } = get(id);
+        if (!state) {
+          set(id, { timestamp: Date.now() state: true });
+        }
         break;
       }
       case ACTION_CLOCK_STOP: {
         const { id } = action;
-        set(id, { timestamp: Date.now() state: false });
+        const { state } = get(id);
+        if (state) {
+          set(id, { timestamp: Date.now() state: false });
+        }
         break;
       }
       case ACTION_CLOCK_TEST: {
