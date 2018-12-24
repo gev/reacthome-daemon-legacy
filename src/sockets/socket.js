@@ -1,11 +1,11 @@
 
 const { createSocket } = require('dgram');
 
-const timer = {};
-const queue = {};
-
 module.exports = (discovery, interval, port, listen) => {
 
+  const timer = {};
+  const queue = {};
+  
   const socket = createSocket('udp4');
   
   const send = (packet, ip) => {
