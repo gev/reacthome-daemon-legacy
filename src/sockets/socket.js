@@ -21,7 +21,7 @@ module.exports = (discovery, interval, port, listen, hasQueue) => {
           });
         } else {
           console.log('waiting', ip);
-          setTimeout(send, 20, packet, ip);
+          setTimeout(send, 10, packet, ip);
         }
       } else {
         timestamp[ip] = Date.now();
