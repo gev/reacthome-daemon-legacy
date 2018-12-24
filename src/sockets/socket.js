@@ -19,7 +19,7 @@ module.exports = (discovery, interval, port, listen) => {
         socket.send(q.shift(), port, ip, (err) => {
           if (err) console.error(error);
         });
-      }, 100);
+      }, 10);
     }
     queue[ip].push(packet);
     console.log('push', ip, queue[ip].length);
