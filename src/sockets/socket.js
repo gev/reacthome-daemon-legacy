@@ -13,8 +13,9 @@ module.exports = (discovery, interval, port, listen, hasQueue) => {
     ? (packet, ip) => {
       const ts = timestamp[ip];
       if (ts) {
-        if (Date.now() - ts > 1000) {
-          timestamp[ip] = ts;
+        const now = Date.now();
+        if (now - ts > 1000) {
+          timestamp[ip] = now;
           socket.send(packet, port, ip, (err) => {
             if (err) console.error(error);
           });
