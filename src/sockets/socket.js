@@ -19,8 +19,11 @@ module.exports = (discovery, interval, port, listen) => {
         });
       }, 20);
     }
-    queue[ip].push(packet);
-  };
+    // queue[ip].push(packet);
+    socket.send(packet, port, ip, (err) => {
+      if (err) console.error(error);
+    });
+};
   
   const sendConfirm = (packet, ip, confirm, t = 1000) => {
     if (confirm()) return;
