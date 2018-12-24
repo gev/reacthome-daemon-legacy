@@ -424,8 +424,6 @@ const run = (action, address) => {
             run({ type: ACTION_SCRIPT_RUN, id: script });
           }
         }
-        clearTimeout(timer[id]);
-        set(id, { tame: 0, state: false });
         break;
       }
       case ACTION_DOPPLER_HANDLE: {
