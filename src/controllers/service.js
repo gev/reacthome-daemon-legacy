@@ -512,7 +512,13 @@ const run = (action, address) => {
       }
       case ACTION_TOGGLE: {
         const { test = [], onOn, onOff } = action;
-        const f = test.reduce((a, b) => a || (get(b) || {}).value, false);
+        const f = test.reduce((a, b) => {
+          const { bind } = get(b) || {};
+          if (bind) {
+            return a || (get(bind) || {}).value
+          }
+          return a;
+        }, false);
         if (f) {
           if (onOff) {
             run({ type: ACTION_SCRIPT_RUN, id: onOff });
