@@ -13,8 +13,8 @@ module.exports = (discovery, interval, port, listen) => {
       q = [];
       queue[ip] = q;
       timer[ip] = setInterval(() => {
-        console.log(ip, q.length);
         if (q.length === 0) return;
+        console.log(ip, q.length);
         socket.send(q.shift(), port, ip, (err) => {
           if (err) console.error(error);
         });
