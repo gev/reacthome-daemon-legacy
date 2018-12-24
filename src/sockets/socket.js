@@ -9,40 +9,41 @@ module.exports = (discovery, interval, port, listen, hasQueue) => {
   
   const socket = createSocket('udp4');
 
+  const _send = (packet, ip) => {
+    socket.send(packet, port, ip, (err) => {
+      if (err) console.error(error);
+    });
+  };
+
   const send = hasQueue
     ? (packet, ip) => {
       if (!timer[ip]) {
         queue[ip] = [];
         timestamp[ip] = Date.now();
         timer[ip] = setInterval(() => {
-          if (queue[ip].length === 0) return;
-          timestamp[ip] = Date.now();
-          socket.send(queue[ip].shift(), port, ip, (err) => {
-            if (err) console.error(error);
-          });
+          const q = queue[ip];
+          if (q.length === 0) return;
+          const now = Date.now();
+          if (now - timestamp[ip] < 20) return;
+          timestamp[ip] = now;
+          _send(q.shift(), ip);
         }, 20);
       } else {
-        if (queue[ip].length === 0) {
+        const q = queue[ip];
+        if (q.length === 0) {
           const now = Date.now();
           if (now - timestamp[ip] > 20) {
             timestamp[ip] = now;
-            socket.send(packet, port, ip, (err) => {
-              if (err) console.error(error);
-            });
+            _send(packet, ip);
           } else {
-            queue[ip].push(packet);
+            q.push(packet);
           }
         } else {
-          queue[ip].push(packet);
+          q.push(packet);
         }
-        console.log(ip, queue[ip].length);
       }
     }
-    : (packet, ip) => {
-      socket.send(packet, port, ip, (err) => {
-        if (err) console.error(error);
-      });
-    };
+    : _send;
   
   const sendConfirm = (packet, ip, confirm, t = 1000) => {
     if (confirm()) return;
