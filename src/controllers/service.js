@@ -31,6 +31,9 @@ const {
   ACTION_SETPOINT,
   ACTION_TIMER_START,
   ACTION_TIMER_STOP,
+  ACTION_CLOCK_START,
+  ACTION_CLOCK_STOP,
+  ACTION_CLOCK_TEST,
   ACTION_DOPPLER_HANDLE,
   ACTION_THERMOSTAT_HANDLE,
   ACTION_TOGGLE,
@@ -62,6 +65,12 @@ const {
   OPERATOR_MINUS,
   OPERATOR_MUL,
   OPERATOR_DIV,
+  OPERATOR_LT,
+  OPERATOR_LE,
+  OPERATOR_EQ,
+  OPERATOR_NE,
+  OPERATOR_GE,
+  OPERATOR_GT,
   STATE,
   ASSETS,
   STOP,
@@ -359,6 +368,56 @@ const run = (action, address) => {
       }
       case ACTION_TIMER_STOP: {
         const { id } = action;
+        clearTimeout(timer[id]);
+        set(id, { time: 0, state: false });
+        break;
+      }
+      case ACTION_CLOCK_START: {
+        const { id } = action;
+        set(id, { timestamp: Date.now() state: true });
+        break;
+      }
+      case ACTION_CLOCK_STOP: {
+        const { id } = action;
+        set(id, { timestamp: Date.now() state: false });
+        break;
+      }
+      case ACTION_CLOCK_TEST: {
+        const { id, time, onTrue, onFalse, operator } = action;
+        const { timestamp, state } = get(id);
+        const t = Date.now() - timestamp;
+        let script;
+        if (state) {
+          switch (operator) {
+            case OPERATOR_LT: {
+              script = t < time ? onTrue : onFalse;
+              break;
+            }
+            case OPERATOR_LE: {
+              script = t <= time ? onTrue : onFalse;
+              break;
+            }
+            case OPERATOR_EQ: {
+              script = t === time ? onTrue : onFalse;
+              break;
+            }
+            case OPERATOR_NE: {
+              script = t !== time ? onTrue : onFalse;
+              break;
+            }
+            case OPERATOR_GE: {
+              script = t >= time ? onTrue : onFalse;
+              break;
+            }
+            case OPERATOR_GT: {
+              script = t > time ? onTrue : onFalse;
+              break;
+            }
+          }
+          if (script) {
+            run({ type: ACTION_SCRIPT_RUN, id: script });
+          }
+        }
         clearTimeout(timer[id]);
         set(id, { tame: 0, state: false });
         break;

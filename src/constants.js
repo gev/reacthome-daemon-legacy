@@ -99,6 +99,9 @@ module.exports.ACTION_SITE_LIGHT_OFF = 'ACTION_SITE_LIGHT_OFF';
 module.exports.ACTION_SETPOINT = 'ACTION_SETPOINT';
 module.exports.ACTION_TIMER_START = 'ACTION_TIMER_START';
 module.exports.ACTION_TIMER_STOP = 'ACTION_TIMER_STOP';
+module.exports.ACTION_CLOCK_START = 'ACTION_CLOCK_START';
+module.exports.ACTION_CLOCK_STOP = 'ACTION_CLOCK_STOP';
+module.exports.ACTION_CLOCK_TEST = 'ACTION_CLOCK_TEST';
 module.exports.ACTION_DOPPLER_HANDLE = 'ACTION_DOPPLER_HANDLE';
 module.exports.ACTION_THERMOSTAT_HANDLE = 'ACTION_THERMOSTAT_HANDLE';
 module.exports.ACTION_TOGGLE = 'ACTION_TOGGLE';
@@ -163,6 +166,13 @@ module.exports.OPERATOR_PLUS = 'OPERATOR_PLUS';
 module.exports.OPERATOR_MINUS = 'OPERATOR_MINUS';
 module.exports.OPERATOR_MUL = 'OPERATOR_MUL';
 module.exports.OPERATOR_DIV = 'OPERATOR_DIV';
+
+module.exports.OPERATOR_LT = 'OPERATOR_LT';
+module.exports.OPERATOR_LE = 'OPERATOR_LE';
+module.exports.OPERATOR_EQ = 'OPERATOR_EQ';
+module.exports.OPERATOR_NE = 'OPERATOR_NE';
+module.exports.OPERATOR_GE = 'OPERATOR_GE';
+module.exports.OPERATOR_GT = 'OPERATOR_GT';
 
 module.exports.HEAT = 'heat';
 module.exports.COOL = 'cool';
