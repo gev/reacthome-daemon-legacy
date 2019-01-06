@@ -442,8 +442,7 @@ const run = (action, address) => {
           if (onLowThreshold) {
             run({ type: ACTION_SCRIPT_RUN, id: onLowThreshold });
           }
-        // } else if (active) {
-        } else {
+        } else if (active) {
           set(id, { active: false });
           if (onQuiet) {
             run({ type: ACTION_SCRIPT_RUN, id: onQuiet });
