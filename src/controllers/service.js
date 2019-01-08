@@ -428,9 +428,10 @@ const run = (action, address) => {
       }
       case ACTION_DOPPLER_HANDLE: {
         const { id, low, high, onQuiet, onLowThreshold, onHighThreshold } = action;
-        const { value, active } = get(id);
+        const { active } = get(action.action);
+        const { value } = get(id);
         if (value >= high) {
-          set(id, { active: true });
+          set(action.action), { active: true });
           if (onHighThreshold) {
             run({ type: ACTION_SCRIPT_RUN, id: onHighThreshold });
           }
@@ -438,12 +439,12 @@ const run = (action, address) => {
             run({ type: ACTION_SCRIPT_RUN, id: onLowThreshold });
           }
         } else if (value >= low) {
-          set(id, { active: true });
+          set(action.action), { active: true });
           if (onLowThreshold) {
             run({ type: ACTION_SCRIPT_RUN, id: onLowThreshold });
           }
         } else if (active) {
-          set(id, { active: false });
+          set(action.action), { active: false });
           if (onQuiet) {
             run({ type: ACTION_SCRIPT_RUN, id: onQuiet });
           }
@@ -562,7 +563,7 @@ const run = (action, address) => {
         if (script && Array.isArray(script.action)) {
           script.action.forEach(i => {
             const { type, payload } = get(i);
-            run({ type, ...payload });
+            run({ action: i, type, ...payload });
           })
         }
         break;
