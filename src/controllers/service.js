@@ -431,7 +431,7 @@ const run = (action, address) => {
         const { active } = get(action.action);
         const { value } = get(id);
         if (value >= high) {
-          set(action.action), { active: true });
+          set(action.action, { active: true });
           if (onHighThreshold) {
             run({ type: ACTION_SCRIPT_RUN, id: onHighThreshold });
           }
@@ -439,12 +439,12 @@ const run = (action, address) => {
             run({ type: ACTION_SCRIPT_RUN, id: onLowThreshold });
           }
         } else if (value >= low) {
-          set(action.action), { active: true });
+          set(action.action, { active: true });
           if (onLowThreshold) {
             run({ type: ACTION_SCRIPT_RUN, id: onLowThreshold });
           }
         } else if (active) {
-          set(action.action), { active: false });
+          set(action.action, { active: false });
           if (onQuiet) {
             run({ type: ACTION_SCRIPT_RUN, id: onQuiet });
           }
