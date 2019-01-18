@@ -34,6 +34,8 @@ const {
   ACTION_CLOCK_START,
   ACTION_CLOCK_STOP,
   ACTION_CLOCK_TEST,
+  ACTION_NIGHT_TEST,
+  ACTION_DAY_TEST,
   ACTION_DOPPLER_HANDLE,
   ACTION_THERMOSTAT_HANDLE,
   ACTION_TOGGLE,
@@ -422,6 +424,38 @@ const run = (action, address) => {
           }
           if (script) {
             run({ type: ACTION_SCRIPT_RUN, id: script });
+          }
+        }
+        break;
+      }
+      case ACTION_DAY_TEST: {
+        const { project } = get(mac);
+        if (project) {
+          const { weather } = get(project);
+          if (weather && weather.sys) {
+            const { sunrise, sunset } = weather.sys;
+            const { onFalse, onTrue } = action;
+            const now = Date.now();
+            const script = now > sunrise && now < sunset ? onTrue : onFalse;
+            if (script) {
+              run({ type: ACTION_SCRIPT_RUN, id: script });
+            }
+          }
+        }
+        break;
+      }
+      case ACTION_NIGHT_TEST: {
+        const { project } = get(mac);
+        if (project) {
+          const { weather } = get(project);
+          if (weather && weather.sys) {
+            const { sunrise, sunset } = weather.sys;
+            const { onFalse, onTrue } = action;
+            const now = Date.now();
+            const script = now < sunrise || now > sunset ? onTrue : onFalse;
+            if (script) {
+              run({ type: ACTION_SCRIPT_RUN, id: script });
+            }
           }
         }
         break;

@@ -1,6 +1,6 @@
 
 const Koa = require('koa');
-const { state, assets, device, service, cpu } = require('./src/controllers');
+const { state, assets, device, service, cpu, weather } = require('./src/controllers');
 const { get, set, count } = require('./src/actions');
 const { mac, DAEMON, CLIENT_SERVER_PORT, ACTION_SET, IMAGE } = require('./src/constants');
 const db = require('./src/db');
@@ -25,6 +25,7 @@ db.createReadStream()
     app.use(state.manage());
     app.use(assets.manage());
     app.listen(CLIENT_SERVER_PORT);
+    weather.manage();
     service.manage();
     device.manage();
     cpu.manage();
