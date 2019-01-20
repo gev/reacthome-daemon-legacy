@@ -435,7 +435,7 @@ const run = (action, address) => {
           if (weather && weather.sys) {
             const { sunrise, sunset } = weather.sys;
             const { onFalse, onTrue } = action;
-            const now = Date.now();
+            const now = Date.now() / 1000;
             const script = now > sunrise && now < sunset ? onTrue : onFalse;
             if (script) {
               run({ type: ACTION_SCRIPT_RUN, id: script });
@@ -451,7 +451,7 @@ const run = (action, address) => {
           if (weather && weather.sys) {
             const { sunrise, sunset } = weather.sys;
             const { onFalse, onTrue } = action;
-            const now = Date.now();
+            const now = Date.now() / 1000;
             const script = now < sunrise || now > sunset ? onTrue : onFalse;
             if (script) {
               run({ type: ACTION_SCRIPT_RUN, id: script });
