@@ -109,6 +109,7 @@ module.exports.manage = () => {
                 }
               }
             }
+          }
           break;
         }
         case ACTION_DI: {
