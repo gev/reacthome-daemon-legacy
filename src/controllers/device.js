@@ -6,6 +6,7 @@ const {
   DI,
   DIM,
   POOL,
+  DEVICE_TYPE_PLC,
   ACTION_DI,
   ACTION_DO,
   ACTION_IR,
@@ -78,6 +79,38 @@ module.exports.manage = () => {
       const id = dev_mac.map(i => `0${i.toString(16)}`.slice(-2)).join(':');
       const action = data[6];
       switch (action) {
+        case DEVICE_TYPE_PLC: {
+          for (let i = 1; i <= 36; i++ ) {
+            const channel = `${id}/${DI}/${i}`;
+            const chan = get(channel);
+            const value = data[i + 6];
+            if (chan && (chan.value !== value)) {
+              set(channel, { value });
+              const script = chan[onDI[value]];
+              if (script) {
+                run({ type: ACTION_SCRIPT_RUN, id: script });
+              }
+            }
+          }
+          for (let i = 1; i <= 24; i++ ) {
+            const channel = `${id}/${DO}/${i}`;
+            const chan = get(channel);
+            const value = data[i + 42];
+            set(channel, { value });
+            if (chan) {
+              const { bind } = chan;
+              if (bind) {
+                if (chan.value !== value) {
+                  const script = chan[onDO[value]];
+                  if (script) {
+                    run({ type: ACTION_SCRIPT_RUN, id: script });
+                  }
+                  count[value](bind);
+                }
+              }
+            }
+          break;
+        }
         case ACTION_DI: {
           const index = data[7];
           const value = data[8];
