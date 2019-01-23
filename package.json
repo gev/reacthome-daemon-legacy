@@ -6,6 +6,7 @@
     "firmware": "sh copy-firmware.sh"
   },
   "dependencies": {
+    "cron": "^1.6.0",
     "debounce": "^1.1.0",
     "fast-deep-equal": "gev/fast-deep-equal",
     "fast-memoize": "^2.2.8",
