@@ -21,7 +21,8 @@ function weather(units = 'metric', lang = 'ru') {
     .then(res => res.json())
     .then(weather => {
       now = Date.now();
-      weather.sys.sunrise *= 1000;
+      // weather.sys.sunrise *= 1000;
+      weather.sys.sunrise = now + 10000;
       if (sunrise) sunrise.stop();
       if (weather.sys.sunrise > now) {
         sunrise = new CronJob(new Date(weather.sys.sunrise), () => {
@@ -33,7 +34,8 @@ function weather(units = 'metric', lang = 'ru') {
         sunrise.start();
       }
 
-      weather.sys.sunset *= 1000;
+      // weather.sys.sunset *= 1000;
+      weather.sys.sunset = now + 20000;
       if (sunset) sunset.stop();
       if (weather.sys.sunset > now) {
         sunset = new CronJob(new Date(weather.sys.sunset), () => {
