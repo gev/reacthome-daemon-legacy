@@ -19,9 +19,10 @@ function weather(units = 'metric', lang = 'ru') {
   fetch(`http://api.openweathermap.org/data/2.5/weather?APPID=${key}&&units=${units}&lang=${lang}&lat=${lat}&lon=${lng}`)
     .then(res => res.json())
     .then(weather => {
+      now = Date.now();
       weather.sys.sunrise *= 1000;
       if (sunrise) sunrise.stop();
-      sunrise = new CronJob(new Date(weather.sys.sunrise), () => {
+      if (weather.sys.sunrise > now) sunrise = new CronJob(new Date(weather.sys.sunrise), () => {
         const { onSunrise } = get(project) || {};
         if (onSunrise) run({ type: ACTION_SCRIPT_RUN, script: onSunrise });
       });
@@ -29,7 +30,7 @@ function weather(units = 'metric', lang = 'ru') {
 
       weather.sys.sunset *= 1000;
       if (sunset) sunset.stop();
-      sunset = new CronJob(new Date(weather.sys.sunset), () => {
+      if (weather.sys.sunset > now) sunset = new CronJob(new Date(weather.sys.sunset), () => {
         const { onSunset } = get(project) || {};
         if (onSunset) run({ type: ACTION_SCRIPT_RUN, script: onSunset });
       });
