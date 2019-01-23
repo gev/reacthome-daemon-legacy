@@ -3,6 +3,7 @@ const fetch = require('node-fetch');
 const CronJob = require('cron').CronJob;
 const { mac } = require('../constants');
 const { get, set } = require('../actions');
+const { ACTION_SCRIPT_RUN } = require('../constants');
 const { run } = require('./service');
 
 const key = 'fd688cedc9202c33d316dda05b28df8e';
@@ -39,7 +40,7 @@ function weather(units = 'metric', lang = 'ru') {
         });
         sunset.start();
       }
-      
+
       set(project, { weather });
     })
     .catch(console.error);
