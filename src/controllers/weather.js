@@ -25,8 +25,9 @@ function weather(units = 'metric', lang = 'ru') {
       if (sunrise) sunrise.stop();
       if (weather.sys.sunrise > now) {
         sunrise = new CronJob(new Date(weather.sys.sunrise), () => {
+          const { project } = get(mac) || {};
           const { onSunrise } = get(project) || {};
-          if (onSunrise) run({ type: ACTION_SCRIPT_RUN, script: onSunrise });
+          if (onSunrise) run({ type: ACTION_SCRIPT_RUN, id: onSunrise });
         });
         sunrise.start();
       }
@@ -35,8 +36,9 @@ function weather(units = 'metric', lang = 'ru') {
       if (sunset) sunset.stop();
       if (weather.sys.sunset > now) {
         sunset = new CronJob(new Date(weather.sys.sunset), () => {
+          const { project } = get(mac) || {};
           const { onSunset } = get(project) || {};
-          if (onSunset) run({ type: ACTION_SCRIPT_RUN, script: onSunset });
+          if (onSunset) run({ type: ACTION_SCRIPT_RUN, id: onSunset });
         });
         sunset.start();
       }
