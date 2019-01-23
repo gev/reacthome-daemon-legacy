@@ -1,6 +1,6 @@
 
 const fetch = require('node-fetch');
-const CronJob = require('../lib/cron.js').CronJob;
+const CronJob = require('cron').CronJob;
 const { mac } = require('../constants');
 const { get, set } = require('../actions');
 const { run } = require('./service');
