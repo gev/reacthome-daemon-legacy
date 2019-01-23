@@ -45,6 +45,11 @@ function weather(units = 'metric', lang = 'ru') {
         sunset.start();
       }
 
+      console.log(weather.sys.sunrise);
+      console.log(now);
+      console.log(weather.sys.sunset);
+      
+
       set(project, { weather });
     })
     .catch(console.error);
