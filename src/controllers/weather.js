@@ -22,20 +22,24 @@ function weather(units = 'metric', lang = 'ru') {
       now = Date.now();
       weather.sys.sunrise *= 1000;
       if (sunrise) sunrise.stop();
-      if (weather.sys.sunrise > now) sunrise = new CronJob(new Date(weather.sys.sunrise), () => {
-        const { onSunrise } = get(project) || {};
-        if (onSunrise) run({ type: ACTION_SCRIPT_RUN, script: onSunrise });
-      });
-      sunrise.start();
+      if (weather.sys.sunrise > now) {
+        sunrise = new CronJob(new Date(weather.sys.sunrise), () => {
+          const { onSunrise } = get(project) || {};
+          if (onSunrise) run({ type: ACTION_SCRIPT_RUN, script: onSunrise });
+        });
+        sunrise.start();
+      }
 
       weather.sys.sunset *= 1000;
       if (sunset) sunset.stop();
-      if (weather.sys.sunset > now) sunset = new CronJob(new Date(weather.sys.sunset), () => {
-        const { onSunset } = get(project) || {};
-        if (onSunset) run({ type: ACTION_SCRIPT_RUN, script: onSunset });
-      });
-      sunset.start();
-
+      if (weather.sys.sunset > now) {
+        sunset = new CronJob(new Date(weather.sys.sunset), () => {
+          const { onSunset } = get(project) || {};
+          if (onSunset) run({ type: ACTION_SCRIPT_RUN, script: onSunset });
+        });
+        sunset.start();
+      }
+      
       set(project, { weather });
     })
     .catch(console.error);
