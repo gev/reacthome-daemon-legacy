@@ -11,11 +11,11 @@ const start = () => {
   set(mac, { type: DAEMON });
   const { project } = get(mac);
   if (project) {
+    count(project);
     const { onStart } = get(project) || {};
     if (onStart) {
       service.run({ type: ACTION_SCRIPT_RUN, id: onStart });
     }
-    count(project);
   }
 };
 
