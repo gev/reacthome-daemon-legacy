@@ -17,7 +17,7 @@ const start = () => {
     }
     count(project);
   }
-}
+};
 
 db.createReadStream()
   .on('error', (err) => {
