@@ -7,6 +7,18 @@ const db = require('./src/db');
 
 const init = {};
 
+const start = () {
+  set(mac, { type: DAEMON });
+  const { project } = get(mac);
+  if (project) {
+    const { onStart } = get(project) || {};
+    if (onStart) {
+      service.run({ type: ACTION_SCRIPT_RUN, id: onStart });
+    }
+    count(project);
+  }
+}
+
 db.createReadStream()
   .on('error', (err) => {
     console.log(err)
@@ -17,16 +29,6 @@ db.createReadStream()
   .on('end', () => {
     const app = new Koa();
     state.init(init);
-    set(mac, { type: DAEMON });
-    const { project } = get(mac);
-    if (project) {
-      const { onStart } = get(project) || {};
-      if (onStart) {
-        console.log(onStart);
-        service.run({ type: ACTION_SCRIPT_RUN, id: onStart })
-      }
-      count(project);
-    }
     app.use(state.manage());
     app.use(assets.manage());
     app.listen(CLIENT_SERVER_PORT);
@@ -34,4 +36,5 @@ db.createReadStream()
     service.manage();
     device.manage();
     cpu.manage();
+    start();
   });
