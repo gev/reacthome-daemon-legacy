@@ -7,7 +7,7 @@ const db = require('./src/db');
 
 const init = {};
 
-const start = () {
+const start = () => {
   set(mac, { type: DAEMON });
   const { project } = get(mac);
   if (project) {
