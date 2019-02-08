@@ -1,8 +1,8 @@
 
 const Koa = require('koa');
 const { state, assets, device, service, cpu, weather } = require('./src/controllers');
-const { mac, DAEMON, CLIENT_SERVER_PORT, ACTION_SET, IMAGE } = require('./src/constants');
-const { get, set, count, start } = require('./src/actions');
+const { mac, DAEMON, CLIENT_SERVER_PORT, ACTION_SET, ACTION_SCRIPT_RUN, IMAGE } = require('./src/constants');
+const { get, set, count } = require('./src/actions');
 const db = require('./src/db');
 
 const init = {};
@@ -20,8 +20,11 @@ db.createReadStream()
     set(mac, { type: DAEMON });
     const { project } = get(mac);
     if (project) {
+      const { onStart } = get(project) || {};
+      if (onStart) {
+        service.run({ type: ACTION_SCRIPT_RUN, id: onStart })
+      }
       count(project);
-      start(project);
     }
     app.use(state.manage());
     app.use(assets.manage());
