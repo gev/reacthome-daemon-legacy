@@ -14,7 +14,9 @@ const start = () => {
     count(project);
     const { onStart } = get(project) || {};
     if (onStart) {
-      service.run({ type: ACTION_SCRIPT_RUN, id: onStart });
+      setTimeout(() => {
+        service.run({ type: ACTION_SCRIPT_RUN, id: onStart });
+      }, 2000);
     }
   }
 };
