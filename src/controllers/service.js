@@ -594,6 +594,7 @@ const run = (action, address) => {
       case ACTION_SCRIPT_RUN: {
         const { id } = action;
         const script = get(id);
+        console.log(id, script);
         if (script && Array.isArray(script.action)) {
           script.action.forEach(i => {
             const { type, payload } = get(i);
