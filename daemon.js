@@ -22,6 +22,7 @@ db.createReadStream()
     if (project) {
       const { onStart } = get(project) || {};
       if (onStart) {
+        console.log(onStart);
         service.run({ type: ACTION_SCRIPT_RUN, id: onStart })
       }
       count(project);
