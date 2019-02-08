@@ -257,7 +257,7 @@ const run = (action, address) => {
         break;
       }
       case ACTION_ON: {
-        console.log(id, action);
+        console.log(action);
         const { id } = action;
         const { bind, last } = get(id);
         const { velocity, type } = get(bind);
