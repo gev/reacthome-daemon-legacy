@@ -116,7 +116,7 @@ module.exports.DIM_OFF = 0x0;
 module.exports.DIM_ON = 0x1;
 module.exports.DIM_SET = 0x2;
 module.exports.DIM_FADE = 0x3;
-module.exports.DIM_TYPE = 0x4;  
+module.exports.DIM_TYPE = 0x4;
 
 module.exports.PNP_ENABLE = 0x0;
 module.exports.PNP_STEP = 0x1;
