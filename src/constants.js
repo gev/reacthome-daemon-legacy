@@ -66,6 +66,7 @@ module.exports.ACTION_TEMPERATURE_EXT = 0xc1;
 module.exports.ACTION_HUMIDITY = 0xc2;
 module.exports.ACTION_ILLUMINATION = 0xc3;
 module.exports.ACTION_DIMMER = 0xd0;
+module.exports.ACTION_ARTNET = 0xd1;
 module.exports.ACTION_RGB = 0xe0;
 module.exports.ACTION_DISCOVERY = 0xf0;
 module.exports.ACTION_READY = 0xf1;
@@ -117,6 +118,10 @@ module.exports.DIM_ON = 0x1;
 module.exports.DIM_SET = 0x2;
 module.exports.DIM_FADE = 0x3;
 module.exports.DIM_TYPE = 0x4;
+module.exports.ARTNET_OFF = 0x0;
+module.exports.ARTNET_ON = 0x1;
+module.exports.ARTNET_SET = 0x2;
+module.exports.ARTNET_FADE = 0x3;
 
 module.exports.PNP_ENABLE = 0x0;
 module.exports.PNP_STEP = 0x1;
@@ -149,6 +154,7 @@ module.exports.DEVICE_TYPE_PNP = 0xe0;
 module.exports.DEVICE_TYPE_PLC = 0xfe;
 module.exports.DEVICE_TYPE_BOOTLOADER = 0xff;
 module.exports.DEVICE_TYPE_IR_RECEIVER = 0x10;
+module.exports.DEVICE_TYPE_ARTNET = 0x11;
 
 module.exports.onIR = 'onIR';
 module.exports.onOff = 'onOff';
