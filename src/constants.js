@@ -126,7 +126,7 @@ module.exports.ARTNET_ON = 0x1;
 module.exports.ARTNET_SET = 0x2;
 module.exports.ARTNET_FADE = 0x3;
 module.exports.ARTNET_TYPE = 0x4;
-module.exports.ARTNET_SIZE = 0x5;
+module.exports.ARTNET_CONFIG = 0x5;
 
 module.exports.PNP_ENABLE = 0x0;
 module.exports.PNP_STEP = 0x1;

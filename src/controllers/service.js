@@ -69,7 +69,7 @@ const {
   ARTNET_OFF,
   ARTNET_SET,
   ARTNET_FADE,
-  ARTNET_SIZE,
+  ARTNET_CONFIG,
   ARTNET_TYPE,
   ARTNET_TYPE_DIMMER,
   ARTNET_TYPE_RELAY,
@@ -221,7 +221,7 @@ const run = (action, address) => {
         const dev = get(action.id);
         const id = `${action.id}/${ARTNET}/${action.index}`;
         switch (action.action) {
-          case ARTNET_SIZE:
+          case ARTNET_CONFIG:
             const value = parseInt(action.value, 10);
             device.send(Buffer.from([ACTION_ARTNET, action.action, (action.value >> 8) & 0xff, action.value & 0xff]), dev.ip);
             break;

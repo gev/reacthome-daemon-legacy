@@ -6,7 +6,7 @@ const {
   DI,
   DIM,
   ARTNET,
-  ARTNET_SIZE,
+  ARTNET_CONFIG,
   POOL,
   DEVICE_TYPE_PLC,
   ACTION_DI,
@@ -172,7 +172,7 @@ module.exports.manage = () => {
         }
         case ACTION_ARTNET: {
           switch (data[7]) {
-            case ARTNET_SIZE: {
+            case ARTNET_CONFIG: {
               const size = (data[8] << 8) | data[9];
               set(id, { size });
               break;
