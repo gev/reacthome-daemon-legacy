@@ -171,7 +171,6 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_ARTNET: {
-          console.log(data);
           switch (data[7]) {
             case ARTNET_SIZE: {
               const size = (data[8] << 8) | data[9];
