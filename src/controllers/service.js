@@ -358,6 +358,7 @@ const run = (action, address) => {
             set(id, { last: value });
             break;
           }
+        }
         break;
       }
       case ACTION_DIM_RELATIVE: {
