@@ -226,19 +226,19 @@ const run = (action, address) => {
             device.send(Buffer.from([ACTION_ARTNET, action.action, (action.value >> 8) & 0xff, action.value & 0xff]), dev.ip);
             break;
           case ARTNET_SET:
-            device.send(Buffer.from([ACTION_ARTNET, action.index, action.action, action.value]), dev.ip);
+            device.send(Buffer.from([ACTION_ARTNET, action.action, action.index, action.value]), dev.ip);
             break;
           case ARTNET_TYPE:
-            device.send(Buffer.from([ACTION_ARTNET, action.index, action.action, action.value]), dev.ip);
+            device.send(Buffer.from([ACTION_ARTNET, action.action, action.index, action.value]), dev.ip);
             break;
           case ARTNET_FADE:
-            device.send(Buffer.from([ACTION_ARTNET, action.index, action.action, action.value, action.velocity]), dev.ip);
+            device.send(Buffer.from([ACTION_ARTNET, action.action, action.index, action.value, action.velocity]), dev.ip);
             break;
           case ARTNET_ON:
-            device.send(Buffer.from([ACTION_ARTNET, action.index, action.action]), dev.ip);
+            device.send(Buffer.from([ACTION_ARTNET, action.action, action.index]), dev.ip);
             break;
         case ARTNET_OFF:
-          device.send(Buffer.from([ACTION_ARTNET, action.index, action.action]), dev.ip);
+          device.send(Buffer.from([ACTION_ARTNET, action.action, action.index]), dev.ip);
             break;
         }
         break;
