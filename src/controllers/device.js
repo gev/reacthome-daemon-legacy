@@ -178,7 +178,7 @@ module.exports.manage = () => {
               break;
             }
             default: {
-              const [,,,,,,, index, type, value, velocity = 150] = data;
+              const [,,,,,,,, index, type, value, velocity = 150] = data;
               const channel = `${id}/${ARTNET}/${index}`;
               const chan = get(channel);
               set(channel, { type, value, velocity });
