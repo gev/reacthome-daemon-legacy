@@ -171,7 +171,7 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_ARTNET: {
-          switch (data[7]) {
+          switch (data.length === 10) {
             case ARTNET_SIZE: {
               const size = (data[8] << 8) | data[9];
               set(id, { size });
