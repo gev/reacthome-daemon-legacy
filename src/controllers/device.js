@@ -6,6 +6,7 @@ const {
   DI,
   DIM,
   ARTNET,
+  ARTNET_SIZE,
   POOL,
   DEVICE_TYPE_PLC,
   ACTION_DI,
@@ -171,21 +172,30 @@ module.exports.manage = () => {
         }
         case ACTION_ARTNET: {
           console.log(data);
-          const [,,,,,,, index, type, value, velocity = 150] = data;
-          const channel = `${id}/${ARTNET}/${index}`;
-          const chan = get(channel);
-          set(channel, { type, value, velocity });
-          if (chan) {
-            const { bind } = chan;
-            if (bind) {
-              const v = value ? 1 : 0;
-              const v_ = chan.value ? 1 : 0;
-              if (v !== v_) {
-                const script = chan[onDO[v]];
-                if (script) {
-                  run({ type: ACTION_SCRIPT_RUN, id: script });
+          switch (data[7]) {
+            case ARTNET_SIZE: {
+              const size = (data[8] << 8) | data[9];
+              set(id, { size });
+              break;
+            }
+            default: {
+              const [,,,,,,, index, type, value, velocity = 150] = data;
+              const channel = `${id}/${ARTNET}/${index}`;
+              const chan = get(channel);
+              set(channel, { type, value, velocity });
+              if (chan) {
+                const { bind } = chan;
+                if (bind) {
+                  const v = value ? 1 : 0;
+                  const v_ = chan.value ? 1 : 0;
+                  if (v !== v_) {
+                    const script = chan[onDO[v]];
+                    if (script) {
+                      run({ type: ACTION_SCRIPT_RUN, id: script });
+                    }
+                    count[v](bind);
+                  }
                 }
-                count[v](bind);
               }
             }
           }
