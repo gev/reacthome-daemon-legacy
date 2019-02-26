@@ -200,7 +200,7 @@ const run = (action, address) => {
         const id = `${action.id}/${DIM}/${action.index}`;
         switch (action.action) {
           case DIM_SET:
-            device.send(Buffer.from([ACTION_DIMMER, action.index, action.action, action.value]));
+            device.send(Buffer.from([ACTION_DIMMER, action.index, action.action, action.value]), dev.ip);
             break;
           case DIM_TYPE:
             device.send(Buffer.from([ACTION_DIMMER, action.index, action.action, action.value]), dev.ip);
@@ -223,10 +223,10 @@ const run = (action, address) => {
         const id = `${action.id}/${ARTNET}/${action.index}`;
         switch (action.action) {
           case ARTNET_SIZE:
-            device.send(Buffer.from([ACTION_ARTNET, action.action, action.value]));
+            device.send(Buffer.from([ACTION_ARTNET, action.action, action.value]), dev.ip);
             break;
           case ARTNET_SET:
-            device.send(Buffer.from([ACTION_ARTNET, action.index, action.action, action.value]));
+            device.send(Buffer.from([ACTION_ARTNET, action.index, action.action, action.value]), dev.ip);
             break;
           case ARTNET_TYPE:
             device.send(Buffer.from([ACTION_ARTNET, action.index, action.action, action.value]), dev.ip);
