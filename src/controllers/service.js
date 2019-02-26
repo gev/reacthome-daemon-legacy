@@ -218,6 +218,7 @@ const run = (action, address) => {
         break;
       }
       case ACTION_ARTNET: {
+        console.log(action);
         const dev = get(action.id);
         const id = `${action.id}/${ARTNET}/${action.index}`;
         switch (action.action) {
