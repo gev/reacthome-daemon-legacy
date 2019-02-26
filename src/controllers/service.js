@@ -218,12 +218,13 @@ const run = (action, address) => {
         break;
       }
       case ACTION_ARTNET: {
-        console.log(action);
         const dev = get(action.id);
         const id = `${action.id}/${ARTNET}/${action.index}`;
         switch (action.action) {
           case ARTNET_SIZE:
-            device.send(Buffer.from([ACTION_ARTNET, action.action, action.value]), dev.ip);
+            const value = parseInt(action.value, 10);
+            console.log(Buffer.from([ACTION_ARTNET, action.action, (action.value >> 8) & 0xff, action.value 0xff]), dev.ip);
+            device.send(Buffer.from([ACTION_ARTNET, action.action, (action.value >> 8) & 0xff, action.value 0xff]), dev.ip);
             break;
           case ARTNET_SET:
             device.send(Buffer.from([ACTION_ARTNET, action.index, action.action, action.value]), dev.ip);
