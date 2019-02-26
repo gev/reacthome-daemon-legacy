@@ -170,6 +170,7 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_ARTNET: {
+          console.log(data);
           const [,,,,,,, index, type, value, velocity = 150] = data;
           const channel = `${id}/${ARTNET}/${index}`;
           const chan = get(channel);
