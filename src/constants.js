@@ -34,6 +34,7 @@ module.exports.MOBILE = 'mobile';
 module.exports.DO = 'do';
 module.exports.DI = 'di';
 module.exports.DIM = 'dim';
+module.exports.ARTNET = 'artnet';
 module.exports.BUTTON = 'button';
 module.exports.SMOCK_SENSOR = 'smock_sensor';
 module.exports.MOTION_SENSOR = 'motion_sensor';
@@ -113,15 +114,18 @@ module.exports.ACTION_SCRIPT_RUN = 'ACTION_SCRIPT_RUN';
 
 module.exports.OFF = 0x0;
 module.exports.ON = 0x1;
+
 module.exports.DIM_OFF = 0x0;
 module.exports.DIM_ON = 0x1;
 module.exports.DIM_SET = 0x2;
 module.exports.DIM_FADE = 0x3;
 module.exports.DIM_TYPE = 0x4;
+
 module.exports.ARTNET_OFF = 0x0;
 module.exports.ARTNET_ON = 0x1;
 module.exports.ARTNET_SET = 0x2;
 module.exports.ARTNET_FADE = 0x3;
+module.exports.ARTNET_TYPE = 0x4;
 
 module.exports.PNP_ENABLE = 0x0;
 module.exports.PNP_STEP = 0x1;
@@ -131,6 +135,10 @@ module.exports.DIM_TYPE_RISING_EDGE = 0x1;
 module.exports.DIM_TYPE_FALLING_EDGE = 0x2;
 module.exports.DIM_TYPE_PWM = 0x3;
 module.exports.DIM_TYPE_RELAY = 0x4;
+
+module.exports.ARTNET_TYPE_UNPLUGGED = 0x0;
+module.exports.ARTNET_TYPE_DIMMER = 0x1;
+module.exports.ARTNET_TYPE_RELAY = 0x2;
 
 module.exports.DEVICE_TYPE_UNKNOWN = 0x00;
 module.exports.DEVICE_TYPE_SENSOR4 = 0x01;

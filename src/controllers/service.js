@@ -10,9 +10,11 @@ const {
   TV,
   DO,
   DIM,
+  ARTNET,
   ACTION_DO,
   ACTION_DOPPLER,
   ACTION_DIMMER,
+  ACTION_ARTNET,
   ACTION_DISCOVERY,
   ACTION_FIND_ME,
   ACTION_BOOTLOAD,
@@ -42,6 +44,9 @@ const {
   ACTION_TV,
   ACTION_SCRIPT_RUN,
   DEVICE_PORT,
+  DEVICE_TYPE_DIM4,
+  DEVICE_TYPE_DIM8,
+  DEVICE_TYPE_ARTNET,
   DISCOVERY_INTERVAL,
   DAEMON,
   MOBILE,
@@ -60,6 +65,15 @@ const {
   DIM_TYPE_FALLING_EDGE,
   DIM_TYPE_RISING_EDGE,
   DIM_TYPE_PWM,
+  ARTNET_ON,
+  ARTNET_OFF,
+  ARTNET_SET,
+  ARTNET_FADE,
+  ARTNET_SIZE,
+  ARTNET_TYPE,
+  ARTNET_TYPE_DIMMER,
+  ARTNET_TYPE_RELAY,
+  ARTNET_TYPE_PWM,
   ACTION_PNP,
   PNP_ENABLE,
   PNP_STEP,
@@ -164,7 +178,7 @@ const run = (action, address) => {
       case ACTION_BOOTLOAD: {
         pendingFirmware(action.id, action.pendingFirmware);
         break;
-      }  
+      }
         case ACTION_FIND_ME: {
         const dev = get(action.id);
         device.send(Buffer.from([ACTION_FIND_ME, action.finding]), dev.ip);
@@ -174,19 +188,11 @@ const run = (action, address) => {
         const dev = get(action.id);
         const id = `${action.id}/${DO}/${action.index}`
         device.send(Buffer.from([ACTION_DO, action.index, action.value]), dev.ip);
-        // device.sendConfirm(Buffer.from([ACTION_DO, action.index, action.value]), dev.ip, () => {
-        //   const channel = get(id);
-        //   return channel && channel.value === action.value;
-        // }, 300);
         break;
       }
       case ACTION_DOPPLER: {
-        const dev = get(action.id);  
+        const dev = get(action.id);
         device.send(Buffer.from([ACTION_DOPPLER, action.gain]), dev.ip);
-        // device.sendConfirm(Buffer.from([ACTION_DOPPLER, action.gain]), dev.ip, () => {
-        //   const dev = get(action.id);
-        //   return dev && dev.gain === action.gain;
-        // }, 300);
         break;
       }
       case ACTION_DIMMER: {
@@ -195,38 +201,43 @@ const run = (action, address) => {
         switch (action.action) {
           case DIM_SET:
             device.send(Buffer.from([ACTION_DIMMER, action.index, action.action, action.value]));
-            // device.sendConfirm(Buffer.from([ACTION_DIMMER, action.index, action.action, action.value]), dev.ip, () => {
-            //   const channel = get(id);
-            //   return channel && channel.value === action.value;
-            // }, 300);
             break;
           case DIM_TYPE:
             device.send(Buffer.from([ACTION_DIMMER, action.index, action.action, action.value]), dev.ip);
-            // device.sendConfirm(Buffer.from([ACTION_DIMMER, action.index, action.action, action.value]), dev.ip, () => {
-            //   const channel = get(id);
-            //   return channel && channel.type === action.value;
-            // }, 300);
             break;
           case DIM_FADE:
             device.send(Buffer.from([ACTION_DIMMER, action.index, action.action, action.value, action.velocity]), dev.ip);
-            // device.sendConfirm(Buffer.from([ACTION_DIMMER, action.index, action.action, action.value, action.velocity]), dev.ip, () => {
-            //   const channel = get(id);
-            //   return channel && channel.value === action.value;
-            // }, 300);
             break;
           case DIM_ON:
             device.send(Buffer.from([ACTION_DIMMER, action.index, action.action]), dev.ip);
-            // device.sendConfirm(Buffer.from([ACTION_DIMMER, action.index, action.action]), dev.ip, () => {
-            //   const channel = get(id);
-            //   return channel && channel.value === 255;
-            // }, 300);
             break;
-        case DIM_OFF:   
+        case DIM_OFF:
           device.send(Buffer.from([ACTION_DIMMER, action.index, action.action]), dev.ip);
-            // device.sendConfirm(Buffer.from([ACTION_DIMMER, action.index, action.action]), dev.ip, () => {
-            //   const channel = get(`${action.id}/${DIM}/${action.index}`);
-            //   return channel && channel.value === 0;
-            // }, 300);
+            break;
+        }
+        break;
+      }
+      case ACTION_ARTNET: {
+        const dev = get(action.id);
+        const id = `${action.id}/${ARTNET}/${action.index}`;
+        switch (action.action) {
+          case ARTNET_SIZE:
+            device.send(Buffer.from([ACTION_ARTNET, action.action, action.value]));
+            break;
+          case ARTNET_SET:
+            device.send(Buffer.from([ACTION_ARTNET, action.index, action.action, action.value]));
+            break;
+          case ARTNET_TYPE:
+            device.send(Buffer.from([ACTION_ARTNET, action.index, action.action, action.value]), dev.ip);
+            break;
+          case ARTNET_FADE:
+            device.send(Buffer.from([ACTION_ARTNET, action.index, action.action, action.value, action.velocity]), dev.ip);
+            break;
+          case ARTNET_ON:
+            device.send(Buffer.from([ACTION_ARTNET, action.index, action.action]), dev.ip);
+            break;
+        case ARTNET_OFF:
+          device.send(Buffer.from([ACTION_ARTNET, action.index, action.action]), dev.ip);
             break;
         }
         break;
@@ -251,7 +262,7 @@ const run = (action, address) => {
       }
       case ACTION_RGB_DIM: {
         const { id, value } = action;
-        const { ip } = get(id);  
+        const { ip } = get(id);
         device.send(Buffer.from([ACTION_RGB, 0, (value >> 16) & 0xff, (value >> 8) & 0xff, value & 0xff ]), ip);
         set(id, { rgb: value });
         break;
@@ -261,21 +272,36 @@ const run = (action, address) => {
         const { bind, last } = get(id);
         const { velocity, type } = get(bind);
         const [dev,,index] = bind.split('/');
-        const { ip } = get(dev);
+        const { ip, type: deviceType } = get(dev);
         const value = last || 255
-        switch (type) {
-          case DIM_TYPE_PWM:
-          case DIM_TYPE_RISING_EDGE:
-          case DIM_TYPE_FALLING_EDGE:
-            device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, VELOCITY]), ip);
-          break;
-          default:
+        switch (deviceType) {
+          case DEVICE_TYPE_DIM4:
+          case DEVICE_TYPE_DIM8: {
+            switch (type) {
+              case DIM_TYPE_PWM:
+              case DIM_TYPE_RISING_EDGE:
+              case DIM_TYPE_FALLING_EDGE:
+                device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, VELOCITY]), ip);
+              break;
+              default:
+                device.send(Buffer.from([ACTION_DO, index, ON]), ip);
+            }
+            break;
+          }
+          case DEVICE_TYPE_ARTNET: {
+            switch (type) {
+              case ARTNET_TYPE_DIMMER:
+                device.send(Buffer.from([ACTION_ARTNET, index, ARTNET_FADE, value, VELOCITY]), ip);
+              break;
+              default:
+                device.send(Buffer.from([ACTION_DO, index, ON]), ip);
+            }
+            break;
+          }
+          default: {
             device.send(Buffer.from([ACTION_DO, index, ON]), ip);
+          }
         }
-        // device.sendConfirm(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, 150]), ip, () => {
-        //   const light = get(id);
-        //   return light && light.value === value;
-        // }, 300);
         break;
       }
       case ACTION_OFF: {
@@ -283,20 +309,35 @@ const run = (action, address) => {
         const { bind } = get(id);
         const { velocity = 128, type } = get(bind);
         const [dev,,index] = bind.split('/');
-        const { ip } = get(dev);
-        switch (type) {
-          case DIM_TYPE_PWM:
-          case DIM_TYPE_RISING_EDGE:
-          case DIM_TYPE_FALLING_EDGE:
-            device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, 0, VELOCITY]), ip);
+        const { ip, type: deviceType } = get(dev);
+        switch (deviceType) {
+          case DEVICE_TYPE_DIM4:
+          case DEVICE_TYPE_DIM8: {
+            switch (type) {
+              case DIM_TYPE_PWM:
+              case DIM_TYPE_RISING_EDGE:
+              case DIM_TYPE_FALLING_EDGE:
+                device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, 0, VELOCITY]), ip);
+                break;
+              default:
+                device.send(Buffer.from([ACTION_DO, index, OFF]), ip);
+            }
             break;
-          default:
+          }
+          case DEVICE_TYPE_ARTNET: {
+            switch (type) {
+              case ARTNET_TYPE_DIMMER:
+                device.send(Buffer.from([ACTION_ARTNET, index, ARTNET_FADE, 0, VELOCITY]), ip);
+              break;
+              default:
+                device.send(Buffer.from([ACTION_DO, index, OFF]), ip);
+            }
+            break;
+          }
+          default: {
             device.send(Buffer.from([ACTION_DO, index, OFF]), ip);
+          }
         }
-        // device.sendConfirm(Buffer.from([ACTION_DIMMER, index, DIM_FADE, 0, 150]), ip, () => {
-        //   const light = get(id);
-        //   return light && light.value === 0;
-        // }, 300);
         break;
       }
       case ACTION_DIM: {
@@ -304,13 +345,19 @@ const run = (action, address) => {
         const { bind } = get(id);
         const { velocity = 128 } = get(bind);
         const [dev,,index] = bind.split('/');
-        const { ip } = get(dev);
-        device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, VELOCITY]), ip);
-        // device.sendConfirm(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, 150]), ip, () => {
-        //   const light = get(id);
-        //   return light && light.value === value;
-        // }, 300);
-        set(id, { last: value });
+        const { ip, type: deviceType } = get(dev);
+        switch (deviceType) {
+          case DEVICE_TYPE_DIM4:
+          case DEVICE_TYPE_DIM8: {
+            device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, VELOCITY]), ip);
+            set(id, { last: value });
+            break;
+          }
+          case DEVICE_TYPE_ARTNET: {
+            device.send(Buffer.from([ACTION_ARTNET, index, ARTNET_FADE, value, VELOCITY]), ip);
+            set(id, { last: value });
+            break;
+          }
         break;
       }
       case ACTION_DIM_RELATIVE: {
