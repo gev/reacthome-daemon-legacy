@@ -5,6 +5,7 @@ const {
   DO,
   DI,
   DIM,
+  ARTNET,
   POOL,
   DEVICE_TYPE_PLC,
   ACTION_DI,
@@ -15,10 +16,11 @@ const {
   ACTION_HUMIDITY,
   ACTION_ILLUMINATION,
   ACTION_DIMMER,
+  ACTION_ARTNET,
   ACTION_DOPPLER,
   ACTION_SCRIPT_RUN,
   ACTION_IP_ADDRESS,
-  ACTION_MAC_ADDRESS,   
+  ACTION_MAC_ADDRESS,
   ACTION_DISCOVERY,
   ACTION_READY,
   ACTION_INITIALIZE,
@@ -26,7 +28,7 @@ const {
   ACTION_ERROR,
   ACTION_FIND_ME,
   ACTION_BOOTLOAD,
-  DEVICE_GROUP, 
+  DEVICE_GROUP,
   DEVICE_TYPE_UNKNOWN,
   IP_ADDRESS_POOL_START,
   IP_ADDRESS_POOL_END,
@@ -57,7 +59,7 @@ const {
 } = require('../actions');
 const { device } = require('../sockets');
 const { run } = require('./service');
-  
+
 const ip2int = ip => ip.split('.').reduce((a, b) => (a << 8) | (parseInt(b)), 0) >>> 0;
 const int2ip = ip => `${ip >> 24 & 0xff}.${ip >> 16 & 0xff}.${ip >> 8 & 0xff}.${ip & 0xff}`;
 
@@ -167,6 +169,27 @@ module.exports.manage = () => {
           }
           break;
         }
+        case ACTION_ARTNET: {
+          const [,,,,,,, index, type, value, velocity = 150] = data;
+          const channel = `${id}/${ARTNET}/${index}`;
+          const chan = get(channel);
+          set(channel, { type, value, velocity });
+          if (chan) {
+            const { bind } = chan;
+            if (bind) {
+              const v = value ? 1 : 0;
+              const v_ = chan.value ? 1 : 0;
+              if (v !== v_) {
+                const script = chan[onDO[v]];
+                if (script) {
+                  run({ type: ACTION_SCRIPT_RUN, id: script });
+                }
+                count[v](bind);
+              }
+            }
+          }
+          break;
+        }
         case ACTION_TEMPERATURE: {
           const temperature = data.readUInt16LE(7) / 100;
           const { onTemperature, site } = get(id);
@@ -249,7 +272,7 @@ module.exports.manage = () => {
           initialized(id);
           break;
         }
-        case ACTION_IP_ADDRESS: {   
+        case ACTION_IP_ADDRESS: {
           const lookup = (get(POOL) || {})[id];
           if (lookup) {
             const buff = Buffer.alloc(15);
@@ -286,7 +309,7 @@ module.exports.manage = () => {
           });
           break;
         }
-        case ACTION_READY: 
+        case ACTION_READY:
         case ACTION_DISCOVERY: {
           const type = data[7];
           const version = `${data[8]}.${data[9]}`;
@@ -309,7 +332,7 @@ module.exports.manage = () => {
               console.log(data);
               break;
             default: {
-              console.log(data);    
+              console.log(data);
             }
           }
         }
@@ -322,4 +345,3 @@ module.exports.manage = () => {
     }
   });
 }
-
