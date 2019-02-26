@@ -229,6 +229,7 @@ const run = (action, address) => {
             device.send(Buffer.from([ACTION_ARTNET, action.action, action.index, action.value]), dev.ip);
             break;
           case ARTNET_TYPE:
+            console.log(Buffer.from([ACTION_ARTNET, action.action, action.index, action.value]), dev.ip);
             device.send(Buffer.from([ACTION_ARTNET, action.action, action.index, action.value]), dev.ip);
             break;
           case ARTNET_FADE:
