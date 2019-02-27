@@ -4,6 +4,7 @@ const {
   DO,
   DI,
   DIM,
+  ARTNET,
   ACTION_INITIALIZE,
   DEVICE,
   DEVICE_PORT,
