@@ -227,7 +227,7 @@ const run = (action, address) => {
             device.send(Buffer.concat([
               Buffer.from([ACTION_ARTNET, action.action]),
               Buffer.from(JSON.stringify(config))
-            ]);
+            ]), dev.ip);
             break;
           case ARTNET_SET:
             device.send(Buffer.from([ACTION_ARTNET, action.action, action.index, action.value]), dev.ip);
