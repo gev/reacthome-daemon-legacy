@@ -225,7 +225,7 @@ const run = (action, address) => {
             const { host, port, net, subnet, universe, rate, size } = dev;
             const config = { host, port, net, subnet, universe, rate, size, ...action.payload };
             device.send(Buffer.concat([
-              Buffer.from([ACTION_ARTNET, action.action,
+              Buffer.from([ACTION_ARTNET, action.action]),
               Buffer.from(JSON.stringify(config))
             ]);
             break;
