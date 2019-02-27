@@ -222,8 +222,12 @@ const run = (action, address) => {
         const id = `${action.id}/${ARTNET}/${action.index}`;
         switch (action.action) {
           case ARTNET_CONFIG:
-            const value = parseInt(action.value, 10);
-            device.send(Buffer.from([ACTION_ARTNET, action.action, (action.value >> 8) & 0xff, action.value & 0xff]), dev.ip);
+            const { host, port, net, subnet, universe, rate, size } = dev;
+            const config = { host, port, net, subnet, universe, rate, size, ...action.payload };
+            device.send(Buffer.concat([
+              Buffer.from([ACTION_ARTNET, action.action,
+              Buffer.from(JSON.stringify(config))
+            ]);
             break;
           case ARTNET_SET:
             device.send(Buffer.from([ACTION_ARTNET, action.action, action.index, action.value]), dev.ip);
