@@ -4,6 +4,7 @@ const {
   DO,
   DI,
   DIM,
+  ARTNET,
   ACTION_INITIALIZE,
   DEVICE,
   DEVICE_PORT,
@@ -87,14 +88,18 @@ module.exports.initialize = (id) => {
     }
     case DEVICE_TYPE_ARTNET: {
       const dev = get(id);
-      const { host, port, net, subnet, universe, rate, size } = dev;
-      const config = { host, port, net, subnet, universe, rate, size, ...action.payload };
+      const { host, port, net, subnet, universe, rate, size = 0 } = dev;
+      const config = { host, port, net, subnet, universe, rate, size };
       device.send(Buffer.concat([
         Buffer.from([ACTION_ARTNET, action.action]),
         Buffer.from(JSON.stringify(config))
       ]), dev.ip);
-      return;
-      // break;
+      for (let i = 1; i <= size; i++) {
+        const channel = get(`${id}/${ARTNET}/${i}`);
+        a[2 * i - 1] = (channel && channel.type) || 0;
+        a[2 * i] = (channel && channel.value) || 0;
+      }
+      break;
     }
     default: {
       set(id, { initialized: true });
