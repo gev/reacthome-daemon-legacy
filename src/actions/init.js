@@ -5,6 +5,7 @@ const {
   DI,
   DIM,
   ARTNET,
+  ARTNET_CONFIG,
   ACTION_ARTNET,
   ACTION_INITIALIZE,
   DEVICE,
@@ -92,7 +93,7 @@ module.exports.initialize = (id) => {
       const { host, port, net, subnet, universe, rate, size = 0 } = dev;
       const config = { host, port, net, subnet, universe, rate, size };
       device.send(Buffer.concat([
-        Buffer.from([ACTION_ARTNET, action.action]),
+        Buffer.from([ACTION_ARTNET, ARTNET_CONFIG]),
         Buffer.from(JSON.stringify(config))
       ]), dev.ip);
       for (let i = 1; i <= size; i++) {
