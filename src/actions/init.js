@@ -24,7 +24,7 @@ module.exports.initialized = (id) => {
   set(id, { initialized: true });
 }
 
-const confirm (id, data) => {
+const confirm = (id, data) => {
   const { ip } = get(id);
   device.sendConfirm(data ip, () => {
     const { initialized } = get(id);
