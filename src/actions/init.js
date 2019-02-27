@@ -4,9 +4,6 @@ const {
   DO,
   DI,
   DIM,
-  ARTNET,
-  ARTNET_CONFIG,
-  ACTION_ARTNET,
   ACTION_INITIALIZE,
   DEVICE,
   DEVICE_PORT,
@@ -26,6 +23,14 @@ const { device } = require('../sockets');
 module.exports.initialized = (id) => {
   set(id, { initialized: true });
 }
+
+const confirm (id, data) => {
+  const { ip } = get(id);
+  device.sendConfirm(data ip, () => {
+    const { initialized } = get(id);
+    return initialized;
+  }, 4 * DISCOVERY_INTERVAL);
+};
 
 module.exports.initialize = (id) => {
   add(mac, DEVICE, id);
@@ -89,27 +94,25 @@ module.exports.initialize = (id) => {
       break;
     }
     case DEVICE_TYPE_ARTNET: {
-      const dev = get(id);
       const { host, port, net, subnet, universe, rate, size = 0 } = dev;
-      const config = { host, port, net, subnet, universe, rate, size };
-      device.send(Buffer.concat([
-        Buffer.from([ACTION_ARTNET, ARTNET_CONFIG]),
-        Buffer.from(JSON.stringify(config))
-      ]), dev.ip);
+      const config = { host, port, net, subnet, universe, rate };
+      a[1] = (size << 8) & 0xff;
+      a[2] = size & 0xff;
       for (let i = 1; i <= size; i++) {
         const channel = get(`${id}/${ARTNET}/${i}`);
-        a[2 * i - 1] = (channel && channel.type) || 0;
-        a[2 * i] = (channel && channel.value) || 0;
+        a[2 * i + 1] = (channel && channel.type) || 0;
+        a[2 * i + 2] = (channel && channel.value) || 0;
       }
-      break;
+      confirm(id, Buffer.concat([
+        Buffer.from(a),
+        Buffer.from(JSON.stringify(config))
+      ]))
+      return;
     }
     default: {
       set(id, { initialized: true });
       return;
     }
   }
-  device.sendConfirm(Buffer.from(a), dev.ip, () => {
-    const d = get(id);
-    return d && d.initialized;
-  }, 4 * DISCOVERY_INTERVAL);
+  confirm(id, Buffer.from(a));
 };
