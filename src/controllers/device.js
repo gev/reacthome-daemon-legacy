@@ -150,7 +150,7 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_DIMMER: {
-          const [,,,,,,, index, type, value, velocity = 150] = data;
+          const [,,,,,,, index, type, value, velocity = 128] = data;
           const channel = `${id}/${DIM}/${index}`;
           const chan = get(channel);
           set(channel, { type, value, velocity });
@@ -178,7 +178,7 @@ module.exports.manage = () => {
               break;
             }
             default: {
-              const [,,,,,,,, index, type, value, velocity = 150] = data;
+              const [,,,,,,,, index, type, value, velocity = 1] = data;
               const channel = `${id}/${ARTNET}/${index}`;
               const chan = get(channel);
               set(channel, { type, value, velocity });
