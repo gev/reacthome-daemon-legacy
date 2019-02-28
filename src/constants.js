@@ -148,6 +148,7 @@ module.exports.DEVICE_TYPE_THI = 0x03;
 module.exports.DEVICE_TYPE_DOPPLER = 0x04;
 module.exports.DEVICE_TYPE_DMX = 0x05;
 module.exports.DEVICE_TYPE_RS485 = 0x06;
+module.exports.DEVICE_TYPE_IR1 = 0x14;
 module.exports.DEVICE_TYPE_IR6 = 0x07;
 module.exports.DEVICE_TYPE_DI16 = 0x08;
 module.exports.DEVICE_TYPE_DI24 = 0x12;
