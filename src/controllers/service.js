@@ -297,7 +297,7 @@ const run = (action, address) => {
           case DEVICE_TYPE_ARTNET: {
             switch (type) {
               case ARTNET_TYPE_DIMMER:
-                device.send(Buffer.from([ACTION_ARTNET, index, ARTNET_FADE, value, ARTNET_VELOCITY]), ip);
+                device.send(Buffer.from([ACTION_ARTNET, ARTNET_FADE, index, value, ARTNET_VELOCITY]), ip);
               break;
               default:
                 device.send(Buffer.from([ACTION_DO, index, ON]), ip);
@@ -333,7 +333,7 @@ const run = (action, address) => {
           case DEVICE_TYPE_ARTNET: {
             switch (type) {
               case ARTNET_TYPE_DIMMER:
-                device.send(Buffer.from([ACTION_ARTNET, index, ARTNET_FADE, 0, ARTNET_VELOCITY]), ip);
+                device.send(Buffer.from([ACTION_ARTNET, ARTNET_FADE, index, 0, ARTNET_VELOCITY]), ip);
               break;
               default:
                 device.send(Buffer.from([ACTION_DO, index, OFF]), ip);
@@ -360,7 +360,7 @@ const run = (action, address) => {
             break;
           }
           case DEVICE_TYPE_ARTNET: {
-            device.send(Buffer.from([ACTION_ARTNET, index, ARTNET_FADE, value, ARTNET_VELOCITY]), ip);
+            device.send(Buffer.from([ACTION_ARTNET, ARTNET_FADE, index, value, ARTNET_VELOCITY]), ip);
             set(id, { last: value });
             break;
           }
