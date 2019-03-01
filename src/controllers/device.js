@@ -29,6 +29,10 @@ const {
   ACTION_ERROR,
   ACTION_FIND_ME,
   ACTION_BOOTLOAD,
+  DIM_TYPE_FALLING_EDGE,
+  DIM_TYPE_RISING_EDGE,
+  DIM_TYPE_PWM,
+  ARTNET_TYPE_DIMMER,
   DEVICE_GROUP,
   DEVICE_TYPE_UNKNOWN,
   IP_ADDRESS_POOL_START,
@@ -153,7 +157,12 @@ module.exports.manage = () => {
           const [,,,,,,, index, type, value, velocity = 128] = data;
           const channel = `${id}/${DIM}/${index}`;
           const chan = get(channel);
-          set(channel, { type, value, velocity });
+          set(channel, {
+            type, value, velocity,
+            dimmable: type ===  DIM_TYPE_FALLING_EDGE
+                   || type === DIM_TYPE_RISING_EDGE
+                   || type === DIM_TYPE_PWM
+          });
           if (chan) {
             const { bind } = chan;
             if (bind) {
@@ -181,7 +190,10 @@ module.exports.manage = () => {
               const [,,,,,,,, index, type, value, velocity = 1] = data;
               const channel = `${id}/${ARTNET}/${index}`;
               const chan = get(channel);
-              set(channel, { type, value, velocity });
+              set(channel, {
+                type, value, velocity,
+                dimmable: type === ARTNET_TYPE_DIMMER
+              });
               if (chan) {
                 const { bind } = chan;
                 if (bind) {
