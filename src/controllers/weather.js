@@ -17,7 +17,7 @@ function weather(units = 'metric', lang = 'ru') {
   const { location } = get(project) || {};
   if (!location) return;
   const { lat, lng } = location;
-  fetch(`http://api.openweathermap.org/data/2.5/weather?APPID=${key}&&units=${units}&lang=${lang}&lat=${lat}&lon=${lng}`)
+  fetch(`http://api.openweathermap.org/data/2.5/weather?APPID=${key}&units=${units}&lang=${lang}&lat=${lat}&lon=${lng}`)
     .then(res => res.json())
     .then(weather => {
       now = Date.now();
