@@ -543,7 +543,7 @@ const run = (action, address) => {
         const {
             id,
             cool_hysteresis, cool_threshold, heat_hysteresis, heat_threshold,
-            onHeat, onCool, onStop
+            onStartHeat, onStartCool, onStopHeat, onStopCool
         } = action
         const { setpoint, sensor, state, mode } = get(id);
         const { temperature } = get(sensor);
@@ -553,46 +553,46 @@ const run = (action, address) => {
             run({ type: ACTION_SCRIPT_RUN, id: script });
           }
         };
-        const stop = make(STOP, onStop, mode);
-        const cool = make(COOL, onCool, COOL);
-        const heat = make(HEAT, onHeat, HEAT);
+        const stopCool = make(STOP, onStopCool, mode);
+        const stopHeat = make(STOP, onStopHeat, mode);
+        const startCool = make(COOL, onStartCool, COOL);
+        const startHeat = make(HEAT, onStartHeat, HEAT);
         if (temperature > setpoint - (- heat_threshold)) {
-          if (state === HEAT) {
-            stop();
-          } else {
-            cool();
-          }
+          stopHeat();
+          startCool();
         } else if (temperature < setpoint - cool_threshold) {
-          if (state === COOL) {
-            stop();
-          } else {
-            heat();
-          }
+          stopCool();
+          startHeat();
         } else {
           switch (mode) {
             case HEAT: {
+              stopCool();
               if (temperature < setpoint - heat_hysteresis) {
-                heat();
+                startHeat();
               } else if (temperature > setpoint - (- heat_hysteresis)) {
-                stop();
+                stopHeat();
               }
               break;
             }
             case COOL: {
+              stopHeat()
               if (temperature > setpoint - (- cool_hysteresis)) {
-                cool();
+                startCool();
               } else if (temperature < setpoint - cool_hysteresis) {
-                stop();
+                stopCool();
               }
               break;
             }
             default: {
               if (temperature > setpoint) {
-                cool();
+                stopHeat();
+                startCool();
               } else if (temperature < setpoint) {
-                heat();
+                stopCool();
+                startHeat();
               } else {
-                stop();
+                stopCool();
+                stopHeat();
               }
             }
           }
