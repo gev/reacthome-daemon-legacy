@@ -556,6 +556,8 @@ const run = (action, address) => {
         const stop = make(STOP, onStop, mode);
         const cool = make(COOL, onCool, COOL);
         const heat = make(HEAT, onHeat, HEAT);
+        //TODO: add stop_cool() stop_heat()
+        stop();
         if (temperature > setpoint - (- heat_threshold)) {
           if (state === HEAT) {
             stop();
