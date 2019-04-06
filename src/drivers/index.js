@@ -3,7 +3,7 @@ const { mac, DRIVER_TYPE_RS21 } = require('../constants');
 const { get } = require('../actions');
 const RS21 = require('./rs21');
 
-const run = {};
+let run = {};
 
 module.exports.manage = () => {
   const { project } = get(mac) || {};
