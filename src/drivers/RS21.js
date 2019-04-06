@@ -1,5 +1,5 @@
 
-const fetch = require('node-fetch');
+var net = require('net');
 const { get, set } = require('../actions');
 
 module.exports = class {
@@ -12,11 +12,21 @@ module.exports = class {
   start() {
     this.timer = setInterval(() => {
       const { ip } = get(this.id);
-      fetch(`http://${ip}/sensors`)
-        .then(console.log)
-        // .then(resp => resp.text())
-        // .then(t => set(id, { temperature: parseFloat(t) }))
-        .catch(console.error);
+      const client = new net.Socket();
+      client.on('error', () => {
+        set(id, { online: false });
+      })
+      client.on('data', (data) => {
+        const lines = String(data).split('\r\n');
+        set(id, {
+          online: true,
+          temperature: parseFloat(lines[lines.length - 1])
+        });
+        client.destroy();
+      });
+      client.connect(80, ip, () => {
+        client.write('GET /sensors HTTP/1.1\r\n\r\n');
+      });
     }, 1000);
   }
 
