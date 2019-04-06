@@ -13,7 +13,7 @@ module.exports = class {
     this.timer = setInterval(() => {
       const { ip } = get(this.id);
       fetch(`http://${ip}/sensors`)
-        .then(resp => resp.text)
+        .then(resp => resp.text())
         .then(temperature => set(id, { temperature }))
         .catch(console.error);
     }, 10000);
