@@ -8,7 +8,7 @@ const run = {};
 module.exports.manage = () => {
   const { project } = get(mac) || {};
   if (project === undefined) return;
-  const driver = get(project) || []
+  const { driver } = get(project) || []
   driver.forEach(id => {
     if (run[id] === undefined) return;
     const { type } = get(id) || {};
