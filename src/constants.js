@@ -195,3 +195,5 @@ module.exports.OPERATOR_GT = 'OPERATOR_GT';
 module.exports.HEAT = 'heat';
 module.exports.COOL = 'cool';
 module.exports.STOP = 'stop';
+
+module.exports.DRIVER_TYPE_RS21;

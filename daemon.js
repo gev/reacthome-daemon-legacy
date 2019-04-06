@@ -1,6 +1,7 @@
 
 const Koa = require('koa');
 const { state, assets, device, service, cpu, weather } = require('./src/controllers');
+const drivers = require('./src/drivers');
 const { mac, DAEMON, CLIENT_SERVER_PORT, ACTION_SET, ACTION_SCRIPT_RUN, IMAGE } = require('./src/constants');
 const { get, set, count } = require('./src/actions');
 const db = require('./src/db');
@@ -37,6 +38,7 @@ db.createReadStream()
     weather.manage();
     service.manage();
     device.manage();
+    drivers.manage();
     cpu.manage();
     start();
   });
