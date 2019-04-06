@@ -3,7 +3,7 @@ const { exists, createWriteStream } = require('fs');
 const fetch = require('node-fetch');
 const crypto = require('crypto');
 const ircodes = require('reacthome-ircodes');
-const drivers = require('./src/drivers');
+const drivers = require('../drivers');
 const {
   mac,
   VERSION,
