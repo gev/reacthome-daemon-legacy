@@ -1,6 +1,6 @@
 
 var net = require('net');
-const { get, set } = require('../actions');
+const { get, set, run } = require('../actions');
 
 module.exports = class {
 
@@ -11,23 +11,25 @@ module.exports = class {
 
   start() {
     this.timer = setInterval(() => {
-      const { ip } = get(this.id);
+      const { ip, onTemperature, site } = get(this.id);
       const client = new net.Socket();
       client.on('error', () => {
         set(this.id, { online: false });
       })
       client.on('data', (data) => {
-        const lines = String(data).split('\r\n');
-        set(this.id, {
-          online: true,
-          temperature: parseFloat(lines[lines.length - 1])
-        });
         client.destroy();
+        const lines = String(data).split('\r\n');
+        const temperature = parseFloat(lines[lines.length - 1]);
+        if (site) set(site, { temperature });
+        set(this.id, { online: true, temperature });
+        if (onTemperature) {
+          run({type: ACTION_SCRIPT_RUN, id: onTemperature});
+        }
       });
       client.connect(80, ip, () => {
         client.write('GET /sensors HTTP/1.1\r\n\r\n');
       });
-    }, 1000);
+    }, 10000);
   }
 
   stop() {
