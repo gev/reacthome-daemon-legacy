@@ -14,11 +14,11 @@ module.exports = class {
       const { ip } = get(this.id);
       const client = new net.Socket();
       client.on('error', () => {
-        set(id, { online: false });
+        set(this.id, { online: false });
       })
       client.on('data', (data) => {
         const lines = String(data).split('\r\n');
-        set(id, {
+        set(this.id, {
           online: true,
           temperature: parseFloat(lines[lines.length - 1])
         });
