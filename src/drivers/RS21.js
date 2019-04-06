@@ -13,8 +13,9 @@ module.exports = class {
     this.timer = setInterval(() => {
       const { ip } = get(this.id);
       fetch(`http://${ip}/sensors`)
-        .then(resp => resp.text())
-        .then(t => set(id, { temperature: parseFloat(t) }))
+        .then(console.log)
+        // .then(resp => resp.text())
+        // .then(t => set(id, { temperature: parseFloat(t) }))
         .catch(console.error);
     }, 10000);
   }
