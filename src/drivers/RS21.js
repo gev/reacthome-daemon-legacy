@@ -17,7 +17,7 @@ module.exports = class {
         // .then(resp => resp.text())
         // .then(t => set(id, { temperature: parseFloat(t) }))
         .catch(console.error);
-    }, 10000);
+    }, 1000);
   }
 
   stop() {
