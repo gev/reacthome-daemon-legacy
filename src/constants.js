@@ -196,4 +196,4 @@ module.exports.HEAT = 'heat';
 module.exports.COOL = 'cool';
 module.exports.STOP = 'stop';
 
-module.exports.DRIVER_TYPE_RS21;
+module.exports.DRIVER_TYPE_RS21 = 'RS21';

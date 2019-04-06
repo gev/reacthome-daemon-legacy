@@ -12,8 +12,8 @@ module.exports.manage = () => {
   Object.entries(run).forEach(([id, drv]) => {
     drv.stop();
   });
+  run = {};
   driver.forEach(id => {
-    if (run[id] === undefined) return;
     const { type } = get(id) || {};
     switch(type) {
       case DRIVER_TYPE_RS21:
