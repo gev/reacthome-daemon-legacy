@@ -14,7 +14,7 @@ module.exports = class {
       const { ip } = get(this.id);
       fetch(`http://${ip}/sensors`)
         .then(resp => resp.text())
-        .then(temperature => set(id, { temperature }))
+        .then(t => set(id, { temperature: parseFloat(t) }))
         .catch(console.error);
     }, 10000);
   }
