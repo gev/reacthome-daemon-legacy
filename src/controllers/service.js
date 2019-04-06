@@ -3,6 +3,7 @@ const { exists, createWriteStream } = require('fs');
 const fetch = require('node-fetch');
 const crypto = require('crypto');
 const ircodes = require('reacthome-ircodes');
+const drivers = require('./src/drivers');
 const {
   mac,
   VERSION,
@@ -142,6 +143,7 @@ const init = (ip) => {
         }
         set(k, v);
       });
+      drivers.manage();
     })
     .catch(console.error);
 };

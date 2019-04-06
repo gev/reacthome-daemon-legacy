@@ -1,9 +1,9 @@
 
 const Koa = require('koa');
 const { state, assets, device, service, cpu, weather } = require('./src/controllers');
-const drivers = require('./src/drivers');
 const { mac, DAEMON, CLIENT_SERVER_PORT, ACTION_SET, ACTION_SCRIPT_RUN, IMAGE } = require('./src/constants');
 const { get, set, count } = require('./src/actions');
+const drivers = require('./src/drivers');
 const db = require('./src/db');
 
 const init = {};
