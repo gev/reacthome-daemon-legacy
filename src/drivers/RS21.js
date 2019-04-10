@@ -2,7 +2,7 @@
 var net = require('net');
 const { get, set } = require('../actions');
 const { service } = require('../controllers');
-
+const { ACTION_SCRIPT_RUN } = require('../constants');
 module.exports = class {
 
   constructor(id) {
