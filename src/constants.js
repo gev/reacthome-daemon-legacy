@@ -164,7 +164,6 @@ module.exports.DEVICE_TYPE_PNP = 0xe0;
 module.exports.DEVICE_TYPE_PLC = 0xfe;
 module.exports.DEVICE_TYPE_BOOTLOADER = 0xff;
 module.exports.DEVICE_TYPE_IR_RECEIVER = 0x10;
-module.exports.DEVICE_TYPE_ARTNET = 0x13;
 
 module.exports.onIR = 'onIR';
 module.exports.onOff = 'onOff';
@@ -197,3 +196,4 @@ module.exports.COOL = 'cool';
 module.exports.STOP = 'stop';
 
 module.exports.DRIVER_TYPE_RS21 = 'RS21';
+module.exports.DRIVER_TYPE_ARTNET = 'ARTNET';

@@ -5,8 +5,6 @@ const {
   DO,
   DI,
   DIM,
-  ARTNET,
-  ARTNET_CONFIG,
   POOL,
   DEVICE_TYPE_PLC,
   ACTION_DI,
@@ -32,7 +30,6 @@ const {
   DIM_TYPE_FALLING_EDGE,
   DIM_TYPE_RISING_EDGE,
   DIM_TYPE_PWM,
-  ARTNET_TYPE_DIMMER,
   DEVICE_GROUP,
   DEVICE_TYPE_UNKNOWN,
   IP_ADDRESS_POOL_START,
@@ -179,43 +176,10 @@ module.exports.manage = () => {
           }
           break;
         }
-        case ACTION_ARTNET: {
-          switch (data[7]) {
-            case ARTNET_CONFIG: {
-              const config = JSON.parse(data.slice(8));
-              set(id, config);
-              break;
-            }
-            default: {
-              const [,,,,,,,, index, type, value, velocity = 1] = data;
-              const channel = `${id}/${ARTNET}/${index}`;
-              const chan = get(channel);
-              set(channel, {
-                type, value, velocity,
-                dimmable: type === ARTNET_TYPE_DIMMER
-              });
-              if (chan) {
-                const { bind } = chan;
-                if (bind) {
-                  const v = value ? 1 : 0;
-                  const v_ = chan.value ? 1 : 0;
-                  if (v !== v_) {
-                    const script = chan[onDO[v]];
-                    if (script) {
-                      run({ type: ACTION_SCRIPT_RUN, id: script });
-                    }
-                    count[v](bind);
-                  }
-                }
-              }
-            }
-          }
-          break;
-        }
         case ACTION_TEMPERATURE: {
           const temperature = data.readUInt16LE(7) / 100;
           const { onTemperature, site } = get(id);
-          if (site) set(site, { temperature });
+          // if (site) set(site, { temperature });
           set(id, { temperature });
           if (onTemperature) {
             run({type: ACTION_SCRIPT_RUN, id: onTemperature});

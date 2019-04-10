@@ -47,7 +47,7 @@ const {
   DEVICE_PORT,
   DEVICE_TYPE_DIM4,
   DEVICE_TYPE_DIM8,
-  DEVICE_TYPE_ARTNET,
+  DRIVER_TYPE_ARTNET,
   DISCOVERY_INTERVAL,
   DAEMON,
   MOBILE,
@@ -221,33 +221,7 @@ const run = (action, address) => {
         break;
       }
       case ACTION_ARTNET: {
-        const dev = get(action.id);
-        const id = `${action.id}/${ARTNET}/${action.index}`;
-        switch (action.action) {
-          case ARTNET_CONFIG:
-            const { host, port, net, subnet, universe, rate, size } = dev;
-            const config = { host, port, net, subnet, universe, rate, size, ...action.payload };
-            device.send(Buffer.concat([
-              Buffer.from([ACTION_ARTNET, action.action]),
-              Buffer.from(JSON.stringify(config))
-            ]), dev.ip);
-            break;
-          case ARTNET_SET:
-            device.send(Buffer.from([ACTION_ARTNET, action.action, action.index, action.value]), dev.ip);
-            break;
-          case ARTNET_TYPE:
-            device.send(Buffer.from([ACTION_ARTNET, action.action, action.index, action.value]), dev.ip);
-            break;
-          case ARTNET_FADE:
-            device.send(Buffer.from([ACTION_ARTNET, action.action, action.index, action.value, action.velocity]), dev.ip);
-            break;
-          case ARTNET_ON:
-            device.send(Buffer.from([ACTION_ARTNET, action.action, action.index]), dev.ip);
-            break;
-        case ARTNET_OFF:
-          device.send(Buffer.from([ACTION_ARTNET, action.action, action.index]), dev.ip);
-            break;
-        }
+        drivers.handle(action);
         break;
       }
       case ACTION_PNP: {
@@ -296,13 +270,13 @@ const run = (action, address) => {
             }
             break;
           }
-          case DEVICE_TYPE_ARTNET: {
+          case DRIVER_TYPE_ARTNET: {
             switch (type) {
               case ARTNET_TYPE_DIMMER:
-                device.send(Buffer.from([ACTION_ARTNET, ARTNET_FADE, index, value, ARTNET_VELOCITY]), ip);
+                drivers.handle({ id: dev, index, action: ARTNET_FADE, value, velocity: ARTNET_VELOCITY });
               break;
               default:
-                device.send(Buffer.from([ACTION_DO, index, ON]), ip);
+                drivers.handle({ id: dev, index, type: ACTION_DO, value: ON, velocity: ARTNET_VELOCITY });
             }
             break;
           }
@@ -332,13 +306,13 @@ const run = (action, address) => {
             }
             break;
           }
-          case DEVICE_TYPE_ARTNET: {
+          case DRIVER_TYPE_ARTNET: {
             switch (type) {
               case ARTNET_TYPE_DIMMER:
-                device.send(Buffer.from([ACTION_ARTNET, ARTNET_FADE, index, 0, ARTNET_VELOCITY]), ip);
+                drivers.handle({ id: dev, index, action: ARTNET_FADE, value: 0, velocity: ARTNET_VELOCITY });
               break;
               default:
-                device.send(Buffer.from([ACTION_DO, index, OFF]), ip);
+                drivers.handle({ id: dev, index, type: ACTION_DO, value: OFF, velocity: ARTNET_VELOCITY });
             }
             break;
           }
@@ -361,8 +335,8 @@ const run = (action, address) => {
             set(id, { last: value });
             break;
           }
-          case DEVICE_TYPE_ARTNET: {
-            device.send(Buffer.from([ACTION_ARTNET, ARTNET_FADE, index, value, ARTNET_VELOCITY]), ip);
+          case DRIVER_TYPE_ARTNET: {
+            drivers.handle({ id: dev, index, action: ARTNET_FADE, value, velocity: ARTNET_VELOCITY });
             set(id, { last: value });
             break;
           }
@@ -547,7 +521,7 @@ const run = (action, address) => {
             cool_hysteresis, cool_threshold, heat_hysteresis, heat_threshold,
             onStartHeat, onStartCool, onStopHeat, onStopCool
         } = action
-        const { setpoint, sensor, state, mode } = get(id);
+        const { setpoint, sensor, state, mode, site } = get(id);
         const { temperature } = get(sensor);
         const make = (state, script, mode) => () => {
           set(id, { state, mode });
@@ -559,6 +533,7 @@ const run = (action, address) => {
         const stopHeat = make(STOP, onStopHeat, mode);
         const startCool = make(COOL, onStartCool, COOL);
         const startHeat = make(HEAT, onStartHeat, HEAT);
+        set(site, { temperature });
         if (temperature > setpoint - (- heat_threshold)) {
           stopHeat();
           startCool();
