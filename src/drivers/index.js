@@ -2,7 +2,7 @@
 const { mac, DRIVER_TYPE_RS21, DRIVER_TYPE_ARTNET } = require('../constants');
 const { get } = require('../actions');
 const RS21 = require('./RS21');
-const Artnet = require('./artnet');
+// const Artnet = require('./artnet');
 
 let run = {};
 
@@ -21,9 +21,9 @@ module.exports.manage = () => {
       case DRIVER_TYPE_RS21:
         run[id] = new RS21(id);
         break;
-      case DRIVER_TYPE_ARTNET:
-        run[id] = new Artnet(id);
-        break;
+      // case DRIVER_TYPE_ARTNET:
+      //   run[id] = new Artnet(id);
+      //   break;
     }
   });
 };

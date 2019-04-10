@@ -14,7 +14,7 @@
     "koa": "^2.5.0",
     "koa-mount": "^4.0.0",
     "koa-static": "^4.0.2",
-    "level": "^4.0.0",
+    "level": "^5.0.1",
     "node-fetch": "^2.1.2",
     "reacthome-ircodes": "gev/reacthome-ircodes",
     "uuid": "^3.2.1"

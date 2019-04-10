@@ -1,6 +1,7 @@
 
 var net = require('net');
-const { get, set, run } = require('../actions');
+const { get, set } = require('../actions');
+const { service } = require('../controllers');
 
 module.exports = class {
 
@@ -23,7 +24,7 @@ module.exports = class {
         if (site) set(site, { temperature });
         set(this.id, { online: true, temperature });
         if (onTemperature) {
-          run({type: ACTION_SCRIPT_RUN, id: onTemperature});
+          service.run({type: ACTION_SCRIPT_RUN, id: onTemperature});
         }
       });
       client.connect(80, ip, () => {
