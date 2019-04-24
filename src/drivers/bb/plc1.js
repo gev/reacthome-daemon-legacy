@@ -92,11 +92,11 @@ module.exports = class {
         if (i === 0) {
           v = data[3] ? 1 : 0;
         } else {
-          const v = bit(data, i - 1);
+          v = bit(data, i - 1);
         }
         const channel = this.channelDI(i);
         const { value, onOn, onOff, onClick } = get(channel) || {};
-        console.log(channel, v);
+        console.log(channel, v, value);
         if (v !== value) {
           set(channel, { value: v });
           if (v) {
