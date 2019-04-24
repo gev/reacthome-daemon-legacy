@@ -18,6 +18,7 @@ module.exports.manage = () => {
   run = {};
   driver.forEach(id => {
     const { type } = get(id) || {};
+    console.log(id, type);
     switch(type) {
       case DRIVER_TYPE_RS21:
         run[id] = new RS21(id);
