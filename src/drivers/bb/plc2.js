@@ -126,12 +126,12 @@ module.exports = class {
   }
 
   masterHandle({ cmd, data }) {
-    param.forEach((p) => {
-      let value;
-      switch (p) {
-        case
-      }
-    })
+    // param.forEach((p) => {
+    //   let value;
+    //   switch (p) {
+    //     case
+    //   }
+    // })
   }
 
 }
