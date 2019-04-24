@@ -1,9 +1,6 @@
 
 const path = require('path');
-const { ip, mac } = require('ip')();
 
-module.exports.ip = ip;
-module.exports.mac = mac;
 module.exports.VERSION = '5.1';
 
 module.exports.DEVICE_PORT = 2017;
@@ -197,3 +194,5 @@ module.exports.STOP = 'stop';
 
 module.exports.DRIVER_TYPE_RS21 = 'RS21';
 module.exports.DRIVER_TYPE_ARTNET = 'ARTNET';
+module.exports.DRIVER_TYPE_BB_PLC1 = 'BB_PLC1';
+module.exports.DRIVER_TYPE_BB_PLC2 = 'BB_PLC2';

@@ -1,7 +1,8 @@
 
 const { Worker } = require('worker_threads');
 const { get, set } = require('../../actions');
-const { ARTNET } = require('../../constants');
+const service = require('../../controllers/service');
+const { ARTNET, ACTION_SCRIPT_RUN } = require('../../constants');
 
 module.exports = class {
 
@@ -24,7 +25,15 @@ module.exports = class {
     }
     this.worker = new Worker('./src/drivers/artnet/worker.js', { workerData });
     this.worker.on('message', ({ index, ...payload }) => {
-      set(this.channel(index), payload);
+      const channel = this.channel(index);
+      const { onOn, onOff, value } = get(channel) || {};
+      set(channel, payload);
+      if (payload.value !== value) {
+        const script = payload.value === 0 ? onOff : onOn;
+        if (script) {
+          service.run({ type: ACTION_SCRIPT_RUN, id: script });
+        }
+      }
     });
   }
 
@@ -35,6 +44,5 @@ module.exports = class {
   handle(action) {
     this.worker.postMessage(action);
   }
-
 
 }

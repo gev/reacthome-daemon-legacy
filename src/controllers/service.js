@@ -5,7 +5,6 @@ const crypto = require('crypto');
 const ircodes = require('reacthome-ircodes');
 const drivers = require('../drivers');
 const {
-  mac,
   VERSION,
   asset,
   TV,
@@ -48,6 +47,8 @@ const {
   DEVICE_TYPE_DIM4,
   DEVICE_TYPE_DIM8,
   DRIVER_TYPE_ARTNET,
+  DRIVER_TYPE_BB_PLC1,
+  DRIVER_TYPE_BB_PLC2,
   DISCOVERY_INTERVAL,
   DAEMON,
   MOBILE,
@@ -105,6 +106,7 @@ const {
   updateFirmware
 } = require('../actions');
 const { device, service } = require('../sockets');
+const mac = require('../mac');
 
 const timer = {};
 
@@ -120,7 +122,7 @@ const download = (ip, name) => {
         if (res.status !== 200) return;
         const ws = createWriteStream(file);
         ws.on('end', () => {
-          service.broadcast(JSON.stringify({ id: mac, type: ACTION_DOWNLOAD, name: name }));
+          service.broadcast(JSON.stringify({ id: mac(), type: ACTION_DOWNLOAD, name: name }));
         });
         res.body.pipe(ws);
       })
@@ -129,14 +131,14 @@ const download = (ip, name) => {
 };
 
 const init = (ip) => {
-  fetch(`http://${ip}:${CLIENT_PORT}/${STATE}/${mac}`)
+  fetch(`http://${ip}:${CLIENT_PORT}/${STATE}/${mac()}`)
     .then(response => response.json())
     .then(({ assets = [], state = {} }) => {
       assets.forEach((name) => {
         download(ip, name);
       });
       Object.entries(state).forEach(([k, v]) => {
-        if (k === mac) {
+        if (k === mac()) {
           v.online = true;
           v.type = DAEMON;
           v.version = VERSION;
@@ -170,7 +172,7 @@ const run = (action, address) => {
         }
         if (id && type !== MOBILE) {
           set(id, { online: true, ip: address, type, multicast, version, ready });
-          add(mac, DEVICE, id);
+          add(mac(), DEVICE, id);
           clearTimeout(timer[id]);
           timer[id] = setTimeout(() => {
             set(id, { online: false });
@@ -190,7 +192,16 @@ const run = (action, address) => {
       case ACTION_DO: {
         const dev = get(action.id);
         const id = `${action.id}/${DO}/${action.index}`
-        device.send(Buffer.from([ACTION_DO, action.index, action.value]), dev.ip);
+        switch (dev.type) {
+          case DRIVER_TYPE_BB_PLC1:
+          case DRIVER_TYPE_BB_PLC2: {
+            drivers.handle(action);
+            break;
+          }
+          default: {
+            device.send(Buffer.from([ACTION_DO, action.index, action.value]), dev.ip);
+          }
+        }
         break;
       }
       case ACTION_DOPPLER: {
@@ -280,6 +291,11 @@ const run = (action, address) => {
             }
             break;
           }
+          case DRIVER_TYPE_BB_PLC1:
+          case DRIVER_TYPE_BB_PLC2: {
+              drivers.handle({ id: dev, index, value: ON });
+              break;
+          }
           default: {
             device.send(Buffer.from([ACTION_DO, index, ON]), ip);
           }
@@ -315,6 +331,11 @@ const run = (action, address) => {
                 drivers.handle({ id: dev, index, type: ACTION_DO, value: OFF, velocity: ARTNET_VELOCITY });
             }
             break;
+          }
+          case DRIVER_TYPE_BB_PLC1:
+          case DRIVER_TYPE_BB_PLC2: {
+              drivers.handle({ id: dev, index, value: OFF });
+              break;
           }
           default: {
             device.send(Buffer.from([ACTION_DO, index, OFF]), ip);

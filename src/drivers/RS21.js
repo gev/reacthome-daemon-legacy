@@ -1,7 +1,7 @@
 
 var net = require('net');
 const { get, set } = require('../actions');
-const { service } = require('../controllers');
+const service = require('../controllers/service');
 const { ACTION_SCRIPT_RUN } = require('../constants');
 module.exports = class {
 
@@ -12,7 +12,7 @@ module.exports = class {
 
   start() {
     this.timer = setInterval(() => {
-      const { ip, onTemperature, site } = get(this.id);
+      const { ip, onTemperature, site } = get(this.id) || {};
       const client = new net.Socket();
       client.on('error', () => {
         set(this.id, { online: false });

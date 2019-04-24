@@ -1,7 +1,6 @@
 
 const crypto = require('crypto');
 const {
-  mac,
   DO,
   DI,
   DIM,
@@ -61,6 +60,7 @@ const {
 } = require('../actions');
 const { device } = require('../sockets');
 const { run } = require('./service');
+const mac = require('../mac');
 
 const ip2int = ip => ip.split('.').reduce((a, b) => (a << 8) | (parseInt(b)), 0) >>> 0;
 const int2ip = ip => `${ip >> 24 & 0xff}.${ip >> 16 & 0xff}.${ip >> 8 & 0xff}.${ip & 0xff}`;
@@ -73,7 +73,7 @@ let last_ip = IP_ADDRESS_POOL_START;
 
 module.exports.manage = () => {
 
-  ((get(mac) || {}).device || []).forEach(id => {
+  ((get(mac()) || {}).device || []).forEach(id => {
     offline(id);
   });
 

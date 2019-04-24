@@ -1,6 +1,5 @@
 
 const {
-  mac,
   DO,
   DI,
   DIM,
@@ -20,6 +19,7 @@ const {
 } = require('../constants');
 const { get, set, add } = require('./create');
 const { device } = require('../sockets');
+const mac = require('../mac');
 
 module.exports.initialized = (id) => {
   set(id, { initialized: true });
@@ -34,7 +34,7 @@ const confirm = (id, data) => {
 };
 
 module.exports.initialize = (id) => {
-  add(mac, DEVICE, id);
+  add(mac(), DEVICE, id);
   set(id, { initialized: false });
   const dev = get(id);
   const a = [ACTION_INITIALIZE];

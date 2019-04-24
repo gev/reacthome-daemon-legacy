@@ -10,5 +10,5 @@ module.exports = {
   online, offline,
   pendingFirmware, updateFirmware,
   initialize, initialized,
-  count, count_on, count_off
+  count, count_on, count_off,
 };

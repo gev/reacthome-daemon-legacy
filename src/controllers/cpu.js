@@ -1,7 +1,8 @@
 
 const { readFile } = require('fs');
 const { set } = require('../actions');
-const { mac, DISCOVERY_INTERVAL } = require('../constants');
+const { DISCOVERY_INTERVAL } = require('../constants');
+const mac = require('../mac');
 
 module.exports.manage = () => {
   setInterval(() => {
@@ -10,7 +11,7 @@ module.exports.manage = () => {
         console.log(err);
         return;
       }
-      set(mac, { temperature: data / 1000 });
+      set(mac(), { temperature: data / 1000 });
     });
   }, 10 * DISCOVERY_INTERVAL);
 };

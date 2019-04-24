@@ -1,6 +1,5 @@
 
 const {
-  mac,
   VERSION,
   DAEMON,
   DISCOVERY_INTERVAL,
@@ -9,25 +8,23 @@ const {
   CLIENT_PORT,
   CLIENT_SERVER_PORT
 } = require('../constants');
-const {} = require
 const socket = require('./socket');
+const mac = require('../mac');
 
 const unicast = [];
 
 const discovery = (multicast) => JSON.stringify({
-  id: mac,
+  id: mac(),
   type: ACTION_DISCOVERY,
   payload: { type: DAEMON, version: VERSION, multicast }
 })
 
 const service = socket(
-  () => {
+  () => () => {
     const m = discovery(true);
     const u = discovery(false);
-    return () => {
-      service.send(m, CLIENT_GROUP);
-      unicast.forEach(ip => service.send(u, ip));
-    }
+    service.send(m, CLIENT_GROUP);
+    unicast.forEach(ip => service.send(u, ip));
   },
   DISCOVERY_INTERVAL, CLIENT_PORT, CLIENT_SERVER_PORT
 );
