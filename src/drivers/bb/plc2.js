@@ -106,7 +106,7 @@ module.exports = class {
 
   start() {
     const { host, port = 502 } = get(this.id) || {};
-    this.master = new Master({ host, port, device: 1 });
+    this.master = new Master({ host, port, device: 2 });
     this.master.on('error', console.error);
     this.master.on('data', (event) => {
       console.log(event);
