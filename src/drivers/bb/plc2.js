@@ -109,6 +109,7 @@ module.exports = class {
     this.master = new Master({ host, port, device: 1 });
     this.master.on('error', console.error);
     this.master.on('data', (event) => {
+      console.log(event);
       this.masterHandle(event);
     });
     this.timer = setInterval(() => {
@@ -126,6 +127,7 @@ module.exports = class {
   }
 
   masterHandle({ cmd, data }) {
+    console.log(data);
     // param.forEach((p) => {
     //   let value;
     //   switch (p) {

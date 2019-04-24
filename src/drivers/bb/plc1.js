@@ -29,12 +29,14 @@ module.exports = class {
     this.master = new Master({ host, port, device: 0 });
     this.master.on('error', console.error);
     this.master.on('data', (event) => {
+      console.log(event);
       this.masterHandle(event);
     });
     this.slave= new Slave({ port: 2502 });
     this.slave.on('error', console.error);
     this.slave.on('data', (event) => {
-      this.slaveHandle(event)
+      console.log(event);
+      this.slaveHandle(event);
     });
     this.timer = setInterval(() => {
       this.master.readHoldingRegisters(0, 7);
