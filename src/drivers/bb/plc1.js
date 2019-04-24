@@ -97,6 +97,7 @@ module.exports = class {
         const channel = this.channelDI(i);
         const { value, onOn, onOff, onClick } = get(channel) || {};
         if (v !== value) {
+          console.log(channel, v);
           set(channel, { value: v });
           if (v) {
             this.timestamp[i] = now;
