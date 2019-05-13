@@ -54,7 +54,7 @@ const handle = (action) => {
       send({ index, value: config.state[index] });
       break;
     }
-    case ACTION_ARTNET: {
+    default: {
       switch (action.action) {
         case ARTNET_TYPE: {
           const { index, value: type } = action;
