@@ -29,13 +29,11 @@ module.exports = class {
     this.master = new Master({ host, port, device: 1 });
     this.master.on('error', console.error);
     this.master.on('data', (event) => {
-      console.log(event);
       this.masterHandle(event);
     });
     this.slave= new Slave({ port: 2502 });
     this.slave.on('error', console.error);
     this.slave.on('data', (event) => {
-      console.log(event);
       this.slaveHandle(event);
     });
     this.timer = setInterval(() => {
@@ -96,7 +94,6 @@ module.exports = class {
         }
         const channel = this.channelDI(i);
         const { value, onOn, onOff, onClick } = get(channel) || {};
-        console.log(channel, v, value);
         if (v !== value) {
           set(channel, { value: v });
           if (v) {

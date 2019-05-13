@@ -42,6 +42,7 @@ module.exports = class {
   }
 
   handle(action) {
+    console.log(action);
     this.worker.postMessage(action);
   }
 
