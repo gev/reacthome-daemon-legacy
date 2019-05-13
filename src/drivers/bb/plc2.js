@@ -146,7 +146,7 @@ module.exports = class {
           case "current_phase_c":
           case "power_phase_a":
           case "power_phase_b":
-          case "power_phase_c":
+          case "power_phase_c": {
             offset += offset % 4;
             const buff = Buffer.alloc(4);
             data.copy(buff, 0, offset + 2, offset + 4);
@@ -155,15 +155,17 @@ module.exports = class {
             this.set(id, value);
             offset += 4;
             break;
+          }
           case "water_counter_1":
           case "water_counter_2":
           case "water_counter_3":
-          case "water_counter_4":
+          case "water_counter_4": {
             const value = data.readUInt16BE(offset);
             // meter[id].tick();
             this.set(id, value);
             offset += 2;
             break;
+          }
           case "room1_set_point":
           case "room2_set_point":
           case "room3_set_point":
@@ -185,7 +187,7 @@ module.exports = class {
           case "t7_air_temperature":
           case "t7_floor_temperature":
           case "t8_air_temperature":
-          case "t8_floor_temperature":
+          case "t8_floor_temperature": {
             let value = Math.round(data.readUInt16BE(offset) / 10) / 10;
             if (!this.temperature[id]) {
               this.temperature[id] = [value];
@@ -199,6 +201,7 @@ module.exports = class {
             }
             offset += 2;
             break;
+          }
           case "t1_humidity":
           case "t2_humidity":
           case "t3_humidity":
@@ -206,15 +209,17 @@ module.exports = class {
           case "t5_humidity":
           case "t6_humidity":
           case "t7_humidity":
-          case "t8_humidity":
+          case "t8_humidity": {
             const value = Math.round(data.readUInt16BE(offset) / 10);
             this.set(id, value);
             offset += 2;
             break;
-          default:
+          }
+          default: {
             const value = data.readUInt16BE(offset);
             this.set(id, value );
             offset += 2;
+          }
         }
       else offset += 2;
     });
