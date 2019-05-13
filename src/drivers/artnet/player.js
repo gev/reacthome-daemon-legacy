@@ -37,8 +37,8 @@ module.exports = class {
 
         const scripts = [];
 
-        const get = i => buff.readUInt8(header.length + 1 + i);
-        const set = (i, value) => buff.writeUInt8(value & 0xff, header.length + 1 + i);
+        const get = i => buff.readUInt8(header.length + i);
+        const set = (i, value) => buff.writeUInt8(value & 0xff, header.length + i);
         const send = () => {
             const t1 = Date.now();
             if ((t1 - t) < delay) return;

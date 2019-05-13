@@ -17,7 +17,7 @@ module.exports = class {
 
   start() {
     const workerData = { ...get(this.id), state: [], type: [], velocity: [] };
-    for(let i = 1; i <= workerData.size; i++) {
+    for(let i = 0; i < workerData.size; i++) {
       const { value = 0, type = 0, velocity = 0 } = get(this.channel(i)) || {};
       workerData.type[i] = type;
       workerData.state[i] = value;
@@ -25,7 +25,7 @@ module.exports = class {
     }
     this.worker = new Worker('./src/drivers/artnet/worker.js', { workerData });
     this.worker.on('message', ({ index, ...payload }) => {
-      const channel = this.channel(index);
+      const channel = this.channel(index + 1);
       const { onOn, onOff, value } = get(channel) || {};
       set(channel, payload);
       if (payload.value !== value) {
@@ -43,6 +43,7 @@ module.exports = class {
 
   handle(action) {
     console.log(action);
+    action.index = action.index - 1;
     this.worker.postMessage(action);
   }
 
