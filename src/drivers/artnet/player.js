@@ -38,7 +38,7 @@ module.exports = class {
         const scripts = [];
 
         const get = i => buff.readUInt8(i + header.length);
-        const set = (i, value) => buff.writeUInt8(value & 0xff, i + header.length);
+        const set = (i, value) => buff.writeUInt8(value & 0xff, i + header.length - 1);
         const send = () => {
             const t1 = Date.now();
             if ((t1 - t) < delay) return;
@@ -53,7 +53,7 @@ module.exports = class {
             });
 
         this.play = (i, script) => {
-            if (i >= size) return;
+            if (i > size) return;
             // const changed = [];
             // changed[i] = get(i);
             scripts[i] = {
