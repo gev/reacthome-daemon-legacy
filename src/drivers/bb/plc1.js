@@ -122,7 +122,7 @@ module.exports = class {
         const { value, onHold } = get(channel) || {};
         if (value === 1) {
           if (now > this.timestamp[i]) {
-            set(channel, { value: 3})
+            set(channel, { value: 2})
             if (onHold) {
               service.run({ type: ACTION_SCRIPT_RUN, id: onHold });
             }
