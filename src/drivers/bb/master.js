@@ -90,7 +90,6 @@ module.exports = class extends EventEmitter {
         const request12 = cmd => (address, data) => {
             try {
                 const buff = request(12, cmd, address, data);
-                console.log(buff);
                 send(buff);
             } catch(err) {
                 this.emit('error', err)

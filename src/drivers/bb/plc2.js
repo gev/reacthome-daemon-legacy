@@ -101,6 +101,7 @@ module.exports = class {
 
   constructor(id) {
     this.id = id;
+    this.temperature = {};
     this.start();
   }
 
@@ -126,14 +127,97 @@ module.exports = class {
 
   }
 
+  set(id, value) {
+    const channel = `${this.id}/channel/${id}`;
+    set(channel, { value });
+  }
+
   masterHandle({ cmd, data }) {
     console.log(data);
-    // param.forEach((p) => {
-    //   let value;
-    //   switch (p) {
-    //     case
-    //   }
-    // })
+    let offset = 0;
+    param.forEach(id => {
+      if (id)
+        switch (id) {
+          case "voltage_phase_a":
+          case "voltage_phase_b":
+          case "voltage_phase_c":
+          case "current_phase_a":
+          case "current_phase_b":
+          case "current_phase_c":
+          case "power_phase_a":
+          case "power_phase_b":
+          case "power_phase_c":
+            offset += offset % 4;
+            const buff = Buffer.alloc(4);
+            data.copy(buff, 0, offset + 2, offset + 4);
+            data.copy(buff, 2, offset + 0, offset + 2);
+            const value = buff.readFloatBE();
+            this.set(id, value);
+            offset += 4;
+            break;
+          case "water_counter_1":
+          case "water_counter_2":
+          case "water_counter_3":
+          case "water_counter_4":
+            const value = data.readUInt16BE(offset);
+            // meter[id].tick();
+            this.set(id, value);
+            offset += 2;
+            break;
+          case "room1_set_point":
+          case "room2_set_point":
+          case "room3_set_point":
+          case "room4_set_point":
+          case "room5_set_point":
+          case "room6_set_point":
+          case "room7_set_point":
+          case "room8_set_point":
+          case "t1_air_temperature":
+          case "t1_floor_temperature":
+          case "t2_air_temperature":
+          case "t2_floor_temperature":
+          case "t3_air_temperature":
+          case "t4_air_temperature":
+          case "t4_floor_temperature":
+          case "t5_air_temperature":
+          case "t6_air_temperature":
+          case "t6_floor_temperature":
+          case "t7_air_temperature":
+          case "t7_floor_temperature":
+          case "t8_air_temperature":
+          case "t8_floor_temperature":
+            let value = Math.round(data.readUInt16BE(offset) / 10) / 10;
+            if (!this.temperature[id]) {
+              this.temperature[id] = [value];
+            } else {
+              this.temperature[id].push(value);
+              if (this.temperature[id].length > 60) {
+                this.temperature[id].shift();
+                value = this.temperature[id].sort((a, b) => a > b)[30];
+                this.set(id, value);
+              }
+            }
+            offset += 2;
+            break;
+          case "t1_humidity":
+          case "t2_humidity":
+          case "t3_humidity":
+          case "t4_humidity":
+          case "t5_humidity":
+          case "t6_humidity":
+          case "t7_humidity":
+          case "t8_humidity":
+            const value = Math.round(data.readUInt16BE(offset) / 10);
+            this.set(id, value);
+            offset += 2;
+            break;
+          default:
+            const value = data.readUInt16BE(offset);
+            this.set(id, value );
+            offset += 2;
+        }
+      else offset += 2;
+    });
   }
 
 }

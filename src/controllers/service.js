@@ -564,8 +564,9 @@ const run = (action, address) => {
         } else {
           switch (mode) {
             case HEAT: {
-              stopCool();
+              // stopCool();
               if (temperature < setpoint - heat_hysteresis) {
+                stopCool();
                 startHeat();
               } else if (temperature > setpoint - (- heat_hysteresis)) {
                 stopHeat();
@@ -573,8 +574,9 @@ const run = (action, address) => {
               break;
             }
             case COOL: {
-              stopHeat()
+              // stopHeat();
               if (temperature > setpoint - (- cool_hysteresis)) {
+                stopHeat();
                 startCool();
               } else if (temperature < setpoint - cool_hysteresis) {
                 stopCool();

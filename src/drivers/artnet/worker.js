@@ -31,9 +31,10 @@ const config = {
   rate: 40,
   state: [],
   type: [],
-  velocity: [],
   ...workerData
 };
+
+const fade = dim(5);
 
 const artnet = new Artnet(config);
 
@@ -72,12 +73,11 @@ const handle = (action) => {
           break;
         }
         case ARTNET_FADE: {
-          const { index, value, velocity } = action;
+          const { index, value } = action;
           if (config.type[index] !== ARTNET_TYPE_DIMMER) return;
           config.state[index] = value;
-          config.velocity[index] = velocity;
-          artnet.play(index, dim(value, velocity));
-          send({ index, value, velocity });
+          artnet.play(index, fade(value));
+          send({ index, value });
           break;
         }
         case ARTNET_ON:{
