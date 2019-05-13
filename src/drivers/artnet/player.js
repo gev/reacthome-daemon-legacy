@@ -53,7 +53,7 @@ module.exports = class {
             });
 
         this.play = (i, script) => {
-            if (i > size) return;
+            if (i >= size) return;
             // const changed = [];
             // changed[i] = get(i);
             scripts[i] = {
