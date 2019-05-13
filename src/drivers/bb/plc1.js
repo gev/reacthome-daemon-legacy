@@ -90,7 +90,7 @@ module.exports = class {
         if (i === 0) {
           v = data[3] ? 1 : 0;
         } else {
-          v = bit(data, i - 1);
+          v = bit(data.slice(4), i - 1);
         }
         const channel = this.channelDI(i);
         const { value, onOn, onOff, onClick } = get(channel) || {};
