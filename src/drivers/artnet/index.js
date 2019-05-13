@@ -12,7 +12,7 @@ module.exports = class {
   }
 
   channel(index) {
-    return `${this.id}/${ARTNET}/${index}`;
+    return `${this.id}/${ARTNET}/${1 + index}`;
   }
 
   start() {
@@ -25,7 +25,7 @@ module.exports = class {
     }
     this.worker = new Worker('./src/drivers/artnet/worker.js', { workerData });
     this.worker.on('message', ({ index, ...payload }) => {
-      const channel = this.channel(index + 1);
+      const channel = this.channel(index);
       const { onOn, onOff, value } = get(channel) || {};
       set(channel, payload);
       if (payload.value !== value) {
