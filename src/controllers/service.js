@@ -344,7 +344,6 @@ const run = (action, address) => {
         break;
       }
       case ACTION_DIM: {
-        console.log(action);
         const { id, value } = action;
         const { bind } = get(id);
         const { velocity = 128 } = get(bind);
@@ -367,7 +366,8 @@ const run = (action, address) => {
       }
       case ACTION_DIM_RELATIVE: {
         const { id, operator } = action;
-        const { value, code } = get(id);
+        const { bind } = get(id);
+        const { value } = get(bind);
         let v;
         switch (operator) {
           case OPERATOR_PLUS:
