@@ -12,10 +12,10 @@ const apply = (id, payload) => {
   service.broadcast(JSON.stringify({ type: ACTION_SET, id, payload }));
   try {
     db.put(id, state.get(id), (err) => {
-      if (err) console.log(err);
+      if (err) console.error(err);
     });
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 };
 

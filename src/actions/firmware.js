@@ -66,7 +66,7 @@ module.exports.pendingFirmware = (id, firmware) => {
               packet.writeUInt8(parseInt(line.slice(j, j + 2), 16), 6 + index);
             }
           } catch (err) {
-            console.log(err);
+            console.error(err);
           }
         }
         break;
@@ -80,7 +80,7 @@ module.exports.pendingFirmware = (id, firmware) => {
         stop = true;
         break;
       default:
-        console.log(line);
+        console.error(line);
     }
   });
 };

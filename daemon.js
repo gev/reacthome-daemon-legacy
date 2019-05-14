@@ -26,7 +26,7 @@ const start = () => {
 
 db.createReadStream()
   .on('error', (err) => {
-    console.log(err)
+    console.error(err)
   })
   .on('data', ({ key, value }) => {
     init[key] = value;

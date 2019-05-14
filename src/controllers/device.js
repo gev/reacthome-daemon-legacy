@@ -285,7 +285,7 @@ module.exports.manage = () => {
         }
         case ACTION_MAC_ADDRESS: {
           crypto.randomBytes(7, (err, a) => {
-            if (err) console.log(err);
+            if (err) console.error(err);
             else {
               a[0] = ACTION_MAC_ADDRESS;
               a[1] &= 0b11111110;
@@ -315,10 +315,10 @@ module.exports.manage = () => {
           switch (reason) {
             case ACTION_BOOTLOAD:
               set(id, { pending: false, updating: false });
-              console.log(data);
+              console.error(data);
               break;
             default: {
-              console.log(data);
+              console.error(data);
             }
           }
         }
@@ -327,7 +327,7 @@ module.exports.manage = () => {
         }
       }
     } catch (e) {
-      console.log(e)
+      console.error(e)
     }
   });
 }

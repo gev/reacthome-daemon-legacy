@@ -42,7 +42,6 @@ module.exports = class {
   }
 
   handle(action) {
-    console.log(action);
     action.index = action.index - 1;
     this.worker.postMessage(action);
   }

@@ -3,7 +3,7 @@ const { readFileSync, writeFileSync} = require('fs');
 
 const level = require('level');
 const { DB } = require('./src/constants');
-const { 
+const {
   DO,
   DI,
   DIM,
@@ -44,7 +44,7 @@ db.createReadStream()
     // writeFileSync(tmp, s);
   })
   .on('error', (err) => {
-    console.log(err)
+    console.error(err)
   });
 
 // const state = JSON.parse(readFileSync(file));
