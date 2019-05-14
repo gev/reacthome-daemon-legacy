@@ -344,6 +344,7 @@ const run = (action, address) => {
         break;
       }
       case ACTION_DIM: {
+        console.log(action);
         const { id, value } = action;
         const { bind } = get(id);
         const { velocity = 128 } = get(bind);
