@@ -370,16 +370,16 @@ const run = (action, address) => {
         let v;
         switch (operator) {
           case OPERATOR_PLUS:
-            v = value + Number(action.value);
+            v = Math.round(value + Number(action.value));
             break;
           case OPERATOR_MINUS:
-            v = value - Number(action.value);
+            v = Math.round(value - Number(action.value));
             break;
             case OPERATOR_MUL:
-            v = value * Number(action.value);
+            v = Math.round(value * Number(action.value));
             break;
             case OPERATOR_DIV:
-            v = value / Number(action.value);
+            v = Math.round(value / Number(action.value))
             break;
         }
         if (v < 0) v = 0;
