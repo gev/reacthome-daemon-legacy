@@ -2,7 +2,7 @@
 const { Worker } = require('worker_threads');
 const { get, set } = require('../../actions');
 const service = require('../../controllers/service');
-const { ARTNET, ACTION_SCRIPT_RUN } = require('../../constants');
+const { ARTNET, ACTION_SCRIPT_RUN, ARTNET_TYPE_DIMMER } = require('../../constants');
 
 module.exports = class {
 
@@ -29,6 +29,12 @@ module.exports = class {
       const { onOn, onOff, value } = get(channel) || {};
       const v = value ? 1 : 0;
       const v_ = payload.value ? 1 : 0;
+      if (payload.type) {
+        payload.dimmable = payload.type ===  ARTNET_TYPE_DIMMER;
+      }
+      || type === DIM_TYPE_RISING_EDGE
+      || type === DIM_TYPE_PWM
+
       set(channel, payload);
       if (v !== v_) {
         const script = payload.value === 0 ? onOff : onOn;
