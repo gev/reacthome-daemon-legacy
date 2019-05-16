@@ -497,7 +497,7 @@ const run = (action, address) => {
         break;
       }
       case ACTION_NIGHT_TEST: {
-        const { project } = get(mac);
+        const { project } = get(mac());
         if (project) {
           const { weather } = get(project);
           if (weather && weather.sys) {
