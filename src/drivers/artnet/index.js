@@ -27,8 +27,10 @@ module.exports = class {
     this.worker.on('message', ({ index, ...payload }) => {
       const channel = this.channel(index);
       const { onOn, onOff, value } = get(channel) || {};
+      const v = value ? 1 : 0;
+      const v_ = payload.value ? 1 : 0;
       set(channel, payload);
-      if (payload.value !== value) {
+      if (v !== v_) {
         const script = payload.value === 0 ? onOff : onOn;
         if (script) {
           service.run({ type: ACTION_SCRIPT_RUN, id: script });
