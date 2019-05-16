@@ -32,9 +32,6 @@ module.exports = class {
       if (payload.type) {
         payload.dimmable = payload.type ===  ARTNET_TYPE_DIMMER;
       }
-      || type === DIM_TYPE_RISING_EDGE
-      || type === DIM_TYPE_PWM
-
       set(channel, payload);
       if (v !== v_) {
         const script = payload.value === 0 ? onOff : onOn;
