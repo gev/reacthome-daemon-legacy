@@ -151,6 +151,7 @@ const init = (ip) => {
 };
 
 const run = (action, address) => {
+  console.log(action);
   try {
     switch (action.type) {
       case ACTION_INIT: {
@@ -190,7 +191,6 @@ const run = (action, address) => {
         break;
       }
       case ACTION_DO: {
-        console.log(action);
         const dev = get(action.id);
         const id = `${action.id}/${DO}/${action.index}`
         switch (dev.type) {
