@@ -129,6 +129,8 @@ module.exports = class {
 
   }
 
+  channel = (id) => `${this.id}/channel/${id}`;
+
   set(id, value, type) {
     switch (id) {
       case "1":
@@ -149,7 +151,7 @@ module.exports = class {
         set(`${this.id}/do/${id}`, { value });
         break;
       default:
-        set(`${this.id}/channel/${id}`, { value });
+        set(this.channel(id), { value });
       }
   }
 
@@ -188,7 +190,7 @@ module.exports = class {
           case "water_counter_4": {
             const value = data.readUInt16BE(offset);
             // meter[id].tick();
-            this.set(id, value);
+            this.set(this.channel(id), value);
             offset += 2;
             break;
           }
@@ -265,7 +267,7 @@ module.exports = class {
           case "t8_humidity": {
             const value = Math.round(data.readUInt16BE(offset) / 10);
             this.set(id, value);
-            const o = get(id);
+            const o = get(this.channel(id));
             console.log(id, o);
             if (o && o.site) {
               set(o.site, { humitity: value });
