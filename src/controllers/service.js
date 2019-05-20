@@ -151,7 +151,6 @@ const init = (ip) => {
 };
 
 const run = (action, address) => {
-  console.log(action);
   try {
     switch (action.type) {
       case ACTION_INIT: {
