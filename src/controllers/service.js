@@ -190,12 +190,12 @@ const run = (action, address) => {
         break;
       }
       case ACTION_DO: {
+        console.log(action);
         const dev = get(action.id);
         const id = `${action.id}/${DO}/${action.index}`
         switch (dev.type) {
           case DRIVER_TYPE_BB_PLC1:
           case DRIVER_TYPE_BB_PLC2: {
-            console.log(action);
             drivers.handle(action);
             break;
           }
