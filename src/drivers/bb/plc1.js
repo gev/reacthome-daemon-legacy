@@ -67,7 +67,7 @@ module.exports = class {
       try {
         const channel = this.channelDO(i + 1);
         const { value, onOn, onOff } = get(channel) || {};
-        const v = data.readUInt16BE(i * 2) ? 1 : 0;
+        const v = data.readUInt16BE(i * 2) ? 0 : 1;
         set(channel, { value: v });
         if (v !== value) {
           const script = v === 1 ? onOn : onOff;
