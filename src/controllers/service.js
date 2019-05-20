@@ -293,8 +293,9 @@ const run = (action, address) => {
           }
           case DRIVER_TYPE_BB_PLC1:
           case DRIVER_TYPE_BB_PLC2: {
-              drivers.handle({ id: dev, index, value: ON });
-              break;
+            console.log({ id: dev, index, value: OFF });
+            drivers.handle({ id: dev, index, value: ON });
+            break;
           }
           default: {
             device.send(Buffer.from([ACTION_DO, index, ON]), ip);
@@ -334,8 +335,9 @@ const run = (action, address) => {
           }
           case DRIVER_TYPE_BB_PLC1:
           case DRIVER_TYPE_BB_PLC2: {
-              drivers.handle({ id: dev, index, value: OFF });
-              break;
+            console.log({ id: dev, index, value: OFF });
+            drivers.handle({ id: dev, index, value: OFF });
+            break;
           }
           default: {
             device.send(Buffer.from([ACTION_DO, index, OFF]), ip);
