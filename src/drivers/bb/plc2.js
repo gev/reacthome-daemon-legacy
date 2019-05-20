@@ -9,26 +9,26 @@ const param = [
   "water_counter_3",
   "water_counter_4",
 
-  "vent_power",
+  "1", //"vent_power",
   "vent_fan_speed",
   "vent_damper",
 
-  "acc1_power",
+  "2", //"acc1_power",
   "acc1_mode",
   "acc1_fan_speed",
   "acc1_vane_position",
 
-  "acc2_power",
+  "3", //"acc2_power",
   "acc2_mode",
   "acc2_fan_speed",
   "acc2_vane_position",
 
-  "acc3_power",
+  "4", //"acc3_power",
   "acc3_mode",
   "acc3_fan_speed",
   "acc3_vane_position",
 
-  "acc4_power",
+  "5", //"acc4_power",
   "acc4_mode",
   "acc4_fan_speed",
   "acc4_vane_position",
@@ -63,10 +63,10 @@ const param = [
   "t8_humidity",
   "t8_floor_temperature",
 
-  "ventilator_relay_k1",
-  "ventilator_relay_k6",
-  "ventilator_relay_k7",
-  "ventilator_relay_k8",
+  "6", //"ventilator_relay_k1",
+  "7", //"ventilator_relay_k6",
+  "8", //"ventilator_relay_k7",
+  "9", //"ventilator_relay_k8",
 
   "voltage_phase_a",
   "voltage_phase_b",
@@ -89,12 +89,12 @@ const param = [
   "room7_set_point",
   "room8_set_point",
 
-  "room1_floor_power",
-  "room2_floor_power",
-  "room4_floor_power",
-  "room6_floor_power",
-  "room7_floor_power",
-  "room8_floor_power"
+  "10", //"room1_floor_power",
+  "11", //"room2_floor_power",
+  "12", //"room4_floor_power",
+  "13", //"room6_floor_power",
+  "14", //"room7_floor_power",
+  "15", //"room8_floor_power"
 ];
 
 module.exports = class {
@@ -127,8 +127,27 @@ module.exports = class {
   }
 
   set(id, value) {
-    const channel = `${this.id}/channel/${id}`;
-    set(channel, { value });
+    switch (id) {
+      case "1":
+      case "2":
+      case "3":
+      case "4":
+      case "5":
+      case "6":
+      case "7":
+      case "8":
+      case "9":
+      case "10":
+      case "11":
+      case "12":
+      case "13":
+      case "14":
+      case "15":
+        set(`${this.id}/do/${id}`, { value });
+        break;
+      default:
+        set(`${this.id}/channel/${id}`, { value });
+      }
   }
 
   masterHandle({ cmd, data }) {
