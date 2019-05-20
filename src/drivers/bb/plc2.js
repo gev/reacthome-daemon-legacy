@@ -234,20 +234,19 @@ module.exports = class {
                     case "t5_air_temperature":
                     case "t6_air_temperature":
                     case "t7_air_temperature":
-                    case "t8_air_temperature":
+                    case "t8_air_temperature": {
                       set(o.site, { temperature: value });
                       break;
                     }
-                    switch (id) {
-                      case "t1_floor_temperature":
-                      case "t2_floor_temperature":
-                      case "t4_floor_temperature":
-                      case "t6_floor_temperature":
-                      case "t7_floor_temperature":
-                      case "t8_floor_temperature": {
-                        set(o.site, { temperature_ext: value });
-                        break;
-                      }
+                    case "t1_floor_temperature":
+                    case "t2_floor_temperature":
+                    case "t4_floor_temperature":
+                    case "t6_floor_temperature":
+                    case "t7_floor_temperature":
+                    case "t8_floor_temperature": {
+                      set(o.site, { temperature_ext: value });
+                      break;
+                    }
                   }
                 }
             }
