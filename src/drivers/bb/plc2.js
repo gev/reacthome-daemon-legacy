@@ -268,7 +268,7 @@ module.exports = class {
             this.set(id, value);
             const o = get(this.channel(id));
             if (o && o.site) {
-              set(o.site, { humitity: value });
+              set(o.site, { humidity: value });
             }
             offset += 2;
             break;
