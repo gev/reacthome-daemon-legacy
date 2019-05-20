@@ -249,6 +249,7 @@ module.exports = class {
                     }
                   }
                 }
+              }
             }
             offset += 2;
             break;
