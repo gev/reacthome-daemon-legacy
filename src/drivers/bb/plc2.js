@@ -146,10 +146,10 @@ module.exports = class {
       case "13":
       case "14":
       case "15":
-        set(`${this.id}/do/${id}`, { value, type });
+        set(`${this.id}/do/${id}`, { value });
         break;
       default:
-        set(`${this.id}/channel/${id}`, { value, type });
+        set(`${this.id}/channel/${id}`, { value });
       }
   }
 
@@ -222,8 +222,34 @@ module.exports = class {
               if (this.temperature[id].length > 60) {
                 this.temperature[id].shift();
                 value = this.temperature[id].sort((a, b) => a > b)[30];
-                this.set(id, value, 'sensor');
-              }
+                this.set(id, value);
+                const o = get(id);
+                if (o && o.site) {
+                  switch (id) {
+                    case "t1_air_temperature":
+                    case "t2_air_temperature":
+                    case "t3_air_temperature":
+                    case "t4_air_temperature":
+                    case "t4_floor_temperature":
+                    case "t5_air_temperature":
+                    case "t6_air_temperature":
+                    case "t7_air_temperature":
+                    case "t8_air_temperature":
+                      set(o.site, { temperature: value });
+                      break;
+                    }
+                    switch (id) {
+                      case "t1_floor_temperature":
+                      case "t2_floor_temperature":
+                      case "t4_floor_temperature":
+                      case "t6_floor_temperature":
+                      case "t7_floor_temperature":
+                      case "t8_floor_temperature": {
+                        set(o.site, { temperature_ext: value });
+                        break;
+                      }
+                  }
+                }
             }
             offset += 2;
             break;
@@ -238,6 +264,10 @@ module.exports = class {
           case "t8_humidity": {
             const value = Math.round(data.readUInt16BE(offset) / 10);
             this.set(id, value);
+            const o = get(id);
+            if (o && o.site) {
+              set(o.site, { humitity: value });
+            }
             offset += 2;
             break;
           }
