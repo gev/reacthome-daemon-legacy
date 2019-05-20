@@ -129,7 +129,7 @@ module.exports = class {
 
   }
 
-  set(id, value) {
+  set(id, value, type) {
     switch (id) {
       case "1":
       case "2":
@@ -146,10 +146,10 @@ module.exports = class {
       case "13":
       case "14":
       case "15":
-        set(`${this.id}/do/${id}`, { value });
+        set(`${this.id}/do/${id}`, { value, type });
         break;
       default:
-        set(`${this.id}/channel/${id}`, { value });
+        set(`${this.id}/channel/${id}`, { value, type });
       }
   }
 
@@ -222,7 +222,7 @@ module.exports = class {
               if (this.temperature[id].length > 60) {
                 this.temperature[id].shift();
                 value = this.temperature[id].sort((a, b) => a > b)[30];
-                this.set(id, value);
+                this.set(id, value, 'sensor');
               }
             }
             offset += 2;
