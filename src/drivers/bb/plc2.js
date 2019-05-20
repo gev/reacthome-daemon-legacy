@@ -154,6 +154,7 @@ module.exports = class {
   }
 
   handle({ index, value }) {
+    console.log(index, value)
     if (index < 1 || index > 15) return;
     this.master.writeSingleOutputRegister(offset[index - 1], value);
   }
