@@ -97,6 +97,9 @@ const param = [
   "15", //"room8_floor_power"
 ];
 
+const offset = [4, 7, 11, 15, 19, 41, 42, 43, 44, 73, 74, 75, 76, 77,78]
+
+
 module.exports = class {
 
   constructor(id) {
@@ -149,6 +152,12 @@ module.exports = class {
         set(`${this.id}/channel/${id}`, { value });
       }
   }
+
+  handle({ index, value }) {
+    if (index < 1 || index > 15) return;
+    this.master.writeSingleOutputRegister(offset[index - 1], value);
+  }
+
 
   masterHandle({ cmd, data }) {
     let offset = 0;
