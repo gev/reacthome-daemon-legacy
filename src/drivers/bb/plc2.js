@@ -97,7 +97,7 @@ const param = [
   "15", //"room8_floor_power"
 ];
 
-const offset = [4, 7, 11, 15, 19, 45, 46, 47, 48, 74, 75, 76, 77, 78,79]
+const offset = [4, 7, 11, 15, 19, 45, 46, 47, 48, 76, 77, 78, 79, 80, 81]
 
 
 module.exports = class {
