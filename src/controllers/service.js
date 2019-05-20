@@ -309,7 +309,7 @@ const run = (action, address) => {
         const { velocity = 128, type } = get(bind);
         const [dev,,index] = bind.split('/');
         const { ip, type: deviceType } = get(dev);
-        console.log(deviceType)
+        switch (deviceType) {
           case DEVICE_TYPE_DIM4:
           case DEVICE_TYPE_DIM8: {
             switch (type) {
