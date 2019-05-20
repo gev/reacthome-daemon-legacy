@@ -225,7 +225,7 @@ module.exports = class {
                 this.temperature[id].shift();
                 value = this.temperature[id].sort((a, b) => a > b)[30];
                 this.set(id, value);
-                const o = get(id);
+                const o = get(this.channel(id));
                 if (o && o.site) {
                   switch (id) {
                     case "t1_air_temperature":
