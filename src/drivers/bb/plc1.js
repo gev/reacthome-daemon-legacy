@@ -65,7 +65,7 @@ module.exports = class {
     if (cmd !== 3) return;
     for (let i = 0; i < DO_N; i++)
       try {
-        const channel = this.channelDO(i + 1);
+        const channel = this.channelDO(i);
         const { value, onOn, onOff } = get(channel) || {};
         const v = data.readUInt16BE(i * 2) ? 0 : 1;
         set(channel, { value: v });
