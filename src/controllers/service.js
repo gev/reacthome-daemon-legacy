@@ -195,6 +195,7 @@ const run = (action, address) => {
         switch (dev.type) {
           case DRIVER_TYPE_BB_PLC1:
           case DRIVER_TYPE_BB_PLC2: {
+            console.log(action);
             drivers.handle(action);
             break;
           }
@@ -293,7 +294,6 @@ const run = (action, address) => {
           }
           case DRIVER_TYPE_BB_PLC1:
           case DRIVER_TYPE_BB_PLC2: {
-            console.log({ id: dev, index, value: OFF });
             drivers.handle({ id: dev, index, value: ON });
             break;
           }
@@ -310,7 +310,6 @@ const run = (action, address) => {
         const [dev,,index] = bind.split('/');
         const { ip, type: deviceType } = get(dev);
         console.log(deviceType)
-        switch (deviceType) {
           case DEVICE_TYPE_DIM4:
           case DEVICE_TYPE_DIM8: {
             switch (type) {
@@ -336,7 +335,6 @@ const run = (action, address) => {
           }
           case DRIVER_TYPE_BB_PLC1:
           case DRIVER_TYPE_BB_PLC2: {
-            console.log({ id: dev, index, value: OFF });
             drivers.handle({ id: dev, index, value: OFF });
             break;
           }
