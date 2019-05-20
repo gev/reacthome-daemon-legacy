@@ -58,7 +58,7 @@ module.exports = class {
 
   handle({ index, value }) {
     if (index < 1 || index > DO_N) return;
-    this.master.writeSingleOutputRegister(i + 1, value);
+    this.master.writeSingleOutputRegister(i - 1, value);
   }
 
   masterHandle({ cmd, data }) {
