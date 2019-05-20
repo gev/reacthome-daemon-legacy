@@ -226,7 +226,6 @@ module.exports = class {
                 value = this.temperature[id].sort((a, b) => a > b)[30];
                 this.set(id, value);
                 const o = get(id);
-                console.log(id, o);
                 if (o && o.site) {
                   switch (id) {
                     case "t1_air_temperature":
@@ -268,7 +267,6 @@ module.exports = class {
             const value = Math.round(data.readUInt16BE(offset) / 10);
             this.set(id, value);
             const o = get(this.channel(id));
-            console.log(id, o);
             if (o && o.site) {
               set(o.site, { humitity: value });
             }
