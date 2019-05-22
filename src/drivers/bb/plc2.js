@@ -80,14 +80,14 @@ const param = [
   "power_phase_b",
   "power_phase_c",
 
-  "room1_set_point",
-  "room2_set_point",
-  "room3_set_point",
-  "room4_set_point",
-  "room5_set_point",
-  "room6_set_point",
-  "room7_set_point",
-  "room8_set_point",
+  "room1_set_point", // 68
+  "room2_set_point", // 69
+  "room3_set_point", // 70
+  "room4_set_point", // 71
+  "room5_set_point", // 72
+  "room6_set_point", // 73
+  "room7_set_point", // 74
+  "room8_set_point", // 75
 
   "10", //"room1_floor_power",
   "11", //"room2_floor_power",
@@ -95,6 +95,17 @@ const param = [
   "13", //"room6_floor_power",
   "14", //"room7_floor_power",
   "15", //"room8_floor_power"
+];
+
+const setpoint = [
+  "room1_set_point",
+  "room2_set_point",
+  "room3_set_point",
+  "room4_set_point",
+  "room5_set_point",
+  "room6_set_point",
+  "room7_set_point",
+  "room8_set_point"
 ];
 
 const offset = [4, 7, 11, 15, 19, 45, 46, 47, 48, 76, 77, 78, 79, 80, 81]
@@ -117,16 +128,20 @@ module.exports = class {
     });
     this.timer = setInterval(() => {
       this.master.readHoldingRegisters(0, 82);
+      setpoint.forEach((id, i) => {
+        const { value, thermostat } = get(this.channel(id)) || {};
+        if (thermostat) {
+          const { setpoint } = get(thermostat);
+          if (setpoint === value) return;
+          this.master.writeSingleOutputRegister(i + 68, value);
+        }
+      });
     }, 1000);
   }
 
   stop() {
     clearInterval(this.timer);
     this.master.destroy();
-  }
-
-  handle() {
-
   }
 
   channel = (id) => `${this.id}/channel/${id}`;
