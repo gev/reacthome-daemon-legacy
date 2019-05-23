@@ -59,7 +59,7 @@ module.exports = class {
   handle({ index, value }) {
     if (index < 1 || index > DO_N) return;
     const i = index - 1;
-    if (i >= 3) value = 1 - value;
+    if (i >= 1) value = 1 - value;
     this.master.writeSingleOutputRegister(i, value);
   }
 
@@ -95,6 +95,16 @@ module.exports = class {
           v = data[3] ? 1 : 0;
         } else {
           v = bit(data.slice(4), i - 1);
+        }
+        if (v) {
+          switch(i) {
+            case 71, 72, 73:
+              set(this.channelDO(2), {value: 1});
+              break;
+            case 74, 75, 76:
+              set(this.channelDO(3), {value: 1});
+              break;
+            }
         }
         const channel = this.channelDI(i);
         const { value, onOn, onOff, onClick } = get(channel) || {};
