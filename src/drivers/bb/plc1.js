@@ -58,7 +58,9 @@ module.exports = class {
 
   handle({ index, value }) {
     if (index < 1 || index > DO_N) return;
-    this.master.writeSingleOutputRegister(index - 1, value);
+    const i = index - 1;
+    if (i < 3) value = 1 - value;
+    this.master.writeSingleOutputRegister(i, value);
   }
 
   masterHandle({ cmd, data }) {
@@ -67,7 +69,9 @@ module.exports = class {
       try {
         const channel = this.channelDO(i);
         const { value, onOn, onOff } = get(channel) || {};
-        const v = data.readUInt16BE(i * 2) ? 1 : 0;
+        const t = i < 3 ? 1 : 0;
+        const f = 1 - t;
+        const v = data.readUInt16BE(i * 2) ? t : f;
         set(channel, { value: v });
         if (v !== value) {
           const script = v === 1 ? onOn : onOff;
