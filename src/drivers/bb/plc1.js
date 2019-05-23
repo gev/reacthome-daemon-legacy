@@ -59,7 +59,7 @@ module.exports = class {
   handle({ index, value }) {
     if (index < 1 || index > DO_N) return;
     const i = index - 1;
-    if (i < 3) value = 1 - value;
+    if (i >= 3) value = 1 - value;
     this.master.writeSingleOutputRegister(i, value);
   }
 
