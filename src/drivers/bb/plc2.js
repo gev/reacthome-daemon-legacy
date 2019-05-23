@@ -133,8 +133,7 @@ module.exports = class {
         if (thermostat) {
           const { setpoint } = get(thermostat);
           if (setpoint === value) return;
-          console.log(thermostat, get(thermostat));
-          console.log(i, value);
+          console.log(i, setpoint);
           this.master.writeSingleOutputRegister(i + 68, setpoint);
         }
       });
