@@ -71,7 +71,17 @@ module.exports = class {
         const { value, onOn, onOff } = get(channel) || {};
         const t = i < 3 ? 1 : 0;
         const f = 1 - t;
-        const v = data.readUInt16BE(i * 2) ? t : f;
+        let v;
+        switch(i) {
+          case 2:
+            v = (get(this.channelDI(72)).value || get(this.channelDI(73)).value || get(this.channelDI(74)).value) ? 1 : 0;
+            break;
+          case 3:
+            v = (get(this.channelDI(75)).value || get(this.channelDI(76)).value || get(this.channelDI(77)).value) ? 1 : 0;
+            break;
+          default:
+            v = data.readUInt16BE(i * 2) ? t : f;
+        }
         set(channel, { value: v });
         if (v !== value) {
           const script = v === 1 ? onOn : onOff;
@@ -95,16 +105,6 @@ module.exports = class {
           v = data[3] ? 1 : 0;
         } else {
           v = bit(data.slice(4), i - 1);
-        }
-        if (v) {
-          switch(i) {
-            case 71, 72, 73:
-              set(this.channelDO(2), {value: 1});
-              break;
-            case 74, 75, 76:
-              set(this.channelDO(3), {value: 1});
-              break;
-            }
         }
         const channel = this.channelDI(i);
         const { value, onOn, onOff, onClick } = get(channel) || {};
