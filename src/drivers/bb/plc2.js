@@ -1,7 +1,9 @@
 
 const { get, set } = require('../../actions');
 const service = require('../../controllers/service');
+const mac = require('../../mac');
 const Master = require('./master');
+
 
 const param = [
   "water_counter_1",
@@ -127,7 +129,7 @@ module.exports = class {
       this.masterHandle(event);
     });
     this.timer = setInterval(() => {
-      this.master.readHoldingRegisters(0, 82);
+      this.master.readHoldingRegisters(0, 83);
       setpoint.forEach((id, i) => {
         const { value, thermostat } = get(this.channel(id)) || {};
         if (thermostat) {
@@ -136,6 +138,11 @@ module.exports = class {
           this.master.writeSingleOutputRegister(i + 68, setpoint * 100);
         }
       });
+      const { project } = get(mac()) || {};
+      const { weather: { main : { temp } = {} } = {} } = get(project) || {};
+      if (temp !== undefined) {
+        this.master.writeSingleOutputRegister(82, temp * 100);
+      }
     }, 1000);
   }
 
