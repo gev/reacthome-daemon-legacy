@@ -73,11 +73,11 @@ module.exports = class {
         const f = 1 - t;
         let v;
         switch(i) {
-          case 2:
-            v = (get(this.channelDI(72)).value || get(this.channelDI(73)).value || get(this.channelDI(74)).value) ? 1 : 0;
+          case 1:
+            v = (get(this.channelDI(71)).value || get(this.channelDI(72)).value || get(this.channelDI(73)).value) ? 1 : 0;
             break;
-          case 3:
-            v = (get(this.channelDI(75)).value || get(this.channelDI(76)).value || get(this.channelDI(77)).value) ? 1 : 0;
+          case 2:
+            v = (get(this.channelDI(74)).value || get(this.channelDI(75)).value || get(this.channelDI(76)).value) ? 1 : 0;
             break;
           default:
             v = data.readUInt16BE(i * 2) ? t : f;
