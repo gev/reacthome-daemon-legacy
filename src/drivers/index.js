@@ -11,11 +11,12 @@ let run = {};
 module.exports.manage = () => {
   const { project } = get(mac()) || {};
   if (project === undefined) return;
-  const { driver } = get(project) || [];
+  const { driver } = get(project);
   Object.entries(run).forEach(([id, drv]) => {
     if (drv.stop) drv.stop();
   });
   run = {};
+  if (!Array.isArray(driver)) return;
   driver.forEach(id => {
     const { type } = get(id) || {};
     switch(type) {
