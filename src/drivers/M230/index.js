@@ -25,7 +25,7 @@ module.exports = class {
     });
     this.socket
         .on('data', this.process)
-        .on('error', err => {this.emit('error', err)});
+        .on('error', console.error);
   }
 
   stop() {
