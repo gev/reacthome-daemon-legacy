@@ -68,7 +68,8 @@ module.exports = class {
   send(cmd) {
     this.socket.write(this.query(cmd), err => {
       if (err) console.error('error');
-  })
+    });
+  }
 
   query(cmd) {
     const buff = Buffer.alloc(1 + cmd.length);
