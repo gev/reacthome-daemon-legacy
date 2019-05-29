@@ -26,21 +26,20 @@ module.exports = class {
     this.worker = new Worker('./src/drivers/artnet/worker.js', { workerData });
     this.worker.on('message', ({ index, ...payload }) => {
       const channel = this.channel(index);
-      const { onOn, onOff, value } = get(channel) || {};
+      const { bind, onOn, onOff, value } = get(channel) || {};
       const v = value ? 1 : 0;
       const v_ = payload.value ? 1 : 0;
       if (payload.type) {
         payload.dimmable = payload.type ===  ARTNET_TYPE_DIMMER;
       }
       set(channel, payload);
-      const { bind } = get(channel);
-      if (v) {
+      if (v_) {
         count_on(bind);
       } else {
         count_off(bind);
       }
       if (v !== v_) {
-        const script = payload.value === 0 ? onOff : onOn;
+        const script = v_ === 0 ? onOff : onOn;
         if (script) {
           service.run({ type: ACTION_SCRIPT_RUN, id: script });
         }

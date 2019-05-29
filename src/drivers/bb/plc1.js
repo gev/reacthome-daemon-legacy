@@ -68,7 +68,7 @@ module.exports = class {
     for (let i = 0; i < DO_N; i++)
       try {
         const channel = this.channelDO(i);
-        const { value, onOn, onOff } = get(channel) || {};
+        const { bind, value, onOn, onOff } = get(channel) || {};
         const t = i < 3 ? 1 : 0;
         const f = 1 - t;
         let v;
@@ -87,7 +87,6 @@ module.exports = class {
             v = data.readUInt16BE(i * 2) ? t : f;
         }
         set(channel, { value: v });
-        const { bind } = get(channel);
         if (v) {
           count_on(bind);
         } else {
