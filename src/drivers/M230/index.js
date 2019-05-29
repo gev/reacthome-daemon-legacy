@@ -16,15 +16,23 @@ module.exports = class {
   }
 
   start() {
-    this.connect();
+    this.socket = new SerialPort(device, {
+      baudRate: 9600,
+      dataBits: 8,
+      parity: 'none',
+      stopBits: 1,
+      autoOpen: true
+    });
+    this.socket
+        .on('open', cb)
+        .on('data', this.process)
+        .on('error', err => {this.emit('error', err)});
   }
 
   stop() {
     clearTimeout(this.t);
     this.socket.close();
   }
-
-  connect() {
 
   login () {
     this.send([1, 1, 1, 1, 1, 1, 1, 1]);
