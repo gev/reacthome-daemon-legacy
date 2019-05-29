@@ -1,5 +1,5 @@
 
-const { get, set, count_on, count_on } = require('../../actions');
+const { get, set, count_on, count_off } = require('../../actions');
 const service = require('../../controllers/service');
 const mac = require('../../mac');
 const Master = require('./master');
