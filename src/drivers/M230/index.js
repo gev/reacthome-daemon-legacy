@@ -4,7 +4,7 @@ const SerialPort = require('serialport');
 const crc = require('crc').crc16modbus;
 
 const address = 0x46;
-const device = '';
+const device = '/dev/ttyUSB0';
 const delay = 200;
 const period = 15000;
 
