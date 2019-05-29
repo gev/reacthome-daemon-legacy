@@ -1,6 +1,6 @@
 
 const { Worker } = require('worker_threads');
-const { get, set } = require('../../actions');
+const { get, set, count_on, count_off } = require('../../actions');
 const service = require('../../controllers/service');
 const { ARTNET, ACTION_SCRIPT_RUN, ARTNET_TYPE_DIMMER } = require('../../constants');
 
@@ -33,6 +33,12 @@ module.exports = class {
         payload.dimmable = payload.type ===  ARTNET_TYPE_DIMMER;
       }
       set(channel, payload);
+      const { bind } = get(channel);
+      if (v) {
+        count_on(bind);
+      } else {
+        count_off(bind);
+      }
       if (v !== v_) {
         const script = payload.value === 0 ? onOff : onOn;
         if (script) {

@@ -1,5 +1,5 @@
 
-const { get, set } = require('../../actions');
+const { get, set, count_on, count_on } = require('../../actions');
 const service = require('../../controllers/service');
 const mac = require('../../mac');
 const Master = require('./master');
@@ -298,6 +298,12 @@ module.exports = class {
           default: {
             const value = data.readUInt16BE(offset);
             this.set(id, value );
+            const { bind } = get(this.channel(id));
+            if (value) {
+              count_on(bind);
+            } else {
+              count_off(bind);
+            }
             offset += 2;
           }
         }

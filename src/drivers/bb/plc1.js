@@ -1,5 +1,5 @@
 
-const { get, set } = require('../../actions');
+const { get, set, count_on, count_off } = require('../../actions');
 const service = require('../../controllers/service');
 const { DI, DO, ACTION_SCRIPT_RUN } = require('../../constants');
 const Master = require('./master');
@@ -87,6 +87,12 @@ module.exports = class {
             v = data.readUInt16BE(i * 2) ? t : f;
         }
         set(channel, { value: v });
+        const { bind } = get(channel);
+        if (v) {
+          count_on(bind);
+        } else {
+          count_off(bind);
+        }
         if (v !== value) {
           const script = v === 1 ? onOn : onOff;
           if (script) {
