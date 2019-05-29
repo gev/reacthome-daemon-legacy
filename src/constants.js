@@ -107,6 +107,7 @@ module.exports.ACTION_DOPPLER_HANDLE = 'ACTION_DOPPLER_HANDLE';
 module.exports.ACTION_THERMOSTAT_HANDLE = 'ACTION_THERMOSTAT_HANDLE';
 module.exports.ACTION_TOGGLE = 'ACTION_TOGGLE';
 module.exports.ACTION_TV = 'ACTION_TV';
+module.exports.ACTION_LEAKAGE_RESET = 'ACTION_LEAKAGE_RESET';
 module.exports.ACTION_SCRIPT_RUN = 'ACTION_SCRIPT_RUN';
 
 module.exports.OFF = 0x0;
@@ -196,3 +197,4 @@ module.exports.DRIVER_TYPE_RS21 = 'RS21';
 module.exports.DRIVER_TYPE_ARTNET = 'ARTNET';
 module.exports.DRIVER_TYPE_BB_PLC1 = 'BB_PLC1';
 module.exports.DRIVER_TYPE_BB_PLC2 = 'BB_PLC2';
+module.exports.DRIVER_TYPE_M230 = 'M230';

@@ -42,6 +42,7 @@ const {
   ACTION_THERMOSTAT_HANDLE,
   ACTION_TOGGLE,
   ACTION_TV,
+  ACTION_LEAKAGE_RESET,s
   ACTION_SCRIPT_RUN,
   DEVICE_PORT,
   DEVICE_TYPE_DIM4,
@@ -645,6 +646,14 @@ const run = (action, address) => {
             device.send(buff, ip);
           })
           .catch(console.error);
+      }
+      case ACTION_LEAKAGE_RESET: {
+        const {onLeakageReset} = get(id);
+        set(action.id, { value: 0 });
+        if (onLeakageReset) {
+          run({ action: ACTION_SCRIPT_RUN, id: onLeakageReset });
+        }
+        break;
       }
       case ACTION_SCRIPT_RUN: {
         const { id } = action;

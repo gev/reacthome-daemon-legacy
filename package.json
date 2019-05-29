@@ -6,6 +6,7 @@
     "firmware": "sh copy-firmware.sh"
   },
   "dependencies": {
+    "crc": "^3.8.0",
     "cron": "^1.6.0",
     "debounce": "^1.1.0",
     "fast-deep-equal": "gev/fast-deep-equal",
@@ -17,6 +18,7 @@
     "level": "^5.0.1",
     "node-fetch": "^2.1.2",
     "reacthome-ircodes": "gev/reacthome-ircodes",
+    "serialport": "^7.1.5",
     "uuid": "^3.2.1"
   }
 }
