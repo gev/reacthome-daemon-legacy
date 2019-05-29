@@ -24,7 +24,6 @@ module.exports = class {
       autoOpen: true
     });
     this.socket
-        .on('open', cb)
         .on('data', this.process)
         .on('error', err => {this.emit('error', err)});
   }
