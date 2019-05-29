@@ -49,7 +49,7 @@ module.exports = class {
       else if (buff.length === 99) {
         const v = [];
         for (let i = 0; i < 6; i++) {
-          v[i] = (buff.readUInt16LE(i * 16 + 1) << 16) | buff.readUInt16LE(i * 16 + 3);
+          v[i] = ((buff.readUInt16LE(i * 16 + 1) << 16) | buff.readUInt16LE(i * 16 + 3)) / 100;
         }
         set(this.id, { t1: v[0], t2: v[1], total: v[4] });
         setTimeout(this.request, period);
