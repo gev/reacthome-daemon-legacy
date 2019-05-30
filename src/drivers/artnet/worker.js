@@ -50,8 +50,8 @@ const handle = (action) => {
       const { index, value } = action;
       if (!config.type[index]) return;
       config.state[index] = value ? 255 : 0;
-      artnet.play(index, set(config.state[index]));
       send({ index, value: config.state[index] });
+      artnet.play(index, set(config.state[index]));
       break;
     }
     default: {
@@ -60,40 +60,40 @@ const handle = (action) => {
           const { index, value: type } = action;
           config.type[index] = type;
           config.state[index] = 0;
-          artnet.play(index, set(0));
           send({ index, type, value: config.state[index] });
+          artnet.play(index, set(0));
           break;
         }
         case ARTNET_SET: {
           const { index, value } = action;
           if (!config.type[index]) return;
           config.state[index] = value;
-          artnet.play(index, set(value));
           send({ index, value });
+          artnet.play(index, set(value));
           break;
         }
         case ARTNET_FADE: {
           const { index, value } = action;
           if (config.type[index] !== ARTNET_TYPE_DIMMER) return;
           config.state[index] = value;
-          artnet.play(index, fade(value));
           send({ index, value });
+          artnet.play(index, fade(value));
           break;
         }
         case ARTNET_ON:{
           const { index } = action;
           if (!config.type[index]) return;
           config.state[index] = 255;
-          artnet.play(index, set(255));
           send({ index, value: 255 });
+          artnet.play(index, set(255));
           break;
         }
         case ARTNET_OFF:{
           const { index } = action;
           if (!config.type[index]) return;
           config.state[index] = 0;
-          artnet.play(index, set(0));
           send({ index, value: 0 });
+          artnet.play(index, set(0));
           break;
         }
       }
