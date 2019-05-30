@@ -58,7 +58,7 @@ module.exports = class {
         for (let i = 0; i < 6; i++) {
           v[i] = ((buff.readUInt16LE(i * 16 + 1) << 16) | buff.readUInt16LE(i * 16 + 3)) / 100;
         }
-        set(this.id, { t1: v[0], t2: v[1], total: v[4] });
+        set(this.id, { value: [v[0], v[1]], total: v[4] });
         setTimeout(this.request, period);
       }
     }, delay);
