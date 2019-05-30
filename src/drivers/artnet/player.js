@@ -86,7 +86,7 @@ module.exports = class {
             }
         }, delay);
 
-        setInterval(send, 5000 / rate);
+        // setInterval(send, 5000 / rate);
 
     }
 
