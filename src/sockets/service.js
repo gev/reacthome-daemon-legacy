@@ -41,8 +41,10 @@ service.delUnicast = (ip) => {
 };
 
 service.broadcast = (packet) => {
-  service.send(packet, CLIENT_GROUP);
-  unicast.forEach(ip => service.send(packet, ip));
+  for (let i = 0; i < 3; i++) {
+    service.send(packet, CLIENT_GROUP);
+    unicast.forEach(ip => service.send(packet, ip));
+  }
 }
 
 module.exports = service;
