@@ -12,7 +12,7 @@ module.exports = class {
         state = []
     }) {
 
-        let t = Date.now();
+        // let t = Date.now();
 
         const delay = Math.round(1000 / rate);
 
@@ -40,10 +40,10 @@ module.exports = class {
         const get = i => buff.readUInt8(header.length + i);
         const set = (i, value) => buff.writeUInt8(value & 0xff, header.length + i);
         const send = () => {
-            const t1 = Date.now();
-            if ((t1 - t) < delay) return;
+            // const t1 = Date.now();
+            // if ((t1 - t) < delay) return;
             socket.send(buff, 0, buff.length, port, host)
-            t = t1;
+            // t = t1;
         };
 
         state
