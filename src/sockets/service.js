@@ -11,6 +11,8 @@ const {
 const socket = require('./socket');
 const mac = require('../mac');
 
+const ATTEMPTS = 3;
+
 const unicast = [];
 
 const discovery = (multicast) => JSON.stringify({
@@ -23,8 +25,10 @@ const service = socket(
   () => () => {
     const m = discovery(true);
     const u = discovery(false);
-    service.send(m, CLIENT_GROUP);
-    unicast.forEach(ip => service.send(u, ip));
+    for (var i = 0; i < ATTEMPTS; i++) {
+      service.send(m, CLIENT_GROUP);
+      unicast.forEach(ip => service.send(u, ip));
+    }
   },
   DISCOVERY_INTERVAL, CLIENT_PORT, CLIENT_SERVER_PORT, true, 1
 );
@@ -41,7 +45,7 @@ service.delUnicast = (ip) => {
 };
 
 service.broadcast = (packet) => {
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < ATTEMPTS; i++) {
     service.send(packet, CLIENT_GROUP);
     unicast.forEach(ip => service.send(packet, ip));
   }
