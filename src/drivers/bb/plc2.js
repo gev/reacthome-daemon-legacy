@@ -179,27 +179,43 @@ module.exports = class {
       }
   }
 
-  handle({ type, index, value: v }) {
+  setWaterCounter(id, amount, rebase) {
+    const channel = this.channel(id);
+    let { start = 0, tick = 0, value = 0 } = get(channel);
+
+    const total = tick => scale * tick + start;
+    const rebase = current => current - (tick * scale);
+
+    const check = () => {
+      value = total(tick);
+      if (value > limit) {
+        start = rebase(value % (limit + 1));
+        check();
+      } else {
+        set(channel, { start, tick, value });
+      }
+    };
+
+    if (rebase) {
+      start = rebase(amount);
+    } else {
+      if (amount > tick) {
+        tick = amount;
+      } else if (amount < tick) {
+        const t = total(tick + amount);
+        start = rebase(t);
+        tick = amount;
+      }
+    }
+
+    check();
+  }
+
+  handle({ type, index, value }) {
     switch (type) {
       case ACTION_REBASE_WATER_COUNTER: {
-        const channel = this.channel(index);
-        let { start = 0, tick = 0, value = 0 } = get(channel);
-
-        const total = tick => scale * tick + start;
-        const rebase = current => current - (tick * scale);
-
-        const check = () => {
-          value = total(tick);
-          if (value > limit) {
-            start = rebase(value % (limit + 1));
-            check();
-          } else {
-            set(channel, { start, tick, value });
-          }
-        };
-
-        start = rebase(v);
-        check();
+        this.setWaterCounter(index, value, true);
+        break;
       }
       default: {
         if (index < 1 || index > 15) return;
@@ -237,32 +253,7 @@ module.exports = class {
           case "water_counter_4": {
             const amount = data.readUInt16BE(offset);
             const channel = this.channel(id);
-
-            let { start = 0, tick = 0, value = 0 } = get(channel);
-
-            const total = tick => scale * tick + start;
-            const rebase = current => current - (tick * scale);
-
-            const check = () => {
-              value = total(tick);
-              if (value > limit) {
-                start = rebase(value % (limit + 1));
-                check();
-              } else {
-                set(channel, { start, tick, value });
-              }
-            };
-
-            if (amount > tick) {
-              tick = amount;
-            } else if (amount < tick) {
-              const t = total(tick + amount);
-              start = rebase(t);
-              tick = amount;
-            }
-
-            check();
-
+            this.setWaterCounter(channel, amount);
             offset += 2;
             break;
           }
