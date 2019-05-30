@@ -1,7 +1,7 @@
 
 const { createSocket } = require('dgram');
 
-module.exports = (discovery, interval, port, listen, hasQueue) => {
+module.exports = (discovery, interval, port, listen, hasQueue, delay = 20) => {
 
   const timer = {};
   const queue = {};
@@ -24,7 +24,7 @@ module.exports = (discovery, interval, port, listen, hasQueue) => {
           const q = queue[ip];
           if (q.length === 0) return;
           const now = Date.now();
-          if (now - timestamp[ip] < 20) return;
+          if (now - timestamp[ip] < delay) return;
           timestamp[ip] = now;
           _send(q.shift(), ip);
         }, 20);
@@ -32,7 +32,7 @@ module.exports = (discovery, interval, port, listen, hasQueue) => {
         const q = queue[ip];
         if (q.length === 0) {
           const now = Date.now();
-          if (now - timestamp[ip] > 20) {
+          if (now - timestamp[ip] > delay) {
             timestamp[ip] = now;
             _send(packet, ip);
           } else {
