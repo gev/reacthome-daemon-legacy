@@ -4,6 +4,8 @@ const service = require('../../controllers/service');
 const mac = require('../../mac');
 const Master = require('./master');
 
+const scale = 10;
+const limit = 99999999;
 
 const param = [
   "water_counter_1",
@@ -177,11 +179,34 @@ module.exports = class {
       }
   }
 
-  handle({ index, value }) {
-    if (index < 1 || index > 15) return;
-    this.master.writeSingleOutputRegister(offset[index - 1], value);
-  }
+  handle({ type, index, value: v }) {
+    switch (type) {
+      case ACTION_REBASE_WATER_COUNTER: {
+        const channel = this.channel(index);
+        let { start = 0, tick = 0, value = 0 } = get(channel);
 
+        const total = tick => scale * tick + start;
+        const rebase = current => current - (tick * scale);
+
+        const check = () => {
+          value = total(tick);
+          if (value > limit) {
+            start = rebase(value % (limit + 1));
+            check();
+          } else {
+            set(channel, { start, tick, value });
+          }
+        };
+
+        start = rebase(v);
+        check();
+      }
+      default: {
+        if (index < 1 || index > 15) return;
+        this.master.writeSingleOutputRegister(offset[index - 1], value);
+      }
+    }
+  }
 
   masterHandle({ cmd, data }) {
     let offset = 0;
@@ -210,9 +235,34 @@ module.exports = class {
           case "water_counter_2":
           case "water_counter_3":
           case "water_counter_4": {
-            const value = data.readUInt16BE(offset);
-            // meter[id].tick();
-            this.set(this.channel(id), value);
+            const amount = data.readUInt16BE(offset);
+            const channel = this.channel(id);
+
+            let { start = 0, tick = 0, value = 0 } = get(channel);
+
+            const total = tick => scale * tick + start;
+            const rebase = current => current - (tick * scale);
+
+            const check = () => {
+              value = total(tick);
+              if (value > limit) {
+                start = rebase(value % (limit + 1));
+                check();
+              } else {
+                set(channel, { start, tick, value });
+              }
+            };
+
+            if (amount > tick) {
+              tick = amount;
+            } else if (amount < tick) {
+              const t = total(tick + amount);
+              start = rebase(t);
+              tick = amount;
+            }
+
+            check();
+
             offset += 2;
             break;
           }
