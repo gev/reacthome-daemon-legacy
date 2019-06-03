@@ -8,11 +8,9 @@ const code = (a, b, data) => {
   data.forEach((x, i) => {
     for (let m = 0b10000000; m > 0; m >>= 1) {
       if (x & m) {
-        code.push(20);
-        code.push(60);
+        code.push(20, 60);
       } else {
-        code.push(20);
-        code.push(20);
+        code.push(20, 20);
       }
     }
   });
@@ -31,7 +29,6 @@ const handle = (power, mode = 0, fan = 0, setpoint = 24, bind) => {
   buff.writeUInt8(index, 1);
   buff.writeUInt8(0, 2);
   buff.writeUInt16BE(frequency, 3);
-  buff.writeUInt16BE(282, 300);
   const data = [0xf2, 0x0d, 0x03, 0xfc, 0x01];
   let t = setpoint < 17 ? 0 : (setpoint - 17);
   data[5] = (t & 0xf) << 4;
@@ -39,12 +36,13 @@ const handle = (power, mode = 0, fan = 0, setpoint = 24, bind) => {
   data[7] = 0;
   data[8] = data.reduce((a, b) => a ^ b);
   const ir = code(167, 164, data);
+  ir.push(20, 282);
   console.log(data.map(i => i.toString(16).padStart(2, '0')).join(' '));
   console.log(ir.join(','));
   console.log(ir.length);
   for (let i = 0; i < ir.length; i++) {
     buff.writeUInt16BE(ir[i], i * 2 + 5);
-    buff.writeUInt16BE(ir[i], i * 2 + 305);
+    buff.writeUInt16BE(ir[i], (i + ir.length) * 2 + 5);
   }
   device.send(buff, ip);
 };
