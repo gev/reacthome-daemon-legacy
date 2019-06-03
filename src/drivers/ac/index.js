@@ -1,7 +1,7 @@
 
 const { get, set } = require('../../actions');
 const { device } = require('../../sockets');
-const { ACTION_IR } = require('../../constants');
+const { ACTION_IR, ON, OFF } = require('../../constants');
 
 const code = (a, b, data) => {
   const code = [a, b];
@@ -48,11 +48,13 @@ const handle = (power, mode = 0, fan = 0, setpoint = 24, bind) => {
 module.exports.on = id => {
   const { mode, fan, thermostat, bind } = get(id) || {};
   const { setpoint } = get(thermostat) || {};
-  handle(1, mode, fan, setpoint, bind);
+  handle(ON, mode, fan, setpoint, bind);
+  set(bind, { value: ON });
 };
 
 module.exports.off = id => {
   const { mode, fan, thermostat, bind } = get(id) || {};
   const { setpoint } = get(thermostat) || {};
-  handle(0, mode, fan, setpoint, bind);
+  handle(OFF, mode, fan, setpoint, bind);
+  set(bind, { value: OFF });
 };
