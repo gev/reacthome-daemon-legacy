@@ -40,6 +40,7 @@ const handle = (power, mode = 0, fan = 0, setpoint = 24, bind) => {
   const ir = code(167, 164, data);
   console.log(data.map(i => i.toString(16).padStart(2, '0')).join(' '));
   console.log(ir.join(','));
+  console.log(ir.length);
   for (let i = 0; i < ir.length; i++) {
     buff.writeUInt16BE(ir[i], i * 2 + 5);
     buff.writeUInt16BE(ir[i], i * 2 + 305);
