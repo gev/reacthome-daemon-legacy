@@ -26,7 +26,6 @@ const handle = (power, mode = 0, fan = 0, setpoint = 24, bind) => {
   const [dev,,index] = bind.split('/');
   const { ip } = get(dev) || {};
   if (!ip) return;
-  console.log(ip, index)
   const buff = Buffer.alloc(595);
   buff.writeUInt8(ACTION_IR, 0);
   buff.writeUInt8(index, 1);
@@ -38,10 +37,10 @@ const handle = (power, mode = 0, fan = 0, setpoint = 24, bind) => {
   data[5] = (t & 0xf) << 4;
   data[6] = ((fan ? ((fan + 1) & 0x7) : 0 ) << 5) | (power ? (mode & 0x3) : 0x7);
   data[8] = data.reduce((a, b) => a ^ b);
-  // const ir = code(167, 164, data);
+  const ir = code(167, 164, data);
   console.log(data.map(i => i.toString(16).padStart(2, '0')).join(' '));
-  // console.log(ir.join(','));
-  // console.log(ir.length);
+  console.log(ir.join(','));
+  console.log(ir.length);
   for (let i = 0; i < ir.length; i++) {
     buff.writeUInt16BE(ir[i], i * 2 + 5);
     buff.writeUInt16BE(ir[i], i * 2 + 305);
