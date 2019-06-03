@@ -37,7 +37,7 @@ const handle = (power, mode = 0, fan = 0, setpoint = 24, bind) => {
   data[5] = (t & 0xf) << 4;
   data[6] = ((fan ? ((fan + 1) & 0x7) : 0 ) << 5) | (power ? (mode & 0x3) : 0x7);
   data[8] = data.reduce((a, b) => a ^ b);
-  const ir = code(data);
+  const ir = code(167, 164, data);
   for (let i = 0; i < ir.length; i++) {
     buff.writeUInt16BE(ir[i], i * 2 + 5);
     buff.writeUInt16BE(ir[i], i * 2 + 305);

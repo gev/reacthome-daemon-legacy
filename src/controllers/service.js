@@ -300,7 +300,6 @@ const run = (action, address) => {
             break;
           }
           default: {
-            console.log(payloadType, id);
             switch (payloadType) {
               case AC: {
                 ac.on(id);
