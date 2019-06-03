@@ -265,8 +265,8 @@ const run = (action, address) => {
       }
       case ACTION_ON: {
         const { id } = action;
-        const { bind, last, type: payloadType } = get(id);
-        const { velocity, type } = get(bind);
+        const { bind, last, type: payloadType } = get(id) || {};
+        const { velocity, type } = get(bind) || {};
         const [dev,,index] = bind.split('/');
         const { ip, type: deviceType } = get(dev);
         const value = last || 255
@@ -315,8 +315,8 @@ const run = (action, address) => {
       }
       case ACTION_OFF: {
         const { id } = action;
-        const { bind, type: payloadType } = get(id);
-        const { velocity = 128, type } = get(bind);
+        const { bind, type: payloadType } = get(id) || {};
+        const { velocity = 128, type } = get(bind) || {};
         const [dev,,index] = bind.split('/');
         const { ip, type: deviceType } = get(dev);
         switch (deviceType) {
