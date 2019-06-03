@@ -36,6 +36,7 @@ const handle = (power, mode = 0, fan = 0, setpoint = 24, bind) => {
   let t = setpoint < 17 ? 0 : (setpoint - 17);
   data[5] = (t & 0xf) << 4;
   data[6] = ((fan ? ((fan + 1) & 0x7) : 0 ) << 5) | (power ? (mode & 0x3) : 0x7);
+  data[7] = 0;
   data[8] = data.reduce((a, b) => a ^ b);
   const ir = code(167, 164, data);
   console.log(data.map(i => i.toString(16).padStart(2, '0')).join(' '));
