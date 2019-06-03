@@ -15,6 +15,7 @@ const code = (a, b, data) => {
         code.push(20);
       }
     }
+  });
   return code;
 }
 
