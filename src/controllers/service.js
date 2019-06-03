@@ -427,6 +427,7 @@ const run = (action, address) => {
       case ACTION_SETPOINT: {
         const { id, value } = action;
         set(id, { setpoint: value });
+        run({ type: ACTION_THERMOSTAT_HANDLE, id });
         break;
       }
       case ACTION_TIMER_START: {
@@ -594,13 +595,15 @@ const run = (action, address) => {
               break;
             }
             case COOL: {
+              stopHeat();
+              startCool();
               // stopHeat();
-              if (temperature > setpoint - (- cool_hysteresis)) {
-                stopHeat();
-                startCool();
-              } else if (temperature < setpoint - cool_hysteresis) {
-                stopCool();
-              }
+              // if (temperature > setpoint - (- cool_hysteresis)) {
+              //   stopHeat();
+              //   startCool();
+              // } else if (temperature < setpoint - cool_hysteresis) {
+              //   stopCool();
+              // }
               break;
             }
             default: {
