@@ -58,7 +58,7 @@ module.exports = (discovery, interval, port, listen, hasQueue, delay = 20) => {
     });
 
     const handle = (handler) => {
-      socket.on('message', handler)
+      socket.on('message', handler);
     };
 
     return { handle, send, sendConfirm };

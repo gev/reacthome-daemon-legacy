@@ -43,6 +43,7 @@ module.exports.BOILER = 'boiler';
 module.exports.PUMP = 'pump';
 module.exports.FAN = 'fan';
 module.exports.TV = 'TV';
+module.exports.AC = 'AC';
 
 
 module.exports.STATE = 'state';

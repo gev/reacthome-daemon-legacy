@@ -7,6 +7,7 @@ const drivers = require('../drivers');
 const {
   VERSION,
   asset,
+  AC,
   TV,
   DO,
   DIM,
@@ -108,6 +109,7 @@ const {
 } = require('../actions');
 const { device, service } = require('../sockets');
 const mac = require('../mac');
+const { ac } = require('../drivers');
 
 const timer = {};
 
@@ -263,7 +265,7 @@ const run = (action, address) => {
       }
       case ACTION_ON: {
         const { id } = action;
-        const { bind, last } = get(id);
+        const { bind, last, type: payloadType } = get(id);
         const { velocity, type } = get(bind);
         const [dev,,index] = bind.split('/');
         const { ip, type: deviceType } = get(dev);
@@ -298,14 +300,22 @@ const run = (action, address) => {
             break;
           }
           default: {
-            device.send(Buffer.from([ACTION_DO, index, ON]), ip);
+            switch (payloadType) {
+              case AC: {
+                ac.on(id);
+                break;
+              }
+              default: {
+                device.send(Buffer.from([ACTION_DO, index, ON]), ip);
+              }
+            }
           }
         }
         break;
       }
       case ACTION_OFF: {
         const { id } = action;
-        const { bind } = get(id);
+        const { bind, type: payloadType } = get(id);
         const { velocity = 128, type } = get(bind);
         const [dev,,index] = bind.split('/');
         const { ip, type: deviceType } = get(dev);
@@ -339,7 +349,15 @@ const run = (action, address) => {
             break;
           }
           default: {
-            device.send(Buffer.from([ACTION_DO, index, OFF]), ip);
+            switch (payloadType) {
+              case AC: {
+                ac.off(id);
+                break;
+              }
+              default: {
+                device.send(Buffer.from([ACTION_DO, index, OFF]), ip);
+              }
+            }
           }
         }
         break;
