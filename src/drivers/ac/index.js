@@ -24,7 +24,7 @@ const handle = (power, mode = 0, fan = 0, setpoint = 24, bind) => {
   const [dev,,index] = bind.split('/');
   const { ip } = get(dev) || {};
   if (!ip) return;
-  const buff = Buffer.alloc(595);
+  const buff = Buffer.alloc(597);
   buff.writeUInt8(ACTION_IR, 0);
   buff.writeUInt8(index, 1);
   buff.writeUInt8(0, 2);
