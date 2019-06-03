@@ -3,7 +3,7 @@ const { get, set } = require('../../actions');
 const { device } = require('../../sockets');
 const { ACTION_IR } = require('../../constants');
 
-const code(a, b, data) = {
+const code = (a, b, data) => {
   const code = [a, b];
   data.forEach((x, i) => {
     for (let m = 0b10000000; m > 0; m >>= 1) {
