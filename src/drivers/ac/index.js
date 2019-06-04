@@ -44,7 +44,7 @@ const handle = (power, mode = 0, fan = 0, setpoint = 24, bind) => {
   device.send(buff, ip);
 };
 
-module.exports.on = id => {
+module.exports.on = (id) => {
   const { mode, fan, thermostat, bind } = get(id) || {};
   const { setpoint } = get(thermostat) || {};
   const ch = get(bind) || {};
@@ -53,11 +53,11 @@ module.exports.on = id => {
   set(bind, { value: ON, setpoint });
 };
 
-module.exports.off = id => {
+module.exports.off = (id) => {
   const { mode, fan, thermostat, bind } = get(id) || {};
   const { setpoint } = get(thermostat) || {};
   const ch = get(bind) || {};
-  if (ch.value === ON && ch.setpoint === setpoint) return;
+  if (ch.value === OFF && ch.setpoint === setpoint) return;
   handle(OFF, mode, fan, setpoint, bind);
   set(bind, { value: OFF, setpoint });
 };
