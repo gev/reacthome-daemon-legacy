@@ -37,9 +37,6 @@ const handle = (power, mode = 0, fan = 0, setpoint = 24, bind) => {
   data[8] = data.reduce((a, b) => a ^ b);
   const ir = code(167, 164, data);
   ir.push(20, 282);
-  console.log(data.map(i => i.toString(16).padStart(2, '0')).join(' '));
-  console.log(ir.join(','));
-  console.log(ir.length);
   for (let i = 0; i < ir.length; i++) {
     buff.writeUInt16BE(ir[i], i * 2 + 5);
     buff.writeUInt16BE(ir[i], (i + ir.length) * 2 + 5);
@@ -50,13 +47,17 @@ const handle = (power, mode = 0, fan = 0, setpoint = 24, bind) => {
 module.exports.on = id => {
   const { mode, fan, thermostat, bind } = get(id) || {};
   const { setpoint } = get(thermostat) || {};
+  const ch = get(bind) || {};
+  if (ch.value === ON && ch.setpoint === setpoint) return;
   handle(ON, mode, fan, setpoint, bind);
-  set(bind, { value: ON });
+  set(bind, { value: ON, setpoint });
 };
 
 module.exports.off = id => {
   const { mode, fan, thermostat, bind } = get(id) || {};
   const { setpoint } = get(thermostat) || {};
+  const ch = get(bind) || {};
+  if (ch.value === ON && ch.setpoint === setpoint) return;
   handle(OFF, mode, fan, setpoint, bind);
-  set(bind, { value: OFF });
+  set(bind, { value: OFF, setpoint });
 };
