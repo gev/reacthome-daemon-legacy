@@ -427,7 +427,6 @@ const run = (action, address) => {
       case ACTION_SETPOINT: {
         const { id, value } = action;
         set(id, { setpoint: value });
-        run({ type: ACTION_THERMOSTAT_HANDLE, id });
         break;
       }
       case ACTION_TIMER_START: {
