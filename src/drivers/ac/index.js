@@ -1,7 +1,7 @@
 
 const { get, set } = require('../../actions');
 const { device } = require('../../sockets');
-const { ACTION_IR, ON, OFF } = require('../../constants');
+const { ACTION_IR, ON, OFF, ACTION_ON, ACTION_OFF, ACTION_ENABLE, ACTION_DISABLE } = require('../../constants');
 
 const code = (a, b, data) => {
   const code = [a, b];
@@ -19,7 +19,7 @@ const code = (a, b, data) => {
 
 const frequency = 38000;
 
-const handle = (power, mode = 0, fan = 0, setpoint = 24, bind) => {
+const manage = (power, mode = 0, fan = 0, setpoint = 24, bind) => {
   if (!bind) return;
   const [dev,,index] = bind.split('/');
   const { ip } = get(dev) || {};
@@ -44,20 +44,30 @@ const handle = (power, mode = 0, fan = 0, setpoint = 24, bind) => {
   device.send(buff, ip);
 };
 
-module.exports.on = (id) => {
-  const { mode, fan, thermostat, bind } = get(id) || {};
-  const { setpoint } = get(thermostat) || {};
-  const ch = get(bind) || {};
-  if (ch.value === ON && ch.setpoint === setpoint) return;
-  handle(ON, mode, fan, setpoint, bind);
-  set(bind, { value: ON, setpoint });
-};
-
-module.exports.off = (id) => {
-  const { mode, fan, thermostat, bind } = get(id) || {};
-  const { setpoint } = get(thermostat) || {};
-  const ch = get(bind) || {};
-  if (ch.value === OFF && ch.setpoint === setpoint) return;
-  handle(OFF, mode, fan, setpoint, bind);
-  set(bind, { value: OFF, setpoint });
+module.exports.handle = ({ type, id }) => {
+  const ac = get(id) || {};
+  let enabled = ac.enabled;
+  const { setpoint } = get(ac.thermostat) || {};
+  const { value } = get(ac.bind) || {}
+  switch (type) {
+    case ACTION_ENABLE:
+      enabled = true;
+    case ACTION_ON: {
+      if (!enabled) return;
+      if (value === ON && ac.setpoint === setpoint) return;
+      manage(ON, ac.mode, ac.fan, setpoint, ac.bind);
+      set(id, { setpoint });
+      set(bind: { value: ON, enabled });
+      break;
+    }
+    case ACTION_DISABLE:
+      enabled = false;
+    case ACTION_OFF: {
+      if (value === OFF && ac.setpoint === setpoint) return;
+      manage(OFF, ac.mode, ac.fan, setpoint, ac.bind);
+      set(id, { setpoint });
+      set(bind: { value: OFF, enabled });
+      break;
+    }
+  }
 };

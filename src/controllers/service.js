@@ -28,6 +28,8 @@ const {
   ACTION_ON,
   ACTION_OFF,
   ACTION_DIM,
+  ACTION_ENABLE,
+  ACTION_DISABLE,
   ACTION_DIM_RELATIVE,
   ACTION_SITE_LIGHT_DIM_RELATIVE,
   ACTION_SITE_LIGHT_OFF,
@@ -263,6 +265,7 @@ const run = (action, address) => {
         set(id, { rgb: value });
         break;
       }
+      case ACTION_ENABLE:
       case ACTION_ON: {
         const { id } = action;
         const { bind, last, type: payloadType } = get(id) || {};
@@ -302,7 +305,7 @@ const run = (action, address) => {
           default: {
             switch (payloadType) {
               case AC: {
-                ac.on(id);
+                ac.handle(action);
                 break;
               }
               default: {
@@ -313,6 +316,7 @@ const run = (action, address) => {
         }
         break;
       }
+      case ACTION_DISABLE:
       case ACTION_OFF: {
         const { id } = action;
         const { bind, type: payloadType } = get(id) || {};
@@ -351,7 +355,7 @@ const run = (action, address) => {
           default: {
             switch (payloadType) {
               case AC: {
-                ac.off(id);
+                ac.handle(action);
                 break;
               }
               default: {
