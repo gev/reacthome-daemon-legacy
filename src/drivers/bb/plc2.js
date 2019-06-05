@@ -180,7 +180,7 @@ module.exports = class {
   }
 
   setWaterCounter(id, amount) {
-    let { water_counter, prev = 0 } = get(id) || {};
+    let { water_counter, value: prev = 0 } = get(id) || {};
     let { value = 0 } = get(water_counter) || {};
 
     const diff = prev === amount ? 0 : scale;
