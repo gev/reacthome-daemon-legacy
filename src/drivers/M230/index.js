@@ -35,11 +35,11 @@ module.exports = class {
     this.socket.close();
   }
 
-  login () {
+  login = () => {
     this.send([1, 1, 1, 1, 1, 1, 1, 1]);
   };
 
-  request () {
+  request = () => {
     this.send([5, 0, 6]);
   };
 
@@ -66,13 +66,13 @@ module.exports = class {
     }, delay);
   };
 
-  send(cmd) {
+  send = (cmd) => {
     this.socket.write(this.query(cmd), err => {
       if (err) console.error('error');
     });
   }
 
-  query(cmd) {
+  query = (cmd) => {
     const buff = Buffer.alloc(1 + cmd.length);
     buff.writeUInt8(address & 0xff, 0);
     cmd.forEach((b, i) => {buff.writeUInt8(b, i + 1)});
