@@ -180,8 +180,7 @@ module.exports = class {
   }
 
   setWaterCounter(id, amount, rebasing = false) {
-    const channel = this.channel(id);
-    let { start = 0, tick = 0, value = 0 } = get(channel);
+    let { start = 0, tick = 0, value = 0 } = get(id);
 
     const total = tick => scale * tick + start;
     const rebase = current => current - (tick * scale);
@@ -192,7 +191,7 @@ module.exports = class {
         start = rebase(value % (limit + 1));
         check();
       } else {
-        set(channel, { start, tick, value });
+        set(id, { start, tick, value });
       }
     };
 
