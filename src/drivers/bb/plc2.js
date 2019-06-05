@@ -340,11 +340,13 @@ module.exports = class {
             const value = data.readUInt16BE(offset);
             this.set(id, value );
             const { bind } = get(this.channel(id)) || {};
-            if (value) {
-              count_on(bind);
-            } else {
-              count_off(bind);
-            }
+            if (bind) {
+              if (value) {
+                count_on(bind);
+              } else {
+                count_off(bind);
+              }
+              }
             offset += 2;
           }
         }
