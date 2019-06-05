@@ -26,6 +26,7 @@ module.exports = class {
     this.socket
         .on('data', this.process)
         .on('error', console.error);
+    this.request();
   }
 
   stop() {
@@ -59,7 +60,7 @@ module.exports = class {
           v[i] = ((buff.readUInt16LE(i * 16 + 1) << 16) | buff.readUInt16LE(i * 16 + 3)) / 100;
         }
         set(this.id, { value: [v[0], v[1]], total: v[4] });
-        setTimeout(this.request, period);
+        this.t = setTimeout(this.request, period);
       }
     }, delay);
   };
