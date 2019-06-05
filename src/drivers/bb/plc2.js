@@ -179,8 +179,9 @@ module.exports = class {
       }
   }
 
-  setWaterCounter(id, amount, rebasing = false) {
-    let { start = 0, tick = 0, value = 0 } = get(id);
+  setWaterCounter(id, amount) {
+    let { water_counter } = get(id) || {};
+    let { start = 0, tick = 0, value = 0} = get(water_counter) || {};
 
     const total = tick => scale * tick + start;
     const rebase = current => current - (tick * scale);
@@ -191,20 +192,18 @@ module.exports = class {
         start = rebase(value % (limit + 1));
         check();
       } else {
-        set(id, { start, tick, value });
+        set(water_counter, { start, tick, value });
       }
     };
 
-    if (rebasing) {
-      start = rebase(amount);
-    } else {
-      if (amount > tick) {
-        tick = amount;
-      } else if (amount < tick) {
-        const t = total(tick + amount);
-        start = rebase(t);
-        tick = amount;
-      }
+    start = rebase(amount);
+
+    if (amount > tick) {
+      tick = amount;
+    } else if (amount < tick) {
+      const t = total(tick + amount);
+      start = rebase(t);
+      tick = amount;
     }
 
     check();
@@ -212,10 +211,6 @@ module.exports = class {
 
   handle({ type, index, value }) {
     switch (type) {
-      case ACTION_REBASE_WATER_COUNTER: {
-        this.setWaterCounter(index, value, true);
-        break;
-      }
       default: {
         if (index < 1 || index > 15) return;
         this.master.writeSingleOutputRegister(offset[index - 1], value);
