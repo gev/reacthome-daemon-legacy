@@ -180,34 +180,13 @@ module.exports = class {
   }
 
   setWaterCounter(id, amount) {
-    let { water_counter } = get(id) || {};
-    let { start = 0, tick = 0, value = 0} = get(water_counter) || {};
+    let { water_counter, prev = 0 } = get(id) || {};
+    let { value = 0 } = get(water_counter) || {};
 
-    const total = tick => scale * tick + start;
-    const rebase = current => current - (tick * scale);
-
-    const check = () => {
-      value = total(tick);
-      if (value > limit) {
-        start = rebase(value % (limit + 1));
-        check();
-      } else {
-        set(water_counter, { start, tick, value });
-      }
-    };
-
-    start = rebase(amount);
-
-    if (amount > tick) {
-      tick = amount;
-    } else if (amount < tick) {
-      const t = total(tick + amount);
-      start = rebase(t);
-      tick = amount;
-    }
-
-    check();
-  }
+    const diff = prev === amount ? 0 : scale;
+    set(water_counter, { value: (value + diff) % (99999999 + 1) });
+    set(id, { value: amount });
+  };
 
   handle({ type, index, value }) {
     switch (type) {
