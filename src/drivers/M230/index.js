@@ -2,6 +2,7 @@
 
 const SerialPort = require('serialport');
 const crc = require('crc').crc16modbus;
+const { set } = require('../../actions');
 
 const address = 0x46;
 const device = '/dev/ttyUSB0';
