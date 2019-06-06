@@ -62,7 +62,7 @@ module.exports.handle = ({ type, id }) => {
     }
     case ACTION_DISABLE:
       enabled = false;
-      set(bind, { value: enabled });
+      set(ac.bind, { value: enabled });
     case ACTION_OFF: {
       if (value === OFF && ac.setpoint === setpoint) return;
       manage(OFF, ac.mode, ac.fan, setpoint, ac.bind);
