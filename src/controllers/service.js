@@ -598,7 +598,7 @@ const run = (action, address) => {
               break;
             }
             case COOL: {
-              stopHeat();
+              // stopHeat();
               startCool();
               // stopHeat();
               // if (temperature > setpoint - (- cool_hysteresis)) {
