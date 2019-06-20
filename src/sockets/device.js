@@ -19,4 +19,6 @@ const device = socket((socket) => {
   };
 }, DISCOVERY_INTERVAL, DEVICE_PORT, DEVICE_SERVER_PORT, true);
 
-module.exports = device;  
+service.setMulticastInterface('eth0');
+
+module.exports = device;

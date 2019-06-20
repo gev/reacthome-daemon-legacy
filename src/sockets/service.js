@@ -51,4 +51,6 @@ service.broadcast = (packet) => {
   }
 }
 
+service.setMulticastInterface('eth1');
+
 module.exports = service;
