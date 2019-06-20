@@ -126,7 +126,10 @@ module.exports.manage = () => {
             if (script) {
               run({ type: ACTION_SCRIPT_RUN, id: script });
             }
+          } else {
+            set(channel, { value });
           }
+
           break;
         }
         case ACTION_DO: {
@@ -186,7 +189,7 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_TEMPERATURE_EXT: {
-          const temperature_ext = data.readUInt16LE(7) / 100;
+          const temperature_ext = data.readUInt16LE(15) / 100;
           const { onTemperatureExt, site } = get(id);
           if (site) set(site, { temperature_ext });
           set(id, { temperature_ext });
