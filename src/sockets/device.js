@@ -17,8 +17,6 @@ const device = socket((socket) => {
   return () => {
     device.send(data, DEVICE_GROUP);
   };
-}, DISCOVERY_INTERVAL, DEVICE_PORT, DEVICE_SERVER_PORT, true);
-
-device.setMulticastInterface('eth0');
+}, DISCOVERY_INTERVAL, DEVICE_PORT, DEVICE_SERVER_PORT, 'eth0', true);
 
 module.exports = device;

@@ -1,7 +1,7 @@
 
 const { createSocket } = require('dgram');
 
-module.exports = (discovery, interval, port, listen, hasQueue, delay = 20) => {
+module.exports = (discovery, interval, port, listen, multicast, hasQueue, delay = 20) => {
 
   const timer = {};
   const queue = {};
@@ -56,6 +56,8 @@ module.exports = (discovery, interval, port, listen, hasQueue, delay = 20) => {
     .bind(listen, () => {
       setInterval(discovery(socket), interval);
     });
+
+    socket.setMulticastInterface(multicast);
 
     const handle = (handler) => {
       socket.on('message', handler);

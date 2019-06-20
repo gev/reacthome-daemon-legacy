@@ -30,7 +30,7 @@ const service = socket(
       unicast.forEach(ip => service.send(u, ip));
     }
   },
-  DISCOVERY_INTERVAL, CLIENT_PORT, CLIENT_SERVER_PORT, true, 1
+  DISCOVERY_INTERVAL, CLIENT_PORT, CLIENT_SERVER_PORT, 'eth1', true, 1
 );
 
 service.addUnicast = (ip) => {
@@ -50,7 +50,5 @@ service.broadcast = (packet) => {
     unicast.forEach(ip => service.send(packet, ip));
   }
 }
-
-service.setMulticastInterface('eth1');
 
 module.exports = service;
