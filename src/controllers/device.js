@@ -221,6 +221,7 @@ module.exports.manage = () => {
         case ACTION_DOPPLER: {
           const [,,,,,,, value, gain ] = data;
           const { onDoppler, threshold } = get(id);
+          console.log(value);
           set(id, { value, gain });
           if (onDoppler) {
             run({type: ACTION_SCRIPT_RUN, id: onDoppler});
