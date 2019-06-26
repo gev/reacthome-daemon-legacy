@@ -209,8 +209,8 @@ const run = (action, address) => {
           case DEVICE_TYPE_RELAY_6:
           case DEVICE_TYPE_RELAY_12:
           case DEVICE_TYPE_RELAY_24: {
-            console.log(Buffer.from([ACTION_DO, ...action.id.split(':').map(i => parseInt(16)), action.index, action.value]));
-            device.send(Buffer.from([ACTION_DO, ...action.id.split(':').map(i => parseInt(16)), action.index, action.value]), dev.ip);
+            console.log(Buffer.from([ACTION_DO, ...(action.id.split(':').map(i => parseInt(16))), action.index, action.value]));
+            device.send(Buffer.from([ACTION_DO, ...(action.id.split(':').map(i => parseInt(16))), action.index, action.value]), dev.ip);
             break;
           }
           default: {
