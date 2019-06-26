@@ -50,6 +50,9 @@ const {
   DEVICE_PORT,
   DEVICE_TYPE_DIM4,
   DEVICE_TYPE_DIM8,
+  DEVICE_TYPE_RELAY_6,
+  DEVICE_TYPE_RELAY_12,
+  DEVICE_TYPE_RELAY_24,
   DRIVER_TYPE_ARTNET,
   DRIVER_TYPE_BB_PLC1,
   DRIVER_TYPE_BB_PLC2,
@@ -285,11 +288,13 @@ const run = (action, address) => {
             switch (type) {
               case DIM_TYPE_PWM:
               case DIM_TYPE_RISING_EDGE:
-              case DIM_TYPE_FALLING_EDGE:
+              case DIM_TYPE_FALLING_EDGE: {
                 device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, DIM_VELOCITY]), ip);
-              break;
-              default:
+                break;
+              }
+              default: {
                 device.send(Buffer.from([ACTION_DO, index, ON]), ip);
+              }
             }
             break;
           }
@@ -306,6 +311,12 @@ const run = (action, address) => {
           case DRIVER_TYPE_BB_PLC1:
           case DRIVER_TYPE_BB_PLC2: {
             drivers.handle({ id: dev, index, value: ON });
+            break;
+          }
+          case DEVICE_TYPE_RELAY_6:
+          case DEVICE_TYPE_RELAY_12:
+          case DEVICE_TYPE_RELAY_24: {
+            device.send(Buffer.from([ACTION_DO, ...dev.split(':').map(i => parseInt(16)), index, ON]), dev.ip);
             break;
           }
           default: {
@@ -356,6 +367,12 @@ const run = (action, address) => {
           case DRIVER_TYPE_BB_PLC1:
           case DRIVER_TYPE_BB_PLC2: {
             drivers.handle({ id: dev, index, value: OFF });
+            break;
+          }
+          case DEVICE_TYPE_RELAY_6:
+          case DEVICE_TYPE_RELAY_12:
+          case DEVICE_TYPE_RELAY_24: {
+            device.send(Buffer.from([ACTION_DO, ...dev.split(':').map(i => parseInt(16)), index, OFF]), dev.ip);
             break;
           }
           default: {
