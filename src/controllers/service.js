@@ -50,6 +50,7 @@ const {
   DEVICE_PORT,
   DEVICE_TYPE_DIM4,
   DEVICE_TYPE_DIM8,
+  DEVICE_TYPE_DIM_8,
   DEVICE_TYPE_RELAY_6,
   DEVICE_TYPE_RELAY_12,
   DEVICE_TYPE_RELAY_24,
@@ -208,7 +209,8 @@ const run = (action, address) => {
           }
           case DEVICE_TYPE_RELAY_6:
           case DEVICE_TYPE_RELAY_12:
-          case DEVICE_TYPE_RELAY_24: {
+          case DEVICE_TYPE_RELAY_24:
+          case DEVICE_TYPE_DIM_8: {
             device.send(Buffer.from([ACTION_DO, ...action.id.split(':').map(i => parseInt(i, 16)), action.index, action.value]), dev.ip);
             break;
           }
@@ -224,23 +226,27 @@ const run = (action, address) => {
         break;
       }
       case ACTION_DIMMER: {
-        const dev = get(action.id);
+        const dev = get(action.id) || {};
         const id = `${action.id}/${DIM}/${action.index}`;
+        let a = [];
+        if (dev.type === DEVICE_TYPE_DIM_8) {
+          a = action.id.split(':').map(i => parseInt(i, 16));
+        }
         switch (action.action) {
           case DIM_SET:
-            device.send(Buffer.from([ACTION_DIMMER, action.index, action.action, action.value]), dev.ip);
+            device.send(Buffer.from([ACTION_DIMMER, ...a, action.index, action.action, action.value]), dev.ip);
             break;
           case DIM_TYPE:
-            device.send(Buffer.from([ACTION_DIMMER, action.index, action.action, action.value]), dev.ip);
+            device.send(Buffer.from([ACTION_DIMMER, ...a, action.index, action.action, action.value]), dev.ip);
             break;
           case DIM_FADE:
-            device.send(Buffer.from([ACTION_DIMMER, action.index, action.action, action.value, action.velocity]), dev.ip);
+            device.send(Buffer.from([ACTION_DIMMER, ...a, action.index, action.action, action.value, action.velocity]), dev.ip);
             break;
           case DIM_ON:
-            device.send(Buffer.from([ACTION_DIMMER, action.index, action.action]), dev.ip);
+            device.send(Buffer.from([ACTION_DIMMER, ...a, action.index, action.action]), dev.ip);
             break;
         case DIM_OFF:
-          device.send(Buffer.from([ACTION_DIMMER, action.index, action.action]), dev.ip);
+          device.send(Buffer.from([ACTION_DIMMER, ...a, action.index, action.action]), dev.ip);
             break;
         }
         break;
@@ -315,8 +321,9 @@ const run = (action, address) => {
           }
           case DEVICE_TYPE_RELAY_6:
           case DEVICE_TYPE_RELAY_12:
-          case DEVICE_TYPE_RELAY_24: {
-            device.send(Buffer.from([ACTION_DO, ...dev.split(':').map(i => parseInt(i, 16)), index, ON]), dev.ip);
+          case DEVICE_TYPE_RELAY_24:
+          case DEVICE_TYPE_DIM_8: {
+                device.send(Buffer.from([ACTION_DO, ...dev.split(':').map(i => parseInt(i, 16)), index, ON]), dev.ip);
             break;
           }
           default: {
@@ -371,8 +378,9 @@ const run = (action, address) => {
           }
           case DEVICE_TYPE_RELAY_6:
           case DEVICE_TYPE_RELAY_12:
-          case DEVICE_TYPE_RELAY_24: {
-            device.send(Buffer.from([ACTION_DO, ...dev.split(':').map(i => parseInt(i, 16)), index, OFF]), dev.ip);
+          case DEVICE_TYPE_RELAY_24:
+          case DEVICE_TYPE_DIM_8: {
+                device.send(Buffer.from([ACTION_DO, ...dev.split(':').map(i => parseInt(i, 16)), index, OFF]), dev.ip);
             break;
           }
           default: {
