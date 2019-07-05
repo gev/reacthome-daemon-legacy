@@ -322,8 +322,21 @@ const run = (action, address) => {
           case DEVICE_TYPE_RELAY_6:
           case DEVICE_TYPE_RELAY_12:
           case DEVICE_TYPE_RELAY_24:
+              device.send(Buffer.from([ACTION_DO, ...dev.split(':').map(i => parseInt(i, 16)), index, ON]), ip);
+            break;
           case DEVICE_TYPE_DIM_8: {
-                device.send(Buffer.from([ACTION_DO, ...dev.split(':').map(i => parseInt(i, 16)), index, ON]), dev.ip);
+            switch (type) {
+              case DIM_TYPE_PWM:
+              case DIM_TYPE_RISING_EDGE:
+              case DIM_TYPE_FALLING_EDGE: {
+                device.send(Buffer.from([ACTION_DIMMER, ...dev.split(':').map(i => parseInt(i, 16)), index, DIM_FADE, value, DIM_VELOCITY]), ip);
+                break;
+              }
+              default: {
+                device.send(Buffer.from([ACTION_DO, ...dev.split(':').map(i => parseInt(i, 16)), index, ON]), ip);
+              }
+            }
+
             break;
           }
           default: {
@@ -378,9 +391,20 @@ const run = (action, address) => {
           }
           case DEVICE_TYPE_RELAY_6:
           case DEVICE_TYPE_RELAY_12:
-          case DEVICE_TYPE_RELAY_24:
+          case DEVICE_TYPE_RELAY_24: {
+              device.send(Buffer.from([ACTION_DO, ...dev.split(':').map(i => parseInt(i, 16)), index, OFF]), ip);
+            break;
+          }
           case DEVICE_TYPE_DIM_8: {
-                device.send(Buffer.from([ACTION_DO, ...dev.split(':').map(i => parseInt(i, 16)), index, OFF]), dev.ip);
+            switch (type) {
+              case DIM_TYPE_PWM:
+              case DIM_TYPE_RISING_EDGE:
+              case DIM_TYPE_FALLING_EDGE:
+                device.send(Buffer.from([ACTION_DIMMER, ...dev.split(':').map(i => parseInt(i, 16)), index, DIM_FADE, 0, DIM_VELOCITY]), ip);
+                break;
+              default:
+                device.send(Buffer.from([ACTION_DO, ...dev.split(':').map(i => parseInt(i, 16)), index, OFF]), ip);
+            }
             break;
           }
           default: {
