@@ -434,6 +434,11 @@ const run = (action, address) => {
             set(id, { last: value });
             break;
           }
+          case DEVICE_TYPE_DIM_8: {
+            device.send(Buffer.from([ACTION_DIMMER, ...dev.split(':').map(i => parseInt(i, 16)), index, DIM_FADE, value, DIM_VELOCITY]), ip);
+            set(id, { last: value });
+            break;
+          }
           case DRIVER_TYPE_ARTNET: {
             drivers.handle({ id: dev, index, action: ARTNET_FADE, value, velocity: ARTNET_VELOCITY });
             set(id, { last: value });
