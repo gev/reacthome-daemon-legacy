@@ -153,7 +153,7 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_DIMMER: {
-          const [,,,,,,, index, type, value, velocity = 128] = data;
+          const [,,,,,,, index, type, value, velocity] = data;
           const channel = `${id}/${DIM}/${index}`;
           const chan = get(channel);
           set(channel, {

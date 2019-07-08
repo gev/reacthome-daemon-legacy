@@ -229,8 +229,11 @@ const run = (action, address) => {
         const dev = get(action.id) || {};
         const id = `${action.id}/${DIM}/${action.index}`;
         let a = [];
+        let velocity = DIM_VELOCITY;
         if (dev.type === DEVICE_TYPE_DIM_8) {
           a = action.id.split(':').map(i => parseInt(i, 16));
+        } else if (dev.type === DRIVER_TYPE_ARTNET) {
+          velocity = ARTNET_VELOCITY;
         }
         switch (action.action) {
           case DIM_SET:
@@ -240,7 +243,7 @@ const run = (action, address) => {
             device.send(Buffer.from([ACTION_DIMMER, ...a, action.index, action.action, action.value]), dev.ip);
             break;
           case DIM_FADE:
-            device.send(Buffer.from([ACTION_DIMMER, ...a, action.index, action.action, action.value, action.velocity]), dev.ip);
+            device.send(Buffer.from([ACTION_DIMMER, ...a, action.index, action.action, action.value, velocity]), dev.ip);
             break;
           case DIM_ON:
             device.send(Buffer.from([ACTION_DIMMER, ...a, action.index, action.action]), dev.ip);
