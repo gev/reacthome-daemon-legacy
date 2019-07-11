@@ -71,7 +71,7 @@ module.exports.initialize = (id) => {
       break;
     }
     case DEVICE_TYPE_RELAY_12: {
-      id.map(i => parseInt(i, 16)).forEach((x, i) => {
+      id.split(':').map(i => parseInt(i, 16)).forEach((x, i) => {
         a[i + 1] = x;
       });
       for (let i = 1; i <= 12; i++) {
@@ -81,7 +81,7 @@ module.exports.initialize = (id) => {
       break;
     }
     case DEVICE_TYPE_RELAY_24: {
-      id.map(i => parseInt(i, 16)).forEach((x, i) => {
+      id.split(':').map(i => parseInt(i, 16)).forEach((x, i) => {
         a[i + 1] = x;
       });
       for (let i = 1; i <= 24; i++) {
@@ -107,7 +107,7 @@ module.exports.initialize = (id) => {
       break;
     }
     case DEVICE_TYPE_DIM_8: {
-      id.map(i => parseInt(i, 16)).forEach((x, i) => {
+      id.split(':').map(i => parseInt(i, 16)).forEach((x, i) => {
         a[i + 1] = x;
       });
       for (let i = 1; i <= 8; i++) {
