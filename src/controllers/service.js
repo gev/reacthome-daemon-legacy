@@ -207,13 +207,6 @@ const run = (action, address) => {
             drivers.handle(action);
             break;
           }
-          case DEVICE_TYPE_RELAY_6:
-          case DEVICE_TYPE_RELAY_12:
-          case DEVICE_TYPE_RELAY_24:
-          case DEVICE_TYPE_DIM_8: {
-            device.send(Buffer.from([ACTION_DO, ...action.id.split(':').map(i => parseInt(i, 16)), action.index, action.value]), dev.ip);
-            break;
-          }
           default: {
             device.send(Buffer.from([ACTION_DO, action.index, action.value]), dev.ip);
           }
@@ -228,28 +221,25 @@ const run = (action, address) => {
       case ACTION_DIMMER: {
         const dev = get(action.id) || {};
         const id = `${action.id}/${DIM}/${action.index}`;
-        let a = [];
         let velocity = DIM_VELOCITY;
-        if (dev.type === DEVICE_TYPE_DIM_8) {
-          a = action.id.split(':').map(i => parseInt(i, 16));
-        } else if (dev.type === DRIVER_TYPE_ARTNET) {
+        if (dev.type === DRIVER_TYPE_ARTNET) {
           velocity = ARTNET_VELOCITY;
         }
         switch (action.action) {
           case DIM_SET:
-            device.send(Buffer.from([ACTION_DIMMER, ...a, action.index, action.action, action.value]), dev.ip);
+            device.send(Buffer.from([ACTION_DIMMER, action.index, action.action, action.value]), dev.ip);
             break;
           case DIM_TYPE:
-            device.send(Buffer.from([ACTION_DIMMER, ...a, action.index, action.action, action.value]), dev.ip);
+            device.send(Buffer.from([ACTION_DIMMER, action.index, action.action, action.value]), dev.ip);
             break;
           case DIM_FADE:
-            device.send(Buffer.from([ACTION_DIMMER, ...a, action.index, action.action, action.value, velocity]), dev.ip);
+            device.send(Buffer.from([ACTION_DIMMER, action.index, action.action, action.value, velocity]), dev.ip);
             break;
           case DIM_ON:
-            device.send(Buffer.from([ACTION_DIMMER, ...a, action.index, action.action]), dev.ip);
+            device.send(Buffer.from([ACTION_DIMMER, action.index, action.action]), dev.ip);
             break;
         case DIM_OFF:
-          device.send(Buffer.from([ACTION_DIMMER, ...a, action.index, action.action]), dev.ip);
+          device.send(Buffer.from([ACTION_DIMMER, action.index, action.action]), dev.ip);
             break;
         }
         break;
@@ -293,7 +283,8 @@ const run = (action, address) => {
         const value = last || 255
         switch (deviceType) {
           case DEVICE_TYPE_DIM4:
-          case DEVICE_TYPE_DIM8: {
+          case DEVICE_TYPE_DIM8:
+          case DEVICE_TYPE_DIM_8: {
             switch (type) {
               case DIM_TYPE_PWM:
               case DIM_TYPE_RISING_EDGE:
@@ -322,26 +313,6 @@ const run = (action, address) => {
             drivers.handle({ id: dev, index, value: ON });
             break;
           }
-          case DEVICE_TYPE_RELAY_6:
-          case DEVICE_TYPE_RELAY_12:
-          case DEVICE_TYPE_RELAY_24:
-              device.send(Buffer.from([ACTION_DO, ...dev.split(':').map(i => parseInt(i, 16)), index, ON]), ip);
-            break;
-          case DEVICE_TYPE_DIM_8: {
-            switch (type) {
-              case DIM_TYPE_PWM:
-              case DIM_TYPE_RISING_EDGE:
-              case DIM_TYPE_FALLING_EDGE: {
-                device.send(Buffer.from([ACTION_DIMMER, ...dev.split(':').map(i => parseInt(i, 16)), index, DIM_FADE, value, DIM_VELOCITY]), ip);
-                break;
-              }
-              default: {
-                device.send(Buffer.from([ACTION_DO, ...dev.split(':').map(i => parseInt(i, 16)), index, ON]), ip);
-              }
-            }
-
-            break;
-          }
           default: {
             switch (payloadType) {
               case AC: {
@@ -365,7 +336,8 @@ const run = (action, address) => {
         const { ip, type: deviceType } = get(dev);
         switch (deviceType) {
           case DEVICE_TYPE_DIM4:
-          case DEVICE_TYPE_DIM8: {
+          case DEVICE_TYPE_DIM8:
+          case DEVICE_TYPE_DIM_8: {
             switch (type) {
               case DIM_TYPE_PWM:
               case DIM_TYPE_RISING_EDGE:
@@ -392,24 +364,6 @@ const run = (action, address) => {
             drivers.handle({ id: dev, index, value: OFF });
             break;
           }
-          case DEVICE_TYPE_RELAY_6:
-          case DEVICE_TYPE_RELAY_12:
-          case DEVICE_TYPE_RELAY_24: {
-              device.send(Buffer.from([ACTION_DO, ...dev.split(':').map(i => parseInt(i, 16)), index, OFF]), ip);
-            break;
-          }
-          case DEVICE_TYPE_DIM_8: {
-            switch (type) {
-              case DIM_TYPE_PWM:
-              case DIM_TYPE_RISING_EDGE:
-              case DIM_TYPE_FALLING_EDGE:
-                device.send(Buffer.from([ACTION_DIMMER, ...dev.split(':').map(i => parseInt(i, 16)), index, DIM_FADE, 0, DIM_VELOCITY]), ip);
-                break;
-              default:
-                device.send(Buffer.from([ACTION_DO, ...dev.split(':').map(i => parseInt(i, 16)), index, OFF]), ip);
-            }
-            break;
-          }
           default: {
             switch (payloadType) {
               case AC: {
@@ -432,13 +386,9 @@ const run = (action, address) => {
         const { ip, type: deviceType } = get(dev);
         switch (deviceType) {
           case DEVICE_TYPE_DIM4:
-          case DEVICE_TYPE_DIM8: {
-            device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, DIM_VELOCITY]), ip);
-            set(id, { last: value });
-            break;
-          }
+          case DEVICE_TYPE_DIM8:
           case DEVICE_TYPE_DIM_8: {
-            device.send(Buffer.from([ACTION_DIMMER, ...dev.split(':').map(i => parseInt(i, 16)), index, DIM_FADE, value, DIM_VELOCITY]), ip);
+            device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, DIM_VELOCITY]), ip);
             set(id, { last: value });
             break;
           }

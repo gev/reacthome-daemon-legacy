@@ -71,22 +71,16 @@ module.exports.initialize = (id) => {
       break;
     }
     case DEVICE_TYPE_RELAY_12: {
-      id.split(':').map(i => parseInt(i, 16)).forEach((x, i) => {
-        a[i + 1] = x;
-      });
       for (let i = 1; i <= 12; i++) {
         const channel = get(`${id}/${DO}/${i}`);
-        a[i + 6] = (channel && channel.value) || 0;
+        a[i] = (channel && channel.value) || 0;
       }
       break;
     }
     case DEVICE_TYPE_RELAY_24: {
-      id.split(':').map(i => parseInt(i, 16)).forEach((x, i) => {
-        a[i + 1] = x;
-      });
       for (let i = 1; i <= 24; i++) {
         const channel = get(`${id}/${DO}/${i}`);
-        a[i + 6] = (channel && channel.value) || 0;
+        a[i] = (channel && channel.value) || 0;
       }
       break;
     }
@@ -98,22 +92,12 @@ module.exports.initialize = (id) => {
       }
       break;
     }
-    case DEVICE_TYPE_DIM8: {
+    case DEVICE_TYPE_DIM8:
+    case DEVICE_TYPE_DIM_8: {
       for (let i = 1; i <= 8; i++) {
         const channel = get(`${id}/${DIM}/${i}`);
         a[2 * i - 1] = (channel && channel.type) || 0;
         a[2 * i] = (channel && channel.value) || 0;
-      }
-      break;
-    }
-    case DEVICE_TYPE_DIM_8: {
-      id.split(':').map(i => parseInt(i, 16)).forEach((x, i) => {
-        a[i + 1] = x;
-      });
-      for (let i = 1; i <= 8; i++) {
-        const channel = get(`${id}/${DIM}/${i}`);
-        a[2 * i + 5] = (channel && channel.type) || 0;
-        a[2 * i + 6] = (channel && channel.value) || 0;
       }
       break;
     }
