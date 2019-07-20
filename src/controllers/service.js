@@ -27,6 +27,7 @@ const {
   ACTION_RGB_DIM,
   ACTION_ON,
   ACTION_OFF,
+  ACTION_RS485_MODE,
   ACTION_DIM,
   ACTION_ENABLE,
   ACTION_DISABLE,
@@ -439,6 +440,21 @@ const run = (action, address) => {
           light_220.map(i => run({ type: ACTION_OFF, id: i }));
           light_LED.map(i => run({ type: ACTION_OFF, id: i }));
         });
+        break;
+      }
+      case ACTION_RS485_MODE: {
+        const { id, index, is_rbus, baud, line_control } = action
+        const { ip } = get(id) || {};
+        const buffer = Buffer.alloc(14);
+        buffer[0] = ACTION_RS485_MODE;
+        id.split(':').forEach((v, i) => {
+          buffer[i +1] = parseInt(v, 16);
+        });
+        buffer[7] = index;
+        buffer[8] = is_rbus;
+        buffer.writeInt32LE(baud, 9);
+        buffer[13] = line_control;
+        device.send(buffer, ip);
         break;
       }
       case ACTION_SETPOINT: {
