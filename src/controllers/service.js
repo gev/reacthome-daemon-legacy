@@ -445,15 +445,12 @@ const run = (action, address) => {
       case ACTION_RS485_MODE: {
         const { id, index, is_rbus, baud, line_control } = action
         const { ip } = get(id) || {};
-        const buffer = Buffer.alloc(14);
+        const buffer = Buffer.alloc(8);
         buffer[0] = ACTION_RS485_MODE;
-        id.split(':').forEach((v, i) => {
-          buffer[i +1] = parseInt(v, 16);
-        });
-        buffer[7] = index;
-        buffer[8] = is_rbus;
-        buffer.writeInt32LE(baud, 9);
-        buffer[13] = line_control;
+        buffer[1] = index;
+        buffer[2] = is_rbus;
+        buffer.writeInt32LE(baud, 3);
+        buffer[7] = line_control;
         device.send(buffer, ip);
         break;
       }
