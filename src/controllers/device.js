@@ -165,7 +165,7 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_RS485_TRANSMIT: {
-          console.log(action);
+          console.log(data);
           break;
         }
         case ACTION_DIMMER: {

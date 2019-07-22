@@ -49,7 +49,7 @@ module.exports = class {
     const header = Buffer.from([ACTION_RS485_TRANSMIT, index]);
     const payload = Buffer.alloc(5, 0);
     payload.writeUInt32BE(address, 0);
-    payload.writeUInt8(cmd, 4)
+    payload.writeUInt8(cmd, 4);
     const crc = Buffer.alloc(2);
     crc.writeUInt16LE(crc16(payload), 0);
     const buffer = Buffer.concat([header, payload, crc]);
