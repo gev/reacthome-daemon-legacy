@@ -51,7 +51,7 @@ module.exports = class {
     payload.writeUInt32BE(address, 0);
     payload.writeUInt8(cmd, 4)
     const crc = Buffer.alloc(2);
-    crc.writeUInt16LE(crc16(payload), 5);
+    crc.writeUInt16LE(crc16(payload), 0);
     const buffer = Buffer.concat([header, payload, crc]);
     device.send(buffer, ip);
     console.log(buffer);
