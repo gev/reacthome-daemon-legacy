@@ -31,9 +31,9 @@ module.exports = class {
     clearTimeout(this.t);
   }
 
-  // handle (action) {
-  //   console.log(action);
-  // }
+  handle (action) {
+    console.log(action);
+  }
 
   request = () => {
     cmd.forEach((c, i) => {

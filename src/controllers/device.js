@@ -62,6 +62,7 @@ const {
 } = require('../actions');
 const { device } = require('../sockets');
 const { run } = require('./service');
+const drivers = require('../drivers');
 const mac = require('../mac');
 
 const ip2int = ip => ip.split('.').reduce((a, b) => (a << 8) | (parseInt(b)), 0) >>> 0;
@@ -165,7 +166,10 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_RS485_TRANSMIT: {
-          console.log(data);
+          const index = data[7];
+          const channel = `${id}/${RS485}/${index}`;
+          const { bind } = get(channel);
+          drivers.handle({ id: bind, data: data.slice(7) })
           break;
         }
         case ACTION_DIMMER: {
