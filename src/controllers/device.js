@@ -169,7 +169,7 @@ module.exports.manage = () => {
           const index = data[7];
           const channel = `${id}/${RS485}/${index}`;
           const { bind } = get(channel) || {};
-          drivers.handle({ id: bind, data: data.slice(7) })
+          drivers.handle({ id: bind, data: data.slice(8) })
           break;
         }
         case ACTION_DIMMER: {
