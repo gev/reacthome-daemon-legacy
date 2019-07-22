@@ -156,7 +156,6 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_RS485_MODE: {
-          console.log(data.slice(7));
           const index = data[7];
           const is_rbus = data[8];
           const baud = data.readUInt32LE(9);
