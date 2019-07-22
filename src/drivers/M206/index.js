@@ -1,6 +1,6 @@
 'use strict';
 
-const crc = require('crc').crc16modbus;
+const crc16 = require('crc').crc16modbus;
 const { get, set } = require('../../actions');
 const { device } = require('../../sockets');
 const { ACTION_RS485_TRANSMIT } = require('../../constants');
@@ -46,13 +46,15 @@ module.exports = class {
     if (!bind) return;
     const [dev,, index] = bind.split('/');
     const { ip } = get(dev);
-    const buff = Buffer.alloc(5, 0);
-    buff.writeUInt32BE(address, 0);
-    buff.writeUInt8(cmd, 4)
-    const req = Buffer.alloc(7, buff);
-    req.writeUInt16LE(crc(buff), 5);
-    device.send(req, ip);
-    console.log(req);
+    const header = Buffer.from([ACTION_RS485_TRANSMIT, index]);
+    const payload = Buffer.alloc(5, 0);
+    payload.writeUInt32BE(address, 0);
+    payload.writeUInt8(cmd, 4)
+    const crc = Buffer.alloc(2);
+    crc.writeUInt16LE(crc16(payload), 5);
+    const buffer = Buffer.concat([header, payload, crc]);
+    device.send(buffer, ip);
+    console.log(buffer);
   }
 
 };
