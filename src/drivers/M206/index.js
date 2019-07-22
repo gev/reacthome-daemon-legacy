@@ -44,6 +44,8 @@ module.exports = class {
   send = (cmd) => {
     const { bind } = get(this.id);
     if (!bind) return;
+    const { is_rbus } = get(bind);
+    if (is_rbus) return;
     const [dev,, index] = bind.split('/');
     const { ip } = get(dev);
     const header = Buffer.from([ACTION_RS485_TRANSMIT, index]);
