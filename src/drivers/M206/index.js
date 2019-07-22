@@ -9,8 +9,7 @@ const address = 0x46;
 const delay = 500;
 const period = 15000;
 
-const pool = [0x27, 0x85, 0x63, 0x81];
-const offset = 4;
+const cmd = [0x27, 0x85, 0x63, 0x81];
 
 const number = x =>
     x instanceof Array
@@ -37,20 +36,23 @@ module.exports = class {
   // }
 
   request = () => {
-    const cmd = pool.shift();
-    this.send(cmd);
-    setTimeout(this.request, delay);
-    pool.push(cmd);
+    cmd.forEach((c, i) => {
+      setTimeout(this.send, i * delay, c);
+    });
   };
 
   send = (cmd) => {
-    const { bind } = get(id);
+    const { bind } = get(this.id);
     if (!bind) return;
     const [dev,, index] = bind.split('/');
     const { ip } = get(dev);
-    const buffer = Buffer.from([ACTION_RS485_TRANSMIT, index, cmd]);
-    device.send(buffer, ip);
-    console.log(buffer);
+    const buff = Buffer.alloc(5, 0);
+    buff.writeUInt32BE(address, 0);
+    buff.writeUInt8(cmd, 4)
+    const req = Buffer.alloc(7, buff);
+    req.writeUInt16LE(crc(buff), offset + cmd.length);
+    device.send(req, ip);
+    console.log(req);
   }
 
 };
