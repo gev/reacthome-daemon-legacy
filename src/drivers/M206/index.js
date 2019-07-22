@@ -12,7 +12,7 @@ const period = 15000;
 const cmd = [0x27, 0x85, 0x63, 0x81];
 
 const number = x =>
-  x.reduce((a, b) => 100 * a + (10 * (b >> 4 & 0xf) + (b & 0xf)), 0);
+  x.reduce((a, b) => (100 * a) + (10 * (b >> 4 & 0xf) + (b & 0xf)), 0);
 
 module.exports = class {
 
