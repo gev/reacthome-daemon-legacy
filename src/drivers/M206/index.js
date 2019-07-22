@@ -25,7 +25,7 @@ module.exports = class {
   }
 
   start() {
-    this.t = setInterval(this.request, period)
+    this.t = setInterval(this.request, period);
   }
 
   stop() {
