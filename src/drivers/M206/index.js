@@ -48,16 +48,9 @@ module.exports = class {
     if (!bind) return;
     const [dev,, index] = bind.split('/');
     const { ip } = get(dev);
-    device.send(Buffer.from([ACTION_RS485_TRANSMIT, index, cmd]), ip);
-  }
-
-  query = (cmd) => {
-    const buff = Buffer.alloc(1 + cmd.length);
-    buff.writeUInt8(address & 0xff, 0);
-    cmd.forEach((b, i) => {buff.writeUInt8(b, i + 1)});
-    const req = Buffer.alloc(buff.length + 2, buff);
-    req.writeUInt16LE(crc(buff), buff.length);
-    return req;
+    const buffer = Buffer.from([ACTION_RS485_TRANSMIT, index, cmd]);
+    device.send(buffer, ip);
+    console.log(buffer);
   }
 
 };
