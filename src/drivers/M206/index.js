@@ -34,32 +34,32 @@ module.exports = class {
   handle ({ id, data }) {
     switch (data[4]) {
       case 0x27: {
-          const t1 = number(data.slice(5, 9)) / 100;
-          const t2 = number(data.slice(9, 13)) / 100;
-          const t3 = number(data.slice(13, 17)) / 100;
-          const t4 = number(data.slice(17, 21)) / 100;
-          const e = t1 + t2 + t3 + t4;
-          set(id, { active_energy: [e, t1, t2, t3, t4] });
-          break;
+        const t1 = number(data.slice(5, 9)) / 100;
+        const t2 = number(data.slice(9, 13)) / 100;
+        const t3 = number(data.slice(13, 17)) / 100;
+        const t4 = number(data.slice(17, 21)) / 100;
+        const e = t1 + t2 + t3 + t4;
+        set(id, { active_energy: [e, t1, t2, t3, t4] });
+        break;
       }
       case 0x85: {
-          const t1 = number(data.slice(5, 9)) / 100;
-          const t2 = number(data.slice(9, 13)) / 100;
-          const t3 = number(data.slice(13, 17)) / 100;
-          const t4 = number(data.slice(17, 21)) / 100;
-          const e = t1 + t2 + t3 + t4;
-          set(id, { reactive_energy: [e, t1, t2, t3, t4] });
-          break;
+        const t1 = number(data.slice(5, 9)) / 100;
+        const t2 = number(data.slice(9, 13)) / 100;
+        const t3 = number(data.slice(13, 17)) / 100;
+        const t4 = number(data.slice(17, 21)) / 100;
+        const e = t1 + t2 + t3 + t4;
+        set(id, { reactive_energy: [e, t1, t2, t3, t4] });
+        break;
       }
       case 0x63: {
-          set(id, { voltage: number(data.slice(5, 7)) / 10 });
-          set(id, { current: number(data.slice(7, 9)) / 100 });
-          set(id, { power: number(data.slice(9, 12)) });
-          break;
+        set(id, { voltage: number(data.slice(5, 7)) / 10 });
+        set(id, { current: number(data.slice(7, 9)) / 100 });
+        set(id, { power: number(data.slice(9, 12)) });
+        break;
       }
       case 0x81: {
-          publish(_.FREQUENCY, number(res.slice(offset + 1, offset + 3)) / 100);
-          break;
+        publish(_.FREQUENCY, number(res.slice(5, 7)) / 100);
+        break;
       }
     }
   }
