@@ -5,7 +5,7 @@ const { get, set } = require('../../actions');
 const { device } = require('../../sockets');
 const { ACTION_RS485_TRANSMIT } = require('../../constants');
 
-const address = 0x46;
+const address = 27321232;
 const delay = 500;
 const period = 15000;
 
