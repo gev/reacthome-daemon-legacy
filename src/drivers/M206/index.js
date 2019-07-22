@@ -32,6 +32,7 @@ module.exports = class {
   }
 
   handle ({ id, data }) {
+    console.log(data);
     switch (data[4]) {
       case 0x27: {
         const t1 = number(data.slice(5, 9)) / 100;
@@ -85,7 +86,6 @@ module.exports = class {
     crc.writeUInt16LE(crc16(payload), 0);
     const buffer = Buffer.concat([header, payload, crc]);
     device.send(buffer, ip);
-    console.log(buffer);
   }
 
 };
