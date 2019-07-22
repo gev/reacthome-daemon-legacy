@@ -451,7 +451,6 @@ const run = (action, address) => {
         buffer[2] = is_rbus;
         buffer.writeUInt32LE(baud, 3);
         buffer[7] = line_control;
-        console.log(buffer);
         device.send(buffer, ip);
         break;
       }

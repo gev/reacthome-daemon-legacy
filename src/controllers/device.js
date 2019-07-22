@@ -11,6 +11,7 @@ const {
   ACTION_DO,
   ACTION_IR,
   ACTION_RS485_MODE,
+  ACTION_RS485_TRANSMIT,
   ACTION_TEMPERATURE,
   ACTION_TEMPERATURE_EXT,
   ACTION_HUMIDITY,
@@ -162,6 +163,10 @@ module.exports.manage = () => {
           const line_control = data[13];
           const channel = `${id}/${RS485}/${index}`;
           set(channel, { is_rbus, baud, line_control });
+          break;
+        }
+        case ACTION_RS485_TRANSMIT: {
+          console.log(action);
           break;
         }
         case ACTION_DIMMER: {
