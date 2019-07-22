@@ -41,10 +41,10 @@ module.exports.manage = () => {
       case DRIVER_TYPE_BB_PLC2:
         run[id] = new Plc2(id);
         break;
-      case DRIVER_TYPE_M230:
+      case DRIVER_TYPE_M206:
         run[id] = new M206(id);
         break;
-        case DRIVER_TYPE_M230:
+      case DRIVER_TYPE_M230:
         run[id] = new M230(id);
         break;
     }
