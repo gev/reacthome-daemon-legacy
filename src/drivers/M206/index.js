@@ -58,7 +58,7 @@ module.exports = class {
         break;
       }
       case 0x81: {
-        publish(_.FREQUENCY, number(res.slice(5, 7)) / 100);
+        set(id, { frequency: number(data.slice(7, 9)) / 100 });
         break;
       }
     }
