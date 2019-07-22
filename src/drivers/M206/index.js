@@ -13,7 +13,9 @@ const cmd = [0x27, 0x85, 0x63, 0x81];
 
 const number = x => {
   console.log (x);
-  return x.reduce((a, b) => (100 * a) + (10 * (b >> 4 & 0xf) + (b & 0xf)), 0);
+  const y = x.reduce((a, b) => (100 * a) + (10 * (b >> 4 & 0xf) + (b & 0xf)), 0);
+  console.log(y);
+  return y;
 }
 
 
