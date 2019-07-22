@@ -50,7 +50,7 @@ module.exports = class {
     buff.writeUInt32BE(address, 0);
     buff.writeUInt8(cmd, 4)
     const req = Buffer.alloc(7, buff);
-    req.writeUInt16LE(crc(buff), offset + cmd.length);
+    req.writeUInt16LE(crc(buff), 5);
     device.send(req, ip);
     console.log(req);
   }
