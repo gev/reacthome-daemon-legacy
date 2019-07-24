@@ -709,9 +709,10 @@ const run = (action, address) => {
               }
           })
           .catch(console.error);
+          break;
       }
       case ACTION_LEAKAGE_RESET: {
-        const {onLeakageReset} = get(id);
+        const {onLeakageReset} = get(action.id);
         set(action.id, { value: 0 });
         if (onLeakageReset) {
           run({ action: ACTION_SCRIPT_RUN, id: onLeakageReset });
