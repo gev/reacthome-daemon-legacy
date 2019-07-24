@@ -695,7 +695,6 @@ const run = (action, address) => {
             for (let i = 0; i < length; i++) {
               buff.writeUInt16BE(data[i + start], i * 2 + 5);
             }
-            console.log(dev, ip, type);
             switch (type) {
               case DEVICE_TYPE_IR_4: {
                   const header = Buffer.alloc(7);
