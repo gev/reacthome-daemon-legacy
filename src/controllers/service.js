@@ -28,6 +28,7 @@ const {
   ACTION_ON,
   ACTION_OFF,
   ACTION_RS485_MODE,
+  ACTION_RBUS_TRANSMIT,
   ACTION_DIM,
   ACTION_ENABLE,
   ACTION_DISABLE,
@@ -55,6 +56,7 @@ const {
   DEVICE_TYPE_RELAY_6,
   DEVICE_TYPE_RELAY_12,
   DEVICE_TYPE_RELAY_24,
+  DEVICE_TYPE_IR_4,
   DRIVER_TYPE_ARTNET,
   DRIVER_TYPE_BB_PLC1,
   DRIVER_TYPE_BB_PLC2,
@@ -675,7 +677,7 @@ const run = (action, address) => {
         const { id, command, repeat } = action;
         const { bind, brand, model } = get(id);
         const [dev,,index] = bind.split('/');
-        const { ip } = get(dev);
+        const { ip, type } = get(dev);
         ircodes.getCode(TV, brand, model, command)
           .then(({ frequency, offset, data }) => {
             if (!data) return;
@@ -693,7 +695,18 @@ const run = (action, address) => {
             for (let i = 0; i < length; i++) {
               buff.writeUInt16BE(data[i + start], i * 2 + 5);
             }
-            device.send(buff, ip);
+            switch (type) {
+              case DEVICE_TYPE_IR_4:
+                  const header = Buffer.alloc(7);
+                  header.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
+                  dev.split(':').forEach((v, i)=> {
+                    header.writeUInt8(parseInt(v, 16), i + 1);
+                  });
+                  device.send(Buffer.concat([header, buff]), ip);
+                break;
+              default:
+                device.send(buff, ip);
+              }
           })
           .catch(console.error);
       }
