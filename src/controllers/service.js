@@ -696,7 +696,7 @@ const run = (action, address) => {
               buff.writeUInt16BE(data[i + start], i * 2 + 5);
             }
             switch (type) {
-              case DEVICE_TYPE_IR_4:
+              case DEVICE_TYPE_IR_4: {
                   const header = Buffer.alloc(7);
                   header.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
                   dev.split(':').forEach((v, i)=> {
@@ -704,6 +704,7 @@ const run = (action, address) => {
                   });
                   device.send(Buffer.concat([header, buff]), ip);
                 break;
+              }
               default:
                 device.send(buff, ip);
               }
