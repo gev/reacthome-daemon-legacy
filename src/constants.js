@@ -170,6 +170,7 @@ module.exports.DEVICE_TYPE_PLC = 0xfe;
 module.exports.DEVICE_TYPE_BOOTLOADER = 0xff;
 module.exports.DEVICE_TYPE_IR_RECEIVER = 0x10;
 
+module.exports.DEVICE_TYPE_RELAY_2 = 0x23;
 module.exports.DEVICE_TYPE_IR_4 = 0x24;
 
 module.exports.DEVICE_TYPE_RELAY_6 = 0xa0;

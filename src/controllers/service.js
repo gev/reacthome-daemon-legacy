@@ -53,6 +53,7 @@ const {
   DEVICE_TYPE_DIM4,
   DEVICE_TYPE_DIM8,
   DEVICE_TYPE_DIM_8,
+  DEVICE_TYPE_RELAY_2,
   DEVICE_TYPE_RELAY_6,
   DEVICE_TYPE_RELAY_12,
   DEVICE_TYPE_RELAY_24,
@@ -210,6 +211,10 @@ const run = (action, address) => {
             drivers.handle(action);
             break;
           }
+          case DEVICE_TYPE_RELAY_2: {
+            device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...action.id.split(':').map(i => parseInt(i, 16)) ACTION_DO, action.index, action.value]), dev.ip);
+            break;
+          }
           default: {
             device.send(Buffer.from([ACTION_DO, action.index, action.value]), dev.ip);
           }
@@ -295,6 +300,10 @@ const run = (action, address) => {
                 device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, DIM_VELOCITY]), ip);
                 break;
               }
+              case DEVICE_TYPE_RELAY_2: {
+                device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...id.split(':').map(i => parseInt(i, 16)) ACTION_DO, action.index, ON]), dev.ip);
+                break;
+              }
               default: {
                 device.send(Buffer.from([ACTION_DO, index, ON]), ip);
               }
@@ -347,6 +356,10 @@ const run = (action, address) => {
               case DIM_TYPE_FALLING_EDGE:
                 device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, 0, DIM_VELOCITY]), ip);
                 break;
+              case DEVICE_TYPE_RELAY_2: {
+                device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...id.split(':').map(i => parseInt(i, 16)) ACTION_DO, action.index, OFF]), dev.ip);
+                break;
+              }
               default:
                 device.send(Buffer.from([ACTION_DO, index, OFF]), ip);
             }
