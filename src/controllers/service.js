@@ -212,7 +212,7 @@ const run = (action, address) => {
             break;
           }
           case DEVICE_TYPE_RELAY_2: {
-            device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...action.id.split(':').map(i => parseInt(i, 16)) ACTION_DO, action.index, action.value]), dev.ip);
+            device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...action.id.split(':').map(i => parseInt(i, 16)), ACTION_DO, action.index, action.value]), dev.ip);
             break;
           }
           default: {
@@ -301,7 +301,7 @@ const run = (action, address) => {
                 break;
               }
               case DEVICE_TYPE_RELAY_2: {
-                device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...id.split(':').map(i => parseInt(i, 16)) ACTION_DO, action.index, ON]), dev.ip);
+                device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...id.split(':').map(i => parseInt(i, 16)), ACTION_DO, action.index, ON]), dev.ip);
                 break;
               }
               default: {
@@ -357,7 +357,7 @@ const run = (action, address) => {
                 device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, 0, DIM_VELOCITY]), ip);
                 break;
               case DEVICE_TYPE_RELAY_2: {
-                device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...id.split(':').map(i => parseInt(i, 16)) ACTION_DO, action.index, OFF]), dev.ip);
+                device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...id.split(':').map(i => parseInt(i, 16)), ACTION_DO, action.index, OFF]), dev.ip);
                 break;
               }
               default:
