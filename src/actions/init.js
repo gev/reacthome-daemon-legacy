@@ -83,7 +83,7 @@ module.exports.initialize = (id) => {
       a[ 8] = (baud) & 0xff;
       a[ 9] = (baud >>  8) & 0xff;
       a[10] = (baud >> 16) & 0xff;
-      a[11] = (baud >> 32) & 0xff;
+      a[11] = (baud >> 24) & 0xff;
       a[12] = line_control;
       break;
     }
@@ -97,7 +97,7 @@ module.exports.initialize = (id) => {
       a[14] = (baud) & 0xff;
       a[15] = (baud >>  8) & 0xff;
       a[16] = (baud >> 16) & 0xff;
-      a[17] = (baud >> 32) & 0xff;
+      a[17] = (baud >> 24) & 0xff;
       a[18] = line_control;
       break;
     }
@@ -111,7 +111,7 @@ module.exports.initialize = (id) => {
       a[26] = (baud) & 0xff;
       a[27] = (baud >>  8) & 0xff;
       a[28] = (baud >> 16) & 0xff;
-      a[29] = (baud >> 32) & 0xff;
+      a[29] = (baud >> 24) & 0xff;
       a[30] = line_control;
       break;
     }
