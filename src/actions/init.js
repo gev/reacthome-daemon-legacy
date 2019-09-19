@@ -80,10 +80,10 @@ module.exports.initialize = (id) => {
       }
       const { is_rbus, baud, line_control } = get(`${id}/${RS485}/1`);
       a[ 7] = is_rbus;
-      a[ 8] = (baud >> 32) & 0xff;
-      a[ 9] = (baud >> 16) & 0xff;
-      a[10] = (baud >>  8) & 0xff;
-      a[11] = (baud) & 0xff;
+      a[ 8] = (baud) & 0xff;
+      a[ 9] = (baud >>  8) & 0xff;
+      a[10] = (baud >> 16) & 0xff;
+      a[11] = (baud >> 32) & 0xff;
       a[12] = line_control;
       break;
     }
@@ -93,10 +93,10 @@ module.exports.initialize = (id) => {
         a[i] = (channel && channel.value) || 0;
       }
       a[13] = is_rbus;
-      a[14] = (baud >> 32) & 0xff;
-      a[15] = (baud >> 16) & 0xff;
-      a[16] = (baud >>  8) & 0xff;
-      a[17] = (baud) & 0xff;
+      a[14] = (baud) & 0xff;
+      a[15] = (baud >>  8) & 0xff;
+      a[16] = (baud >> 16) & 0xff;
+      a[17] = (baud >> 32) & 0xff;
       a[18] = line_control;
       break;
     }
@@ -106,10 +106,10 @@ module.exports.initialize = (id) => {
         a[i] = (channel && channel.value) || 0;
       }
       a[25] = is_rbus;
-      a[26] = (baud >> 32) & 0xff;
-      a[27] = (baud >> 16) & 0xff;
-      a[28] = (baud >>  8) & 0xff;
-      a[29] = (baud) & 0xff;
+      a[26] = (baud) & 0xff;
+      a[27] = (baud >>  8) & 0xff;
+      a[28] = (baud >> 16) & 0xff;
+      a[29] = (baud >> 32) & 0xff;
       a[30] = line_control;
       break;
     }
