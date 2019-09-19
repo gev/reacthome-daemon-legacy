@@ -176,6 +176,7 @@ module.exports.DEVICE_TYPE_IR_4 = 0x24;
 module.exports.DEVICE_TYPE_RELAY_6 = 0xa0;
 module.exports.DEVICE_TYPE_RELAY_12 = 0xa1;
 module.exports.DEVICE_TYPE_RELAY_24 = 0xa2;
+module.exports.DEVICE_TYPE_DIM_4 = 0xa3;
 module.exports.DEVICE_TYPE_DIM_8 = 0xa4;
 
 module.exports.onIR = 'onIR';
