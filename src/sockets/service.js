@@ -19,7 +19,7 @@ const discovery = (multicast) => JSON.stringify({
   id: mac(),
   type: ACTION_DISCOVERY,
   payload: { type: DAEMON, version: VERSION, multicast }
-})
+});
 
 const service = socket(
   () => () => {
@@ -30,7 +30,7 @@ const service = socket(
       unicast.forEach(ip => service.send(u, ip));
     }
   },
-  DISCOVERY_INTERVAL, CLIENT_PORT, CLIENT_SERVER_PORT, '192.168.88.188', true, 1
+  DISCOVERY_INTERVAL, CLIENT_PORT, CLIENT_SERVER_PORT, '192.168.0.2', true, 1
 );
 
 service.addUnicast = (ip) => {
@@ -49,6 +49,6 @@ service.broadcast = (packet) => {
     service.send(packet, CLIENT_GROUP);
     unicast.forEach(ip => service.send(packet, ip));
   }
-}
+};
 
 module.exports = service;
