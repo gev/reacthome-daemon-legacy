@@ -1,7 +1,7 @@
 
 const { contains } = require('fast-deep-equal');
 const { ACTION_SET, CLIENT_PORT, CLIENT_GROUP } = require('../constants');
-const { service } = require('../sockets');
+const { broadcast } = require('../webrtc/peer');
 const state = require('../controllers/state');
 const db = require('../db');
 
@@ -9,7 +9,7 @@ module.exports.get = state.get;
 
 const apply = (id, payload) => {
   state.set(id, payload);
-  service.broadcast(JSON.stringify({ type: ACTION_SET, id, payload }));
+  broadcast(JSON.stringify({ type: ACTION_SET, id, payload }));
   try {
     db.put(id, state.get(id), (err) => {
       if (err) console.error(err);

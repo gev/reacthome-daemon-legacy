@@ -5,6 +5,7 @@ const { state, assets, device, service, cpu, weather } = require('./src/controll
 const { DAEMON, CLIENT_SERVER_PORT, ACTION_SET, ACTION_SCRIPT_RUN, IMAGE } = require('./src/constants');
 const { get, set, count } = require('./src/actions');
 const drivers = require('./src/drivers');
+const webrtc = require('./src/webrtc');
 const mac = require('./src/mac');
 const db = require('./src/db');
 
@@ -42,9 +43,9 @@ db.createReadStream()
     app.use(assets.manage());
     app.listen(CLIENT_SERVER_PORT);
     weather.manage();
-    service.manage();
     device.manage();
     drivers.manage();
     cpu.manage();
+    webrtc(init.mac);
     start();
   });

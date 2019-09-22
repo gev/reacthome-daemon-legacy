@@ -117,9 +117,10 @@ const {
   pendingFirmware,
   updateFirmware
 } = require('../actions');
-const { device, service } = require('../sockets');
+const { device } = require('../sockets');
 const mac = require('../mac');
 const { ac } = require('../drivers');
+const { broadcast } = require('../webrtc/peer');
 
 const timer = {};
 
@@ -135,7 +136,7 @@ const download = (ip, name) => {
         if (res.status !== 200) return;
         const ws = createWriteStream(file);
         ws.on('end', () => {
-          service.broadcast(JSON.stringify({ id: mac(), type: ACTION_DOWNLOAD, name: name }));
+          broadcast(JSON.stringify({ id: mac(), type: ACTION_DOWNLOAD, name: name }));
         });
         res.body.pipe(ws);
       })
@@ -177,14 +178,9 @@ const run = (action, address) => {
       }
       case ACTION_DISCOVERY: {
         const { id, payload } = action;
-        const { multicast, type, version, ready } = payload;
-        if (multicast) {
-          service.delUnicast(address);
-        } else {
-          service.addUnicast(address);
-        }
+        const { type, version, ready } = payload;
         if (id && type !== MOBILE) {
-          set(id, { online: true, ip: address, type, multicast, version, ready });
+          set(id, { online: true, ip: address, type, version, ready });
           add(mac(), DEVICE, id);
           clearTimeout(timer[id]);
           timer[id] = setTimeout(() => {
@@ -749,15 +745,5 @@ const run = (action, address) => {
     console.error(e);
   }
 };
-
-module.exports.manage = () => {
-    service.handle((data, { address }) => {
-      try {
-        run(JSON.parse(data), address);
-      } catch (err) {
-        console.error(err);
-      }
-    });
-}
 
 module.exports.run = run;

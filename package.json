@@ -1,24 +1,25 @@
 {
-  "name": "reacthome-daemon",
-  "version": "0.0.1",
-  "private": true,
-  "scripts": {
-    "firmware": "sh copy-firmware.sh"
-  },
+  "name": "y",
+  "version": "1.0.0",
+  "main": "daemon.js",
+  "author": "Evgeny <gazdovsky@gmail.com>",
+  "license": "MIT",
   "dependencies": {
     "crc": "^3.8.0",
-    "cron": "^1.6.0",
-    "debounce": "^1.1.0",
+    "cron": "^1.7.2",
+    "debounce": "^1.2.0",
     "fast-deep-equal": "gev/fast-deep-equal",
-    "fast-memoize": "^2.2.8",
-    "ip": "gev/ip",
-    "koa": "^2.5.0",
+    "fast-memoize": "^2.5.1",
+    "ip": "^1.1.5",
+    "koa": "^2.8.1",
     "koa-mount": "^4.0.0",
-    "koa-static": "^4.0.2",
+    "koa-static": "^5.0.0",
     "level": "^5.0.1",
-    "node-fetch": "^2.1.2",
+    "node-fetch": "^2.6.0",
     "reacthome-ircodes": "gev/reacthome-ircodes",
     "serialport": "^7.1.5",
-    "uuid": "^3.2.1"
+    "uuid": "^3.3.3",
+    "wrtc": "^0.4.1",
+    "ws": "^7.1.2"
   }
 }
