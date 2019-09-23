@@ -9,7 +9,7 @@ const send = (session, message) => {
 const broadcast = (message) => {
   for (channel of channels.values()) {
     channel.send(message);
-  })
+  }
 };
 
 module.exports = { peers, channels, send, broadcast };
