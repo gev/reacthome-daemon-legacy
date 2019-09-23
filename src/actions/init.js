@@ -44,7 +44,6 @@ module.exports.initialize = (id) => {
   set(id, { initialized: false });
   const dev = get(id);
   const a = [ACTION_INITIALIZE];
-  console.log(dev);
   switch (dev.type) {
     case DEVICE_TYPE_SENSOR4: {
       for (let i = 1; i <= 4; i++) {
@@ -162,7 +161,6 @@ module.exports.initialize = (id) => {
       return;
     }
     default: {
-      console.log('ops');
       set(id, { initialized: true });
       return;
     }
