@@ -13,6 +13,6 @@ module.exports = (handle) => {
         action => socket.send(JSON.stringify(action))
       );
     });
-    socket.on('error', console.log);
+    socket.on('error', console.error);
   });
 };

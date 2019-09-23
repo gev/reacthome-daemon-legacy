@@ -28,7 +28,7 @@ const connect = (id, handle) => {
     clearInterval(t);
     setTimeout(connect, TIMEOUT, id, handle);
   });
-  socket.on('error', console.log);
+  socket.on('error', console.error);
 };
 
 module.exports = connect;
