@@ -7,6 +7,7 @@ const send = (session, message) => {
 };
 
 const broadcast = (message) => {
+  console.log(message);
   for (let channel of channels.values()) {
     channel.send(message);
   }
