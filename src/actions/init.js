@@ -161,6 +161,7 @@ module.exports.initialize = (id) => {
       return;
     }
     default: {
+      console.log(ops);
       set(id, { initialized: true });
       return;
     }
