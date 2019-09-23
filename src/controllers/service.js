@@ -164,36 +164,36 @@ const init = (ip) => {
     .catch(console.error);
 };
 
-const run = (action, address) => {
+const run = (action) => {
   try {
     switch (action.type) {
-      case ACTION_INIT: {
-        init(address);
-        break;
-      }
+      // case ACTION_INIT: {
+      //   init(address);
+      //   break;
+      // }
       case ACTION_SET: {
         const { id, payload } = action;
         set(id, payload);
         break;
       }
-      case ACTION_DISCOVERY: {
-        const { id, payload } = action;
-        const { type, version, ready } = payload;
-        if (id && type !== MOBILE) {
-          set(id, { online: true, ip: address, type, version, ready });
-          add(mac(), DEVICE, id);
-          clearTimeout(timer[id]);
-          timer[id] = setTimeout(() => {
-            set(id, { online: false });
-          }, 60 * DISCOVERY_INTERVAL);
-        }
-        break;
-      }
-      case ACTION_BOOTLOAD: {
-        pendingFirmware(action.id, action.pendingFirmware);
-        break;
-      }
-        case ACTION_FIND_ME: {
+      // case ACTION_DISCOVERY: {
+      //   const { id, payload } = action;
+      //   const { type, version, ready } = payload;
+      //   if (id && type !== MOBILE) {
+      //     set(id, { online: true, ip: address, type, version, ready });
+      //     add(mac(), DEVICE, id);
+      //     clearTimeout(timer[id]);
+      //     timer[id] = setTimeout(() => {
+      //       set(id, { online: false });
+      //     }, 60 * DISCOVERY_INTERVAL);
+      //   }
+      //   break;
+      // }
+      // case ACTION_BOOTLOAD: {
+      //   pendingFirmware(action.id, action.pendingFirmware);
+      //   break;
+      // }
+      case ACTION_FIND_ME: {
         const dev = get(action.id);
         device.send(Buffer.from([ACTION_FIND_ME, action.finding]), dev.ip);
         break;
