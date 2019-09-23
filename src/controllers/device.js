@@ -273,10 +273,12 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_INITIALIZE: {
+          console.log('init');
           initialize(id);
           break;
         }
         case ACTION_INITIALIZED: {
+          console.log('done');
           initialized(id);
           break;
         }

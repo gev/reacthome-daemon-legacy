@@ -8,7 +8,6 @@ const { run } = require('../controllers/service');
 module.exports = (id) => {
   const handle = signal((message) => {
     try {
-      console.log(message);
       const action = JSON.parse(message);
       run(action);
     } catch(e) {
