@@ -7,12 +7,10 @@ const send = (session, message) => {
 };
 
 const broadcast = (message) => {
-  console.log(channels);
-  console.log(channels.values());
-  for (let channel of channels.values()) {
-    console.log(message);
+  channels.forEach(([session, channel]) => {
+    console.log(session, message);
     channel.send(message);
-  }
+  });
 };
 
 module.exports = { peers, channels, send, broadcast };
