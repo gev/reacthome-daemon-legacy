@@ -1,19 +1,18 @@
 
 const { RTCPeerConnection, RTCIceCandidate } = require('wrtc');
 const { OFFER, ANSWER, CANDIDATE, FAILED } = require('./constants');
+const { onAction } = require('./handle');
 const { peers, channels } = require('./peer');
 const { options } = require('./config');
 
-module.exports = (handle) => (session, message, send, config) => {
+module.exports = (session, message, send, config) => {
   try {
     const action = JSON.parse(message);
     switch(action.type) {
       case OFFER: {
         const peer = new RTCPeerConnection(config);
         peer.ondatachannel = ({ channel }) => {
-          channel.onmessage = ({ data }) => {
-            handle(data)
-          };
+          channel.onmessage = onAction;
           channel.onerror = console.error;
           channels.set(session, channel);
         };
