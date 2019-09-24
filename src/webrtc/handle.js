@@ -2,7 +2,7 @@
 const { run } = require('../controllers/service');
 const { state } = require('../controllers/state');
 const { ACTION_SET } = require('../constants');
-const { send } = require('./peer');
+const { sendAction } = require('./peer');
 
 module.exports.onAction = ({ data }) => {
   try {
@@ -18,6 +18,6 @@ module.exports.onAsset = ({ data }) => {
 
 module.exports.onConnect = (session) => {
   Object.entries(state()).forEach(([id, payload]) => {
-    send(session, JSON.stringify({ type: ACTION_SET, id, payload }));
+    sendAction(session, { type: ACTION_SET, id, payload });
   })
 };
