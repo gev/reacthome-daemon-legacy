@@ -17,7 +17,13 @@ const sendAsset = (session, asset) => {
   send(assets.get(session), JSON.stringify);
 };
 
-const broadcast = (message) => {
+const broadcastAction = (message) => {
+  actions.forEach(({channel}, session) => {
+    send(channel, message)
+  });
+};
+
+const broadcastAsset = (message) => {
   assets.forEach((channel, session) => {
     send(channel, message)
   });
