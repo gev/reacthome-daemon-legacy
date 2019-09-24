@@ -9,4 +9,4 @@ module.exports.set = (id, payload) => {
   state[id] = { ...state[id], ...payload };
 };
 
-module.exports.state = state;
+module.exports.state = () => state;
