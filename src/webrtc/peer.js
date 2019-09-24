@@ -3,7 +3,9 @@ const peers = new Map();
 const channels = new Map();
 
 const _send = (channel, message) => {
-  channel.send(message);
+  if (channel.readyState === 'open') {
+    channel.send(message);
+  }
 }
 
 const send = (session, message) => {
