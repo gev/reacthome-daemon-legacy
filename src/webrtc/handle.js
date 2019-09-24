@@ -1,5 +1,6 @@
 
 const { run } = require('../controllers/service');
+const { send } = require('./peer');
 
 module.exports.onAction = ({ data }) => {
   try {
@@ -8,4 +9,8 @@ module.exports.onAction = ({ data }) => {
   } catch(e) {
     console.error(e);
   }
+};
+
+module.exports.onConnect = (session) => {
+
 };

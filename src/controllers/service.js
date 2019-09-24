@@ -144,33 +144,9 @@ const download = (ip, name) => {
   });
 };
 
-const init = (ip) => {
-  fetch(`http://${ip}:${CLIENT_PORT}/${STATE}/${mac()}`)
-    .then(response => response.json())
-    .then(({ assets = [], state = {} }) => {
-      assets.forEach((name) => {
-        download(ip, name);
-      });
-      Object.entries(state).forEach(([k, v]) => {
-        if (k === mac()) {
-          v.online = true;
-          v.type = DAEMON;
-          v.version = VERSION;
-        }
-        set(k, v);
-      });
-      drivers.manage();
-    })
-    .catch(console.error);
-};
-
 const run = (action) => {
   try {
     switch (action.type) {
-      // case ACTION_INIT: {
-      //   init(address);
-      //   break;
-      // }
       case ACTION_SET: {
         const { id, payload } = action;
         set(id, payload);

@@ -1,7 +1,7 @@
 
 const { RTCPeerConnection, RTCIceCandidate } = require('wrtc');
 const { OFFER, ANSWER, CANDIDATE, FAILED } = require('./constants');
-const { onAction } = require('./handle');
+const { onAction, onConnect } = require('./handle');
 const { peers, channels } = require('./peer');
 const { options } = require('./config');
 
@@ -15,6 +15,7 @@ module.exports = (session, message, send, config) => {
           channel.onmessage = onAction;
           channel.onerror = console.error;
           channels.set(session, channel);
+          onConnect(session);
         };
         peer.onconnectionstatechange = () => {
           if (peer.connectionState === FAILED) {
