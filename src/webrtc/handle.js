@@ -1,5 +1,7 @@
 
+const state = require('../controllers/state');
 const { run } = require('../controllers/service');
+const { ACTION_SET } = require('../constants');
 const { send } = require('./peer');
 
 module.exports.onAction = ({ data }) => {
@@ -12,5 +14,7 @@ module.exports.onAction = ({ data }) => {
 };
 
 module.exports.onConnect = (session) => {
-
+  Object.entries(state).forEach(([id, payload]) => {
+    send(session, JSON.stringify({ type: ACTION_SET, id, payload }));
+  })
 };
