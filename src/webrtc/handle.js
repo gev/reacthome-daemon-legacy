@@ -14,6 +14,7 @@ module.exports.onAction = ({ data }) => {
 };
 
 module.exports.onConnect = (session) => {
+  console.log(state);
   Object.entries(state).forEach(([id, payload]) => {
     send(session, JSON.stringify({ type: ACTION_SET, id, payload }));
   })
