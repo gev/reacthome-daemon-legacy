@@ -3,35 +3,36 @@ const peers = new Map();
 const assets = new Map();
 const actions = new Map();
 
-const send = (channel, message) => {
+const sendMessage = (channel, message) => {
   if (channel.readyState === 'open') {
     channel.send(message);
   }
 }
 
-const sendAction = (session, action) => {
-  send(actions.get(session), JSON.stringify(action));
+const send = (channels, handle) => (session, data) => {
+  handle(channels.get(session), data);
+}
+
+const broadcast = (channels, handle) => (data) => {
+  for (let channel of channels.values()) {
+    handle(channel, data);
+  }
+}
+
+const sendAction = (channel, action) => {
+  sendMessage(channel, JSON.stringify(action));
+}
+
+const sendAsset = (channel, asset) => {
+  //TODO
 };
 
-const sendAsset = (session, asset) => {
-  send(assets.get(session), JSON.stringify);
-};
+module.exports.peers = peers;
+module.exports.assets = assets;
+module.exports.actions = actions;
 
-const broadcastAction = (message) => {
-  actions.forEach((channel, session) => {
-    send(channel, message)
-  });
-};
+module.exports.sendAction = send(actions, sendAction);
+module.exports.broadcastAction = broadcast(actions, sendAction);
 
-const broadcastAsset = (message) => {
-  assets.forEach((channel, session) => {
-    send(channel, message)
-  });
-};
-
-module.exports = {
-  broadcastAction, broadcastAsset,
-  sendAction, sendAsset,
-  actions, assets,
-  peers
-};
+module.exports.sendAsset = send(assets, sendAsset);
+module.exports.broadcastAsset = broadcast(assets, sendAsset);
