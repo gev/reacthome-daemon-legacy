@@ -1,6 +1,6 @@
 
-const state = require('../controllers/state');
 const { run } = require('../controllers/service');
+const { state } = require('../controllers/state');
 const { ACTION_SET } = require('../constants');
 const { send } = require('./peer');
 
