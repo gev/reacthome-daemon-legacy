@@ -1,21 +1,31 @@
 
 const peers = new Map();
-const channels = new Map();
+const assets = new Map();
+const actions = new Map();
 
-const _send = (channel, message) => {
+const send = (channel, message) => {
   if (channel.readyState === 'open') {
     channel.send(message);
   }
 }
 
-const send = (session, message) => {
-  _send(channels.get(session), message);
+const sendAction = (session, action) => {
+  send(assets.get(session), JSON.stringify(action));
+};
+
+const sendAsset = (session, asset) => {
+  send(assets.get(session), JSON.stringify);
 };
 
 const broadcast = (message) => {
-  channels.forEach((channel, session) => {
-    _send(channel, message)
+  assets.forEach((channel, session) => {
+    send(channel, message)
   });
 };
 
-module.exports = { peers, channels, send, broadcast };
+module.exports = {
+  broadcastAction, broadcastAsset,
+  sendAction, sendAsset,
+  actions, assets,
+  peers
+};

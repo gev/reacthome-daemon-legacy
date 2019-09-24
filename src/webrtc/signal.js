@@ -1,8 +1,8 @@
 
 const { RTCPeerConnection, RTCIceCandidate } = require('wrtc');
-const { OFFER, ANSWER, CANDIDATE, FAILED } = require('./constants');
-const { onAction, onConnect } = require('./handle');
-const { peers, channels } = require('./peer');
+const { OFFER, ANSWER, CANDIDATE, FAILED, ACTION, ASSET } = require('./constants');
+const { onAction, onAsset, onConnect } = require('./handle');
+const { peers, actions, assets } = require('./peer');
 const { options } = require('./config');
 
 module.exports = (session, message, send, config) => {
@@ -12,14 +12,25 @@ module.exports = (session, message, send, config) => {
       case OFFER: {
         const peer = new RTCPeerConnection(config);
         peer.ondatachannel = ({ channel }) => {
-          channel.onmessage = onAction;
+          switch (channel.label) {
+            case ACTION: {
+              channel.onmessage = onAction;
+              actions.set(session, channel);
+              break;
+            }
+            case ASSET: {
+              channel.onmessage = onAsset;
+              assets.set(session, channel);
+              break;
+            }
+          }
           channel.onerror = console.error;
-          channels.set(session, channel);
           onConnect(session);
         };
         peer.onconnectionstatechange = () => {
           if (peer.connectionState === FAILED) {
-            channels.delete(session);
+            actions.delete(session);
+            assets.delete(session);
             peers.delete(session);
           }
         };
