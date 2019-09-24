@@ -10,7 +10,7 @@ const send = (channel, message) => {
 }
 
 const sendAction = (session, action) => {
-  send(assets.get(session), JSON.stringify(action));
+  send(actions.get(session), JSON.stringify(action));
 };
 
 const sendAsset = (session, asset) => {

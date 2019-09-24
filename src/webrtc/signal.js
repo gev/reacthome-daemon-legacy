@@ -12,6 +12,7 @@ module.exports = (session, message, send, config) => {
       case OFFER: {
         const peer = new RTCPeerConnection(config);
         peer.ondatachannel = ({ channel }) => {
+          console.log(channel.label);
           switch (channel.label) {
             case ACTION: {
               channel.onmessage = onAction;
