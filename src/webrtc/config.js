@@ -1,6 +1,5 @@
 
 module.exports.gateURL = id => `wss://gate.reacthome.net/${id}`;
-// module.exports.gateURL = id => `ws://gate.reacthome.net:3000/${id}`;
 
 module.exports.ICE = {
   iceServers: [
