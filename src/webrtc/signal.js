@@ -10,12 +10,8 @@ module.exports = (session, message, send, config) => {
     const action = JSON.parse(message);
     switch(action.type) {
       case OFFER: {
-        console.log(config);
         const peer = new RTCPeerConnection(config);
         peer.ondatachannel = ({ channel }) => {
-          channel.onclose = () => {
-            console.log('close');
-          };
           channel.onmessage = onAction;
           channel.onerror = console.error;
           channels.set(session, channel);
