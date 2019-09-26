@@ -19,7 +19,7 @@ module.exports = (id) => {
       payload: { type: DAEMON, version: VERSION }
     });
     setInterval(() => {
-      socket.send(CLIENT_PORT, CLIENT_GROUP, discovery);
+      socket.send(discovery, CLIENT_PORT, CLIENT_GROUP);
     }, TIMEOUT);
   });
 };
