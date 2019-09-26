@@ -1,6 +1,7 @@
 
 const { createSocket } = require('dgram');
 const { DAEMON, VERSION, ACTION_DISCOVERY } = require('./constants');
+const { get } = require('./actions');
 
 const CLIENT_PORT = 2021;
 const CLIENT_GROUP = '224.0.0.2';
