@@ -18,6 +18,10 @@ module.exports.onAsset = ({ data }) => {
 
 module.exports.onConnect = (session) => {
   Object.entries(state()).forEach(([id, payload]) => {
-    sendAction(session, { type: ACTION_SET, id, payload });
+    if (!payload) return;
+    if (payload instanceof Array) return;
+    if (payload instanceof Object) {
+      sendAction(session, { type: ACTION_SET, id, payload });
+    }
   })
 };
