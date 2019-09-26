@@ -15,7 +15,7 @@ module.exports = (id) => {
     const discovery = JSON.stringify({
       id,
       type: ACTION_DISCOVERY,
-      payload: { type: DAEMON, version: VERSION }
+      payload: { ...get(id), type: DAEMON, version: VERSION }
     });
     setInterval(() => {
       socket.send(discovery, CLIENT_PORT, CLIENT_GROUP);
