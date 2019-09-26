@@ -3,6 +3,7 @@ const { v4 } = require('uuid');
 const { state, assets, device, service, cpu, weather } = require('./src/controllers');
 const { DAEMON, CLIENT_SERVER_PORT, ACTION_SET, ACTION_SCRIPT_RUN, IMAGE } = require('./src/constants');
 const { get, set, count } = require('./src/actions');
+const discovery = require('./src/discovery');
 const drivers = require('./src/drivers');
 const webrtc = require('./src/webrtc');
 const mac = require('./src/mac');
@@ -41,6 +42,7 @@ db.createReadStream()
     device.manage();
     drivers.manage();
     cpu.manage();
+    discovery(init.mac);
     webrtc(init.mac);
     start();
   });
