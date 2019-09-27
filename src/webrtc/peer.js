@@ -4,6 +4,7 @@ const assets = new Map();
 const actions = new Map();
 
 const sendMessage = (channel, message) => {
+  console.log(channel.readyState, message);
   if (channel.readyState === 'open') {
     channel.send(message);
   }
