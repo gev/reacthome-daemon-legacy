@@ -16,6 +16,7 @@ module.exports = (session, message, send, config) => {
             case ACTION: {
               channel.onmessage = onAction;
               actions.set(session, channel);
+              onConnect(session);
               break;
             }
             case ASSET: {
@@ -25,7 +26,6 @@ module.exports = (session, message, send, config) => {
             }
           }
           channel.onerror = console.error;
-          onConnect(session);
         };
         peer.onconnectionstatechange = () => {
           if (peer.connectionState === FAILED) {
