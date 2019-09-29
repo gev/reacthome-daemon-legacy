@@ -121,6 +121,7 @@ const { device } = require('../sockets');
 const mac = require('../mac');
 const { ac } = require('../drivers');
 const { broadcast } = require('../webrtc/peer');
+const { onConnect } = require('../webrtc/handle');
 
 const timer = {};
 
@@ -714,6 +715,10 @@ const run = (action) => {
             run({ action: i, type, ...payload });
           })
         }
+        break;
+      }
+      case 'init': {
+        onConnect(action.timestamp, session);
         break;
       }
     }

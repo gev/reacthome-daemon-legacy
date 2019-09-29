@@ -14,7 +14,7 @@ module.exports = (session, message, send, config) => {
         peer.ondatachannel = ({ channel }) => {
           switch (channel.label) {
             case ACTION: {
-              channel.onmessage = onAction;
+              channel.onmessage = onAction(session);
               actions.set(session, channel);
               onConnect(session);
               break;
