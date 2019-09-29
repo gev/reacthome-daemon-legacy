@@ -724,7 +724,6 @@ const run = (action, session) => {
           if (!payload) return;
           if (payload instanceof Array) return;
           if (payload instanceof Object && payload.timestamp > timestamp) {
-            console.log(id);
             sendAction(session, { type: 'init', id, payload });
           }
         })
