@@ -30,7 +30,7 @@ db.createReadStream()
     console.error(err)
   })
   .on('data', ({ key, value }) => {
-    value.timestamp = Data.now()
+    value.timestamp = Date.now()
     db.put(key, JSON.stringify(value));
     init[key] = value;
   })
