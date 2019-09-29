@@ -13,7 +13,7 @@ const init = {};
 
 const start = (id) => {
   set(id, { type: DAEMON });
-  const { project } = get(mac()) || {};
+  const { project } = get(id) || {};
   if (project) {
     count(project);
     const { onStart } = get(project) || {};
