@@ -1,7 +1,7 @@
 
 const { RTCPeerConnection, RTCIceCandidate } = require('wrtc');
 const { OFFER, ANSWER, CANDIDATE, FAILED, ACTION, ASSET } = require('./constants');
-const { onAction, onAsset, onConnect } = require('./handle');
+const { onAction, onAsset } = require('./handle');
 const { peers, actions, assets } = require('./peer');
 const { options } = require('./config');
 

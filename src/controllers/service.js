@@ -122,6 +122,7 @@ const mac = require('../mac');
 const { ac } = require('../drivers');
 const { broadcast } = require('../webrtc/peer');
 const { onConnect } = require('../webrtc/handle');
+const { state } = require('./state');
 
 const timer = {};
 
@@ -718,7 +719,13 @@ const run = (action) => {
         break;
       }
       case 'init': {
-        onConnect(action.timestamp, session);
+        Object.entries(state()).forEach(([id, payload]) => {
+          if (!payload) return;
+          if (payload instanceof Array) return;
+          if (payload instanceof Object && payload.timestamp > action.timestamp) {
+            sendAction(session, { type: 'init', id, payload });
+          }
+        })
         break;
       }
     }
