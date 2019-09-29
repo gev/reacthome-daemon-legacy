@@ -15,13 +15,13 @@ module.exports = (id) => {
   socket.bind(() => {
     const interface = '192.168.88.188';
     socket.setMulticastInterface(interface)
-    const discovery = JSON.stringify({
-      id,
-      type: DISCOVERY,
-      payload: { ...get(id), type: DAEMON, version: VERSION }
-    });
     setInterval(() => {
-      socket.send(discovery, CLIENT_PORT, CLIENT_GROUP);
+      const { code, title, project } = get(id);
+      socket.send(JSON.stringify({
+        id,
+        type: DISCOVERY,
+        payload: { code, title, project, type: DAEMON, version: VERSION }
+      }), CLIENT_PORT, CLIENT_GROUP);
     }, TIMEOUT);
   });
 };

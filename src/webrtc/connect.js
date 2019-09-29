@@ -4,7 +4,7 @@ const { isUUID } = require('../util');
 const { ICE, gateURL } = require('./config');
 
 const PROTOCOL = 'listen';
-const TIMEOUT = 10000;
+const TIMEOUT = 3000;
 
 const connect = (id, handle) => {
   let t;
