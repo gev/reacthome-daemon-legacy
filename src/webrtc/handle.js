@@ -1,7 +1,6 @@
 
 const { run } = require('../controllers/service');
 const { ACTION_SET } = require('../constants');
-const { sendAction } = require('./peer');
 
 module.exports.onAction = (session) => ({ data }) => {
   try {

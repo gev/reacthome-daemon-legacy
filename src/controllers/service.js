@@ -122,6 +122,7 @@ const mac = require('../mac');
 const { ac } = require('../drivers');
 const { broadcast } = require('../webrtc/peer');
 const { onConnect } = require('../webrtc/handle');
+const { sendAction } = require('../webrtc/peer');
 const { state } = require('./state');
 
 const timer = {};
