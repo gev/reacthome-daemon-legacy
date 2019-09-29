@@ -6,13 +6,13 @@ const { get, set, count } = require('./src/actions');
 const discovery = require('./src/discovery');
 const drivers = require('./src/drivers');
 const webrtc = require('./src/webrtc');
-const mac = require('./src/mac');
+const ping = require('./src/ping');
 const db = require('./src/db');
 
 const init = {};
 
-const start = () => {
-  set(mac(), { type: DAEMON });
+const start = (id) => {
+  set(id, { type: DAEMON });
   const { project } = get(mac()) || {};
   if (project) {
     count(project);
@@ -44,5 +44,6 @@ db.createReadStream()
     cpu.manage();
     discovery(init.mac);
     webrtc(init.mac);
-    start();
+    start(init.mac);
+    ping();
   });

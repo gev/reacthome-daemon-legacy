@@ -1,7 +1,9 @@
 
 const { createSocket } = require('dgram');
-const { DAEMON, VERSION, ACTION_DISCOVERY } = require('./constants');
+const { DAEMON, VERSION} = require('./constants');
 const { get } = require('./actions');
+
+const DISCOVERY = 'discovery';
 
 const CLIENT_PORT = 2021;
 const CLIENT_GROUP = '224.0.0.2';
@@ -15,7 +17,7 @@ module.exports = (id) => {
     socket.setMulticastInterface(interface)
     const discovery = JSON.stringify({
       id,
-      type: ACTION_DISCOVERY,
+      type: DISCOVERY,
       payload: { ...get(id), type: DAEMON, version: VERSION }
     });
     setInterval(() => {
