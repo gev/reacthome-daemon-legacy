@@ -16,7 +16,6 @@ module.exports = (session, message, send, config) => {
             case ACTION: {
               channel.onmessage = onAction(session);
               actions.set(session, channel);
-              onConnect(session);
               break;
             }
             case ASSET: {
