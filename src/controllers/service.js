@@ -719,10 +719,12 @@ const run = (action, session) => {
         break;
       }
       case 'init': {
+        console.log(action);
         Object.entries(state()).forEach(([id, payload]) => {
           if (!payload) return;
           if (payload instanceof Array) return;
           if (payload instanceof Object && payload.timestamp > action.timestamp) {
+            console.log(id);
             sendAction(session, { type: 'init', id, payload });
           }
         })
