@@ -146,7 +146,7 @@ const download = (ip, name) => {
   });
 };
 
-const run = (action) => {
+const run = (action, session) => {
   try {
     switch (action.type) {
       case ACTION_SET: {
