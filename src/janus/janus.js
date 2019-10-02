@@ -28,14 +28,12 @@ const connect = () => {
       console.log(e);
     }
   });
+  socket.on('close', () => {
+    setTimeout(connect, TIMEOUT_RECONNECT);
+  });
+  socket.on('error', console.error);
   callbacks.clear();
 };
-
-socket.on('close', () => {
-  setTimeout(connect, TIMEOUT_RECONNECT);
-});
-
-socket.on('error', console.error);
 
 const send = (o) => new Promise ((resolve, reject) => {
   try {
