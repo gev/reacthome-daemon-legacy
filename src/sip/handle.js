@@ -22,9 +22,9 @@ module.exports.onInvite = async (request) => {
     const { jsep } = await janus.sendMessage(session, handle, {
       request: 'process', type: 'offer', sdp: request.content
     });
-    if (jsep) {
+    // if (jsep) {
       broadcastAction({ type: 'invite', jsep, session_id, handle_id, call_id });
-    }
+    // }
   } catch (e) {
     console.error(e);
   }
