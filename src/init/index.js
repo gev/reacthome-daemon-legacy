@@ -1,5 +1,5 @@
 
-const state = require('../controllers');
+const { state } = require('../controllers');
 
 module.exports = (action, session) => {
   const timestamp = action.timestamp || 0;
