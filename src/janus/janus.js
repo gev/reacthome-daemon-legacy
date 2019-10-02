@@ -44,10 +44,12 @@ const send = (o) => new Promise ((resolve, reject) => {
         reject(err);
       }
     });
-    setTimeout(callbacks.delete, TIMEOUT_TRANSACTION, transaction);
-    } catch (e) {
-      reject(e);
-    }
+    setTimeout(() => {
+      callbacks.delete(transaction)
+    }, TIMEOUT_TRANSACTION);
+  } catch (e) {
+    reject(e);
+  }
 });
 
 module.exports = { connect, send };
