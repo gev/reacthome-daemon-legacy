@@ -13,21 +13,19 @@ module.exports.onRegister = (request) => {
   sip.send(rs);
 };
 
-module.exports.onInvite = async (request) => {
+module.exports.onInvite = (request) => {
   const call_id = calls.create(request);
   sip.send(sip.makeResponse(request, 100, 'Ok'));
   sip.send(sip.makeResponse(request, 180, 'Ok'));
-  try {
-    const session_id = await janus.createSession();
-    const handle_id = await janus.attachPlugin(session_id, 'janus.plugin.nosip');
-    const jsep = await janus.sendMessage(session_id, handle_id, {
-      request: PROCESS, type: OFFER, sdp: request.content
+  janus.createSession((session_id) => {
+    janus.attachPlugin(session_id, 'janus.plugin.nosip', (handle_id) => {
+      janus.sendMessage(session_id, handle_id, {
+        request: PROCESS, type: OFFER, sdp: request.content
+      }, ({ jsep }) => {
+        if (jsep) {
+          broadcastAction({ type: INVITE, jsep, session_id, handle_id, call_id });
+        }
+      });
     });
-    console.log(jsep);
-    if (jsep) {
-      broadcastAction({ type: INVITE, jsep, session_id, handle_id, call_id });
-    }
-  } catch (e) {
-    console.error(e);
-  }
+  });
 };

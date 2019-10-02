@@ -35,20 +35,18 @@ const connect = () => {
   callbacks.clear();
 };
 
-const send = (action) => new Promise ((resolve, reject) => {
+const send = (action, callback) => {
   try {
     const transaction = uuid();
-    callbacks.set(transaction, resolve);
-    socket.send(JSON.stringify({ ...action, transaction }), (err) => {
-      if (err) {
-        reject(err);
-      }
-    });
-    setTimeout(() => {
-      callbacks.delete(transaction)
-    }, TIMEOUT_TRANSACTION);
+    if (callback) {
+      callbacks.set(transaction, callback);
+      setTimeout(() => {
+        callbacks.delete(transaction)
+      }, TIMEOUT_TRANSACTION);
+    }
+    socket.send(JSON.stringify({ ...action, transaction }));
   } catch (e) {
-    reject(e);
+    console.log(e);
   }
 });
 
