@@ -4,9 +4,9 @@ const janus = require('../janus');
 const { GENERATE } = require('../janus/constants');
 const calls = require('./calls');
 
-module.exports = async (action) => {
+module.exports = (action) => {
   const { jsep, session_id, handle_id, call_id } = action;
-  janus.sendMessage(session_id, handle_id, { request: GENERATE }, jsep), ({ plugindata }) => {
+  janus.sendMessage(session_id, handle_id, { request: GENERATE }, jsep, ({ plugindata }) => {
     if (!plugindata) return;
     const request = calls.get(call_id);
     if (!request) return;
@@ -16,4 +16,4 @@ module.exports = async (action) => {
     rs.headers['content-length'] = rs.content.length;
     sip.send(rs);
   });
-});
+};
