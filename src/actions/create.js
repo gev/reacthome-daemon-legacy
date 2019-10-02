@@ -1,7 +1,7 @@
 
 const { contains } = require('fast-deep-equal');
 const { ACTION_SET, CLIENT_PORT, CLIENT_GROUP } = require('../constants');
-const { broadcastAction } = require('../webrtc');
+const { broadcastAction } = require('../webrtc/peer');
 const state = require('../controllers/state');
 const db = require('../db');
 
