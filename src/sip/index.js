@@ -6,7 +6,6 @@ const options = require('./config')
 
 module.exports.start = () => {
   sip.start(options, (request, info) => {
-    console.log(request);
     switch(request.method) {
       case REGISTER: {
         onRegister(request);
