@@ -15,7 +15,7 @@ module.exports.attachPlugin = async (session_id, plugin) => {
 };
 
 module.exports.sendMessage = (session_id, handle_id, body, jsep) =>
-  send({ janus: MESSAGE, session_id, body, jsep });
+  send({ janus: MESSAGE, session_id, handle_id, body, jsep });
 
 module.exports.trickle = ({ session_id, handle_id, candidate }) =>
   send({ janus: TRICKLE, session_id, handle_id, candidate: [candidate] });
