@@ -38,7 +38,7 @@ const connect = () => {
 const send = (o) => new Promise ((resolve, reject) => {
   try {
     const transaction = uuid();
-    callbacks.set(transaction, resole);
+    callbacks.set(transaction, resolve);
     socket.send(JSON.stringify({ ...o, transaction }), (err) => {
       if (err) {
         reject(err);
