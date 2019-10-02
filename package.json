@@ -18,6 +18,7 @@
     "node-fetch": "^2.6.0",
     "reacthome-ircodes": "gev/reacthome-ircodes",
     "serialport": "^7.1.5",
+    "sip": "^0.0.5",
     "uuid": "^3.3.3",
     "wrtc": "^0.4.1",
     "ws": "^7.1.2"

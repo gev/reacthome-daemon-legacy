@@ -720,13 +720,13 @@ const run = (action, session) => {
       }
       case 'init': {
         const timestamp = action.timestamp || 0;
-        Object.entries(state()).forEach(([id, payload]) => {
-          if (!payload) return;
-          if (payload instanceof Array) return;
-          if (payload instanceof Object && payload.timestamp > timestamp) {
-            sendAction(session, { type: 'init', id, payload });
-          }
-        })
+        Object
+          .entries(state())
+          .filter(([id, payload]) =>
+            payload && !payload instanceof Array && payload instanceof Object && payload.timestamp > timestamp)
+          .forEach(([id, payload], i, { length }) => {
+            sendAction(session, { type: 'init', id, payload, current i + 1, total: length });
+          });
         break;
       }
     }

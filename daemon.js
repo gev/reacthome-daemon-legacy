@@ -7,6 +7,7 @@ const discovery = require('./src/discovery');
 const drivers = require('./src/drivers');
 const webrtc = require('./src/webrtc');
 const ping = require('./src/ping');
+const sip = require('./src/sip');
 const db = require('./src/db');
 
 const init = {};
@@ -46,4 +47,5 @@ db.createReadStream()
     webrtc(init.mac);
     start(init.mac);
     ping();
+    sip();
   });
