@@ -6,7 +6,7 @@ const { TRICKLE } =require('./constants');
 const TIMEOUT_RECONNECT = 1000;
 const TIMEOUT_TRANSACTION = 10000;
 
-const promises = new Map();
+const callbacks = new Map();
 
 let socket;
 
@@ -17,7 +17,11 @@ const connect = () => {
     try {
       const action = JSON.parse(message);
       if (action.transaction) {
-        Promise.resolve(promises.get(action.transaction));
+        if (callbacks.has(action.transaction)) {
+          const callback = callbacks.get(action.transaction);
+          Promise.resolve(new Promise(callback));
+          callback(action);
+        }
       } else if (action.janus === TRICKLE) {
 
       }
@@ -29,27 +33,24 @@ const connect = () => {
     setTimeout(connect, TIMEOUT_RECONNECT);
   });
   socket.on('error', console.error);
-  promises.clear();
+  callbacks.clear();
 };
 
-const send = (action) => {
-  const transaction = uuid();
-  const promise = new Promise ((resolve, reject) => {
-    try {
-      socket.send(JSON.stringify({ ...action, transaction }), (err) => {
-        if (err) {
-          reject(err);
-        }
-      });
-    } catch (e) {
-      reject(e);
-    }
-  });
-  promises.set(transaction, promise);
-  setTimeout(() => {
-    promises.delete(transaction)
-  }, TIMEOUT_TRANSACTION);
-  return promise;
-}
+const send = (action) => new Promise ((resolve, reject) => {
+  try {
+    const transaction = uuid();
+    callbacks.set(transaction, resolve);
+    socket.send(JSON.stringify({ ...action, transaction }), (err) => {
+      if (err) {
+        reject(err);
+      }
+    });
+    setTimeout(() => {
+      callbacks.delete(transaction)
+    }, TIMEOUT_TRANSACTION);
+  } catch (e) {
+    reject(e);
+  }
+});
 
 module.exports = { connect, send };
