@@ -19,7 +19,6 @@ const connect = () => {
       if (action.transaction) {
         if (callbacks.has(action.transaction)) {
           const callback = callbacks.get(action.transaction);
-          new Promise(callback);
           callback(action);
         }
       } else if (action.janus === TRICKLE) {
