@@ -7,7 +7,7 @@ const signal = require('./signal');
 
 module.exports = {
   ...peer,
-  start(id) => {
+  start(id) {
     connect(id, signal);
     start(signal);
   }
