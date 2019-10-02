@@ -2,6 +2,7 @@
 const sip = require('sip');
 const janus = require('../janus');
 const { broadcastAction } = require('../webrtc');
+const { PROCESS } = require('../janus/constants');
 const { OFFER } = require('../webrtc/constants');
 const { INVITE } = require('./constants');
 const calls = require('./calls');
@@ -20,11 +21,11 @@ module.exports.onInvite = async (request) => {
     const session = await janus.createSession();
     const handle = await janus.attachPlugin(session, 'janus.plugin.nosip');
     const { jsep } = await janus.sendMessage(session, handle, {
-      request: 'process', type: 'offer', sdp: request.content
+      request: PROCESS, type: OFFER, sdp: request.content
     });
-    // if (jsep) {
-      broadcastAction({ type: 'invite', jsep, session_id, handle_id, call_id });
-    // }
+    if (jsep) {
+      broadcastAction({ type: INVITE, jsep, session_id, handle_id, call_id });
+    }
   } catch (e) {
     console.error(e);
   }
