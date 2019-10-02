@@ -725,7 +725,7 @@ const run = (action, session) => {
           .filter(([id, payload]) =>
             payload && !payload instanceof Array && payload instanceof Object && payload.timestamp > timestamp)
           .forEach(([id, payload], i, { length }) => {
-            sendAction(session, { type: 'init', id, payload, current i + 1, total: length });
+            sendAction(session, { type: 'init', id, payload, current: i + 1, total: length });
           });
         break;
       }
