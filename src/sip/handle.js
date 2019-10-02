@@ -20,7 +20,7 @@ module.exports.onInvite = async (request) => {
   try {
     const session = await janus.createSession();
     const handle = await janus.attachPlugin(session, 'janus.plugin.nosip');
-    const { jsep } = await janus.sendMessage(session, handle, {
+    const jsep = await janus.sendMessage(session, handle, {
       request: PROCESS, type: OFFER, sdp: request.content
     });
     console.log(jsep);
