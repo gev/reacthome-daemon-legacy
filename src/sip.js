@@ -2,7 +2,7 @@
 const uuid = require('uuid');
 const digest = require('sip/digest');
 const sip = require('sip');
-const janus = require('./janus')
+// const janus = require('./janus')
 const { broadcastAction } = require('./webrtc');
 
 const calls = {};
@@ -106,7 +106,7 @@ module.exports.start = () => {
         break;
       }
       case 'INVITE': {
-        call(request);
+        // call(request);
         break;
       }
     }
