@@ -48,6 +48,6 @@ const send = (action, callback) => {
   } catch (e) {
     console.log(e);
   }
-});
+};
 
 module.exports = { connect, send };
