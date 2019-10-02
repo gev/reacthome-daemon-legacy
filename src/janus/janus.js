@@ -17,10 +17,7 @@ const connect = () => {
     try {
       const action = JSON.parse(message);
       if (action.transaction) {
-        const promise = promises.get(action.transaction);
-        if (promise) {
-          promise.resolve(action);
-        }
+        Promise.resolve(promises.get(action.transaction));
       } else if (action.janus === TRICKLE) {
 
       }
