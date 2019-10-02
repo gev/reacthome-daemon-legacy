@@ -88,8 +88,14 @@ const callbacks = new Map();
 
 let session_id;
 
+const options = {
+  logger: {
+    error: console.error
+  }
+};
+
 module.exports = () => {
-  sip.start({}, (request, info) => {
+  sip.start(options, (request, info) => {
     console.log(request);
     switch(request.method) {
       case 'REGISTER': {
@@ -104,4 +110,5 @@ module.exports = () => {
       }
     }
   });
+
 };
