@@ -1,6 +1,7 @@
 
 const WebSocket = require('ws');
 const uuid = require('uuid/v4');
+const { TRICKLE } =require('./constants');
 
 const TIMEOUT_RECONNECT = 1000;
 const TIMEOUT_TRANSACTION = 10000;
@@ -18,10 +19,9 @@ const connect = () => {
       if (data.transaction) {
         const callback = callbacks.get(data.transaction);
         if (callback) {
-          // callbacks.delete(data.transaction);
           callback(data);
         }
-      } else if (data.janus === 'trickle') {
+      } else if (data.janus === TRICKLE) {
 
       }
     } catch (e) {
@@ -37,7 +37,7 @@ socket.on('close', () => {
 
 socket.on('error', console.error);
 
-module.exports.send = (o) => new Promise ((resolve, reject) => {
+const send = (o) => new Promise ((resolve, reject) => {
   try {
     const transaction = uuid();
     callbacks.set(transaction, resole);
@@ -52,4 +52,4 @@ module.exports.send = (o) => new Promise ((resolve, reject) => {
     }
 });
 
-module.exports.start = connect;
+module.exports = { connect, send };

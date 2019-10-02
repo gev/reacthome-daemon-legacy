@@ -145,7 +145,7 @@ const ARTNET_VELOCITY = 1;
 //   });
 // };
 
-const run = (action, session) => {
+const run = (action) => {
   try {
     switch (action.type) {
       case ACTION_SET: {
@@ -715,17 +715,6 @@ const run = (action, session) => {
             run({ action: i, type, ...payload });
           })
         }
-        break;
-      }
-      case 'init': {
-        const timestamp = action.timestamp || 0;
-        Object
-          .entries(state())
-          .filter(([id, payload]) =>
-            payload && !payload instanceof Array && payload instanceof Object && payload.timestamp > timestamp)
-          .forEach(([id, payload], i, { length }) => {
-            sendAction(session, { type: 'init', id, payload, current: i + 1, total: length });
-          });
         break;
       }
     }
