@@ -13,7 +13,7 @@ module.exports.onRegister = (request) => {
   sip.send(rs);
 };
 
-module.exports.onInvite = (request) => {
+module.exports.onInvite = async (request) => {
   const call_id = calls.create(request);
   sip.send(sip.makeResponse('request', 100, 'Ok'));
   sip.send(sip.makeResponse('request', 180, 'Ok'));
