@@ -2,18 +2,11 @@
 const uuid = require('uuid');
 const digest = require('sip/digest');
 const sip = require('sip');
-// const janus = require('./janus')
+const janus = require('./janus')
 const { broadcastAction } = require('./webrtc');
 
 const calls = {};
 const callbacks = new Map();
-
-// const sendToJanus = (o, callback) => {
-//   const transaction = uuid.v4();
-//   callbacks.set(transaction, callback);
-//   janus.send(JSON.stringify({ ...o, transaction }));
-// }
-
 
 // gate.on('message', (message) => {
 //   console.log(message);
@@ -106,7 +99,7 @@ module.exports.start = () => {
         break;
       }
       case 'INVITE': {
-        // call(request);
+        call(request);
         break;
       }
     }
