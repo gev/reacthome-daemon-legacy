@@ -7,14 +7,12 @@ const { INVITE } = require('./constants');
 const calls = require('./calls');
 
 module.exports.onRegister = (request) => {
-  console.log(request);
   const rs = sip.makeResponse(request, 200, 'Ok');
   // rs.headers.to.tag = uuid.v4();
   sip.send(rs);
 };
 
 module.exports.onInvite = async (request) => {
-  console.log(request);
   const call_id = calls.create(request);
   sip.send(sip.makeResponse('request', 100, 'Ok'));
   sip.send(sip.makeResponse('request', 180, 'Ok'));

@@ -1,4 +1,4 @@
 
-module.exports.REGISTER = 'register';
-module.exports.INVITE = 'invite';
-module.exports.ACK = 'ack';
+module.exports.REGISTER = 'REGISTER';
+module.exports.INVITE = 'INVITE';
+module.exports.ACK = 'ACK';
