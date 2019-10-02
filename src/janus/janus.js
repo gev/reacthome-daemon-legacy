@@ -27,7 +27,7 @@ const connect = () => {
     } catch (e) {
       console.log(e);
     }
-  };
+  });
   callbacks.clear();
 };
 
