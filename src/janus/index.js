@@ -1,6 +1,6 @@
 
 const { connect, send } = require('./janus');
-const { CREATE, ATTACH, MESSAGE } =require('./constants');
+const { CREATE, ATTACH, MESSAGE, TRICKLE } =require('./constants');
 
 module.exports.start = connect;
 
@@ -16,3 +16,6 @@ module.export.attachPlugin = async (session_id, plugin) => {
 
 module.export.sendMessage = (session_id, handle_id, body, jsep) =>
   send({ janus: MESSAGE, session_id, body, jsep });
+
+module.exports.trickle = ({ session_id, handle_id, candidate }) =>
+  send({ janus: TRICKLE, session_id, handle_id, candidate: [candidate] });

@@ -1,20 +1,20 @@
 
 const sip = require('sip');
-const uuid = require('uuid');
-const janus = require('../janus')
+const janus = require('../janus');
 const { broadcastAction } = require('../webrtc');
 const { OFFER } = require('../webrtc/constants');
 const { INVITE } = require('./constants');
+const calls = require('./calls');
 
-const calls = new Map();
+module.exports.onRegister = (request) => {
+  const rs = sip.makeResponse(request, 200, 'Ok');
+  // rs.headers.to.tag = uuid.v4();
+  sendToGate('register', { id: id });
+  sip.send(rs);
+};
 
-const register = () => {
-
-}
-
-const invite = (request) => {
-  const call_id = uuid();
-  calls.set(call_id, request);
+module.exports.onInvite = (request) => {
+  const call_id = calls.create(request);
   sip.send(sip.makeResponse('request', 100, 'Ok'));
   sip.send(sip.makeResponse('request', 180, 'Ok'));
   try {
@@ -28,13 +28,5 @@ const invite = (request) => {
     }
   } catch (e) {
     console.error(e);
-  }
-};
-
-let session_id;
-
-const options = {
-  logger: {
-    error: console.error
   }
 };

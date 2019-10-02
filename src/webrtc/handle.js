@@ -5,7 +5,7 @@ const { INIT } = require('../init/constants');
 const { run } = require('../controllers/service');
 const onAck = require('../sip/ack');
 const onInit = require('../init')
-const onCandidate = require('../janus/candidate');
+const janus = require('../janus');
 
 module.exports.onAction = (session) => ({ data }) => {
   try {
@@ -20,7 +20,7 @@ module.exports.onAction = (session) => ({ data }) => {
         break;
       }
       case CANDIDATE: {
-        onCandidate(action)
+        janus.trickle(action);
         break;
       }
       default: {
