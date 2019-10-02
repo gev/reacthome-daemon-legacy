@@ -19,6 +19,7 @@ const connect = () => {
       if (data.transaction) {
         const callback = callbacks.get(data.transaction);
         if (callback) {
+          console.log(callback);
           callback(data);
         }
       } else if (data.janus === TRICKLE) {
