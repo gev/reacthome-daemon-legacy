@@ -88,7 +88,7 @@ const callbacks = new Map();
 
 let session_id;
 
-export default = () => {
+module.exports = () => {
   sip.start({}, (request, info) => {
     console.log(request);
     switch(request.method) {
