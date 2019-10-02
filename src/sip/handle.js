@@ -23,6 +23,7 @@ module.exports.onInvite = async (request) => {
     const { jsep } = await janus.sendMessage(session, handle, {
       request: PROCESS, type: OFFER, sdp: request.content
     });
+    console.log(jsep);
     if (jsep) {
       broadcastAction({ type: INVITE, jsep, session_id, handle_id, call_id });
     }
