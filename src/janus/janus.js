@@ -15,13 +15,13 @@ const connect = () => {
   socket.on('message', (message) => {
     console.log(message);
     try {
-      const data = JSON.parse(message);
-      if (data.transaction) {
-        const callback = callbacks.get(data.transaction);
+      const action = JSON.parse(message);
+      if (action.transaction) {
+        const callback = callbacks.get(action.transaction);
         if (callback) {
-          callback(data);
+          callback(action);
         }
-      } else if (data.janus === TRICKLE) {
+      } else if (action.janus === TRICKLE) {
 
       }
     } catch (e) {
@@ -35,11 +35,12 @@ const connect = () => {
   callbacks.clear();
 };
 
-const send = (o) => new Promise ((resolve, reject) => {
+const send = (action) => new Promise ((resolve, reject) => {
   try {
+    console.log(this);
     const transaction = uuid();
     callbacks.set(transaction, resolve);
-    socket.send(JSON.stringify({ ...o, transaction }), (err) => {
+    socket.send(JSON.stringify({ ...action, transaction }), (err) => {
       if (err) {
         reject(err);
       }
