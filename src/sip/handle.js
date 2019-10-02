@@ -20,7 +20,7 @@ module.exports.onInvite = async (request) => {
     const session = await janus.createSession();
     const handle = await janus.attachPlugin(session, 'janus.plugin.nosip');
     const { jsep } = await janus.sendMessage(session, handle, {
-      request: 'process', type: 'offer', sdp: request.connect
+      request: 'process', type: 'offer', sdp: request.content
     });
     if (jsep) {
       broadcastAction({ type: 'invite', jsep, session_id, handle_id, call_id });
