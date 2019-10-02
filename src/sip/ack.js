@@ -20,4 +20,4 @@ module.exports = async (action) => {
   } catch (e) {
     console.error(e);
   }
-});
+};
