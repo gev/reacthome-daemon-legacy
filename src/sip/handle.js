@@ -9,7 +9,6 @@ const calls = require('./calls');
 module.exports.onRegister = (request) => {
   const rs = sip.makeResponse(request, 200, 'Ok');
   // rs.headers.to.tag = uuid.v4();
-  sendToGate('register', { id: id });
   sip.send(rs);
 };
 
