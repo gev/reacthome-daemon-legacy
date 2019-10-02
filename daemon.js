@@ -43,9 +43,9 @@ db.createReadStream()
     device.manage();
     drivers.manage();
     cpu.manage();
-    discovery(init.mac);
-    webrtc(init.mac);
+    discovery.start(init.mac);
+    webrtc.start(init.mac);
+    ping.start();
+    sip.start();
     start(init.mac);
-    ping();
-    sip();
   });

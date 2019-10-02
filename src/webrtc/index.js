@@ -1,10 +1,14 @@
 
 
+const peer = require('./peer');
+const start = require('./server');
 const connect = require('./connect');
-const start = require('../../server');
-const signal = require('./signal')
+const signal = require('./signal');
 
-module.exports = (id) => {
-  connect(id, signal);
-  start(signal);
+module.exports = {
+  ...peer,
+  start(id) => {
+    connect(id, signal);
+    start(signal);
+  }
 }

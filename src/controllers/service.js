@@ -120,8 +120,7 @@ const {
 const { device } = require('../sockets');
 const mac = require('../mac');
 const { ac } = require('../drivers');
-const { broadcast } = require('../webrtc/peer');
-const { sendAction } = require('../webrtc/peer');
+const { sendAction } = require('../webrtc');
 const { state } = require('./state');
 
 const timer = {};
@@ -129,22 +128,22 @@ const timer = {};
 const DIM_VELOCITY = 128;
 const ARTNET_VELOCITY = 1;
 
-const download = (ip, name) => {
-  const file = asset(name);
-  exists(file, (ex) => {
-    if (ex) return;
-    fetch(`http://${ip}:${CLIENT_PORT}/${ASSETS}/${name}`)
-      .then(res => {
-        if (res.status !== 200) return;
-        const ws = createWriteStream(file);
-        ws.on('end', () => {
-          broadcast(JSON.stringify({ id: mac(), type: ACTION_DOWNLOAD, name: name }));
-        });
-        res.body.pipe(ws);
-      })
-      .catch(console.error);
-  });
-};
+// const download = (ip, name) => {
+//   const file = asset(name);
+//   exists(file, (ex) => {
+//     if (ex) return;
+//     fetch(`http://${ip}:${CLIENT_PORT}/${ASSETS}/${name}`)
+//       .then(res => {
+//         if (res.status !== 200) return;
+//         const ws = createWriteStream(file);
+//         ws.on('end', () => {
+//           broadcast(JSON.stringify({ id: mac(), type: ACTION_DOWNLOAD, name: name }));
+//         });
+//         res.body.pipe(ws);
+//       })
+//       .catch(console.error);
+//   });
+// };
 
 const run = (action, session) => {
   try {

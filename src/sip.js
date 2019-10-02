@@ -2,6 +2,8 @@
 const uuid = require('uuid');
 const digest = require('sip/digest');
 const sip = require('sip');
+const janus = require('./janus')
+const { broadcastAction } = require('./webrtc');
 
 const calls = {};
 const callbacks = new Map();
@@ -54,37 +56,37 @@ const callbacks = new Map();
 //   }
 // });
 
-// const call = (request) => {
-//   const call_id = uuid.v4();
-//   calls[call_id] = request;
-//   [100, 180].forEach(code => {
-//     const rs = sip.makeResponse(request, code, 'Ok');
-//     sip.send(rs);
-//   });
-//   sendToJanus({ janus: 'create' }, ({ data }) => {
-//     const session_id = data.id;
-//     sendToJanus({
-//       janus: 'attach',
-//       session_id,
-//       plugin: 'janus.plugin.nosip'
-//     }, ({ data }) => {
-//       const handle_id = data.id;
-//       sendToJanus({
-//         janus: 'message',
-//         session_id,
-//         handle_id,
-//         body: {
-//           request: 'process',
-//           type: 'offer',
-//           sdp: request.content
-//         }
-//       }, ({ jsep }) => {
-//         if (!jsep) return;
-//         sendToGate('offer', { jsep, session_id, handle_id, call_id });
-//       });
-//     })
-//   });
-// };
+const call = (request) => {
+  const call_id = uuid.v4();
+  calls[call_id] = request;
+  [100, 180].forEach(code => {
+    const rs = sip.makeResponse(request, code, 'Ok');
+    sip.send(rs);
+  });
+  sendToJanus({ janus: 'create' }, ({ data }) => {
+    const session_id = data.id;
+    sendToJanus({
+      janus: 'attach',
+      session_id,
+      plugin: 'janus.plugin.nosip'
+    }, ({ data }) => {
+      const handle_id = data.id;
+      sendToJanus({
+        janus: 'message',
+        session_id,
+        handle_id,
+        body: {
+          request: 'process',
+          type: 'offer',
+          sdp: request.content
+        }
+      }, ({ jsep }) => {
+        if (!jsep) return;
+        sendToGate('offer', { jsep, session_id, handle_id, call_id });
+      });
+    })
+  });
+};
 
 let session_id;
 
@@ -94,18 +96,17 @@ const options = {
   }
 };
 
-module.exports = () => {
+module.exports.start = () => {
   sip.start(options, (request, info) => {
     console.log(request);
     switch(request.method) {
       case 'REGISTER': {
         const rs = sip.makeResponse(request, 200, 'Ok');
-        // sendToGate('register', { id: id });
         sip.send(rs);
         break;
       }
       case 'INVITE': {
-        // call(request);
+        call(request);
         break;
       }
     }
