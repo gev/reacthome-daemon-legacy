@@ -8,7 +8,6 @@ module.exports.fixSDP = (sdp) => {
   for (let m of o.m) {
     if (m.media === 'video') {
       m.a = [
-        // 'rtpmap:96 H264/-1190812184',
         'rtpmap:96 H264/90000',
         'rtcp-fb:96 nack',
         'rtcp-fb:96 nack pli',
