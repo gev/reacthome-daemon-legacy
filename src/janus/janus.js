@@ -22,7 +22,8 @@ const connect = () => {
           callback(action);
         }
       } else if (action.janus === TRICKLE) {
-
+        console.log('++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+        console.log(action);
       }
     } catch (e) {
       console.log(e);
