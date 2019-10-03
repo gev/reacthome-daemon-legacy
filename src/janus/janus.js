@@ -11,7 +11,8 @@ const callbacks = new Map();
 let socket;
 
 const connect = () => {
-  socket = new WebSocket('ws://localhost:8188', 'janus-protocol');
+  // socket = new WebSocket('ws://localhost:8188', 'janus-protocol');
+  socket = new WebSocket('ws://192.168.88.134:8188', 'janus-protocol');
   socket.on('message', (message) => {
     console.log(message);
     try {
