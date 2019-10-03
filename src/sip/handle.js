@@ -1,5 +1,6 @@
 
 const sip = require('sip');
+const uuid = require('uuid/v4');
 const janus = require('../janus');
 const { fixSDP } = require('../util');
 const { broadcastAction } = require('../webrtc');
@@ -10,7 +11,7 @@ const calls = require('./calls');
 
 module.exports.onRegister = (request) => {
   const rs = sip.makeResponse(request, 200, 'Ok');
-  // rs.headers.to.tag = uuid.v4();
+  rs.headers.to.tag = uuid();
   sip.send(rs);
 };
 
