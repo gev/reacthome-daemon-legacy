@@ -24,7 +24,6 @@ module.exports.onInvite = (request) => {
         request: PROCESS, type: OFFER, sdp: fixSDP(request.content)
       }, ({ jsep }) => {
         if (jsep) {
-          console.log(jsep);
           broadcastAction({ type: INVITE, jsep, session_id, handle_id, call_id });
         }
       });

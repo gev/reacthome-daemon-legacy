@@ -4,7 +4,6 @@ const SDP = require('sip/sdp');
 module.exports.isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 module.exports.fixSDP = (sdp) => {
-  console.log(sdp);
   const o = SDP.parse(sdp);
   for (let m of o.m) {
     if (m.media === 'video') {
@@ -16,6 +15,5 @@ module.exports.fixSDP = (sdp) => {
       ]
     }
   }
-  console.log(SDP.stringify(o));
   return SDP.stringify(o);
 }
