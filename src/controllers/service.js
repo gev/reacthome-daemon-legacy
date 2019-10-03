@@ -120,8 +120,6 @@ const {
 const { device } = require('../sockets');
 const mac = require('../mac');
 const { ac } = require('../drivers');
-const { sendAction } = require('../webrtc');
-const { state } = require('./state');
 
 const timer = {};
 
