@@ -10,11 +10,11 @@ module.exports = (action) => {
     if (!plugindata) return;
     const request = calls.get(call_id);
     if (!request) return;
-    console.log(plugindata, request);
     const rs = sip.makeResponse(request, 200, 'Ok');
     rs.content = plugindata.data.result.sdp;
     rs.headers['content-type'] = 'application/sdp';
     rs.headers['content-length'] = rs.content.length;
+    console.log(request, rs);
     sip.send(rs);
   });
 };
