@@ -11,8 +11,7 @@ const callbacks = new Map();
 let socket;
 
 const connect = () => {
-  // socket = new WebSocket('ws://localhost:8188', 'janus-protocol');
-  socket = new WebSocket('ws://192.168.88.134:8188', 'janus-protocol');
+  socket = new WebSocket('ws://localhost:8188', 'janus-protocol');
   socket.on('message', (message) => {
     console.log(message);
     try {
@@ -41,9 +40,9 @@ const send = (action, callback) => {
     const transaction = uuid();
     if (callback) {
       callbacks.set(transaction, callback);
-      setTimeout(() => {
-        callbacks.delete(transaction)
-      }, TIMEOUT_TRANSACTION);
+      // setTimeout(() => {
+      //   callbacks.delete(transaction)
+      // }, TIMEOUT_TRANSACTION);
     }
     socket.send(JSON.stringify({ ...action, transaction }));
   } catch (e) {
