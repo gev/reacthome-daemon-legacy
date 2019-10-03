@@ -20,7 +20,6 @@ module.exports.onAction = (session) => ({ data }) => {
         break;
       }
       case CANDIDATE: {
-        console.log('------------------------------------------------------',action)
         janus.trickle(action);
         break;
       }

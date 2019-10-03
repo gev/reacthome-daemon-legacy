@@ -36,6 +36,8 @@ const connect = () => {
 };
 
 const send = (action, callback) => {
+  console.log('-----------------------------------------------------')
+  console.log(action, callback);
   try {
     const transaction = uuid();
     if (callback) {
