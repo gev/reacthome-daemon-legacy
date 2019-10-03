@@ -14,7 +14,6 @@ module.exports = (action) => {
     rs.content = plugindata.data.result.sdp;
     rs.headers['content-type'] = 'application/sdp';
     rs.headers['content-length'] = rs.content.length;
-    console.log(request, rs);
     sip.send(rs);
   });
 };
