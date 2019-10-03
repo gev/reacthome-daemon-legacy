@@ -27,5 +27,5 @@ module.exports.sendMessage = (session_id, handle_id, body, jsep, callback) => {
 };
 
 module.exports.trickle = ({ session_id, handle_id, candidate }, callback) => {
-  send({ janus: TRICKLE, session_id, handle_id, candidate: [candidate] }, callback);
+  send({ janus: TRICKLE, session_id, handle_id, candidates: [candidate] }, callback);
 };
