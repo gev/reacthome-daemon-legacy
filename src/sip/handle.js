@@ -20,7 +20,7 @@ module.exports.onInvite = (request) => {
   sip.send(sip.makeResponse(request, 180, 'Ok'));
   janus.createSession((session_id) => {
     janus.attachPlugin(session_id, 'janus.plugin.nosip', (handle_id) => {
-      console.log(sdp.parse(request.content));
+      console.log(JSON.stringify(sdp.parse(request.content), nul, 2));
       janus.sendMessage(session_id, handle_id, {
         request: PROCESS, type: OFFER, sdp: request.content
       }, ({ jsep }) => {
