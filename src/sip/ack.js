@@ -5,6 +5,7 @@ const { GENERATE } = require('../janus/constants');
 const calls = require('./calls');
 
 module.exports = (action) => {
+  console.log(action);
   const { jsep, session_id, handle_id, call_id } = action;
   janus.sendMessage(session_id, handle_id, { request: GENERATE }, jsep, ({ plugindata }) => {
     if (!plugindata) return;
