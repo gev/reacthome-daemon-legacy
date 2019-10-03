@@ -8,10 +8,11 @@ module.exports.fixSDP = (sdp) => {
   for (let m of o.m) {
     if (m.media === 'video') {
       m.a = [
-        'rtpmap:96 H264/-1190812184',
+        // 'rtpmap:96 H264/-1190812184',
+        'rtpmap:96 H264/90000',
         'rtcp-fb:96 nack',
         'rtcp-fb:96 nack pli',
-        'fmtp:96 level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=42e01f;max-fr=30'
+        'fmtp:96 level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=42e01f'
       ]
     }
   }
