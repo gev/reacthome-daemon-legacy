@@ -23,7 +23,6 @@ module.exports.sendMessage = (session_id, handle_id, body, jsep, callback) => {
       jsep = undefined;
     }
   }
-  console.log(jsep, callback);
   send({ janus: MESSAGE, session_id, handle_id, body, jsep }, callback);
 };
 
