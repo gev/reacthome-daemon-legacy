@@ -5,7 +5,7 @@ const { onRegister, onInvite } = require('./handle');
 const options = require('./config')
 
 module.exports.start = () => {
-  sip.start(options, (request, info) => {
+  sip.start({}, (request) => {
     console.log(request);
     switch(request.method) {
       case REGISTER: {
