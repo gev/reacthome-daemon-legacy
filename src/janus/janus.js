@@ -13,7 +13,6 @@ let socket;
 const connect = () => {
   socket = new WebSocket('ws://localhost:8188', 'janus-protocol');
   socket.on('message', (message) => {
-    console.log(message);
     try {
       const action = JSON.parse(message);
       if (action.transaction) {
@@ -26,7 +25,7 @@ const connect = () => {
         console.log(action);
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   });
   socket.on('close', () => {
@@ -37,19 +36,17 @@ const connect = () => {
 };
 
 const send = (action, callback) => {
-  console.log('-----------------------------------------------------')
-  console.log(action, callback);
   try {
     const transaction = uuid();
     if (callback) {
       callbacks.set(transaction, callback);
-      // setTimeout(() => {
-      //   callbacks.delete(transaction)
-      // }, TIMEOUT_TRANSACTION);
+      setTimeout(() => {
+        callbacks.delete(transaction)
+      }, TIMEOUT_TRANSACTION);
     }
     socket.send(JSON.stringify({ ...action, transaction }));
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 };
 
