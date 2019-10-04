@@ -1,8 +1,10 @@
 
 const { ACK } = require('../sip/constants');
+const { START, WATCH } = require('../camera/constants');
 const { CANDIDATE } = require('../webrtc/constants');
 const { INIT } = require('../init/constants');
 const { run } = require('../controllers/service');
+const { onWatch, onStart } = require('../camera');
 const onAck = require('../sip/ack');
 const onInit = require('../init')
 const janus = require('../janus');
@@ -17,6 +19,14 @@ module.exports.onAction = (session) => ({ data }) => {
       }
       case ACK: {
         onAck(action)
+        break;
+      }
+      case WATCH: {
+        onWatch(action, session);
+        break;
+      }
+      case START: {
+        onStart(action);
         break;
       }
       case CANDIDATE: {
