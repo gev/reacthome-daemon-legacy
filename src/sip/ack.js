@@ -1,4 +1,5 @@
 
+const SDP = require('sdp-transform');
 const sip = require('sip');
 const janus = require('../janus');
 const { GENERATE } = require('../janus/constants');
@@ -11,11 +12,11 @@ module.exports = (action) => {
     const request = calls.get(call_id);
     if (!request) return;
     const rs = sip.makeResponse(request, 200, 'Ok');
-    rs.content = plugindata.data.result.sdp;
+    const o = SDP.parse(plugindata.data.result.sdp);
+    o.media = o.media.filter(media => media.type === 'audio');
+    rs.content = SDP.write(o);
     rs.headers['content-type'] = 'application/sdp';
     rs.headers['content-length'] = rs.content.length;
-    console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-    console.log(request, rs, jsep);
     sip.send(rs);
   });
 };
