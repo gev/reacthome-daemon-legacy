@@ -25,14 +25,15 @@ module.exports.onWatch = ({ id, preview, audio = false, video = true }, session)
         type: RTSP,
         audio, video,
         url: u.toString(),
-        rtsp_user, rtsp_pwd
+        rtsp_user, rtsp_pwd,
+        videofmtp: 'profile-level-id=42e01f;packetization-mode=1'
       }, ({ plugindata }) => {
         const stream_id = plugindata.data.stream.id;
         janus.sendMessage(session_id, handle_id, { request: WATCH, id: stream_id }, ({ jsep }) => {
           if (jsep) {
             // jsep.sdp = fixSDP(jsep.sdp);
-            jsep.sdp = jsep.sdp.replace('42801E', '42e01f');
-            jsep.sdp = jsep.sdp.replace('420029', '42e01f');
+            // jsep.sdp = jsep.sdp.replace('42801E', '42e01f');
+            // jsep.sdp = jsep.sdp.replace('420029', '42e01f');
             sendAction(session, { type: WATCH, id, session_id, handle_id, stream_id, jsep });
           }
         });
