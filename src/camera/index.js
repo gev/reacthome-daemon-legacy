@@ -19,6 +19,7 @@ module.exports.onWatch = ({ id, preview, audio = false, video = true }, session)
       const rtsp_pwd = u.password;
       u.username = '';
       u.password = '';
+      console.log(id, url, rtsp_user, rtsp_pwd, u.toString());
       janus.sendMessage(session_id, handle_id, {
         request: CREATE,
         type: RTSP,
