@@ -17,6 +17,7 @@
     "level": "^5.0.1",
     "node-fetch": "^2.6.0",
     "reacthome-ircodes": "gev/reacthome-ircodes",
+    "sdp-transform": "^2.13.0",
     "serialport": "^7.1.5",
     "sip": "^0.0.5",
     "uuid": "^3.3.3",
