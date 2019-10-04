@@ -29,7 +29,7 @@ module.exports.onWatch = ({ id, preview, audio = false, video = true }, session)
         const stream_id = plugindata.data.stream.id;
         janus.sendMessage(session_id, handle_id, { request: WATCH, id: stream_id }, ({ jsep }) => {
           if (jsep) {
-            jsep.sdp = fixSDP(jsep.sdp);
+            // jsep.sdp = fixSDP(jsep.sdp);
             sendAction(session, { type: WATCH, id, session_id, handle_id, stream_id, jsep });
           }
         });
