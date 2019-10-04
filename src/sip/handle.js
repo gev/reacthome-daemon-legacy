@@ -1,7 +1,6 @@
 
 const sip = require('sip');
 const uuid = require('uuid/v4');
-const SDP = require('sdp-transform');
 const janus = require('../janus');
 const { fixSDP } = require('../util');
 const { broadcastAction } = require('../webrtc');
@@ -28,7 +27,7 @@ module.exports.onInvite = (request) => {
         sdp: request.content
       }, ({ jsep }) => {
         if (jsep) {
-          console.log(SDP.parse(jsep.sdp));
+          jsep.sdp = fixSDP(jsep.sdp);
           broadcastAction({ type: INVITE, jsep, session_id, handle_id, call_id });
         }
       });
