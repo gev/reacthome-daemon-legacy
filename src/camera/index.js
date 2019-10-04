@@ -42,5 +42,5 @@ module.exports.onWatch = ({ id, preview, audio = false, video = true }, session)
 };
 
 module.exports.onStart = ({ session_id, handle_id, stream_id, jsep }, session) => {
-  janus.sendMessage(session_id, handle_id, jsep, { request: START, id: stream_id });
+  janus.sendMessage(session_id, handle_id, { request: START, id: stream_id }, jsep);
 };
