@@ -14,10 +14,19 @@ module.exports.onWatch = ({ id, preview, audio = false, video = true }, session)
   if (!url) return;
   janus.createSession((session_id) => {
     janus.attachPlugin(session_id, 'janus.plugin.streaming', (handle_id) => {
+      const u = new URL(url);
+      const rtsp_user = u.username;
+      const rtsp_pwd = u.password;
+      u.username = '';
+      u.password = '';
       janus.sendMessage(session_id, handle_id, {
-        request: CREATE, type: RTSP, audio, video, url, rtsp_user, rtsp_pwd
+        request: CREATE,
+        type: RTSP,
+        audio, video,
+        url: u.toString(),
+        rtsp_user, rtsp_pwd
       }, ({ plugindata }) => {
-        const { stream_id } = plugindata.data.stream.id;
+        const stream_id = plugindata.data.stream.id;
         janus.sendMessage(session_id, handle_id, { request: WATCH, id: stream_id }, ({ jsep }) => {
           if (jsep) {
             jsep.sdp = fixSDP(jsep.sdp);
