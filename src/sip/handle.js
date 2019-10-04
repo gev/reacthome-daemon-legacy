@@ -22,9 +22,12 @@ module.exports.onInvite = (request) => {
   janus.createSession((session_id) => {
     janus.attachPlugin(session_id, 'janus.plugin.nosip', (handle_id) => {
       janus.sendMessage(session_id, handle_id, {
-        request: PROCESS, type: OFFER, sdp: fixSDP(request.content)
+        request: PROCESS,
+        type: OFFER,
+        sdp: request.content
       }, ({ jsep }) => {
         if (jsep) {
+          console.log(jsep);
           broadcastAction({ type: INVITE, jsep, session_id, handle_id, call_id });
         }
       });
