@@ -25,6 +25,8 @@ module.exports.onInvite = (request) => {
         request: PROCESS, type: OFFER, sdp: fixSDP(request.content)
       }, ({ jsep }) => {
         if (jsep) {
+          jsep.sdp = jsep.sdp.replace('42801E', '42e01f');
+          jsep.sdp = jsep.sdp.replace('420029', '42e01f');
           broadcastAction({ type: INVITE, jsep, session_id, handle_id, call_id });
         }
       });
