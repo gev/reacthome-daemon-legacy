@@ -19,6 +19,7 @@ module.exports = (action) => {
     const o = SDP.parse(plugindata.data.result.sdp);
     o.media = o.media.filter(media => media.type === 'audio');
     rs.content = SDP.write(o);
+    rs.content.replace('1.1.1.1', '192.168.88.188');
     rs.headers.contact = request.headers.to;
     rs.headers.contact.params = {};
     rs.headers.to.params.tag = tag;
