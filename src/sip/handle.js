@@ -13,12 +13,16 @@ const calls = require('./calls');
 const realm = 'reacthome';
 
 module.exports.onRegister = (request) => {
-  sip.send(digest.challenge({realm: realm}, sip.makeResponse(request, 401, 'Authentication Required')));
-  // const rs = sip.makeResponse(request, 200, 'Ok');
-  // rs.headers.contact = request.headers.contact;
-  // rs.headers.to.tag = uuid();
-  // console.log(JSON.stringify(rs, null, 2));
-  // sip.send(rs);
+  let rs;
+  if (request.headers.authorization) {
+    rs = digest.challenge({ realm }, sip.makeResponse(request, 401, 'Authentication Required'));
+  } else {
+    rs = sip.makeResponse(request, 200, 'Ok');
+    rs.headers.contact = request.headers.contact;
+    rs.headers.to.tag = uuid();
+  }
+  console.log(JSON.stringify(rs, null, 2));
+  sip.send(rs);
 };
 
 module.exports.onInvite = (request) => {
