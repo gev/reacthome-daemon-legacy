@@ -16,13 +16,13 @@ const tag = '123456';
 
 module.exports.onRegister = (request) => {
   let rs;
-  // if (request.headers.authorization) {
+  if (request.headers.authorization) {
     rs = sip.makeResponse(request, 200, 'Ok');
     rs.headers.contact = [{ uri: request.headers.contact[0].uri, expires: 3600 }];
     rs.headers.to.params.tag = uuid();
-  // } else {
-  //   rs = digest.challenge({ realm }, sip.makeResponse(request, 401, 'Authentication Required'));
-  // }
+  } else {
+    rs = digest.challenge({ realm }, sip.makeResponse(request, 401, 'Authentication Required'));
+  }
   console.log(JSON.stringify(rs, null, 2));
   sip.send(rs);
 };
