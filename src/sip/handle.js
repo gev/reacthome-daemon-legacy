@@ -15,11 +15,11 @@ const realm = 'reacthome';
 module.exports.onRegister = (request) => {
   let rs;
   if (request.headers.authorization) {
-    rs = digest.challenge({ realm }, sip.makeResponse(request, 401, 'Authentication Required'));
-  } else {
     rs = sip.makeResponse(request, 200, 'Ok');
     rs.headers.contact = request.headers.contact;
     rs.headers.to.tag = uuid();
+  } else {
+    rs = digest.challenge({ realm }, sip.makeResponse(request, 401, 'Authentication Required'));
   }
   console.log(JSON.stringify(rs, null, 2));
   sip.send(rs);
