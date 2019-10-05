@@ -16,6 +16,7 @@ module.exports = (action) => {
     // o.media = o.media.filter(media => media.type === 'audio');
     // rs.content = SDP.write(o);
     rs.headers.via = [];
+    rs.headers.contact = request.headers.contact;
     rs.content = plugindata.data.result.sdp;
     rs.headers['content-type'] = 'application/sdp';
     rs.headers['content-length'] = rs.content.length;
