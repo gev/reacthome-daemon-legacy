@@ -28,12 +28,12 @@ module.exports.onRegister = (request) => {
 module.exports.onInvite = (request) => {
   const call_id = calls.create(request);
   let rs;
-  rs = sip.makeResponse(request, 100, 'Ok');
-  rs.headers.contact = request.headers.contact;
-  rs.headers.to.tag = uuid();
-  sip.send(rs);
+  // rs = sip.makeResponse(request, 100, 'Ok');
+  // rs.headers.contact = request.headers.to;
+  // rs.headers.to.tag = uuid();
+  // sip.send(rs);
   rs = sip.makeResponse(request, 180, 'Ok');
-  rs.headers.contact = request.headers.contact;
+  rs.headers.contact = request.headers.to;
   rs.headers.to.tag = uuid();
   sip.send(rs);
   janus.createSession((session_id) => {
