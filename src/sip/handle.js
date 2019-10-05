@@ -12,7 +12,7 @@ const calls = require('./calls');
 
 module.exports.onRegister = (request) => {
   const rs = sip.makeResponse(request, 200, 'Ok');
-  // rs.headers.contact = request.headers.contact;
+  rs.headers.contact = request.headers.contact;
   rs.headers.to.tag = uuid();
   console.log(JSON.stringify(rs, null, 2));
   sip.send(rs);
