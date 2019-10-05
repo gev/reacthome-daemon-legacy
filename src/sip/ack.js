@@ -12,8 +12,8 @@ module.exports = (action) => {
     const request = calls.get(call_id);
     if (!request) return;
     const rs = sip.makeResponse(request, 200, 'Ok');
-    rs.headers.contact = request.headers.contact;
     rs.content = plugindata.data.result.sdp;
+    rs.headers.contact = request.headers.to;
     rs.headers['content-type'] = 'application/sdp';
     rs.headers['content-length'] = rs.content.length;
     console.log(JSON.stringify(rs, null, 2));
