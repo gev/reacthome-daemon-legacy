@@ -12,8 +12,9 @@ module.exports = (action) => {
     const request = calls.get(call_id);
     if (!request) return;
     const rs = sip.makeResponse(request, 200, 'Ok');
-    const o = SDP.parse(plugindata.data.result.sdp);
-    o.media = o.media.filter(media => media.type === 'audio');
+    // const o = SDP.parse(plugindata.data.result.sdp);
+    // o.media = o.media.filter(media => media.type === 'audio');
+    delete rs.headers.via;
     rs.content = SDP.write(o);
     rs.headers['content-type'] = 'application/sdp';
     rs.headers['content-length'] = rs.content.length;
