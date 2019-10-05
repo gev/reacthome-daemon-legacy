@@ -11,6 +11,7 @@ const { INVITE } = require('./constants');
 const calls = require('./calls');
 
 const realm = 'reacthome';
+const tag = '123456';
 
 module.exports.onRegister = (request) => {
   let rs;
@@ -30,11 +31,11 @@ module.exports.onInvite = (request) => {
   let rs;
   // rs = sip.makeResponse(request, 100, 'Ok');
   // rs.headers.contact = request.headers.to;
-  // rs.headers.to.tag = uuid();
+  // rs.headers.to.tag = tag;
   // sip.send(rs);
   rs = sip.makeResponse(request, 180, 'Ok');
   rs.headers.contact = request.headers.to;
-  rs.headers.to.tag = uuid();
+  rs.headers.to.tag = tag;
   sip.send(rs);
   janus.createSession((session_id) => {
     janus.attachPlugin(session_id, 'janus.plugin.nosip', (handle_id) => {
