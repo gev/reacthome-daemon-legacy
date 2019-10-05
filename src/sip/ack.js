@@ -20,8 +20,7 @@ module.exports = (action) => {
     o.media = o.media.filter(media => media.type === 'audio');
     rs.content = SDP.write(o);
     rs.content = rs.content.replace('2 IN IP4 1.1.1.1', '0 IN IP4 192.168.88.188').replace('s=-', 's=Reacthome').replace('o=-', 'o=0');
-    rs.headers.contact = request.headers.to;
-    rs.headers.contact.params = {};
+    rs.headers.contact = [{ uri: request.headers.to.uri, params: {} }];
     rs.headers.to.params.tag = tag;
     rs.headers['content-type'] = 'application/sdp';
     rs.headers['content-length'] = rs.content.length;

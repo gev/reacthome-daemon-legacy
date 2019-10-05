@@ -35,8 +35,7 @@ module.exports.onInvite = (request) => {
   console.log(JSON.stringify(rs, null, 2));
   sip.send(rs);
   rs = sip.makeResponse(request, 180, 'Ok');
-  rs.headers.contact = request.headers.to;
-  rs.headers.contact.params = {};
+  rs.headers.contact = [{ uri: request.headers.to.uri, params: {} }];
   rs.headers.to.params.tag = tag;
   console.log(JSON.stringify(rs, null, 2));
   sip.send(rs);
