@@ -1,5 +1,6 @@
 
 const sip = require('sip');
+const SDP = require('sdp-transform');
 const digest = require('sip/digest');
 const uuid = require('uuid/v4');
 const janus = require('../janus');
@@ -39,13 +40,18 @@ module.exports.onInvite = (request) => {
   sip.send(rs);
   janus.createSession((session_id) => {
     janus.attachPlugin(session_id, 'janus.plugin.nosip', (handle_id) => {
+      const o = SDP.parse(request.content);
+      o.media = o.media.filter(media => media.type === 'audio');
       janus.sendMessage(session_id, handle_id, {
         request: PROCESS,
         type: OFFER,
-        sdp: request.content
+        sdp: SDP.write(o)
       }, ({ jsep }) => {
         if (jsep) {
-          jsep.sdp = fixSDP(jsep.sdp);
+          // jsep.sdp = fixSDP(jsep.sdp);
+          const o = SDP.parse(jsep.sdp);
+          o.media = o.media.filter(media => media.type === 'audio');
+          jsep.sdp = SDP.write(o);
           broadcastAction({ type: INVITE, jsep, session_id, handle_id, call_id });
         }
       });
