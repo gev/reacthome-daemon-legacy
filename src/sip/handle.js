@@ -38,6 +38,7 @@ module.exports.onInvite = (request) => {
   rs.headers.contact = request.headers.to;
   rs.headers.contact.params = {};
   rs.headers.to.params.tag = tag;
+  console.log(JSON.stringify(rs, null, 2));
   sip.send(rs);
   janus.createSession((session_id) => {
     janus.attachPlugin(session_id, 'janus.plugin.nosip', (handle_id) => {
