@@ -30,7 +30,7 @@ module.exports.onInvite = (request) => {
         sdp: request.content
       }, ({ jsep }) => {
         if (jsep) {
-          jsep.sdp = fixSDP(jsep.sdp);
+          // jsep.sdp = fixSDP(jsep.sdp);
           broadcastAction({ type: INVITE, jsep, session_id, handle_id, call_id });
         }
       });
