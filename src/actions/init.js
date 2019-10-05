@@ -106,8 +106,8 @@ module.exports.initialize = (id) => {
         const channel = get(`${id}/${DO}/${i}`);
         a[i] = (channel && channel.value) || 0;
       }
-      const { is_rbus, baud, line_control } = get(`${id}/${RS485}/1`) || {};
-      a[25] = is_rbus = true;
+      const { is_rbus = true, baud, line_control } = get(`${id}/${RS485}/1`) || {};
+      a[25] = is_rbus;
       a[26] = (baud) & 0xff;
       a[27] = (baud >>  8) & 0xff;
       a[28] = (baud >> 16) & 0xff;
