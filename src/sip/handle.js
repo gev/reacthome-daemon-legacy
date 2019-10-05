@@ -20,20 +20,23 @@ module.exports.onRegister = (request) => {
 
 module.exports.onInvite = (request) => {
   const call_id = calls.create(request);
-  // sip.send(sip.makeResponse(request, 100, 'Ok'));
-  sip.send(sip.makeResponse(request, 180, 'Ok'));
-  janus.createSession((session_id) => {
-    janus.attachPlugin(session_id, 'janus.plugin.nosip', (handle_id) => {
-      janus.sendMessage(session_id, handle_id, {
-        request: PROCESS,
-        type: OFFER,
-        sdp: request.content
-      }, ({ jsep }) => {
-        if (jsep) {
-          jsep.sdp = fixSDP(jsep.sdp);
-          broadcastAction({ type: INVITE, jsep, session_id, handle_id, call_id });
-        }
+  sip.send(sip.makeResponse(request, 100, 'Ok'));
+  setTimeout(() => {
+    sip.send(sip.makeResponse(request, 180, 'Ok'));
+    janus.createSession((session_id) => {
+      janus.attachPlugin(session_id, 'janus.plugin.nosip', (handle_id) => {
+        janus.sendMessage(session_id, handle_id, {
+          request: PROCESS,
+          type: OFFER,
+          sdp: request.content
+        }, ({ jsep }) => {
+          if (jsep) {
+            jsep.sdp = fixSDP(jsep.sdp);
+            broadcastAction({ type: INVITE, jsep, session_id, handle_id, call_id });
+          }
+        });
       });
     });
-  });
+
+  }, 500);
 };
