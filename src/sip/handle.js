@@ -14,21 +14,21 @@ const realm = 'reacthome';
 
 module.exports.onRegister = (request) => {
   let rs;
-  if (request.headers.authorization) {
+  // if (request.headers.authorization) {
     rs = sip.makeResponse(request, 200, 'Ok');
     rs.headers.contact = request.headers.contact;
     rs.headers.to.tag = uuid();
-  } else {
-    rs = digest.challenge({ realm }, sip.makeResponse(request, 401, 'Authentication Required'));
-  }
+  // } else {
+  //   rs = digest.challenge({ realm }, sip.makeResponse(request, 401, 'Authentication Required'));
+  // }
   console.log(JSON.stringify(rs, null, 2));
   sip.send(rs);
 };
 
 module.exports.onInvite = (request) => {
   const call_id = calls.create(request);
-  sip.send(sip.makeResponse(request, 100, 'Ok'));
-  sip.send(sip.makeResponse(request, 180, 'Ok'));
+  // sip.send(sip.makeResponse(request, 100, 'Ok'));
+  // sip.send(sip.makeResponse(request, 180, 'Ok'));
   janus.createSession((session_id) => {
     janus.attachPlugin(session_id, 'janus.plugin.nosip', (handle_id) => {
       janus.sendMessage(session_id, handle_id, {
