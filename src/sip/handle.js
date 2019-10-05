@@ -18,8 +18,7 @@ module.exports.onRegister = (request) => {
   let rs;
   // if (request.headers.authorization) {
     rs = sip.makeResponse(request, 200, 'Ok');
-    rs.headers.contact = request.headers.contact;
-    rs.headers.contact.params.expires = 3600;
+    rs.headers.contact = [{ uri: request.headers.contact.uri, expires: 3600 }];
     rs.headers.to.params.tag = uuid();
   // } else {
   //   rs = digest.challenge({ realm }, sip.makeResponse(request, 401, 'Authentication Required'));
