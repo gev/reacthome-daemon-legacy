@@ -15,13 +15,13 @@ module.exports = (action) => {
     const request = calls.get(call_id);
     if (!request) return;
     const rs = sip.makeResponse(request, 200, 'Ok');
-    rs.headers.to.params.tag = tag;
     // rs.content = plugindata.data.result.sdp;
     const o = SDP.parse(plugindata.data.result.sdp);
     o.media = o.media.filter(media => media.type === 'audio');
     rs.content = SDP.write(o);
     rs.headers.contact = request.headers.to;
     rs.headers.contact.params = {};
+    rs.headers.to.params.tag = tag;
     rs.headers['content-type'] = 'application/sdp';
     rs.headers['content-length'] = rs.content.length;
     console.log(JSON.stringify(rs, null, 2));
