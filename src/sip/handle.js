@@ -30,10 +30,10 @@ module.exports.onRegister = (request) => {
 module.exports.onInvite = (request) => {
   const call_id = calls.create(request);
   let rs;
-  // rs = sip.makeResponse(request, 100, 'Ok');
-  // rs.headers.contact = request.headers.to;
-  // rs.headers.to.params.tag = tag;
-  // sip.send(rs);
+  rs = sip.makeResponse(request, 100, 'Ok');
+  rs.headers.to.params.tag = tag;
+  console.log(JSON.stringify(rs, null, 2));
+  sip.send(rs);
   rs = sip.makeResponse(request, 180, 'Ok');
   rs.headers.contact = request.headers.to;
   rs.headers.contact.params = {};
