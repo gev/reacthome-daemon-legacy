@@ -15,7 +15,7 @@ module.exports = (action) => {
     // const o = SDP.parse(plugindata.data.result.sdp);
     // o.media = o.media.filter(media => media.type === 'audio');
     // delete rs.headers.via;
-    rs.content = SDP.write(o);
+    // rs.content = SDP.write(o);
     rs.content = plugindata.data.result.sdp;
     rs.headers['content-type'] = 'application/sdp';
     rs.headers['content-length'] = rs.content.length;
