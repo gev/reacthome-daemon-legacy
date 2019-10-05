@@ -36,6 +36,7 @@ module.exports.onInvite = (request) => {
   // sip.send(rs);
   rs = sip.makeResponse(request, 180, 'Ok');
   rs.headers.contact = request.headers.to;
+  rs.headers.contact.params = {};
   rs.headers.to.params.tag = tag;
   sip.send(rs);
   janus.createSession((session_id) => {
