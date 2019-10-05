@@ -15,7 +15,6 @@ module.exports = (action) => {
     const o = SDP.parse(plugindata.data.result.sdp);
     o.media = o.media.filter(media => media.type === 'audio');
     rs.content = SDP.write(o);
-    rs.headers.contact = request.headers.contact;
     rs.headers['content-type'] = 'application/sdp';
     rs.headers['content-length'] = rs.content.length;
     console.log(JSON.stringify(rs, null, 2));
