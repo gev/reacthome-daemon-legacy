@@ -20,7 +20,7 @@ module.exports.onRegister = (request) => {
 
 module.exports.onInvite = (request) => {
   const call_id = calls.create(request);
-  sip.send(sip.makeResponse(request, 100, 'Ok'));
+  // sip.send(sip.makeResponse(request, 100, 'Ok'));
   sip.send(sip.makeResponse(request, 180, 'Ok'));
   janus.createSession((session_id) => {
     janus.attachPlugin(session_id, 'janus.plugin.nosip', (handle_id) => {
