@@ -17,7 +17,7 @@ module.exports = (action) => {
     rs.content = SDP.write(o);
     rs.headers['content-type'] = 'application/sdp';
     rs.headers['content-length'] = rs.content.length;
-    console.log(rs);
+    console.log(JSON.stringify(rs, null, 2);
     sip.send(rs);
   });
 };
