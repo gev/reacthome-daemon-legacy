@@ -4,7 +4,7 @@ const SDP = require('sdp-transform');
 const uuid = require('uuid/v4');
 const janus = require('../janus');
 const { fixSDP } = require('../util');
-const { broadcastAction } = require('../webrtc');
+const { peers, sendAction } = require('../webrtc');
 const { PROCESS } = require('../janus/constants');
 const { OFFER } = require('../webrtc/constants');
 const { INVITE } = require('./constants');
@@ -38,23 +38,25 @@ module.exports.onInvite = (request) => {
   const call_id = calls.create(request);
   sip.send(rs100(call_id, request));
   sip.send(rs180(call_id, request));
-  janus.createSession((session_id) => {
-    janus.attachPlugin(session_id, 'janus.plugin.nosip', (handle_id) => {
-      const o = SDP.parse(request.content);
-      o.media = o.media.filter(media => media.type === 'audio');
-      janus.sendMessage(session_id, handle_id, {
-        request: PROCESS,
-        type: OFFER,
-        sdp: SDP.write(o)
-      }, ({ jsep }) => {
-        if (jsep) {
-          // jsep.sdp = fixSDP(jsep.sdp);
-          const o = SDP.parse(jsep.sdp);
-          o.media = o.media.filter(media => media.type === 'audio');
-          jsep.sdp = SDP.write(o);
-          broadcastAction({ type: INVITE, jsep, session_id, handle_id, call_id });
-        }
+  for (let session of peers.keys()) {
+    janus.createSession((session_id) => {
+      janus.attachPlugin(session_id, 'janus.plugin.nosip', (handle_id) => {
+        const o = SDP.parse(request.content);
+        o.media = o.media.filter(media => media.type === 'audio');
+        janus.sendMessage(session_id, handle_id, {
+          request: PROCESS,
+          type: OFFER,
+          sdp: SDP.write(o)
+        }, ({ jsep }) => {
+          if (jsep) {
+            // jsep.sdp = fixSDP(jsep.sdp);
+            const o = SDP.parse(jsep.sdp);
+            o.media = o.media.filter(media => media.type === 'audio');
+            jsep.sdp = SDP.write(o);
+            sendAction(session, { type: INVITE, jsep, session_id, handle_id, call_id });
+          }
+        });
       });
     });
-  });
+  }
 };
