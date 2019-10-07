@@ -6,7 +6,7 @@ const { INIT } = require('../init/constants');
 const { run } = require('../controllers/service');
 const { onWatch, onStart } = require('../camera');
 const onAck = require('../sip/ack');
-const onBack = require('../sip/bye');
+const onBye = require('../sip/bye');
 const onInit = require('../init')
 const janus = require('../janus');
 
