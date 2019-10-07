@@ -17,6 +17,7 @@ module.exports = ({ call_id }) => {
           via: []
       }
     };
+    console.log(request, rq);
     sip.send(rq);
     calls.delete(call_id);
   }
