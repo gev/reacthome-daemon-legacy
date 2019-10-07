@@ -25,8 +25,7 @@ module.exports.start = () => {
         break;
       }
       case BYE: {
-        console.log(request);
-        // onBye(request);
+        onBye(request);
         break;
       }
     }
