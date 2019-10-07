@@ -22,7 +22,7 @@ module.exports.onRegister = (request) => {
 };
 
 module.exports.onCancel = (request) => {
-  console.log(request, { type: CANCEL, call_id });
+  console.log(request);
   // let rs;
   // const call_id = request.headers['call-id'];
   // rs = sip.makeResponse(request, 200, 'Ok');

@@ -16,7 +16,6 @@ module.exports.start = () => {
         break;
       }
       case CANCEL: {
-        console.log(onCancel);
         onCancel(request);
         break;
       }
