@@ -10,8 +10,8 @@ module.exports = ({ call_id }) => {
       method: 'BYE',
       uri: request.headers.from.uri,
       headers: {
-          to: rs.headers.from,
-          from: rs.headers.to,
+          to: request.headers.from,
+          from: request.headers.to,
           'call-id': call_id,
           cseq: { method: BYE, seq: 2000 },
           via: []
