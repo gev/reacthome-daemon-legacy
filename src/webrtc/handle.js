@@ -48,4 +48,12 @@ module.exports.onAction = (session) => ({ data }) => {
 };
 
 module.exports.onAsset = ({ data }) => {
+  const buff = Buffer.from(data);
+  const transaction = buff.readUInt16LE(0);
+  const total = buff.readUInt16LE(4);
+  const i = buff.readUInt16LE(6);
+  const length = buff.readUInt16LE(8);
+  const name = String(buff.slice(10, 10 + length));
+  const chunk = buff.slice(10 + length);
+  console.log(transaction, total, i, name, chunk.length);
 };
