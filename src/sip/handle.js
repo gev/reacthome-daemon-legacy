@@ -63,6 +63,7 @@ const rs180 = (call_id, request) => {
 
 module.exports.onInvite = (request) => {
   const call_id = request.headers['call-id'];
+  calls.set(call_id, { session_id, handle_id, request });
   sip.send(rs100(call_id, request));
   sip.send(rs180(call_id, request));
   janus.createSession((session_id) => {
@@ -84,5 +85,4 @@ module.exports.onInvite = (request) => {
       });
     });
   });
-  calls.set(call_id, { session_id, handle_id, request });
 };
