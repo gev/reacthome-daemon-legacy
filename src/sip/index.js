@@ -1,7 +1,7 @@
 
 const sip = require('sip');
 const { INVITE, REGISTER, CANCEL, BYE } = require('./constants');
-const { onRegister, onInvite, onCancel, onBye } = require('./handle');
+const { onRegister, onInvite, onCANCEL, onBye } = require('./handle');
 const options = require('./config')
 
 module.exports.start = () => {

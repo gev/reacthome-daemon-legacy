@@ -21,7 +21,7 @@ module.exports.onRegister = (request) => {
   sip.send(rs);
 };
 
-module.exports.onCancel = (request) => {
+module.exports.onCANCEL = (request) => {
   console.log(request, { type: CANCEL, call_id });
   let rs;
   const call_id = request.headers['call-id'];
