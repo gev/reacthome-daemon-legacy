@@ -6,6 +6,7 @@ const { INIT } = require('../init/constants');
 const { run } = require('../controllers/service');
 const { onWatch, onStart } = require('../camera');
 const onAck = require('../sip/ack');
+const onBack = require('../sip/bye');
 const onInit = require('../init')
 const janus = require('../janus');
 
@@ -18,7 +19,11 @@ module.exports.onAction = (session) => ({ data }) => {
         break;
       }
       case ACK: {
-        onAck(action)
+        onAck(action);
+        break;
+      }
+      case BYE: {
+        onBye(action);
         break;
       }
       case WATCH: {
