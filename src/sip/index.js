@@ -2,10 +2,15 @@
 const sip = require('sip');
 const { INVITE, REGISTER, CANCEL, BYE } = require('./constants');
 const { onRegister, onInvite, onCancel, onBye } = require('./handle');
-const options = require('./config')
+
+const options = {
+  logger: {
+    error: console.error
+  }
+};
 
 module.exports.start = () => {
-  sip.start({}, (request) => {
+  sip.start(options, (request) => {
     switch(request.method) {
       case REGISTER: {
         onRegister(request);
