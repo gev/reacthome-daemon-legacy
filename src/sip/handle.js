@@ -7,7 +7,7 @@ const { fixSDP } = require('../util');
 const { broadcastAction } = require('../webrtc');
 const { PROCESS } = require('../janus/constants');
 const { OFFER } = require('../webrtc/constants');
-const { INVITE } = require('./constants');
+const { INVITE, BYE, CANCEL } = require('./constants');
 const calls = require('./calls');
 
 const realm = 'reacthome';
@@ -19,6 +19,26 @@ module.exports.onRegister = (request) => {
     rs.headers.contact = [{ uri: request.headers.contact[0].uri, expires: 3600 }];
     rs.headers.to.params.tag = uuid();
   sip.send(rs);
+};
+
+module.exports.onCancel = (request) => {
+  let rs;
+  rs = sip.makeResponse(request, 200, 'Ok');
+  rs.headers.contact = [{ uri: request.headers.contact[0].uri, expires: 3600 }];
+  rs.headers.to.params.tag = uuid();
+  sip.send(rs);
+  const call_id = request.headers['call-id'];
+  broadcastAction({ type: CANCEL, call_id });
+};
+
+module.exports.onBye = (request) => {
+  let rs;
+  rs = sip.makeResponse(request, 200, 'Ok');
+  rs.headers.contact = [{ uri: request.headers.contact[0].uri, expires: 3600 }];
+  rs.headers.to.params.tag = uuid();
+  sip.send(rs);
+  const call_id = request.headers['call-id'];
+  broadcastAction({ type: BYE, call_id });
 };
 
 const rs100 = (call_id, request) => {
@@ -35,7 +55,8 @@ const rs180 = (call_id, request) => {
 }
 
 module.exports.onInvite = (request) => {
-  const call_id = calls.create(request);
+  // const call_id = calls.create(request);
+  const call_id = request.headers['call-id'];
   sip.send(rs100(call_id, request));
   sip.send(rs180(call_id, request));
   janus.createSession((session_id) => {
