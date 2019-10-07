@@ -1,5 +1,5 @@
 
-const { ACK } = require('../sip/constants');
+const { ACK, BYE } = require('../sip/constants');
 const { START, WATCH } = require('../camera/constants');
 const { CANDIDATE } = require('../webrtc/constants');
 const { INIT } = require('../init/constants');
