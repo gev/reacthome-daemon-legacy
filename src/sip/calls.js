@@ -1,2 +1,2 @@
 
-module.exports.calls = new Map();
+module.exports = new Map();
