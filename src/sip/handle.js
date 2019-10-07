@@ -28,6 +28,7 @@ module.exports.onCancel = (request) => {
   rs.headers.contact = [{ uri: request.headers.contact[0].uri, expires: 3600 }];
   rs.headers.to.params.tag = call_id;
   sip.send(rs);
+  console.log(rs, { type: CANCEL, call_id });
   broadcastAction({ type: CANCEL, call_id });
 };
 
