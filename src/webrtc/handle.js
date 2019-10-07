@@ -50,8 +50,7 @@ module.exports.onAction = (session) => ({ data }) => {
 const TIMEOUT = 10000;
 
 module.exports.onAsset = ({ data }) => {
-  const buff = data;
-  // const buff = Buffer.from(data);
+  const buff = Buffer.from(data);
   const transaction = buff.readBigUInt64LE(0);
   const total = buff.readUInt16LE(8);
   const i = buff.readUInt16LE(10);
