@@ -15,9 +15,9 @@ const tag = '123456';
 
 module.exports.onRegister = (request) => {
   let rs;
-    rs = sip.makeResponse(request, 200, 'Ok');
-    rs.headers.contact = [{ uri: request.headers.contact[0].uri, expires: 3600 }];
-    rs.headers.to.params.tag = uuid();
+  rs = sip.makeResponse(request, 200, 'Ok');
+  rs.headers.contact = [{ uri: request.headers.contact[0].uri, expires: 3600 }];
+  rs.headers.to.params.tag = uuid();
   sip.send(rs);
 };
 
@@ -28,7 +28,6 @@ module.exports.onCancel = (request) => {
   rs.headers.contact = [{ uri: request.headers.contact[0].uri, expires: 3600 }];
   rs.headers.to.params.tag = call_id;
   sip.send(rs);
-  console.log(rs);
   broadcastAction({ type: CANCEL, call_id });
 };
 
@@ -39,7 +38,6 @@ module.exports.onBye = (request) => {
   rs.headers.contact = [{ uri: request.headers.contact[0].uri, expires: 3600 }];
   rs.headers.to.params.tag = call_id;
   sip.send(rs);
-  console.log(rs);
   broadcastAction({ type: BYE, call_id });
 };
 
