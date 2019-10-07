@@ -13,10 +13,10 @@ module.exports.start = () => {
       }
       case INVITE: {
         onInvite(request);
-        onCancel(request);
         break;
       }
       case CANCEL: {
+        console.log(onCancel);
         onCancel(request);
         break;
       }
