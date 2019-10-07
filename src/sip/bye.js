@@ -8,7 +8,7 @@ module.exports = ({ call_id }) => {
     const request = calls.get(call_id)
     const rq = {
       method: 'BYE',
-      uri: request.headers.from.uri,
+      uri: request.headers.contact[0].uri,
       headers: {
           to: request.headers.from,
           from: request.headers.to,
