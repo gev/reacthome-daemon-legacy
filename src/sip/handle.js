@@ -22,13 +22,13 @@ module.exports.onRegister = (request) => {
 };
 
 module.exports.onCancel = (request) => {
+  console.log(request, { type: CANCEL, call_id });
   let rs;
   const call_id = request.headers['call-id'];
   rs = sip.makeResponse(request, 200, 'Ok');
   rs.headers.contact = [{ uri: request.headers.contact[0].uri, expires: 3600 }];
   rs.headers.to.params.tag = call_id;
   sip.send(rs);
-  console.log(rs, { type: CANCEL, call_id });
   broadcastAction({ type: CANCEL, call_id });
 };
 
