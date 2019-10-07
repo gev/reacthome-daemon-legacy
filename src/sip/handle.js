@@ -25,6 +25,7 @@ module.exports.onCancel = (request) => {
   let rs;
   const call_id = request.headers['call-id'];
   rs = sip.makeResponse(request, 200, 'Ok');
+  rs.headers.to.params.tag = call_id;
   sip.send(rs);
   broadcastAction({ type: CANCEL, call_id });
 };
@@ -33,7 +34,7 @@ module.exports.onBye = (request) => {
   let rs;
   const call_id = request.headers['call-id'];
   rs = sip.makeResponse(request, 200, 'Ok');
-  rs.headers.contact = [{ uri: request.headers.contact[0].uri, expires: 3600 }];
+  rs.headers.contact = [{ uri: request.headers.contact[0].uri }];
   rs.headers.to.params.tag = call_id;
   sip.send(rs);
   broadcastAction({ type: BYE, call_id });
