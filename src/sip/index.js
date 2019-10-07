@@ -1,7 +1,7 @@
 
 const sip = require('sip');
 const { INVITE, REGISTER, CANCEL, BYE } = require('./constants');
-const { onRegister, onInvite, onCANCEL, onBye } = require('./handle');
+const { onRegister, onInvite, onFuck, onBye } = require('./handle');
 const options = require('./config')
 
 module.exports.start = () => {
@@ -18,7 +18,7 @@ module.exports.start = () => {
       }
       case CANCEL: {
         console.log(request);
-        onCancel(request);
+        onFuck(request);
         break;
       }
       case BYE: {
