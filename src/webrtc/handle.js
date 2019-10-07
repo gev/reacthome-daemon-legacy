@@ -47,13 +47,16 @@ module.exports.onAction = (session) => ({ data }) => {
   }
 };
 
+const TIMEOUT = 10000;
+
 module.exports.onAsset = ({ data }) => {
-  const buff = Buffer.from(data);
-  const transaction = buff.readUInt16LE(0);
-  const total = buff.readUInt16LE(4);
-  const i = buff.readUInt16LE(6);
-  const length = buff.readUInt16LE(8);
-  const name = String(buff.slice(10, 10 + length));
-  const chunk = buff.slice(10 + length);
+  const buff = data;
+  // const buff = Buffer.from(data);
+  const transaction = buff.readBigUInt64LE(0);
+  const total = buff.readUInt16LE(8);
+  const i = buff.readUInt16LE(10);
+  const length = buff.readUInt16LE(12);
+  const name = buff.slice(14, 14 + length).toString();
+  const chunk = buff.slice(14 + length);
   console.log(transaction, total, i, name, chunk.length);
 };
