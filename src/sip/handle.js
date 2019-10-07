@@ -7,7 +7,7 @@ const { fixSDP } = require('../util');
 const { broadcastAction } = require('../webrtc');
 const { PROCESS } = require('../janus/constants');
 const { OFFER } = require('../webrtc/constants');
-const { INVITE, BYE, CANCEL } = require('./constants');
+const { INVITE, BYE, CANCEL, HANGUP } = require('./constants');
 const calls = require('./calls');
 
 const realm = 'reacthome';
@@ -28,6 +28,10 @@ module.exports.onCancel = (request) => {
   rs.headers.to.params.tag = call_id;
   sip.send(rs);
   broadcastAction({ type: CANCEL, call_id });
+  if (calls.has(call_id)) {
+    const { session_id, handle_id } = calls.get(call_id);
+    janus.sendMessage(session_id, handle_id, { request: HANGUP })
+  }
 };
 
 module.exports.onBye = (request) => {
@@ -38,6 +42,10 @@ module.exports.onBye = (request) => {
   rs.headers.to.params.tag = call_id;
   sip.send(rs);
   broadcastAction({ type: BYE, call_id });
+  if (calls.has(call_id)) {
+    const { session_id, handle_id } = calls.get(call_id);
+    janus.sendMessage(session_id, handle_id, { request: HANGUP })
+  }
 };
 
 const rs100 = (call_id, request) => {
@@ -76,5 +84,5 @@ module.exports.onInvite = (request) => {
       });
     });
   });
-  calls.set(call_id, request);
+  calls.set(call_id, { session_id, handle_id, request });
 };
