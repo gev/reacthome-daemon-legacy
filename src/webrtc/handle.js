@@ -69,7 +69,7 @@ module.exports.onAsset = ({ data }) => {
       if (i === 1) {
         stream = fs.createWriteStream(file);
         stream.on('error', console.error);
-        streams.set(name, steram);
+        streams.set(name, stream);
       } else {
         if (streams.has(name)) {
           stream = streams.get(name);
