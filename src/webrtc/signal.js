@@ -21,7 +21,7 @@ module.exports = (session, message, send, config) => {
               break;
             }
             case ASSET: {
-              channel.onmessage = onAsset;
+              channel.onmessage = onAsset(session);
               assets.set(session, channel);
               break;
             }

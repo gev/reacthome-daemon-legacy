@@ -49,7 +49,7 @@ module.exports.onAction = (session) => ({ data }) => {
   }
 };
 
-module.exports.onAsset = async ({ data }) => {
+module.exports.onAsset = (session) => async ({ data }) => {
   const buff = Buffer.from(data);
   const transaction = buff.readBigUInt64LE(0);
   const total = buff.readUInt16LE(8);
@@ -57,7 +57,7 @@ module.exports.onAsset = async ({ data }) => {
   const length = buff.readUInt16LE(12);
   const name = buff.slice(14, 14 + length).toString();
   const chunk = buff.slice(14 + length);
-  const temp = tmp(`${transaction}-${name}`);
+  const temp = tmp(`${session}-${transaction}-${name}`);
   broadcastAsset(data);
   try {
     await appendFile(temp, chunk)
