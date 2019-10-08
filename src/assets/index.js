@@ -1,10 +1,6 @@
 
-const fs = require('fs');
 const { promisify } = require('util');
-const { asset } = require('./util');
-
-const readdir = promisify(fs.readdir);
-const stat = promisify(fs.stat);
+const { readdir, stat, exists, asset, tmp } = require('./util');
 
 module.exports.list = async () => Promise.all(
   (await readdir(asset()))
