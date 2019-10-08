@@ -50,10 +50,6 @@ module.exports.onAction = (session) => ({ data }) => {
   }
 };
 
-const TIMEOUT = 10000;
-
-const streams = new Map();
-
 module.exports.onAsset = ({ data }) => {
   const buff = Buffer.from(data);
   const transaction = buff.readBigUInt64LE(0);
@@ -62,26 +58,33 @@ module.exports.onAsset = ({ data }) => {
   const length = buff.readUInt16LE(12);
   const name = buff.slice(14, 14 + length).toString();
   const chunk = buff.slice(14 + length);
-  const file = asset(name);
-  fs.exists(file, (exists) => {
-    if (!exists) {
-      let stream;
-      if (i === 1) {
-        stream = fs.createWriteStream(file);
-        stream.on('error', console.error);
-        streams.set(name, stream);
-      } else {
-        if (streams.has(name)) {
-          stream = streams.get(name);
-        } else {
-          return;
+  const tmp = asset(`${transaction}-${name}`);
+  fs.appendFile(tmp, chunk, (appendErr) => {
+    if (appendErr) {
+      console.error(appendErr);
+    }
+    if (i === total) {
+      const file = asset(name);
+      fs.exists(file, (exists) => {
+        if (exists) {
+          fs.unlink(file, (unlinkFileErr) => {
+            if (unlinkFileErr) {
+              console.error(unlinkFileErr);
+              unlink(tmp, (unlinkTmpErr) => {
+                if (unlinkTmpErr) {
+                  console.error(unlinkTmpErr);
+                }
+              });
+            } else {
+              fs.rename(tmp, file, (renameErr) => {
+                if (renameErr) {
+                  console.error(renameErr);
+                }
+              })
+            }
+          });
         }
-      }
-      stream.write(chunk);
-      if (i === total) {
-        stream.close();
-      }
-      broadcastAsset(data);
+      });
     }
   });
 };
