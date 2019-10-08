@@ -8,6 +8,7 @@ const { asset } = require('../constants');
 const { run } = require('../controllers/service');
 const { onWatch, onStart } = require('../camera');
 const { broadcastAsset } = require('./peer');
+const onGet = require('../init/get');
 const onAck = require('../sip/ack');
 const onBye = require('../sip/bye');
 const janus = require('../janus');
