@@ -7,14 +7,13 @@ const highWaterMark = 16384;
 
 module.exports = async (id, name) => {
   const file = asset(name);
-  const { isFile, size } = await stat(file);
-  if (isFile()) {
+  const s = await stat(file);
+  if (s.isFile()) {
     let i = 1;
-    // eslint-disable-next-line no-undef
     const transaction = BigInt(Date.now());
     const buff = Buffer.from(name);
-    const m = size % highWaterMark;
-    const total = m === 0 ? (size / highWaterMark) : (((size - m) / highWaterMark) + 1);
+    const m = s.size % highWaterMark;
+    const total = m === 0 ? (s.size / highWaterMark) : (((s.size - m) / highWaterMark) + 1);
     const stream = fs.createReadStream(file, { highWaterMark });
     stream.on('readable', () => {
       const header = Buffer.alloc(8 + 2 + 2 + 2);
