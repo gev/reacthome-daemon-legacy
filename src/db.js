@@ -1,5 +1,6 @@
 
 const level = require('level');
-const { DB } = require('./constants');
+
+const DB = './var/db';
 
 module.exports = level(DB, { valueEncoding: 'json' });

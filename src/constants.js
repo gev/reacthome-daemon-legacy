@@ -43,9 +43,7 @@ module.exports.TV = 'TV';
 module.exports.AC = 'AC';
 
 module.exports.STATE = 'state';
-
 module.exports.FIRMWARE = './firmware';
-module.exports.DB = './var/db';
 
 module.exports.ACTION_DO = 0x00;
 module.exports.ACTION_DI = 0x01;
