@@ -1,10 +1,9 @@
 
-const fs = require('fs');
 const { GET } = require('../init/constants');
 const { ACK, BYE } = require('../sip/constants');
 const { START, WATCH } = require('../camera/constants');
 const { CANDIDATE } = require('./constants');
-const { asset } = require('../constants');
+const { tmp, asset, appendFile, rename, unlink } = require('../assets/util');
 const { run } = require('../controllers/service');
 const { onWatch, onStart } = require('../camera');
 const { broadcastAsset } = require('./peer');
@@ -50,7 +49,7 @@ module.exports.onAction = (session) => ({ data }) => {
   }
 };
 
-module.exports.onAsset = ({ data }) => {
+module.exports.onAsset = async ({ data }) => {
   const buff = Buffer.from(data);
   const transaction = buff.readBigUInt64LE(0);
   const total = buff.readUInt16LE(8);
@@ -58,33 +57,19 @@ module.exports.onAsset = ({ data }) => {
   const length = buff.readUInt16LE(12);
   const name = buff.slice(14, 14 + length).toString();
   const chunk = buff.slice(14 + length);
-  const tmp = asset(`${transaction}-${name}`);
-  fs.appendFile(tmp, chunk, (appendErr) => {
-    if (appendErr) {
-      console.error(appendErr);
-    }
+  const temp = tmp(transaction);
+  try {
+    await appendFile(temp, chunk)
     if (i === total) {
       const file = asset(name);
-      fs.exists(file, (exists) => {
-        if (exists) {
-          fs.unlink(file, (unlinkFileErr) => {
-            if (unlinkFileErr) {
-              console.error(unlinkFileErr);
-              unlink(tmp, (unlinkTmpErr) => {
-                if (unlinkTmpErr) {
-                  console.error(unlinkTmpErr);
-                }
-              });
-            } else {
-              fs.rename(tmp, file, (renameErr) => {
-                if (renameErr) {
-                  console.error(renameErr);
-                }
-              })
-            }
-          });
-        }
-      });
+      if (await exists(file)) {
+        await unlink(file)
+      }
+      rename(temp, file);
     }
-  });
+  } catch (e) {
+    console.error(e);
+  } finally {
+    unlink(temp);
+  }
 };
