@@ -61,7 +61,7 @@ module.exports.onAsset = async ({ data }) => {
   broadcastAsset(data);
   try {
     await appendFile(temp, chunk)
-    if (current === total && transactions.get(transaction)) {
+    if (current === total) {
       const file = asset(name);
       if (await exists(file)) {
         await unlink(file)
