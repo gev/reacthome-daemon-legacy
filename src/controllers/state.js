@@ -13,10 +13,9 @@ module.exports.state = () => state;
 
 module.exports.list = () =>
   Object.entries(state)
-        .filter(
-          ([payload]) => !Array.isArray(payload) &&
-                         (payload instanceof Object) &&
-                         payload.timestamp
-        ).map(
+        .filter(([payload]) => !(payload instanceof Array) &&
+                                (payload instanceof Object) &&
+                                 payload.timestamp)
+        .map(
           ([{ timestamp }, id]) => [id, timestamp]
         );
