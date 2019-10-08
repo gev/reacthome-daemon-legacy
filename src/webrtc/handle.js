@@ -1,10 +1,13 @@
 
+const fs = require('fs');
 const { ACK, BYE } = require('../sip/constants');
 const { START, WATCH } = require('../camera/constants');
 const { CANDIDATE } = require('../webrtc/constants');
 const { INIT } = require('../init/constants');
+const { asset } = require('../constants');
 const { run } = require('../controllers/service');
 const { onWatch, onStart } = require('../camera');
+const { broadcastAsset } = require('./peer');
 const onAck = require('../sip/ack');
 const onBye = require('../sip/bye');
 const onInit = require('../init')
@@ -49,6 +52,8 @@ module.exports.onAction = (session) => ({ data }) => {
 
 const TIMEOUT = 10000;
 
+const streams = new Map();
+
 module.exports.onAsset = ({ data }) => {
   const buff = Buffer.from(data);
   const transaction = buff.readBigUInt64LE(0);
@@ -57,5 +62,25 @@ module.exports.onAsset = ({ data }) => {
   const length = buff.readUInt16LE(12);
   const name = buff.slice(14, 14 + length).toString();
   const chunk = buff.slice(14 + length);
-  console.log(transaction, total, i, name, chunk.length);
-};
+  const file = asset(name);
+  fs.exists(file, (exists) => {
+    if (!exists) {
+      let stream;
+      if (i === 1) {
+        stream = fs.createWriteStream(file);
+        stream.on('error', console.error);
+        streams.set(name, steram);
+      } else {
+        if (streams.has(name)) {
+          stream = streams.get(name);
+        } else {
+          return;
+        }
+      }
+      stream.write(chunk);
+      if (i === total) {
+        stream.close();
+      }
+      broadcastAsset(data);
+    }
+  })
