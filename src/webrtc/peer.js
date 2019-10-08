@@ -3,14 +3,16 @@ const peers = new Map();
 const assets = new Map();
 const actions = new Map();
 
-const sendMessage = (channel, message) => {
+const sendMessage = (channel, data) => {
   if (channel.readyState === 'open') {
-    channel.send(message);
+    channel.send(data);
   }
 }
 
 const send = (channels, handle) => (session, data) => {
-  handle(channels.get(session), data);
+  if (channels.has(session)) {
+    handle(channels.get(session), data);
+  }
 }
 
 const broadcast = (channels, handle) => (data) => {
@@ -23,8 +25,8 @@ const sendAction = (channel, action) => {
   sendMessage(channel, JSON.stringify(action));
 }
 
-const sendAsset = (channel, asset) => {
-  //TODO
+const sendAsset = (channel, chunk) => {
+  sendMessage(channel, chunk);
 };
 
 module.exports.peers = peers;
