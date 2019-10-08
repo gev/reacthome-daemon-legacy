@@ -6,8 +6,8 @@ const { ASSETS, TMP } = require('./constants');
 
 const p = (type) => (a = '') => path.join(type, a);
 
-module.exports.tmp = p(TMP_DIR);
-module.exports.asset = p(ASSETS_DIR);
+module.exports.tmp = p(TMP);
+module.exports.asset = p(ASSETS);
 module.exports.stat = promisify(stat);
 module.exports.mkdir = promisify(mkdir);
 module.exports.readdir = promisify(readdir);
