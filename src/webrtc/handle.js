@@ -9,7 +9,6 @@ const { onWatch, onStart } = require('../camera');
 const { broadcastAsset } = require('./peer');
 const onAck = require('../sip/ack');
 const onBye = require('../sip/bye');
-const onInit = require('../init')
 const janus = require('../janus');
 
 module.exports.onAction = (session) => ({ data }) => {
