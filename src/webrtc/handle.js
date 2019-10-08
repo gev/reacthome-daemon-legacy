@@ -57,7 +57,7 @@ module.exports.onAsset = async ({ data }) => {
   const length = buff.readUInt16LE(12);
   const name = buff.slice(14, 14 + length).toString();
   const chunk = buff.slice(14 + length);
-  const temp = tmp(transaction);
+  const temp = tmp(String(transaction));
   broadcastAsset(data);
   try {
     await appendFile(temp, chunk)
