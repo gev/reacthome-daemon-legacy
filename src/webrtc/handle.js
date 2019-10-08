@@ -3,7 +3,7 @@ const { GET } = require('../init/constants');
 const { ACK, BYE } = require('../sip/constants');
 const { START, WATCH } = require('../camera/constants');
 const { CANDIDATE } = require('./constants');
-const { tmp, asset, appendFile, rename, unlink } = require('../assets/util');
+const { tmp, asset, appendFile, exists, rename, unlink } = require('../assets/util');
 const { run } = require('../controllers/service');
 const { onWatch, onStart } = require('../camera');
 const { broadcastAsset } = require('./peer');
@@ -51,13 +51,13 @@ module.exports.onAction = (session) => ({ data }) => {
 
 module.exports.onAsset = async ({ data }) => {
   const buff = Buffer.from(data);
-  const transaction = String(buff.readBigUInt64LE(0));
+  const transaction = buff.readBigUInt64LE(0);
   const total = buff.readUInt16LE(8);
   const current = buff.readUInt16LE(10);
   const length = buff.readUInt16LE(12);
   const name = buff.slice(14, 14 + length).toString();
   const chunk = buff.slice(14 + length);
-  const temp = tmp(transaction);
+  const temp = tmp(`${transaction}-${name}`);
   broadcastAsset(data);
   try {
     await appendFile(temp, chunk)
