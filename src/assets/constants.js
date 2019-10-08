@@ -1,14 +1,9 @@
 
 const path = require('path');
 
-const DB = 'db';
-const VAR = 'var';
-const TMP = 'tmp';
-const ASSETS = 'assets';
-
 const p = (...s) => path.join(process.cwd(), ...s);
 
-module.exports.VAR = p(VAR);
-module.exports.DB = p(VAR, DB);
-module.exports.TMP = p(VAR, TMP);
-module.exports.ASSETS = p(VAR, ASSETS);
+module.exports.VAR = p('var');
+module.exports.DB = p('var', 'db');
+module.exports.TMP = p('var', 'tmp');
+module.exports.ASSETS = p('var', 'assets');
