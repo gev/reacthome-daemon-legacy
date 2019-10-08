@@ -83,4 +83,5 @@ module.exports.onAsset = ({ data }) => {
       }
       broadcastAsset(data);
     }
-  })
+  });
+};
