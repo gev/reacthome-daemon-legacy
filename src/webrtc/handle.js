@@ -1,5 +1,6 @@
 
 const fs = require('fs');
+const { GET } = require('../init/constants');
 const { ACK, BYE } = require('../sip/constants');
 const { START, WATCH } = require('../camera/constants');
 const { CANDIDATE } = require('./constants');
@@ -15,6 +16,10 @@ module.exports.onAction = (session) => ({ data }) => {
   try {
     const action = JSON.parse(Buffer.from(data));
     switch (action.type) {
+      case GET: {
+        onGet(action, session);
+        break;
+      }
       case ACK: {
         onAck(action);
         break;
