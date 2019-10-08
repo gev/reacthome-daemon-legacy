@@ -4,6 +4,7 @@ const { OFFER, ANSWER, CANDIDATE, FAILED, ACTION, ASSET } = require('./constants
 const { onAction, onAsset } = require('./handle');
 const { peers, actions, assets } = require('./peer');
 const { options } = require('./config');
+const list = require('../init/list');
 
 module.exports = (session, message, send, config) => {
   try {
@@ -16,6 +17,7 @@ module.exports = (session, message, send, config) => {
             case ACTION: {
               channel.onmessage = onAction(session);
               actions.set(session, channel);
+              list(session);
               break;
             }
             case ASSET: {

@@ -1,2 +1,3 @@
 
-module.exports.INIT = 'init';
+module.exports.LIST = 'list';
+module.exports.GET = 'get';

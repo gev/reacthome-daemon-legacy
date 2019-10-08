@@ -2,8 +2,7 @@
 const fs = require('fs');
 const { ACK, BYE } = require('../sip/constants');
 const { START, WATCH } = require('../camera/constants');
-const { CANDIDATE } = require('../webrtc/constants');
-const { INIT } = require('../init/constants');
+const { CANDIDATE } = require('./constants');
 const { asset } = require('../constants');
 const { run } = require('../controllers/service');
 const { onWatch, onStart } = require('../camera');
@@ -17,10 +16,6 @@ module.exports.onAction = (session) => ({ data }) => {
   try {
     const action = JSON.parse(Buffer.from(data));
     switch (action.type) {
-      case INIT: {
-        onInit(action, session);
-        break;
-      }
       case ACK: {
         onAck(action);
         break;

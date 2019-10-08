@@ -10,3 +10,13 @@ module.exports.set = (id, payload) => {
 };
 
 module.exports.state = () => state;
+
+module.exports.list = () =>
+  Object.entries(state)
+        .filter(
+          ([payload]) => !Array.isArray(payload) &&
+                         (payload instanceof Object) &&
+                         payload.timestamp
+        ).map(
+          ([{ timestamp }, id]) => ([id, timestamp])
+        );

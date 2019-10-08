@@ -42,12 +42,7 @@ module.exports.FAN = 'fan';
 module.exports.TV = 'TV';
 module.exports.AC = 'AC';
 
-
 module.exports.STATE = 'state';
-
-module.exports.ASSETS = 'assets';
-module.exports.ASSETS_DIR = path.join('tmp', 'assets');
-module.exports.asset = (a = '') => path.join(process.cwd(), 'tmp', 'assets', a);
 
 module.exports.FIRMWARE = './firmware';
 module.exports.DB = './db';

@@ -102,7 +102,6 @@ const {
   OPERATOR_GE,
   OPERATOR_GT,
   STATE,
-  ASSETS,
   STOP,
   HEAT,
   COOL
@@ -126,23 +125,6 @@ const timer = {};
 const DIM_VELOCITY = 128;
 const ARTNET_VELOCITY = 1;
 
-// const download = (ip, name) => {
-//   const file = asset(name);
-//   exists(file, (ex) => {
-//     if (ex) return;
-//     fetch(`http://${ip}:${CLIENT_PORT}/${ASSETS}/${name}`)
-//       .then(res => {
-//         if (res.status !== 200) return;
-//         const ws = createWriteStream(file);
-//         ws.on('end', () => {
-//           broadcast(JSON.stringify({ id: mac(), type: ACTION_DOWNLOAD, name: name }));
-//         });
-//         res.body.pipe(ws);
-//       })
-//       .catch(console.error);
-//   });
-// };
-
 const run = (action) => {
   try {
     switch (action.type) {
@@ -151,23 +133,6 @@ const run = (action) => {
         set(id, payload);
         break;
       }
-      // case ACTION_DISCOVERY: {
-      //   const { id, payload } = action;
-      //   const { type, version, ready } = payload;
-      //   if (id && type !== MOBILE) {
-      //     set(id, { online: true, ip: address, type, version, ready });
-      //     add(mac(), DEVICE, id);
-      //     clearTimeout(timer[id]);
-      //     timer[id] = setTimeout(() => {
-      //       set(id, { online: false });
-      //     }, 60 * DISCOVERY_INTERVAL);
-      //   }
-      //   break;
-      // }
-      // case ACTION_BOOTLOAD: {
-      //   pendingFirmware(action.id, action.pendingFirmware);
-      //   break;
-      // }
       case ACTION_FIND_ME: {
         const dev = get(action.id);
         device.send(Buffer.from([ACTION_FIND_ME, action.finding]), dev.ip);
