@@ -1,11 +1,9 @@
 
 const { mkdir, readdir, stat, exists, asset, tmp } = require('./util');
 
-const init = async (path) => (await exists(path)) || mkdir(path);
+const init = (...path) => path.map(async (i) => (await exists(i)) || mkdir(i));
 
-module.exports.init = () => Promise.all(
-  init(asset()), init(tmp())
-);
+module.exports.init = () => Promise.all(init(asset(), tmp()));
 
 module.exports.list = async () => Promise.all(
   (await readdir(asset()))
