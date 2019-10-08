@@ -1,5 +1,6 @@
 
 const path = require('path');
+const { promisify } = require('util');
 const { readdir, stat, exists } = require('fs');
 const { ASSETS, TMP } = require('./constants');
 

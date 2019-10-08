@@ -1,5 +1,4 @@
 
-const { promisify } = require('util');
 const { readdir, stat, exists, asset, tmp } = require('./util');
 
 module.exports.list = async () => Promise.all(
