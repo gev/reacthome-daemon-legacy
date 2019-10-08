@@ -18,5 +18,5 @@ module.exports.list = () =>
                          (payload instanceof Object) &&
                          payload.timestamp
         ).map(
-          ([{ timestamp }, id]) => ([id, timestamp])
+          ([{ timestamp }, id]) => [id, timestamp]
         );
