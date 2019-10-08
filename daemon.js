@@ -5,6 +5,7 @@ const { DAEMON, CLIENT_SERVER_PORT, ACTION_SET, ACTION_SCRIPT_RUN, IMAGE } = req
 const { get, set, count } = require('./src/actions');
 const discovery = require('./src/discovery');
 const drivers = require('./src/drivers');
+const assets = require('./src/assets');
 const webrtc = require('./src/webrtc');
 const janus = require('./src/janus');
 const ping = require('./src/ping');
@@ -34,11 +35,12 @@ db.createReadStream()
   .on('data', ({ key, value }) => {
     init[key] = value;
   })
-  .on('end', () => {
+  .on('end', async () => {
     if (!init.mac) {
       init.mac = v4();
       db.put('mac', init.mac);
     }
+    await assets.init();
     state.init(init);
     weather.manage();
     device.manage();
