@@ -49,14 +49,16 @@ module.exports.onAction = (session) => ({ data }) => {
   }
 };
 
+let assetTransaction = 0;
+
 module.exports.onAsset = (session) => async ({ data }) => {
   const buff = Buffer.from(data);
-  const transaction = buff.readBigUInt64LE(0);
-  const total = buff.readUInt16LE(8);
-  const current = buff.readUInt16LE(10);
-  const length = buff.readUInt16LE(12);
-  const name = buff.slice(14, 14 + length).toString();
-  const chunk = buff.slice(14 + length);
+  const transaction = buff.readBigInt32LE(0);
+  const total = buff.readUInt16LE(4);
+  const current = buff.readUInt16LE(6);
+  const length = buff.readUInt16LE(8);
+  const name = buff.slice(10, 10 + length).toString();
+  const chunk = buff.slice(10 + length);
   const temp = tmp(`${session}-${transaction}-${name}`);
   broadcastAsset(data);
   try {
