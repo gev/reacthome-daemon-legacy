@@ -20,7 +20,7 @@ module.exports = async (id, name) => {
       header.writeUInt16LE(transaction, 0);
       header.writeUInt16LE(total, 2);
       header.writeUInt16LE(i, 4);
-      header.writeUInt16LE(buff.length, 8);
+      header.writeUInt16LE(buff.length, 6);
       const chunk = stream.read(highWaterMark);
       if (chunk) {
         sendAsset(id, Buffer.concat([header, buff, chunk]));
