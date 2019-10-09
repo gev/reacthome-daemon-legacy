@@ -6,9 +6,8 @@ const sendAsset = require('../assets/send');
 
 
 module.exports = ({ state = [], assets = [] }, session) => {
-  console.log(state, assets);
   state.forEach(id => {
-    sendAction({ type: ACTION_SET, id,  payload: get(id) });
+    sendAction(session, { type: ACTION_SET, id,  payload: get(id) });
   });
   assets.forEach(asset => {
     sendAsset(session, asset);
