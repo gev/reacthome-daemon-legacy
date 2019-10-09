@@ -3,7 +3,7 @@ const fs = require('fs');
 const { asset, stat } = require('../assets/util');
 const { sendAsset } = require('../webrtc/peer');
 
-const highWaterMark = 16384 * 3;
+const highWaterMark = 16384;
 
 module.exports = async (id, name) => {
   const file = asset(name);
