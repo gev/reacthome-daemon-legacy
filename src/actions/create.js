@@ -7,10 +7,10 @@ const db = require('../db');
 
 module.exports.get = state.get;
 
-const apply = (id, payload) => {
-  const p = { ...payload, timestamp: Date.now() };
-  state.set(id, p);
-  broadcastAction({ type: ACTION_SET, id, p });
+const apply = (id, p) => {
+  payload = { ...p, timestamp: Date.now() };
+  state.set(id, payload);
+  broadcastAction({ type: ACTION_SET, id, payload });
   try {
     db.put(id, state.get(id), (err) => {
       if (err) console.error(err);
