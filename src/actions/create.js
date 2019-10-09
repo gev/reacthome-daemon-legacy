@@ -8,7 +8,7 @@ const db = require('../db');
 module.exports.get = state.get;
 
 const apply = (id, p) => {
-  payload = { ...p, timestamp: Date.now() };
+  const payload = { ...p, timestamp: Date.now() };
   state.set(id, payload);
   broadcastAction({ type: ACTION_SET, id, payload });
   try {
