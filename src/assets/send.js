@@ -6,7 +6,6 @@ const { sendAsset } = require('../webrtc/peer');
 const highWaterMark = 16384;
 
 module.exports = async (id, name) => {
-  console.log(name);
   const file = asset(name);
   const s = await stat(file);
   if (s.isFile()) {
