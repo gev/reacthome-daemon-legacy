@@ -19,8 +19,7 @@ module.exports = async (session) => {
   split(state.list(), N).forEach(state => {
     sendAction(session, { type: LIST, state });
   });
-  console.log(split(await assets.list(), N));
-  // split(await assets.list(), N).forEach(assets => {
-  //   sendAction(session, { type: LIST, assets });
-  // });
+  split(await assets.list(), N).forEach(assets => {
+    console.log(session, { type: LIST, assets });
+  });
 };
