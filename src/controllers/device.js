@@ -229,7 +229,7 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_ILLUMINATION: {
-          const illumination = data.readUInt16LE(7) / 100;
+          const illumination = data.readUInt32LE(7) / 100;
           const { onIllumination, site } = get(id);
           if (site) set(site, { illumination });
           set(id, { illumination });
