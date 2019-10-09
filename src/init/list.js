@@ -20,6 +20,6 @@ module.exports = async (session) => {
     sendAction(session, { type: LIST, state });
   });
   split(await assets.list(), N).forEach(assets => {
-    console.log(session, { type: LIST, assets });
+    sendAction(session, { type: LIST, assets });
   });
 };
