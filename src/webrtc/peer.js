@@ -5,6 +5,7 @@ const actions = new Map();
 
 const sendMessage = (channel, data) => {
   if (channel.readyState === 'open') {
+    console.log(data);
     channel.send(data);
   }
 }
