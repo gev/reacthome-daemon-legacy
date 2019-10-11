@@ -1,6 +1,6 @@
 
 const fs = require('fs');
-const { asset, stat } = require('../assets/util');
+const { asset, stat } = require('../fs');
 const { sendAsset } = require('../webrtc/peer');
 
 const highWaterMark = 16384;

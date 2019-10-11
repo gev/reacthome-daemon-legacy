@@ -1,7 +1,7 @@
 
 const janus = require('../janus');
 const { get } = require('../actions');
-const { fixSDP } = require('../util');
+const { fixSDP } = require('../sdp');
 const { sendAction } = require('../webrtc/peer');
 const { CREATE } = require('../janus/constants');
 const { RTSP, WATCH, START } = require('./constants');

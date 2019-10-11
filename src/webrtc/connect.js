@@ -1,6 +1,6 @@
 
 const WebSocket = require('ws');
-const { isUUID } = require('../util');
+const { isUUID } = require('../uuid');
 const { ICE, gateURL } = require('./config');
 
 const PROTOCOL = 'listen';
