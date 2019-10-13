@@ -302,6 +302,7 @@ module.exports.manage = () => {
             buff.writeUInt32BE(last_ip, 7);
             buff.writeUInt32BE(SUB_NET_MASK, 11);
             device.send(buff, DEVICE_GROUP);
+            console.log(id, new Date());
           }
           break;
         }
