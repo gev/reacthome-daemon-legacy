@@ -6,7 +6,7 @@ const { CANDIDATE } = require('./constants');
 const { tmp, asset, appendFile, exists, rename, unlink } = require('../fs');
 const { run } = require('../controllers/service');
 const { onWatch, onStart } = require('../camera');
-const { broadcastAsset } = require('./peer');
+const { broadcastAsset, broadcastAction } = require('./peer');
 const onGet = require('../init/get');
 const onAck = require('../sip/ack');
 const onBye = require('../sip/bye');
@@ -38,6 +38,10 @@ module.exports.onAction = (session) => ({ data }) => {
       }
       case CANDIDATE: {
         janus.trickle(action);
+        break;
+      }
+      case 'navigate': {
+        broadcastAction(action);
         break;
       }
       default: {
