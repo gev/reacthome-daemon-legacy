@@ -481,7 +481,7 @@ const run = (action) => {
         break;
       }
       case ACTION_DAY_TEST: {
-        const { project } = get(mac);
+        const { project } = get(mac());
         if (project) {
           const { weather } = get(project);
           if (weather && weather.sys) {
@@ -674,7 +674,7 @@ const run = (action) => {
         const script = get(id);
         if (script && Array.isArray(script.action)) {
           script.action.forEach(i => {
-            const { type, payload, deleay } = get(i);
+            const { type, payload, delay } = get(i);
             const a = { action: i, type, ...payload };
             if (delay > 0) {
               setTimeout(run, delay, a);
