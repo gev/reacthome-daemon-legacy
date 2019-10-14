@@ -80,7 +80,8 @@ const findIntercom = (id, auth) => {
 
 module.exports.onInvite = (request) => {
   const { auth } = url.parse(request.header.from.uri);
-  const from = findIntercom(nac(), auth);
+  const { project } = get(mac()) || {};
+  const from = findIntercom(project, auth);
   console.log(from);
   if (!from) return;
   const call_id = request.headers['call-id'];
