@@ -2,7 +2,7 @@
 const sip = require('sip');
 const calls = require('./calls');
 const janus = require('../janus');
-const broadcastAction = require('../webrtc/peer');
+const { broadcastAction } = require('../webrtc/peer');
 const { BYE, HANGUP } = require('./constants');
 
 module.exports = ({ call_id }) => {
