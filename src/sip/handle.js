@@ -1,4 +1,5 @@
 
+const url = require('url');
 const sip = require('sip');
 const SDP = require('sdp-transform');
 const uuid = require('uuid/v4');
@@ -9,6 +10,8 @@ const { PROCESS } = require('../janus/constants');
 const { OFFER } = require('../webrtc/constants');
 const { INVITE, BYE, CANCEL, HANGUP } = require('./constants');
 const calls = require('./calls');
+const get = require('../actions')
+const mac = require('../mac');
 
 const realm = 'reacthome';
 const tag = '123456';
@@ -61,8 +64,25 @@ const rs180 = (call_id, request) => {
   return rs;
 }
 
+const findIntercom = (id, auth) => {
+  const o = get[id];
+  if (Array.isArray(o.intercom)) {
+    const from = o.intercom.find(i => get(i).SIP_user === auth);
+    if (from) return from;
+  }
+  if (Array.isArray(o.site)) {
+    return o.site.reduce((a, b) => {
+      if (a) return a;
+      return findIntercom(b, auth);
+    }, false)
+  }
+};
+
 module.exports.onInvite = (request) => {
-  console.log(request);
+  const { auth } = url.parse(request.header.from.uri);
+  const from = findIntercom(nac(), auth);
+  console.log(from);
+  if (!from) return;
   const call_id = request.headers['call-id'];
   sip.send(rs100(call_id, request));
   sip.send(rs180(call_id, request));
@@ -81,7 +101,7 @@ module.exports.onInvite = (request) => {
           const o = SDP.parse(jsep.sdp);
           o.media = o.media.filter(media => media.type === 'audio');
           jsep.sdp = SDP.write(o);
-          broadcastAction({ type: INVITE, jsep, session_id, handle_id, call_id });
+          broadcastAction({ type: INVITE, jsep, session_id, handle_id, call_id, from });
         }
       });
     });
