@@ -9,8 +9,8 @@ const { broadcastAction } = require('../webrtc');
 const { PROCESS } = require('../janus/constants');
 const { OFFER } = require('../webrtc/constants');
 const { INVITE, BYE, CANCEL, HANGUP } = require('./constants');
+const { get } = require('../actions')
 const calls = require('./calls');
-const get = require('../actions')
 const mac = require('../mac');
 
 const realm = 'reacthome';
