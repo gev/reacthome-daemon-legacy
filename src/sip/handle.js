@@ -82,7 +82,6 @@ module.exports.onInvite = (request) => {
   const { auth } = url.parse(request.headers.from.uri);
   const { project } = get(mac()) || {};
   const from = findIntercom(project, auth);
-  console.log(from);
   if (!from) return;
   const call_id = request.headers['call-id'];
   sip.send(rs100(call_id, request));
