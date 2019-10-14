@@ -4,6 +4,7 @@ const SDP = require('sdp-transform');
 const uuid = require('uuid/v4');
 const janus = require('../janus');
 const { GENERATE } = require('../janus/constants');
+const broadcastAction = require('../webrtc/peer');
 const calls = require('./calls');
 
 module.exports = ({ jsep, session_id, handle_id, call_id }) => {
@@ -21,6 +22,7 @@ module.exports = ({ jsep, session_id, handle_id, call_id }) => {
       rs.headers['content-type'] = 'application/sdp';
       rs.headers['content-length'] = rs.content.length;
       sip.send(rs);
+      broadcastAction({ type: ACK, call_id });
     }
   });
 };

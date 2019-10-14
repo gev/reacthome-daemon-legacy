@@ -1,6 +1,6 @@
 
 const { GET } = require('../init/constants');
-const { ACK, BYE } = require('../sip/constants');
+const { ACK, BYE, CANCEL } = require('../sip/constants');
 const { START, WATCH } = require('../camera/constants');
 const { CANDIDATE } = require('./constants');
 const { tmp, asset, appendFile, exists, rename, unlink } = require('../fs');
