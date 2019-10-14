@@ -65,7 +65,7 @@ const rs180 = (call_id, request) => {
 }
 
 const findIntercom = (id, auth) => {
-  const o = get[id];
+  const o = get(id);
   if (Array.isArray(o.intercom)) {
     const from = o.intercom.find(i => get(i).SIP_user === auth);
     if (from) return from;
