@@ -21,11 +21,11 @@ module.exports.onAction = (session) => ({ data }) => {
         break;
       }
       case ACK: {
-        onAck(action);
+        onAck(action, session);
         break;
       }
       case BYE: {
-        onBye(action);
+        onBye(action, session);
         break;
       }
       case WATCH: {
@@ -62,7 +62,7 @@ module.exports.onAsset = (session) => async ({ data }) => {
   const name = buff.slice(8, 8 + length).toString();
   const chunk = buff.slice(8 + length);
   const temp = tmp(`${session}-${transaction}-${name}`);
-  // broadcastAsset(data);
+  broadcastAsset(data, session);
   try {
     await appendFile(temp, chunk)
     if (current === total) {

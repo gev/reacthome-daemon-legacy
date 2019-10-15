@@ -15,9 +15,11 @@ const send = (channels, handle) => (session, data) => {
   }
 }
 
-const broadcast = (channels, handle) => (data) => {
-  for (let channel of channels.values()) {
-    handle(channel, data);
+const broadcast = (channels, handle) => (data, ignore) => {
+  for (let [session, channel] of channels.entries()) {
+    if (session !== ignore) {
+      handle(channel, data);
+    }
   }
 }
 

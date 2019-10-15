@@ -5,7 +5,7 @@ const janus = require('../janus');
 const { broadcastAction } = require('../webrtc/peer');
 const { BYE, HANGUP } = require('./constants');
 
-module.exports = ({ call_id }) => {
+module.exports = ({ call_id }, session) => {
   if (calls.has(call_id)) {
     const { session_id, handle_id, request } = calls.get(call_id);
     const rq = {
@@ -20,7 +20,7 @@ module.exports = ({ call_id }) => {
       }
     };
     sip.send(rq);
-    broadcastAction({ type: BYE, call_id });
+    broadcastAction({ type: BYE, call_id }, session);
     janus.sendMessage(session_id, handle_id, { request: HANGUP })
     calls.delete(call_id);
   }
