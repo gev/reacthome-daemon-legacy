@@ -48,9 +48,11 @@ const {
   ACTION_TOGGLE,
   ACTION_TV,
   ACTION_LEAKAGE_RESET,
+  ACTION_NOTIFICATION,
   ACTION_SCRIPT_RUN,
   DEVICE_PORT,
   DEVICE_TYPE_DIM4,
+  DEVICE_TYPE_DIM_4,
   DEVICE_TYPE_DIM8,
   DEVICE_TYPE_DIM_8,
   DEVICE_TYPE_RELAY_2,
@@ -119,6 +121,7 @@ const {
 const { device } = require('../sockets');
 const mac = require('../mac');
 const { ac } = require('../drivers');
+const { broadcastAction } = require('../webrtc/peer');
 
 const timer = {};
 
@@ -227,6 +230,7 @@ const run = (action) => {
         const value = last || 255
         switch (deviceType) {
           case DEVICE_TYPE_DIM4:
+          case DEVICE_TYPE_DIM_4:
           case DEVICE_TYPE_DIM8:
           case DEVICE_TYPE_DIM_8: {
             switch (type) {
@@ -284,6 +288,7 @@ const run = (action) => {
         const { ip, type: deviceType } = get(dev);
         switch (deviceType) {
           case DEVICE_TYPE_DIM4:
+          case DEVICE_TYPE_DIM_4:
           case DEVICE_TYPE_DIM8:
           case DEVICE_TYPE_DIM_8: {
             switch (type) {
@@ -338,6 +343,7 @@ const run = (action) => {
         const { ip, type: deviceType } = get(dev);
         switch (deviceType) {
           case DEVICE_TYPE_DIM4:
+          case DEVICE_TYPE_DIM_4:
           case DEVICE_TYPE_DIM8:
           case DEVICE_TYPE_DIM_8: {
             device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, DIM_VELOCITY]), ip);
@@ -667,6 +673,10 @@ const run = (action) => {
         if (onLeakageReset) {
           run({ action: ACTION_SCRIPT_RUN, id: onLeakageReset });
         }
+        break;
+      }
+      case ACTION_NOTIFICATION: {
+        broadcastAction(action);
         break;
       }
       case ACTION_SCRIPT_RUN: {
