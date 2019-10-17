@@ -42,6 +42,8 @@ module.exports.FAN = 'fan';
 module.exports.TV = 'TV';
 module.exports.AC = 'AC';
 
+module.exports.NOTIFY = 'notify';
+
 module.exports.STATE = 'state';
 module.exports.FIRMWARE = './firmware';
 
@@ -104,7 +106,6 @@ module.exports.ACTION_THERMOSTAT_HANDLE = 'ACTION_THERMOSTAT_HANDLE';
 module.exports.ACTION_TOGGLE = 'ACTION_TOGGLE';
 module.exports.ACTION_TV = 'ACTION_TV';
 module.exports.ACTION_LEAKAGE_RESET = 'ACTION_LEAKAGE_RESET';
-module.exports.ACTION_NOTIFICATION = 'ACTION_NOTIFICATION';
 module.exports.ACTION_SCRIPT_RUN = 'ACTION_SCRIPT_RUN';
 
 module.exports.OFF = 0x0;

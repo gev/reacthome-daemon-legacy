@@ -48,8 +48,8 @@ const {
   ACTION_TOGGLE,
   ACTION_TV,
   ACTION_LEAKAGE_RESET,
-  ACTION_NOTIFICATION,
   ACTION_SCRIPT_RUN,
+  NOTIFY,
   DEVICE_PORT,
   DEVICE_TYPE_DIM4,
   DEVICE_TYPE_DIM_4,
@@ -675,7 +675,7 @@ const run = (action) => {
         }
         break;
       }
-      case ACTION_NOTIFICATION: {
+      case NOTIFY: {
         broadcastAction(action);
         break;
       }
