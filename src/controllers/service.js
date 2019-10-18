@@ -231,7 +231,7 @@ const run = (action) => {
             set(id, value);
             break;
           }
-          case light_RGB: {
+          case LIGHT_RGB: {
             rgb.forEach((i) => {
               if (!o[i]) return;
               const { velocity } = get(o[i]) || {};
