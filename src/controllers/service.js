@@ -423,14 +423,14 @@ const run = (action) => {
       case ACTION_DIM_RELATIVE: {
         const { id, value, operator } = action;
         const o = get(id) || {};
-        let v;
+        let h, s, v;
         if (o.bind) {
           v = (get(o.bind) || {}).value;
         } else {
           const R = o.r ? (get(o.r) || {}).value || 0 : 0;
           const G = o.g ? (get(o.g) || {}).value || 0 : 0;
           const B = o.b ? (get(o.b) || {}).value || 0 : 0;
-          v = color.rgb.hsv(R, G, B)[2];
+          [h, s v] = color.rgb.hsv(R, G, B)[2];
         };
         switch (operator) {
           case OPERATOR_PLUS:
