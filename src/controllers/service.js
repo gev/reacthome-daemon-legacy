@@ -421,7 +421,7 @@ const run = (action) => {
         break;
       }
       case ACTION_DIM_RELATIVE: {
-        const { id, value } = action;
+        const { id, value, operator } = action;
         const o = get(id) || {};
         let v;
         if (o.bind) {
