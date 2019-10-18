@@ -264,6 +264,7 @@ const run = (action) => {
       case ACTION_ON: {
         const { id } = action;
         const o = get(id) || {};
+        console.log(o);
         const { last = {}, type: payloadType } = o;
         bind.forEach((i) => {
           if (!o[i]) return;
