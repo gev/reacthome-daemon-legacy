@@ -400,6 +400,7 @@ const run = (action) => {
           } else {
             v = rgb[c];
           }
+          console.log({ last: { ...last, [i]: v } });
           set(id, { last: { ...last, [i]: v } });
           switch (deviceType) {
             case DEVICE_TYPE_DIM4:
