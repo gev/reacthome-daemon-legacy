@@ -233,8 +233,6 @@ const run = (action) => {
             break;
           }
           case LIGHT_RGB: {
-            const [ h, s, v ] = color.rgb.hsv(r, g, b);
-            set(id, { last: value, hsv: { h, s, v } });
             rgb.forEach((i) => {
               if (!o[i]) return;
               const { velocity } = get(o[i]) || {};
@@ -387,7 +385,11 @@ const run = (action) => {
       case ACTION_DIM: {
         const { id, value } = action;
         const o = get(id) || {};
-        const { last, hsv: { h = 0, s = 0 } = {} } = o;
+        const { last } = o;
+        const R = o.r ? (get(o.r) || {}).value || 0 : 0;
+        const G = o.g ? (get(o.g) || {}).value || 0 : 0;
+        const B = o.b ? (get(o.b) || {}).value || 0 : 0;
+        const [ h, s ] = color.rgb.hsv(R, G, B);
         const rgb = color.hsv.rgb(h, s, value / 2.55);
         const [ r, g, b ] = rgb;
         set(id, { last: o.bind ? { value } : { r, g, b } });
@@ -402,7 +404,6 @@ const run = (action) => {
           } else {
             v = rgb[c];
           }
-          console.log(i, v);
           switch (deviceType) {
             case DEVICE_TYPE_DIM4:
             case DEVICE_TYPE_DIM_4:
@@ -420,21 +421,17 @@ const run = (action) => {
         break;
       }
       case ACTION_DIM_RELATIVE: {
-        const { id, operator } = action;
+        const { id, value } = action;
         const o = get(id) || {};
-        let value, v;
+        let v, r, g, b;
         if (o.bind) {
-          value = (get(o.bind) || {}).value || 0;
+          v = (get(o.bind) || {}).value;
         } else {
-          const r = o.r ? (get(o.r) || {}).value || 0 : 0;
-          const g = o.g ? (get(o.g) || {}).value || 0 : 0;
-          const b = o.b ? (get(o.b) || {}).value || 0 : 0;
-          const [ h, s, v ] = color.rgb.hsv(r, g, b);
-          console.log(r,g,b);
-          console.log(h,s,v);
-          set(id, { hsv: { h, s, v } });
-          value = v * 2.25;
-        }
+          const R = o.r ? (get(o.r) || {}).value || 0 : 0;
+          const G = o.g ? (get(o.g) || {}).value || 0 : 0;
+          const B = o.b ? (get(o.b) || {}).value || 0 : 0;
+          v = color.rgb.hsv(R, G, B)[2];
+        };
         switch (operator) {
           case OPERATOR_PLUS:
             v = Math.round(value + Number(action.value));
@@ -450,9 +447,37 @@ const run = (action) => {
             break;
         }
         if (v < 0) v = 0;
-        if (v > 255) v = 255;
+        if (o.bind) {
+          if (v > 255) v = 255;
+        } else {
+          if (v > 100) v = 100;
+        }
         if (v === value) return;
-        run({ type: ACTION_DIM, id, value: v });
+        const rgb = color.hsv.rgb(h, s, v);
+        const [ r, g, b ] = rgb;
+        bind.forEach((i, c) => {
+          if (!o[i]) return;
+          const { velocity } = get(o[i]) || {};
+          const [dev,,index] = o[i].split('/');
+          const { ip, type: deviceType } = get(dev);
+          let v;
+          if (i !== 'bind') {
+            v = rgb[c];
+          }
+          switch (deviceType) {
+            case DEVICE_TYPE_DIM4:
+            case DEVICE_TYPE_DIM_4:
+            case DEVICE_TYPE_DIM8:
+            case DEVICE_TYPE_DIM_8: {
+              device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, v, DIM_VELOCITY]), ip);
+              break;
+            }
+            case DRIVER_TYPE_ARTNET: {
+              drivers.handle({ id: dev, index, action: ARTNET_FADE, v, velocity: ARTNET_VELOCITY });
+              break;
+            }
+          }
+        });
         break;
       }
       case ACTION_SITE_LIGHT_DIM_RELATIVE: {
