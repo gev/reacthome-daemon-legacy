@@ -350,7 +350,7 @@ const run = (action) => {
         const o = get(id) || {};
         bind.forEach((i) => {
           if (!o[i]) return;
-          const { velocity } = get(o[i]);
+          const { velocity } = get(o[i]) || {};
           const [dev,,index] = o[i].split('/');
           const { ip, type: deviceType } = get(dev);
           switch (deviceType) {
