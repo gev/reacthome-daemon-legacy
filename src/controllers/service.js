@@ -288,57 +288,62 @@ const run = (action) => {
       case ACTION_DISABLE:
       case ACTION_OFF: {
         const { id } = action;
-        const { bind, type: payloadType } = get(id) || {};
-        const { velocity = 128, type } = get(bind) || {};
-        const [dev,,index] = bind.split('/');
-        const { ip, type: deviceType } = get(dev);
-        switch (deviceType) {
-          case DEVICE_TYPE_DIM4:
-          case DEVICE_TYPE_DIM_4:
-          case DEVICE_TYPE_DIM8:
-          case DEVICE_TYPE_DIM_8: {
-            switch (type) {
-              case DIM_TYPE_PWM:
-              case DIM_TYPE_RISING_EDGE:
-              case DIM_TYPE_FALLING_EDGE:
-                device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, 0, DIM_VELOCITY]), ip);
-                break;
-              default:
-                device.send(Buffer.from([ACTION_DO, index, OFF]), ip);
-            }
-            break;
-          }
-          case DEVICE_TYPE_RELAY_2: {
-            device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...dev.split(':').map(i => parseInt(i, 16)), ACTION_DO, index, OFF]), ip);
-            break;
-          }
-          case DRIVER_TYPE_ARTNET: {
-            switch (type) {
-              case ARTNET_TYPE_DIMMER:
-                drivers.handle({ id: dev, index, action: ARTNET_FADE, value: 0, velocity: ARTNET_VELOCITY });
+        const { id } = action;
+        const o = get(id) || {};
+        const { last = {}, type: payloadType } = o;
+        bind.forEach((i) => {
+          if (!o[i]) return;
+          const { velocity, type } = get(o[i]) || {};
+          const [dev,,index] = o[i].split('/');
+          const { ip, type: deviceType } = get(dev);
+          switch (deviceType) {
+            case DEVICE_TYPE_DIM4:
+            case DEVICE_TYPE_DIM_4:
+            case DEVICE_TYPE_DIM8:
+            case DEVICE_TYPE_DIM_8: {
+              switch (type) {
+                case DIM_TYPE_PWM:
+                case DIM_TYPE_RISING_EDGE:
+                case DIM_TYPE_FALLING_EDGE:
+                  device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, 0, DIM_VELOCITY]), ip);
+                  break;
+                default:
+                  device.send(Buffer.from([ACTION_DO, index, OFF]), ip);
+              }
               break;
-              default:
-                drivers.handle({ id: dev, index, type: ACTION_DO, value: OFF, velocity: ARTNET_VELOCITY });
             }
-            break;
-          }
-          case DRIVER_TYPE_BB_PLC1:
-          case DRIVER_TYPE_BB_PLC2: {
-            drivers.handle({ id: dev, index, value: OFF });
-            break;
-          }
-          default: {
-            switch (payloadType) {
-              case AC: {
-                ac.handle(action);
+            case DEVICE_TYPE_RELAY_2: {
+              device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...dev.split(':').map(i => parseInt(i, 16)), ACTION_DO, index, OFF]), ip);
+              break;
+            }
+            case DRIVER_TYPE_ARTNET: {
+              switch (type) {
+                case ARTNET_TYPE_DIMMER:
+                  drivers.handle({ id: dev, index, action: ARTNET_FADE, value: 0, velocity: ARTNET_VELOCITY });
                 break;
+                default:
+                  drivers.handle({ id: dev, index, type: ACTION_DO, value: OFF, velocity: ARTNET_VELOCITY });
               }
-              default: {
-                device.send(Buffer.from([ACTION_DO, index, OFF]), ip);
+              break;
+            }
+            case DRIVER_TYPE_BB_PLC1:
+            case DRIVER_TYPE_BB_PLC2: {
+              drivers.handle({ id: dev, index, value: OFF });
+              break;
+            }
+            default: {
+              switch (payloadType) {
+                case AC: {
+                  ac.handle(action);
+                  break;
+                }
+                default: {
+                  device.send(Buffer.from([ACTION_DO, index, OFF]), ip);
+                }
               }
             }
           }
-        }
+        });
         break;
       }
       case ACTION_DIM: {
