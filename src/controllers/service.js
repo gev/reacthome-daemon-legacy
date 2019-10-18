@@ -222,7 +222,8 @@ const run = (action) => {
       }
       case ACTION_RGB_DIM: {
         const { id, value = {} } = action;
-        const { ip, type } = get(id);
+        const o = get(id) || {};
+        const { ip, type } = o;
         switch (type) {
           case DEVICE_TYPE_SENSOR4:
           case DEVICE_TYPE_SMART_4: {
