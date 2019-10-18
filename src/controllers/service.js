@@ -387,7 +387,8 @@ const run = (action) => {
       case ACTION_DIM: {
         const { id, value } = action;
         const o = get(id) || {};
-        const { last, r, g, b, hsv: { h = 0, s = 0 } = {} } = o;
+        const { type, r, g, b, hsv: { h = 0, s = 0 } = {} } = o;
+        const rgb = color.hsv.rgb(h, s, value / 2.55);
         bind.forEach((i, c) => {
           if (!o[i]) return;
           const { velocity } = get(o[i]) || {};
@@ -397,7 +398,7 @@ const run = (action) => {
           if (i === 'bind') {
             v = value;
           } else {
-            v = color.hsv.rgb(h, s, value / 2.55)[c];
+            v = rgb[c];
           }
           switch (deviceType) {
             case DEVICE_TYPE_DIM4:
