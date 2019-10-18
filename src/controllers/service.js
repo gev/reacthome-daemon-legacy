@@ -222,17 +222,19 @@ const run = (action) => {
       }
       case ACTION_RGB_DIM: {
         const { id, value = {} } = action;
+        const { r, g, b } = value;
         const o = get(id) || {};
         const { ip, type } = o;
         switch (type) {
           case DEVICE_TYPE_SENSOR4:
           case DEVICE_TYPE_SMART_4: {
-            const { r, g, b } = value;
             device.send(Buffer.from([ACTION_RGB, 0, r, g, b]), ip);
             set(id, value);
             break;
           }
           case LIGHT_RGB: {
+            const [ h, s, v ] = color.rgb.hsv(r, g, b);
+            set(id, { last: value, hsv: { h, s, v } });
             rgb.forEach((i) => {
               if (!o[i]) return;
               const { velocity } = get(o[i]) || {};
@@ -252,7 +254,6 @@ const run = (action) => {
                   break;
                 }
               }
-              set(id, { last: value });
             });
             break;
           }
@@ -385,10 +386,7 @@ const run = (action) => {
       case ACTION_DIM: {
         const { id, value } = action;
         const o = get(id) || {};
-        const { last, r, g, b } = o;
-        const R = r ? (get(r) || {}).value || 0 : 0;
-        const G = g ? (get(g) || {}).value || 0 : 0;
-        const B = b ? (get(b) || {}).value || 0 : 0;
+        const { last, r, g, b, hsv: { h = 0, s = 0 } = {} } = o;
         bind.forEach((i, c) => {
           if (!o[i]) return;
           const { velocity } = get(o[i]) || {};
@@ -398,8 +396,7 @@ const run = (action) => {
           if (i === 'bind') {
             v = value;
           } else {
-            const [h, s, l] = color.rgb.hsl(R, G, B);
-            v = color.hsl.rgb(h, s, value)[c];
+            v = color.hsv.rgb(h, s, value)[c];
           }
           switch (deviceType) {
             case DEVICE_TYPE_DIM4:
