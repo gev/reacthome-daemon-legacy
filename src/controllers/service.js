@@ -359,7 +359,7 @@ const run = (action) => {
           if (i === 'bind') {
             v = value;
           } else {
-            const [h ,s, l] = color.rgb.hsl(r, g, b);
+            const [h ,s] = color.rgb.hsl(r, g, b);
             v = color.hsl.rgb(h, s, value)[c];
           }
           switch (deviceType) {
