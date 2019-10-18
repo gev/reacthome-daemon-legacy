@@ -347,25 +347,28 @@ const run = (action) => {
       }
       case ACTION_DIM: {
         const { id, value } = action;
-        const { bind } = get(id);
-        const { velocity = 128 } = get(bind);
-        const [dev,,index] = bind.split('/');
-        const { ip, type: deviceType } = get(dev);
-        switch (deviceType) {
-          case DEVICE_TYPE_DIM4:
-          case DEVICE_TYPE_DIM_4:
-          case DEVICE_TYPE_DIM8:
-          case DEVICE_TYPE_DIM_8: {
-            device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, DIM_VELOCITY]), ip);
-            set(id, { last: value });
-            break;
+        const o = get(id) || {};
+        bind.forEach((i) => {
+          if (!o[i]) return;
+          const { velocity } = get(o[i]);
+          const [dev,,index] = o[i].split('/');
+          const { ip, type: deviceType } = get(dev);
+          switch (deviceType) {
+            case DEVICE_TYPE_DIM4:
+            case DEVICE_TYPE_DIM_4:
+            case DEVICE_TYPE_DIM8:
+            case DEVICE_TYPE_DIM_8: {
+              device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, DIM_VELOCITY]), ip);
+              set(id, { last: value });
+              break;
+            }
+            case DRIVER_TYPE_ARTNET: {
+              drivers.handle({ id: dev, index, action: ARTNET_FADE, value, velocity: ARTNET_VELOCITY });
+              set(id, { last: value });
+              break;
+            }
           }
-          case DRIVER_TYPE_ARTNET: {
-            drivers.handle({ id: dev, index, action: ARTNET_FADE, value, velocity: ARTNET_VELOCITY });
-            set(id, { last: value });
-            break;
-          }
-        }
+        });
         break;
       }
       case ACTION_DIM_RELATIVE: {
