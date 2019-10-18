@@ -390,7 +390,7 @@ const run = (action) => {
         const { last, hsv: { h = 0, s = 0 } = {} } = o;
         const rgb = color.hsv.rgb(h, s, value / 2.55);
         const { r, g, b } = rgb;
-        set(id, { last: o.bind ? { value } : { r, g, b });
+        set(id, { last: o.bind ? { value } : { r, g, b } });
         bind.forEach((i, c) => {
           if (!o[i]) return;
           const { velocity } = get(o[i]) || {};
