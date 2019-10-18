@@ -433,8 +433,6 @@ const run = (action) => {
           set(id, { hsv: { h, s, v } });
           value = v;
         }
-
-        const { value } = get(bind);
         let v;
         switch (operator) {
           case OPERATOR_PLUS:
