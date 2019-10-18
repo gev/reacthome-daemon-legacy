@@ -5,6 +5,7 @@
   "author": "Evgeny <gazdovsky@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "color-convert": "^2.0.1",
     "crc": "^3.8.0",
     "cron": "^1.7.2",
     "debounce": "^1.2.0",

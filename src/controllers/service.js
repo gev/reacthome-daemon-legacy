@@ -2,6 +2,7 @@
 const { exists, createWriteStream } = require('fs');
 const fetch = require('node-fetch');
 const crypto = require('crypto');
+const color = require('color-convert');
 const ircodes = require('reacthome-ircodes');
 const drivers = require('../drivers');
 const {
@@ -128,7 +129,7 @@ const timer = {};
 const DIM_VELOCITY = 128;
 const ARTNET_VELOCITY = 1;
 
-const bind = ['bind', 'r', 'g', 'b'];
+const bind = ['r', 'g', 'b', 'bind'];
 
 const run = (action) => {
   try {
@@ -289,7 +290,7 @@ const run = (action) => {
       case ACTION_OFF: {
         const { id } = action;
         const o = get(id) || {};
-        const { last = {}, type: payloadType } = o;
+        const { type: payloadType } = o;
         bind.forEach((i) => {
           if (!o[i]) return;
           const { velocity, type } = get(o[i]) || {};
@@ -348,23 +349,31 @@ const run = (action) => {
       case ACTION_DIM: {
         const { id, value } = action;
         const o = get(id) || {};
-        bind.forEach((i) => {
+        const { last, r, g, b } = o;
+        bind.forEach((i, c) => {
           if (!o[i]) return;
           const { velocity } = get(o[i]) || {};
           const [dev,,index] = o[i].split('/');
           const { ip, type: deviceType } = get(dev);
+          let v;
+          if (i === 'bind') {
+            v = value;
+          } else {
+            const [h ,s, l] = color.rgb.hsl(r, g, b);
+            v = color.hsl.rgb(h, s, value)[c];
+          }
           switch (deviceType) {
             case DEVICE_TYPE_DIM4:
             case DEVICE_TYPE_DIM_4:
             case DEVICE_TYPE_DIM8:
             case DEVICE_TYPE_DIM_8: {
-              device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, DIM_VELOCITY]), ip);
-              set(id, { last: value });
+              device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, v, DIM_VELOCITY]), ip);
+              set(id, { last: { ...last, [i]: v } });
               break;
             }
             case DRIVER_TYPE_ARTNET: {
-              drivers.handle({ id: dev, index, action: ARTNET_FADE, value, velocity: ARTNET_VELOCITY });
-              set(id, { last: value });
+              drivers.handle({ id: dev, index, action: ARTNET_FADE, v, velocity: ARTNET_VELOCITY });
+              set(id, { last: { ...last, [i]: v } });
               break;
             }
           }
