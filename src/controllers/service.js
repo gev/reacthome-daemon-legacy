@@ -430,7 +430,7 @@ const run = (action) => {
           const R = o.r ? (get(o.r) || {}).value || 0 : 0;
           const G = o.g ? (get(o.g) || {}).value || 0 : 0;
           const B = o.b ? (get(o.b) || {}).value || 0 : 0;
-          [h, s, v] = color.rgb.hsv(R, G, B)[2];
+          [h, s, v] = color.rgb.hsv(R, G, B);
         };
         switch (operator) {
           case OPERATOR_PLUS:
