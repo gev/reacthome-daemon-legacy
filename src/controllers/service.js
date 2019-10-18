@@ -426,9 +426,9 @@ const run = (action) => {
         if (o.bind) {
           value = (get(o.bind) || {}).value || 0;
         } else {
-          const r = (o.r && get(o.r) || {}).value || 0;
-          const g = (o.g && get(o.g) || {}).value || 0;
-          const b = (o.b && get(o.b) || {}).value || 0;
+          const r = o.r ? (get(o.r) || {}).value || 0 : 0;
+          const g = o.g ? (get(o.g) || {}).value || 0 : 0;
+          const b = o.b ? (get(o.b) || {}).value || 0 : 0;
           const [ h, s, v ] = color.rgb.hsv(r, g, b);
           set(id, { hsv: { h, s, v } });
           value = v;
