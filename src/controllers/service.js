@@ -264,14 +264,15 @@ const run = (action) => {
       case ACTION_ON: {
         const { id } = action;
         const o = get(id) || {};
-        console.log(o);
         const { last = {}, type: payloadType } = o;
+        const { r, g, b, bind } = value;
+        const isOn = r > 0 || g > 0 || b > 0 || bind > 0;
         bind.forEach((i) => {
           if (!o[i]) return;
           const { velocity, type } = get(o[i]) || {};
           const [dev,,index] = o[i].split('/');
           const { ip, type: deviceType } = get(dev);
-          const value = last[i] || 255
+          const value = isOn ? last[i] : 255;
           switch (deviceType) {
             case DEVICE_TYPE_DIM4:
             case DEVICE_TYPE_DIM_4:
