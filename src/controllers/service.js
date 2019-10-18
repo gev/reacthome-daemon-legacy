@@ -128,6 +128,8 @@ const timer = {};
 const DIM_VELOCITY = 128;
 const ARTNET_VELOCITY = 1;
 
+const bind = ['bind', 'r', 'g', 'b'];
+
 const run = (action) => {
   try {
     switch (action.type) {
@@ -223,60 +225,64 @@ const run = (action) => {
       case ACTION_ENABLE:
       case ACTION_ON: {
         const { id } = action;
-        const { bind, last, type: payloadType } = get(id) || {};
-        const { velocity, type } = get(bind) || {};
-        const [dev,,index] = bind.split('/');
-        const { ip, type: deviceType } = get(dev);
-        const value = last || 255
-        switch (deviceType) {
-          case DEVICE_TYPE_DIM4:
-          case DEVICE_TYPE_DIM_4:
-          case DEVICE_TYPE_DIM8:
-          case DEVICE_TYPE_DIM_8: {
-            switch (type) {
-              case DIM_TYPE_PWM:
-              case DIM_TYPE_RISING_EDGE:
-              case DIM_TYPE_FALLING_EDGE: {
-                device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, DIM_VELOCITY]), ip);
-                break;
+        const o = get(id) || {};
+        const { last = {}, type: payloadType } = o;
+        bind.forEach((i) => {
+          if (!o[i]) return;
+          const { velocity, type } = get(o[i]) || {};
+          const [dev,,index] = o[i].split('/');
+          const { ip, type: deviceType } = get(dev);
+          const value = last[i] || 255
+          switch (deviceType) {
+            case DEVICE_TYPE_DIM4:
+            case DEVICE_TYPE_DIM_4:
+            case DEVICE_TYPE_DIM8:
+            case DEVICE_TYPE_DIM_8: {
+              switch (type) {
+                case DIM_TYPE_PWM:
+                case DIM_TYPE_RISING_EDGE:
+                case DIM_TYPE_FALLING_EDGE: {
+                  device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, DIM_VELOCITY]), ip);
+                  break;
+                }
+                default: {
+                  device.send(Buffer.from([ACTION_DO, index, ON]), ip);
+                }
               }
-              default: {
-                device.send(Buffer.from([ACTION_DO, index, ON]), ip);
-              }
-            }
-            break;
-          }
-          case DEVICE_TYPE_RELAY_2: {
-            device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...dev.split(':').map(i => parseInt(i, 16)), ACTION_DO, index, ON]), ip);
-            break;
-          }
-          case DRIVER_TYPE_ARTNET: {
-            switch (type) {
-              case ARTNET_TYPE_DIMMER:
-                drivers.handle({ id: dev, index, action: ARTNET_FADE, value, velocity: ARTNET_VELOCITY });
               break;
-              default:
-                drivers.handle({ id: dev, index, type: ACTION_DO, value: ON, velocity: ARTNET_VELOCITY });
             }
-            break;
-          }
-          case DRIVER_TYPE_BB_PLC1:
-          case DRIVER_TYPE_BB_PLC2: {
-            drivers.handle({ id: dev, index, value: ON });
-            break;
-          }
-          default: {
-            switch (payloadType) {
-              case AC: {
-                ac.handle(action);
+            case DEVICE_TYPE_RELAY_2: {
+              device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...dev.split(':').map(i => parseInt(i, 16)), ACTION_DO, index, ON]), ip);
+              break;
+            }
+            case DRIVER_TYPE_ARTNET: {
+              switch (type) {
+                case ARTNET_TYPE_DIMMER:
+                  drivers.handle({ id: dev, index, action: ARTNET_FADE, value, velocity: ARTNET_VELOCITY });
                 break;
+                default:
+                  drivers.handle({ id: dev, index, type: ACTION_DO, value: ON, velocity: ARTNET_VELOCITY });
               }
-              default: {
-                device.send(Buffer.from([ACTION_DO, index, ON]), ip);
+              break;
+            }
+            case DRIVER_TYPE_BB_PLC1:
+            case DRIVER_TYPE_BB_PLC2: {
+              drivers.handle({ id: dev, index, value: ON });
+              break;
+            }
+            default: {
+              switch (payloadType) {
+                case AC: {
+                  ac.handle(action);
+                  break;
+                }
+                default: {
+                  device.send(Buffer.from([ACTION_DO, index, ON]), ip);
+                }
               }
             }
           }
-        }
+        });
         break;
       }
       case ACTION_DISABLE:
@@ -385,17 +391,19 @@ const run = (action) => {
       }
       case ACTION_SITE_LIGHT_DIM_RELATIVE: {
         const { id, operator, value } = action;
-        applySite(id, ({ light_220 = [], light_LED = [] }) => {
+        applySite(id, ({ light_220 = [], light_LED = [], light_RGB = [] }) => {
           light_220.map(i => run({ type: ACTION_DIM_RELATIVE, id: i, operator, value }));
           light_LED.map(i => run({ type: ACTION_DIM_RELATIVE, id: i, operator, value }));
+          light_RGB.map(i => run({ type: ACTION_DIM_RELATIVE, id: i, operator, value }));
         });
         break;
       }
       case ACTION_SITE_LIGHT_OFF: {
         const { id } = action;
-        applySite(id, ({ light_220 = [], light_LED = [] }) => {
+        applySite(id, ({ light_220 = [], light_LED = [], light_RGB = [] }) => {
           light_220.map(i => run({ type: ACTION_OFF, id: i }));
           light_LED.map(i => run({ type: ACTION_OFF, id: i }));
+          light_RGB.map(i => run({ type: ACTION_OFF, id: i }));
         });
         break;
       }
