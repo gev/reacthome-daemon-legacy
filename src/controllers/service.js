@@ -421,7 +421,19 @@ const run = (action) => {
       }
       case ACTION_DIM_RELATIVE: {
         const { id, operator } = action;
-        const { bind } = get(id);
+        const o = get(id) || {};
+        let value;
+        if (o.bind) {
+          value = (get(o.bind) || {}).value || 0;
+        } else {
+          const r = (o.r && get(o.r) || {}).value || 0;
+          const g = (o.g && get(o.g) || {}).value || 0;
+          const b = (o.b && get(o.b) || {}).value || 0;
+          const [ h, s, v ] = color.rgb.hsv(r, g, b);
+          set(id, { hsv: { h, s, v } });
+          value = v;
+        }
+
         const { value } = get(bind);
         let v;
         switch (operator) {
