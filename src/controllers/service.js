@@ -430,6 +430,8 @@ const run = (action) => {
           const g = o.g ? (get(o.g) || {}).value || 0 : 0;
           const b = o.b ? (get(o.b) || {}).value || 0 : 0;
           const [ h, s, v ] = color.rgb.hsv(r, g, b);
+          console.log(r,g,b);
+          console.log(h,s,v);
           set(id, { hsv: { h, s, v } });
           value = v;
         }
