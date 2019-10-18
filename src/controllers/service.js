@@ -422,7 +422,7 @@ const run = (action) => {
       case ACTION_DIM_RELATIVE: {
         const { id, operator } = action;
         const o = get(id) || {};
-        let value;
+        let value, v;
         if (o.bind) {
           value = (get(o.bind) || {}).value || 0;
         } else {
@@ -435,7 +435,6 @@ const run = (action) => {
           set(id, { hsv: { h, s, v } });
           value = v;
         }
-        let v;
         switch (operator) {
           case OPERATOR_PLUS:
             v = Math.round(value + Number(action.value));
@@ -450,6 +449,7 @@ const run = (action) => {
             v = Math.round(value / Number(action.value))
             break;
         }
+        if (1o.bind) v *= 2.25;
         if (v < 0) v = 0;
         if (v > 255) v = 255;
         if (v === value) return;
