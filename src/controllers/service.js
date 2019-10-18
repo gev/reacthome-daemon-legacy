@@ -423,7 +423,7 @@ const run = (action) => {
       case ACTION_DIM_RELATIVE: {
         const { id, value } = action;
         const o = get(id) || {};
-        let v, r, g, b;
+        let v;
         if (o.bind) {
           v = (get(o.bind) || {}).value;
         } else {
