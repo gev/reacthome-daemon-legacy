@@ -434,16 +434,16 @@ const run = (action) => {
         };
         switch (operator) {
           case OPERATOR_PLUS:
-            v = Math.round(value + Number(action.value));
+            v = Math.round(v + Number(value));
             break;
           case OPERATOR_MINUS:
-            v = Math.round(value - Number(action.value));
+            v = Math.round(v - Number(value));
             break;
             case OPERATOR_MUL:
-            v = Math.round(value * Number(action.value));
+            v = Math.round(v * Number(value));
             break;
             case OPERATOR_DIV:
-            v = Math.round(value / Number(action.value))
+            v = Math.round(v / Number(value))
             break;
         }
         if (v < 0) v = 0;
