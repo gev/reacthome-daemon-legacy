@@ -269,7 +269,7 @@ const run = (action) => {
           const { velocity, type } = get(o[i]) || {};
           const [dev,,index] = o[i].split('/');
           const { ip, type: deviceType } = get(dev);
-          const value = isOn ? last[i] : 255;
+          const value = isOn ? (i === 'bind' ? last.value : last[i]) : 255;
           switch (deviceType) {
             case DEVICE_TYPE_DIM4:
             case DEVICE_TYPE_DIM_4:
