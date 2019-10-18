@@ -61,6 +61,8 @@ const {
   DEVICE_TYPE_RELAY_12,
   DEVICE_TYPE_RELAY_24,
   DEVICE_TYPE_IR_4,
+  DEVICE_TYPE_SENSOR4,
+  DEVICE_TYPE_SMART_4;
   DRIVER_TYPE_ARTNET,
   DRIVER_TYPE_BB_PLC1,
   DRIVER_TYPE_BB_PLC2,
@@ -130,6 +132,7 @@ const DIM_VELOCITY = 128;
 const ARTNET_VELOCITY = 1;
 
 const bind = ['r', 'g', 'b', 'bind'];
+const rgb  = ['r', 'g', 'b'];
 
 const run = (action) => {
   try {
@@ -217,10 +220,42 @@ const run = (action) => {
         break;
       }
       case ACTION_RGB_DIM: {
-        const { id, value } = action;
-        const { ip } = get(id);
-        device.send(Buffer.from([ACTION_RGB, 0, (value >> 16) & 0xff, (value >> 8) & 0xff, value & 0xff ]), ip);
-        set(id, { rgb: value });
+        const { id, value = {} } = action;
+        const { ip, type } = get(id);
+        switch (type) {
+          case DEVICE_TYPE_SENSOR4:
+          case DEVICE_TYPE_SMART_4: {
+            const { r, g, b } = value;
+            device.send(Buffer.from([ACTION_RGB, 0, r, g, b]), ip);
+            set(id, value);
+            break;
+          }
+          case light_RGB: {
+            rgb.forEach((i) => {
+              if (!o[i]) return;
+              const { velocity } = get(o[i]) || {};
+              const [dev,,index] = o[i].split('/');
+              const { ip, type: deviceType } = get(dev);
+              const v = value[i];
+              switch (deviceType) {
+                case DEVICE_TYPE_DIM4:
+                case DEVICE_TYPE_DIM_4:
+                case DEVICE_TYPE_DIM8:
+                case DEVICE_TYPE_DIM_8: {
+                  device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, v, DIM_VELOCITY]), ip);
+                  set(id, { last: { ...last, [i]: v } });
+                  break;
+                }
+                case DRIVER_TYPE_ARTNET: {
+                  drivers.handle({ id: dev, index, action: ARTNET_FADE, v, velocity: ARTNET_VELOCITY });
+                  set(id, { last: { ...last, [i]: v } });
+                  break;
+                }
+              }
+            });
+            break;
+          }
+        }
         break;
       }
       case ACTION_ENABLE:

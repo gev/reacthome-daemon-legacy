@@ -163,6 +163,7 @@ module.exports.DEVICE_TYPE_IR_RECEIVER = 0x10;
 
 module.exports.DEVICE_TYPE_RELAY_2 = 0x23;
 module.exports.DEVICE_TYPE_IR_4 = 0x24;
+module.exports.DEVICE_TYPE_SMART_4 = 0x25;
 
 module.exports.DEVICE_TYPE_RELAY_6 = 0xa0;
 module.exports.DEVICE_TYPE_RELAY_12 = 0xa1;
