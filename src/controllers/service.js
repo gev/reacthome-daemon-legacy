@@ -387,9 +387,9 @@ const run = (action) => {
       case ACTION_DIM: {
         const { id, value } = action;
         const o = get(id) || {};
-        const { last, r, g, b, hsv: { h = 0, s = 0 } = {} } = o;
+        const { last, hsv: { h = 0, s = 0 } = {} } = o;
         const rgb = color.hsv.rgb(h, s, value / 2.55);
-        bind.forEach((i, c) => {
+        rgb.forEach((i, c) => {
           if (!o[i]) return;
           const { velocity } = get(o[i]) || {};
           const [dev,,index] = o[i].split('/');
