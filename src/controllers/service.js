@@ -265,8 +265,7 @@ const run = (action) => {
         const { id } = action;
         const o = get(id) || {};
         const { last = {}, type: payloadType } = o;
-        const { r, g, b, bind } = last;
-        const isOn = r > 0 || g > 0 || b > 0 || bind > 0;
+        const isOn = last.r > 0 || last.g > 0 || last.b > 0 || last.bind > 0;
         bind.forEach((i) => {
           if (!o[i]) return;
           const { velocity, type } = get(o[i]) || {};
