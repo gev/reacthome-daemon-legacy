@@ -265,7 +265,7 @@ const run = (action) => {
         const { id } = action;
         const o = get(id) || {};
         const { last = {}, type: payloadType } = o;
-        const { r, g, b, bind } = value;
+        const { r, g, b, bind } = last;
         const isOn = r > 0 || g > 0 || b > 0 || bind > 0;
         bind.forEach((i) => {
           if (!o[i]) return;
