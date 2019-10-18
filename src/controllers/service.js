@@ -388,8 +388,8 @@ const run = (action) => {
         const { id, value } = action;
         const o = get(id) || {};
         const { last, hsv: { h = 0, s = 0 } = {} } = o;
-        const rgb_ = color.hsv.rgb(h, s, value / 2.55);
-        rgb.forEach((i, c) => {
+        const rgb = color.hsv.rgb(h, s, value / 2.55);
+        bind.forEach((i, c) => {
           if (!o[i]) return;
           const { velocity } = get(o[i]) || {};
           const [dev,,index] = o[i].split('/');
@@ -398,20 +398,19 @@ const run = (action) => {
           if (i === 'bind') {
             v = value;
           } else {
-            v = rgb_[c];
+            v = rgb[c];
           }
+          set(id, { last: { ...last, [i]: v } });
           switch (deviceType) {
             case DEVICE_TYPE_DIM4:
             case DEVICE_TYPE_DIM_4:
             case DEVICE_TYPE_DIM8:
             case DEVICE_TYPE_DIM_8: {
               device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, v, DIM_VELOCITY]), ip);
-              set(id, { last: { ...last, [i]: v } });
               break;
             }
             case DRIVER_TYPE_ARTNET: {
               drivers.handle({ id: dev, index, action: ARTNET_FADE, v, velocity: ARTNET_VELOCITY });
-              set(id, { last: { ...last, [i]: v } });
               break;
             }
           }
