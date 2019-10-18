@@ -35,6 +35,7 @@ module.exports.MOTION_SENSOR = 'motion_sensor';
 module.exports.LEAKAGE_SENSOR = 'leakage_sensor';
 module.exports.VALVE_HEATING = 'valve_heating';
 module.exports.VALVE_WATER = 'valve_water';
+module.exports.LIGHT_RGB = 'light_RGB';
 module.exports.SOCKET_220 = 'socket_220';
 module.exports.BOILER = 'boiler';
 module.exports.PUMP = 'pump';

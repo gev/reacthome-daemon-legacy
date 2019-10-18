@@ -109,7 +109,8 @@ const {
   STATE,
   STOP,
   HEAT,
-  COOL
+  COOL,
+  LIGHT_RGB
 } = require('../constants');
 const {
   get,
