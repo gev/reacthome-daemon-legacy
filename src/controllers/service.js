@@ -449,7 +449,7 @@ const run = (action) => {
             v = Math.round(value / Number(action.value))
             break;
         }
-        if (1o.bind) v *= 2.25;
+        if (o.bind) v *= 2.25;
         if (v < 0) v = 0;
         if (v > 255) v = 255;
         if (v === value) return;
