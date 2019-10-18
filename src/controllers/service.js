@@ -252,7 +252,7 @@ const run = (action) => {
                   break;
                 }
               }
-              set(id, { last: value } });
+              set(id, { last: value });
             });
             break;
           }
