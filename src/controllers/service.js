@@ -433,7 +433,7 @@ const run = (action) => {
           console.log(r,g,b);
           console.log(h,s,v);
           set(id, { hsv: { h, s, v } });
-          value = v;
+          value = v * 2.25;
         }
         switch (operator) {
           case OPERATOR_PLUS:
@@ -449,7 +449,6 @@ const run = (action) => {
             v = Math.round(value / Number(action.value))
             break;
         }
-        if (!o.bind) v *= 2.25;
         if (v < 0) v = 0;
         if (v > 255) v = 255;
         if (v === value) return;
