@@ -288,7 +288,6 @@ const run = (action) => {
       case ACTION_DISABLE:
       case ACTION_OFF: {
         const { id } = action;
-        const { id } = action;
         const o = get(id) || {};
         const { last = {}, type: payloadType } = o;
         bind.forEach((i) => {
