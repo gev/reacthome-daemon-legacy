@@ -245,15 +245,14 @@ const run = (action) => {
                 case DEVICE_TYPE_DIM8:
                 case DEVICE_TYPE_DIM_8: {
                   device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, v, DIM_VELOCITY]), ip);
-                  set(id, { last: { ...last, [i]: v } });
                   break;
                 }
                 case DRIVER_TYPE_ARTNET: {
                   drivers.handle({ id: dev, index, action: ARTNET_FADE, v, velocity: ARTNET_VELOCITY });
-                  set(id, { last: { ...last, [i]: v } });
                   break;
                 }
               }
+              set(id, { last: value } });
             });
             break;
           }
