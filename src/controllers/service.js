@@ -350,6 +350,9 @@ const run = (action) => {
         const { id, value } = action;
         const o = get(id) || {};
         const { last, r, g, b } = o;
+        const R = r ? (get(r) || {}).value || 0 : 0;
+        const G = g ? (get(g) || {}).value || 0 : 0;
+        const B = b ? (get(b) || {}).value || 0 : 0;
         bind.forEach((i, c) => {
           if (!o[i]) return;
           const { velocity } = get(o[i]) || {};
@@ -359,7 +362,7 @@ const run = (action) => {
           if (i === 'bind') {
             v = value;
           } else {
-            const [h ,s] = color.rgb.hsl(r, g, b);
+            const [h, s, l] = color.rgb.hsl(R, G, B);
             v = color.hsl.rgb(h, s, value)[c];
           }
           switch (deviceType) {
