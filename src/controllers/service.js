@@ -400,6 +400,7 @@ const run = (action) => {
           } else {
             v = rgb[c];
           }
+          console.log(i, v);
           console.log({ last: { ...last, [i]: v } });
           set(id, { last: { ...last, [i]: v } });
           switch (deviceType) {
