@@ -264,8 +264,8 @@ const run = (action) => {
       case ACTION_ON: {
         const { id } = action;
         const o = get(id) || {};
-        const { last = {}, type: payloadType } = o;
-        const isOn = last.r > 0 || last.g > 0 || last.b > 0 || last.bind > 0;
+        const { last, type: payloadType } = o;
+        const isOn = last.r > 0 || last.g > 0 || last.b > 0 || last.value > 0;
         bind.forEach((i) => {
           if (!o[i]) return;
           const { velocity, type } = get(o[i]) || {};
@@ -389,6 +389,8 @@ const run = (action) => {
         const o = get(id) || {};
         const { last, hsv: { h = 0, s = 0 } = {} } = o;
         const rgb = color.hsv.rgb(h, s, value / 2.55);
+        const { r, g, b } = rgb;
+        set(id, { last: o.bind ? { value } : { r, g, b });
         bind.forEach((i, c) => {
           if (!o[i]) return;
           const { velocity } = get(o[i]) || {};
@@ -401,8 +403,6 @@ const run = (action) => {
             v = rgb[c];
           }
           console.log(i, v);
-          console.log({ last: { ...last, [i]: v } });
-          set(id, { last: { ...last, [i]: v } });
           switch (deviceType) {
             case DEVICE_TYPE_DIM4:
             case DEVICE_TYPE_DIM_4:
