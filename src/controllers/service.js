@@ -259,10 +259,23 @@ const run = (action) => {
         }
         break;
       }
-      case ACTION_ENABLE:
+      case ACTION_ENABLE: {
+        const { type } = get(action.id) || {};
+        switch (type) {
+          case AC: {
+            ac.handle(action);
+            break;
+          }
+          default: {
+            set(action.id, { disabled: false });
+          }
+        }
+        break;
+      }
       case ACTION_ON: {
         const { id } = action;
         const o = get(id) || {};
+        if (o.disabled) return;
         const { last, type: payloadType } = o;
         const isOn = last.r > 0 || last.g > 0 || last.b > 0 || last.value > 0;
         bind.forEach((i) => {
@@ -323,10 +336,23 @@ const run = (action) => {
         });
         break;
       }
-      case ACTION_DISABLE:
+      case ACTION_DISABLE: {
+        const { type } = get(action.id) || {};
+        switch (type) {
+          case AC: {
+            ac.handle(action);
+            break;
+          }
+          default: {
+            set(action.id, { disabled: true });
+          }
+        }
+        break;
+      }
       case ACTION_OFF: {
         const { id } = action;
         const o = get(id) || {};
+        if (o.disabled) return;
         const { type: payloadType } = o;
         bind.forEach((i) => {
           if (!o[i]) return;
