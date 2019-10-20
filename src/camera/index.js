@@ -5,7 +5,8 @@ const { fixSDP } = require('../sdp');
 const { sendAction } = require('../webrtc/peer');
 const { CREATE } = require('../janus/constants');
 const { RTSP, WATCH, START } = require('./constants');
-const streams = require('./streams');
+
+const streams = new Map();
 
 module.exports.onWatch = ({ id, preview, audio = false, video = true }, session) => {
   const camera = get(id);
@@ -18,7 +19,6 @@ module.exports.onWatch = ({ id, preview, audio = false, video = true }, session)
       const watch = (stream_id) => {
         janus.sendMessage(session_id, handle_id, { request: WATCH, id: stream_id }, ({ jsep }) => {
           if (jsep) {
-            console.log(stream_id);
             // jsep.sdp = fixSDP(jsep.sdp);
             // jsep.sdp = jsep.sdp.replace('42801E', '42e01f');
             // jsep.sdp = jsep.sdp.replace('420029', '42e01f');
