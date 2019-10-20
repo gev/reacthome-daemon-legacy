@@ -257,6 +257,7 @@ const run = (action) => {
                 case DEVICE_TYPE_SMART_4: {
                   const { value: { r, g, b} = {} } = action;
                   const { ip } = get(action.id);
+                  console.log(action.id, r, g, b, ip)
                   device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...action.id.split(':').map(i => parseInt(i, 16)), ACTION_RGB, 0, r, g, b]), ip);
                   break
                 }
