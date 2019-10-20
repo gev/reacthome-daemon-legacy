@@ -5,6 +5,7 @@ const { fixSDP } = require('../sdp');
 const { sendAction } = require('../webrtc/peer');
 const { CREATE } = require('../janus/constants');
 const { RTSP, WATCH, START } = require('./constants');
+const streams = require('./streams');
 
 module.exports.onWatch = ({ id, preview, audio = false, video = true }, session) => {
   const camera = get(id);
@@ -14,21 +15,9 @@ module.exports.onWatch = ({ id, preview, audio = false, video = true }, session)
   if (!url) return;
   janus.createSession((session_id) => {
     janus.attachPlugin(session_id, 'janus.plugin.streaming', (handle_id) => {
-      const u = new URL(url);
-      const rtsp_user = u.username;
-      const rtsp_pwd = u.password;
-      u.username = '';
-      u.password = '';
-      janus.sendMessage(session_id, handle_id, {
-        request: CREATE,
-        type: RTSP,
-        audio, video,
-        url: u.toString(),
-        rtsp_user, rtsp_pwd,
-        videofmtp: 'profile-level-id=42e01f;packetization-mode=1'
-      }, ({ plugindata }) => {
-        const stream_id = plugindata.data.stream.id;
+      const watch = (stream_id) => {
         janus.sendMessage(session_id, handle_id, { request: WATCH, id: stream_id }, ({ jsep }) => {
+          streams.set(url, stream_id);
           if (jsep) {
             console.log(stream_id);
             // jsep.sdp = fixSDP(jsep.sdp);
@@ -37,7 +26,26 @@ module.exports.onWatch = ({ id, preview, audio = false, video = true }, session)
             sendAction(session, { type: WATCH, id, session_id, handle_id, stream_id, jsep });
           }
         });
-      });
+      };
+      if (streams.has(url)) {
+        watch(streams.get(url));
+      } else {
+        const u = new URL(url);
+        const rtsp_user = u.username;
+        const rtsp_pwd = u.password;
+        u.username = '';
+        u.password = '';
+          janus.sendMessage(session_id, handle_id, {
+          request: CREATE,
+          type: RTSP,
+          audio, video,
+          url: u.toString(),
+          rtsp_user, rtsp_pwd,
+          videofmtp: 'profile-level-id=42e01f;packetization-mode=1'
+        }, ({ plugindata }) => {
+          watch(plugindata.data.stream.id);
+        });
+      }
     });
   });
 };
