@@ -30,6 +30,7 @@ module.exports.onWatch = ({ id, preview, audio = false, video = true }, session)
         const stream_id = plugindata.data.stream.id;
         janus.sendMessage(session_id, handle_id, { request: WATCH, id: stream_id }, ({ jsep }) => {
           if (jsep) {
+            console.log(stream_id);
             // jsep.sdp = fixSDP(jsep.sdp);
             // jsep.sdp = jsep.sdp.replace('42801E', '42e01f');
             // jsep.sdp = jsep.sdp.replace('420029', '42e01f');
