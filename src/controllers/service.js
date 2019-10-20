@@ -736,7 +736,7 @@ const run = (action) => {
       }
       case ACTION_TOGGLE: {
         const { test = [], onOn, onOff } = action;
-        const f = test.find(i => bind.find(j => (get(i[j]) || {}).value)));
+        const f = test.find(i => bind.find(j => (get(i[j]) || {}).value));
         if (f) {
           if (onOff) {
             run({ type: ACTION_SCRIPT_RUN, id: onOff });
