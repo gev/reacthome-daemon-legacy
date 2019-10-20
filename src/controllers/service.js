@@ -226,11 +226,13 @@ const run = (action) => {
         const o = get(id) || {};
         const { ip, type } = o;
         switch (type) {
-          case DEVICE_TYPE_SENSOR4:
-          case DEVICE_TYPE_SMART_4: {
+          case DEVICE_TYPE_SENSOR4: {
             device.send(Buffer.from([ACTION_RGB, 0, r, g, b]), ip);
-            set(id, value);
             break;
+          };
+          case DEVICE_TYPE_SMART_4: {
+            device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...action.id.split(':').map(i => parseInt(i, 16)), ACTION_RGB, 0, r, g, b]), ip);
+            break
           }
           case LIGHT_RGB: {
             set(id, { last: { r, g, b } });
@@ -247,19 +249,6 @@ const run = (action) => {
                 case DEVICE_TYPE_DIM_8: {
                   device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, v, DIM_VELOCITY]), ip);
                   break;
-                }
-                case DEVICE_TYPE_SENSOR4: {
-                  const { value: { r, g, b} = {} } = action;
-                  const { ip } = get(action.id);
-                  device.send(Buffer.from([ACTION_RGB, 0, r, g, b]), ip);
-                  break;
-                };
-                case DEVICE_TYPE_SMART_4: {
-                  const { value: { r, g, b} = {} } = action;
-                  const { ip } = get(action.id);
-                  console.log(action.id, r, g, b, ip)
-                  device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...action.id.split(':').map(i => parseInt(i, 16)), ACTION_RGB, 0, r, g, b]), ip);
-                  break
                 }
                 case DRIVER_TYPE_ARTNET: {
                   drivers.handle({ id: dev, index, action: ARTNET_FADE, v, velocity: ARTNET_VELOCITY });
