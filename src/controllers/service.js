@@ -278,7 +278,7 @@ const run = (action) => {
         const { id } = action;
         const o = get(id) || {};
         if (o.disabled) return;
-        const { last, type: payloadType } = o;
+        const { last = {}, type: payloadType } = o;
         const isOn = last.r > 0 || last.g > 0 || last.b > 0 || last.value > 0;
         bind.forEach((i) => {
           if (!o[i]) return;
