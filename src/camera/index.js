@@ -17,7 +17,6 @@ module.exports.onWatch = ({ id, preview, audio = false, video = true }, session)
     janus.attachPlugin(session_id, 'janus.plugin.streaming', (handle_id) => {
       const watch = (stream_id) => {
         janus.sendMessage(session_id, handle_id, { request: WATCH, id: stream_id }, ({ jsep }) => {
-          streams.set(url, stream_id);
           if (jsep) {
             console.log(stream_id);
             // jsep.sdp = fixSDP(jsep.sdp);
@@ -43,7 +42,9 @@ module.exports.onWatch = ({ id, preview, audio = false, video = true }, session)
           rtsp_user, rtsp_pwd,
           videofmtp: 'profile-level-id=42e01f;packetization-mode=1'
         }, ({ plugindata }) => {
-          watch(plugindata.data.stream.id);
+          const stream_id = plugindata.data.stream.id;
+          streams.set(url, stream_id);
+          watch(stream_id);
         });
       }
     });
