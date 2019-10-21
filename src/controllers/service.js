@@ -751,7 +751,7 @@ const run = (action) => {
           if (o.value === undefined) {
             return bind.find(j => (get(o[j]) || {}).value);
           }
-          return  o;
+          return  o.value;
         });
         if (f) {
           if (onOff) {
