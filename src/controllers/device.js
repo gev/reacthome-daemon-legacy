@@ -215,7 +215,7 @@ module.exports.manage = () => {
           const temperature = data.readUInt16LE(15) / 100;
           set(dev_id, { ip: address, online: true, temperature, type: DEVICE_TYPE_TEMPERATURE_EXT, version: '1.0' });
           add(mac(), DEVICE, dev_id);
-          const { onTemperature: onTemperature, site } = get(id);
+          const { onTemperature: onTemperature, site } = get(dev_id);
           if (site) set(site, { temperature });
           if (onTemperature) {
             run({ type: ACTION_SCRIPT_RUN, id: onTemperature });
