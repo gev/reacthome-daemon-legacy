@@ -209,6 +209,8 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_TEMPERATURE_EXT: {
+          const dev_id = data.slice(7, 15).map(i => i.toString(16)).join(':');
+          console.log(dev_id);
           const temperature_ext = data.readUInt16LE(15) / 100;
           const { onTemperatureExt, site } = get(id);
           if (site) set(site, { temperature_ext });
