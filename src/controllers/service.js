@@ -279,6 +279,9 @@ const run = (action) => {
         const o = get(id) || {};
         if (o.disabled) return;
         set(id, { value: true });
+        if (o.onOn) {
+          run({ type: ACTION_SCRIPT_RUN, id: o.onOn });
+        }
         const { last = {}, type: payloadType } = o;
         const isOn = last.r > 0 || last.g > 0 || last.b > 0 || last.value > 0;
         bind.forEach((i) => {
@@ -357,6 +360,9 @@ const run = (action) => {
         const o = get(id) || {};
         if (o.disabled) return;
         set(id, { value: false });
+        if (o.onOff) {
+          run({ type: ACTION_SCRIPT_RUN, id: o.onOff });
+        }
         const { type: payloadType } = o;
         bind.forEach((i) => {
           if (!o[i]) return;
@@ -740,7 +746,13 @@ const run = (action) => {
       }
       case ACTION_TOGGLE: {
         const { test = [], onOn, onOff } = action;
-        const f = test.find(i => bind.find(j => (get(i[j]) || {}).value));
+        const f =  test.find(i => {
+          const o = get(i);
+          if (o.value === undefined) {
+            return bind.find(j => (get(o[j]) || {}).value);
+          }
+          return  o;
+        });
         if (f) {
           if (onOff) {
             run({ type: ACTION_SCRIPT_RUN, id: onOff });
