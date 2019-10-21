@@ -278,6 +278,7 @@ const run = (action) => {
         const { id } = action;
         const o = get(id) || {};
         if (o.disabled) return;
+        o.set(id, { value: true });
         const { last = {}, type: payloadType } = o;
         const isOn = last.r > 0 || last.g > 0 || last.b > 0 || last.value > 0;
         bind.forEach((i) => {
@@ -355,6 +356,7 @@ const run = (action) => {
         const { id } = action;
         const o = get(id) || {};
         if (o.disabled) return;
+        o.set(id, { value: false });
         const { type: payloadType } = o;
         bind.forEach((i) => {
           if (!o[i]) return;
@@ -752,7 +754,7 @@ const run = (action) => {
       }
       case ACTION_TV: {
         const { id, command, repeat } = action;
-        const { bind, brand, model } = get(id);
+        const { bind, brand, model } = get(id) || {};
         const [dev,,index] = bind.split('/');
         const { ip, type } = get(dev);
         ircodes.getCode(TV, brand, model, command)
