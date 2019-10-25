@@ -42,13 +42,13 @@ db.createReadStream()
     }
     await assets.init();
     state.init(init);
-    // weather.manage();
-    // device.manage();
-    // drivers.manage();
-    // cpu.manage();
+    weather.manage();
+    device.manage();
+    drivers.manage();
+    cpu.manage();
     discovery.start(init.mac);
     webrtc.start(init.mac);
-    // janus.start();
+    janus.start();
     ping.start();
     sip.start();
     start(init.mac);
