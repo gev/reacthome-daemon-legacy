@@ -1,4 +1,5 @@
 
+const { networkInterfaces } = require('os');
 const { createSocket } = require('dgram');
 const { DAEMON, VERSION} = require('./constants');
 const { get } = require('./actions');
@@ -13,8 +14,7 @@ module.exports.start = (id) => {
   const socket = createSocket('udp4');
   socket.on('error', console.error);
   socket.bind(() => {
-    const interface = '192.168.88.188';
-    socket.setMulticastInterface(interface)
+    socket.setMulticastInterface(networkInterfaces().eth0.address)
     setInterval(() => {
       const { code, title, project } = get(id);
       socket.send(JSON.stringify({
