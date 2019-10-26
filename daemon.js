@@ -41,6 +41,7 @@ db.createReadStream()
       db.put('mac', init.mac);
     }
     init.pool = {};
+    db.put('pool', {});
     await assets.init();
     state.init(init);
     weather.manage();
