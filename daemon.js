@@ -40,7 +40,6 @@ db.createReadStream()
       init.mac = v4();
       db.put('mac', init.mac);
     }
-    console.log(init.pool)
     await assets.init();
     state.init(init);
     weather.manage();
