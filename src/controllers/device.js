@@ -287,7 +287,6 @@ module.exports.manage = () => {
         case ACTION_IP_ADDRESS: {
           const lookup = (get(POOL) || {})[id];
           if (lookup) {
-            console.log(lookup);
             const buff = Buffer.alloc(15);
             buff.writeUInt8(ACTION_IP_ADDRESS, 0);
             Buffer.from(dev_mac).copy(buff, 1, 0, 6);
@@ -306,7 +305,6 @@ module.exports.manage = () => {
             set(POOL, { [id]: last_ip });
             buff.writeUInt32BE(last_ip, 7);
             buff.writeUInt32BE(SUB_NET_MASK, 11);
-            console.log(buff);
             device.send(buff, DEVICE_GROUP);
           }
           break;
