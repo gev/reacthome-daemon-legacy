@@ -14,7 +14,7 @@ module.exports.start = (id) => {
   const socket = createSocket('udp4');
   socket.on('error', console.error);
   socket.bind(() => {
-    socket.setMulticastInterface(networkInterfaces().eth0[0].address)
+    socket.setMulticastInterface(networkInterfaces().eth1[0].address)
     setInterval(() => {
       const { code, title, project } = get(id);
       socket.send(JSON.stringify({
