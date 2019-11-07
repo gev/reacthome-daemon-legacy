@@ -6,6 +6,7 @@ const {
   DIM,
   RS485,
   POOL,
+  DEVICE,
   DEVICE_TYPE_PLC,
   ACTION_DI,
   ACTION_DO,
@@ -33,6 +34,7 @@ const {
   DIM_TYPE_PWM,
   DEVICE_GROUP,
   DEVICE_TYPE_UNKNOWN,
+  DEVICE_TYPE_TEMPERATURE_EXT,
   IP_ADDRESS_POOL_START,
   IP_ADDRESS_POOL_END,
   SUB_NET_MASK,
@@ -46,12 +48,12 @@ const {
   onDoppler,
   onHumidity,
   onIllumination,
-  onTemperature,
-  onTemperatureExt
+  onTemperature
 } = require('../constants');
 const {
   get,
   set,
+  add,
   count_on,
   count_off,
   offline,
@@ -201,7 +203,7 @@ module.exports.manage = () => {
         case ACTION_TEMPERATURE: {
           const temperature = data.readUInt16LE(7) / 100;
           const { onTemperature, site } = get(id);
-          // if (site) set(site, { temperature });
+          if (site) set(site, { temperature });
           set(id, { temperature });
           if (onTemperature) {
             run({type: ACTION_SCRIPT_RUN, id: onTemperature});
@@ -209,12 +211,14 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_TEMPERATURE_EXT: {
-          const temperature_ext = data.readUInt16LE(15) / 100;
-          const { onTemperatureExt, site } = get(id);
-          if (site) set(site, { temperature_ext });
-          set(id, { temperature_ext });
-          if (onTemperatureExt) {
-            run({type: ACTION_SCRIPT_RUN, id: onTemperatureExt});
+          const dev_id = data.slice(7, 15).map(i => `0${i.toString(16)}`.slice(-2)).join(':');
+          const temperature = data.readUInt16LE(15) / 100;
+          set(dev_id, { ip: address, online: true, temperature, type: DEVICE_TYPE_TEMPERATURE_EXT, version: '1.0' });
+          add(mac(), DEVICE, dev_id);
+          const { onTemperature: onTemperature, site } = get(dev_id);
+          if (site) set(site, { temperature });
+          if (onTemperature) {
+            run({ type: ACTION_SCRIPT_RUN, id: onTemperature });
           }
           break;
         }
@@ -229,7 +233,7 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_ILLUMINATION: {
-          const illumination = data.readUInt16LE(7) / 100;
+          const illumination = data.readUInt32BE(7) / 100;
           const { onIllumination, site } = get(id);
           if (site) set(site, { illumination });
           set(id, { illumination });

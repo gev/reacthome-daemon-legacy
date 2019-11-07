@@ -6,6 +6,7 @@
     "firmware": "sh copy-firmware.sh"
   },
   "dependencies": {
+    "color-convert": "^2.0.1",
     "crc": "^3.8.0",
     "cron": "^1.6.0",
     "debounce": "^1.1.0",

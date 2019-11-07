@@ -2,6 +2,7 @@
 const { exists, createWriteStream } = require('fs');
 const fetch = require('node-fetch');
 const crypto = require('crypto');
+const color = require('color-convert');
 const ircodes = require('reacthome-ircodes');
 const drivers = require('../drivers');
 const {
@@ -49,8 +50,10 @@ const {
   ACTION_TV,
   ACTION_LEAKAGE_RESET,
   ACTION_SCRIPT_RUN,
+  NOTIFY,
   DEVICE_PORT,
   DEVICE_TYPE_DIM4,
+  DEVICE_TYPE_DIM_4,
   DEVICE_TYPE_DIM8,
   DEVICE_TYPE_DIM_8,
   DEVICE_TYPE_RELAY_2,
@@ -58,6 +61,8 @@ const {
   DEVICE_TYPE_RELAY_12,
   DEVICE_TYPE_RELAY_24,
   DEVICE_TYPE_IR_4,
+  DEVICE_TYPE_SENSOR4,
+  DEVICE_TYPE_SMART_4,
   DRIVER_TYPE_ARTNET,
   DRIVER_TYPE_BB_PLC1,
   DRIVER_TYPE_BB_PLC2,
@@ -105,7 +110,8 @@ const {
   ASSETS,
   STOP,
   HEAT,
-  COOL
+  COOL,
+  LIGHT_RGB
 } = require('../constants');
 const {
   get,
@@ -125,6 +131,9 @@ const timer = {};
 
 const DIM_VELOCITY = 128;
 const ARTNET_VELOCITY = 1;
+
+const bind = ['r', 'g', 'b', 'bind'];
+const rgb  = ['r', 'g', 'b'];
 
 const download = (ip, name) => {
   const file = asset(name);
@@ -275,185 +284,317 @@ const run = (action, address) => {
         break;
       }
       case ACTION_RGB_DIM: {
-        const { id, value } = action;
-        const { ip } = get(id);
-        device.send(Buffer.from([ACTION_RGB, 0, (value >> 16) & 0xff, (value >> 8) & 0xff, value & 0xff ]), ip);
-        set(id, { rgb: value });
+        const { id, value = {} } = action;
+        const { r, g, b } = value;
+        const o = get(id) || {};
+        const { ip, type } = o;
+        switch (type) {
+          case DEVICE_TYPE_SENSOR4: {
+            device.send(Buffer.from([ACTION_RGB, 0, r, g, b]), ip);
+            break;
+          };
+          case DEVICE_TYPE_SMART_4: {
+            device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...action.id.split(':').map(i => parseInt(i, 16)), ACTION_RGB, 0, r, g, b]), ip);
+            break
+          }
+          case LIGHT_RGB: {
+            set(id, { last: { r, g, b } });
+            rgb.forEach((i) => {
+              if (!o[i]) return;
+              const { velocity } = get(o[i]) || {};
+              const [dev,,index] = o[i].split('/');
+              const { ip, type: deviceType } = get(dev);
+              const v = value[i];
+              switch (deviceType) {
+                case DEVICE_TYPE_DIM4:
+                case DEVICE_TYPE_DIM_4:
+                case DEVICE_TYPE_DIM8:
+                case DEVICE_TYPE_DIM_8: {
+                  device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, v, DIM_VELOCITY]), ip);
+                  break;
+                }
+                case DRIVER_TYPE_ARTNET: {
+                  drivers.handle({ id: dev, index, action: ARTNET_FADE, v, velocity: ARTNET_VELOCITY });
+                  break;
+                }
+              }
+            });
+            break;
+          }
+        }
         break;
       }
-      case ACTION_ENABLE:
+      case ACTION_ENABLE: {
+        const { type } = get(action.id) || {};
+        switch (type) {
+          case AC: {
+            ac.handle(action);
+            break;
+          }
+          default: {
+            set(action.id, { disabled: false });
+          }
+        }
+        break;
+      }
       case ACTION_ON: {
         const { id } = action;
-        const { bind, last, type: payloadType } = get(id) || {};
-        const { velocity, type } = get(bind) || {};
-        const [dev,,index] = bind.split('/');
-        const { ip, type: deviceType } = get(dev);
-        const value = last || 255
-        switch (deviceType) {
-          case DEVICE_TYPE_DIM4:
-          case DEVICE_TYPE_DIM8:
-          case DEVICE_TYPE_DIM_8: {
-            switch (type) {
-              case DIM_TYPE_PWM:
-              case DIM_TYPE_RISING_EDGE:
-              case DIM_TYPE_FALLING_EDGE: {
-                device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, DIM_VELOCITY]), ip);
-                break;
+        const o = get(id) || {};
+        if (o.disabled) return;
+        set(id, { value: true });
+        if (o.onOn) {
+          run({ type: ACTION_SCRIPT_RUN, id: o.onOn });
+        }
+        const { last = {}, type: payloadType } = o;
+        const isOn = last.r > 0 || last.g > 0 || last.b > 0 || last.value > 0;
+        bind.forEach((i) => {
+          if (!o[i]) return;
+          const { velocity, type } = get(o[i]) || {};
+          const [dev,,index] = o[i].split('/');
+          const { ip, type: deviceType } = get(dev) || {};
+          const value = isOn ? (i === 'bind' ? last.value : last[i]) : 255;
+          switch (deviceType) {
+            case DEVICE_TYPE_DIM4:
+            case DEVICE_TYPE_DIM_4:
+            case DEVICE_TYPE_DIM8:
+            case DEVICE_TYPE_DIM_8: {
+              switch (type) {
+                case DIM_TYPE_PWM:
+                case DIM_TYPE_RISING_EDGE:
+                case DIM_TYPE_FALLING_EDGE: {
+                  device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, DIM_VELOCITY]), ip);
+                  break;
+                }
+                default: {
+                  device.send(Buffer.from([ACTION_DO, index, ON]), ip);
+                }
               }
-              default: {
-                device.send(Buffer.from([ACTION_DO, index, ON]), ip);
-              }
-            }
-            break;
-          }
-          case DEVICE_TYPE_RELAY_2: {
-            device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...dev.split(':').map(i => parseInt(i, 16)), ACTION_DO, index, ON]), ip);
-            break;
-          }
-          case DRIVER_TYPE_ARTNET: {
-            switch (type) {
-              case ARTNET_TYPE_DIMMER:
-                drivers.handle({ id: dev, index, action: ARTNET_FADE, value, velocity: ARTNET_VELOCITY });
               break;
-              default:
-                drivers.handle({ id: dev, index, type: ACTION_DO, value: ON, velocity: ARTNET_VELOCITY });
             }
-            break;
+            case DEVICE_TYPE_RELAY_2: {
+              device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...dev.split(':').map(i => parseInt(i, 16)), ACTION_DO, index, ON]), ip);
+              break;
+            }
+            case DRIVER_TYPE_ARTNET: {
+              switch (type) {
+                case ARTNET_TYPE_DIMMER:
+                  drivers.handle({ id: dev, index, action: ARTNET_FADE, value, velocity: ARTNET_VELOCITY });
+                break;
+                default:
+                  drivers.handle({ id: dev, index, type: ACTION_DO, value: ON, velocity: ARTNET_VELOCITY });
+              }
+              break;
+            }
+            case DRIVER_TYPE_BB_PLC1:
+            case DRIVER_TYPE_BB_PLC2: {
+              drivers.handle({ id: dev, index, value: ON });
+              break;
+            }
+            default: {
+              switch (payloadType) {
+                case AC: {
+                  ac.handle(action);
+                  break;
+                }
+                default: {
+                  device.send(Buffer.from([ACTION_DO, index, ON]), ip);
+                }
+              }
+            }
           }
-          case DRIVER_TYPE_BB_PLC1:
-          case DRIVER_TYPE_BB_PLC2: {
-            drivers.handle({ id: dev, index, value: ON });
+        });
+        break;
+      }
+      case ACTION_DISABLE: {
+        const { type } = get(action.id) || {};
+        switch (type) {
+          case AC: {
+            ac.handle(action);
             break;
           }
           default: {
-            switch (payloadType) {
-              case AC: {
-                ac.handle(action);
-                break;
-              }
-              default: {
-                device.send(Buffer.from([ACTION_DO, index, ON]), ip);
-              }
-            }
+            set(action.id, { disabled: true });
           }
         }
         break;
       }
-      case ACTION_DISABLE:
       case ACTION_OFF: {
         const { id } = action;
-        const { bind, type: payloadType } = get(id) || {};
-        const { velocity = 128, type } = get(bind) || {};
-        const [dev,,index] = bind.split('/');
-        const { ip, type: deviceType } = get(dev);
-        switch (deviceType) {
-          case DEVICE_TYPE_DIM4:
-          case DEVICE_TYPE_DIM8:
-          case DEVICE_TYPE_DIM_8: {
-            switch (type) {
-              case DIM_TYPE_PWM:
-              case DIM_TYPE_RISING_EDGE:
-              case DIM_TYPE_FALLING_EDGE:
-                device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, 0, DIM_VELOCITY]), ip);
-                break;
-              default:
-                device.send(Buffer.from([ACTION_DO, index, OFF]), ip);
-            }
-            break;
-          }
-          case DEVICE_TYPE_RELAY_2: {
-            device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...dev.split(':').map(i => parseInt(i, 16)), ACTION_DO, index, OFF]), ip);
-            break;
-          }
-          case DRIVER_TYPE_ARTNET: {
-            switch (type) {
-              case ARTNET_TYPE_DIMMER:
-                drivers.handle({ id: dev, index, action: ARTNET_FADE, value: 0, velocity: ARTNET_VELOCITY });
-              break;
-              default:
-                drivers.handle({ id: dev, index, type: ACTION_DO, value: OFF, velocity: ARTNET_VELOCITY });
-            }
-            break;
-          }
-          case DRIVER_TYPE_BB_PLC1:
-          case DRIVER_TYPE_BB_PLC2: {
-            drivers.handle({ id: dev, index, value: OFF });
-            break;
-          }
-          default: {
-            switch (payloadType) {
-              case AC: {
-                ac.handle(action);
-                break;
-              }
-              default: {
-                device.send(Buffer.from([ACTION_DO, index, OFF]), ip);
-              }
-            }
-          }
+        const o = get(id) || {};
+        if (o.disabled) return;
+        set(id, { value: false });
+        if (o.onOff) {
+          run({ type: ACTION_SCRIPT_RUN, id: o.onOff });
         }
+        const { type: payloadType } = o;
+        bind.forEach((i) => {
+          if (!o[i]) return;
+          const { velocity, type } = get(o[i]) || {};
+          const [dev,,index] = o[i].split('/');
+          const { ip, type: deviceType } = get(dev);
+          switch (deviceType) {
+            case DEVICE_TYPE_DIM4:
+            case DEVICE_TYPE_DIM_4:
+            case DEVICE_TYPE_DIM8:
+            case DEVICE_TYPE_DIM_8: {
+              switch (type) {
+                case DIM_TYPE_PWM:
+                case DIM_TYPE_RISING_EDGE:
+                case DIM_TYPE_FALLING_EDGE:
+                  device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, 0, DIM_VELOCITY]), ip);
+                  break;
+                default:
+                  device.send(Buffer.from([ACTION_DO, index, OFF]), ip);
+              }
+              break;
+            }
+            case DEVICE_TYPE_RELAY_2: {
+              device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...dev.split(':').map(i => parseInt(i, 16)), ACTION_DO, index, OFF]), ip);
+              break;
+            }
+            case DRIVER_TYPE_ARTNET: {
+              switch (type) {
+                case ARTNET_TYPE_DIMMER:
+                  drivers.handle({ id: dev, index, action: ARTNET_FADE, value: 0, velocity: ARTNET_VELOCITY });
+                break;
+                default:
+                  drivers.handle({ id: dev, index, type: ACTION_DO, value: OFF, velocity: ARTNET_VELOCITY });
+              }
+              break;
+            }
+            case DRIVER_TYPE_BB_PLC1:
+            case DRIVER_TYPE_BB_PLC2: {
+              drivers.handle({ id: dev, index, value: OFF });
+              break;
+            }
+            default: {
+              switch (payloadType) {
+                case AC: {
+                  ac.handle(action);
+                  break;
+                }
+                default: {
+                  device.send(Buffer.from([ACTION_DO, index, OFF]), ip);
+                }
+              }
+            }
+          }
+        });
         break;
       }
       case ACTION_DIM: {
         const { id, value } = action;
-        const { bind } = get(id);
-        const { velocity = 128 } = get(bind);
-        const [dev,,index] = bind.split('/');
-        const { ip, type: deviceType } = get(dev);
-        switch (deviceType) {
-          case DEVICE_TYPE_DIM4:
-          case DEVICE_TYPE_DIM8:
-          case DEVICE_TYPE_DIM_8: {
-            device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, value, DIM_VELOCITY]), ip);
-            set(id, { last: value });
-            break;
+        const o = get(id) || {};
+        const { last } = o;
+        const R = o.r ? (get(o.r) || {}).value || 0 : 0;
+        const G = o.g ? (get(o.g) || {}).value || 0 : 0;
+        const B = o.b ? (get(o.b) || {}).value || 0 : 0;
+        const [ h, s ] = color.rgb.hsv(R, G, B);
+        const rgb = color.hsv.rgb(h, s, value / 2.55);
+        const [ r, g, b ] = rgb;
+        set(id, { last: o.bind ? { value } : { r, g, b } });
+        bind.forEach((i, c) => {
+          if (!o[i]) return;
+          const { velocity } = get(o[i]) || {};
+          const [dev,,index] = o[i].split('/');
+          const { ip, type: deviceType } = get(dev);
+          let v;
+          if (i === 'bind') {
+            v = value;
+          } else {
+            v = rgb[c];
           }
-          case DRIVER_TYPE_ARTNET: {
-            drivers.handle({ id: dev, index, action: ARTNET_FADE, value, velocity: ARTNET_VELOCITY });
-            set(id, { last: value });
-            break;
+          switch (deviceType) {
+            case DEVICE_TYPE_DIM4:
+            case DEVICE_TYPE_DIM_4:
+            case DEVICE_TYPE_DIM8:
+            case DEVICE_TYPE_DIM_8: {
+              device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, v, DIM_VELOCITY]), ip);
+              break;
+            }
+            case DRIVER_TYPE_ARTNET: {
+              drivers.handle({ id: dev, index, action: ARTNET_FADE, v, velocity: ARTNET_VELOCITY });
+              break;
+            }
           }
-        }
+        });
         break;
       }
       case ACTION_DIM_RELATIVE: {
-        const { id, operator } = action;
-        const { bind } = get(id);
-        const { value } = get(bind);
-        let v;
+        const { id, value, operator } = action;
+        const o = get(id) || {};
+        let h, s, v;
+        if (o.bind) {
+          v = (get(o.bind) || {}).value;
+        } else {
+          const R = o.r ? (get(o.r) || {}).value || 0 : 0;
+          const G = o.g ? (get(o.g) || {}).value || 0 : 0;
+          const B = o.b ? (get(o.b) || {}).value || 0 : 0;
+          [h, s, v] = color.rgb.hsv(R, G, B);
+        };
         switch (operator) {
           case OPERATOR_PLUS:
-            v = Math.round(value + Number(action.value));
+            v = Math.round(v + Number(value));
             break;
           case OPERATOR_MINUS:
-            v = Math.round(value - Number(action.value));
+            v = Math.round(v - Number(value));
             break;
             case OPERATOR_MUL:
-            v = Math.round(value * Number(action.value));
+            v = Math.round(v * Number(value));
             break;
             case OPERATOR_DIV:
-            v = Math.round(value / Number(action.value))
+            v = Math.round(v / Number(value))
             break;
         }
         if (v < 0) v = 0;
-        if (v > 255) v = 255;
+        if (o.bind) {
+          if (v > 255) v = 255;
+        } else {
+          if (v > 100) v = 100;
+        }
         if (v === value) return;
-        run({ type: ACTION_DIM, id, value: v });
+        const rgb = color.hsv.rgb(h, s, v);
+        const [ r, g, b ] = rgb;
+        bind.forEach((i, c) => {
+          if (!o[i]) return;
+          const { velocity } = get(o[i]) || {};
+          const [dev,,index] = o[i].split('/');
+          const { ip, type: deviceType } = get(dev);
+          let v;
+          if (i !== 'bind') {
+            v = rgb[c];
+          }
+          switch (deviceType) {
+            case DEVICE_TYPE_DIM4:
+            case DEVICE_TYPE_DIM_4:
+            case DEVICE_TYPE_DIM8:
+            case DEVICE_TYPE_DIM_8: {
+              device.send(Buffer.from([ACTION_DIMMER, index, DIM_FADE, v, DIM_VELOCITY]), ip);
+              break;
+            }
+            case DRIVER_TYPE_ARTNET: {
+              drivers.handle({ id: dev, index, action: ARTNET_FADE, v, velocity: ARTNET_VELOCITY });
+              break;
+            }
+          }
+        });
         break;
       }
       case ACTION_SITE_LIGHT_DIM_RELATIVE: {
         const { id, operator, value } = action;
-        applySite(id, ({ light_220 = [], light_LED = [] }) => {
+        applySite(id, ({ light_220 = [], light_LED = [], light_RGB = [] }) => {
           light_220.map(i => run({ type: ACTION_DIM_RELATIVE, id: i, operator, value }));
           light_LED.map(i => run({ type: ACTION_DIM_RELATIVE, id: i, operator, value }));
+          light_RGB.map(i => run({ type: ACTION_DIM_RELATIVE, id: i, operator, value }));
         });
         break;
       }
       case ACTION_SITE_LIGHT_OFF: {
         const { id } = action;
-        applySite(id, ({ light_220 = [], light_LED = [] }) => {
+        applySite(id, ({ light_220 = [], light_LED = [], light_RGB = [] }) => {
           light_220.map(i => run({ type: ACTION_OFF, id: i }));
           light_LED.map(i => run({ type: ACTION_OFF, id: i }));
+          light_RGB.map(i => run({ type: ACTION_OFF, id: i }));
         });
         break;
       }
@@ -545,7 +686,7 @@ const run = (action, address) => {
         break;
       }
       case ACTION_DAY_TEST: {
-        const { project } = get(mac);
+        const { project } = get(mac());
         if (project) {
           const { weather } = get(project);
           if (weather && weather.sys) {
@@ -668,13 +809,13 @@ const run = (action, address) => {
       }
       case ACTION_TOGGLE: {
         const { test = [], onOn, onOff } = action;
-        const f = test.reduce((a, b) => {
-          const { bind } = get(b) || {};
-          if (bind) {
-            return a || (get(bind) || {}).value
+        const f =  test.find(i => {
+          const o = get(i);
+          if (o.value === undefined) {
+            return bind.find(j => (get(o[j]) || {}).value);
           }
-          return a;
-        }, false);
+          return  o.value;
+        });
         if (f) {
           if (onOff) {
             run({ type: ACTION_SCRIPT_RUN, id: onOff });
@@ -688,7 +829,7 @@ const run = (action, address) => {
       }
       case ACTION_TV: {
         const { id, command, repeat } = action;
-        const { bind, brand, model } = get(id);
+        const { bind, brand, model } = get(id) || {};
         const [dev,,index] = bind.split('/');
         const { ip, type } = get(dev);
         ircodes.getCode(TV, brand, model, command)
@@ -733,13 +874,22 @@ const run = (action, address) => {
         }
         break;
       }
-      case ACTION_SCRIPT_RUN: {
+      // case NOTIFY: {
+      //   broadcastAction(action);
+      //   break;
+      // }
+case ACTION_SCRIPT_RUN: {
         const { id } = action;
         const script = get(id);
         if (script && Array.isArray(script.action)) {
           script.action.forEach(i => {
-            const { type, payload } = get(i);
-            run({ action: i, type, ...payload });
+            const { type, payload, delay } = get(i);
+            const a = { action: i, type, ...payload };
+            if (delay > 0) {
+              setTimeout(run, delay, a);
+            } else {
+              run(a);
+            }
           })
         }
         break;

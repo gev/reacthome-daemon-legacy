@@ -39,6 +39,7 @@ module.exports.MOTION_SENSOR = 'motion_sensor';
 module.exports.LEAKAGE_SENSOR = 'leakage_sensor';
 module.exports.VALVE_HEATING = 'valve_heating';
 module.exports.VALVE_WATER = 'valve_water';
+module.exports.LIGHT_RGB = 'light_RGB';
 module.exports.SOCKET_220 = 'socket_220';
 module.exports.BOILER = 'boiler';
 module.exports.PUMP = 'pump';
@@ -46,6 +47,7 @@ module.exports.FAN = 'fan';
 module.exports.TV = 'TV';
 module.exports.AC = 'AC';
 
+module.exports.NOTIFY = 'notify';
 
 module.exports.STATE = 'state';
 
@@ -172,12 +174,15 @@ module.exports.DEVICE_TYPE_IR_RECEIVER = 0x10;
 
 module.exports.DEVICE_TYPE_RELAY_2 = 0x23;
 module.exports.DEVICE_TYPE_IR_4 = 0x24;
+module.exports.DEVICE_TYPE_SMART_4 = 0x25;
 
 module.exports.DEVICE_TYPE_RELAY_6 = 0xa0;
 module.exports.DEVICE_TYPE_RELAY_12 = 0xa1;
 module.exports.DEVICE_TYPE_RELAY_24 = 0xa2;
 module.exports.DEVICE_TYPE_DIM_4 = 0xa3;
 module.exports.DEVICE_TYPE_DIM_8 = 0xa4;
+
+module.exports.DEVICE_TYPE_TEMPERATURE_EXT = 0xf0;
 
 module.exports.onIR = 'onIR';
 module.exports.onOff = 'onOff';
