@@ -254,7 +254,6 @@ module.exports.manage = () => {
         }
         case ACTION_DOPPLER_RAW: {
           set(id, { raw: [...data.slice(7)] });
-          console.log(data.slice(7));
           break;
         }
         case ACTION_IR: {
