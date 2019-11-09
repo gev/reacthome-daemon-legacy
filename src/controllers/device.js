@@ -251,6 +251,10 @@ module.exports.manage = () => {
           }
           break;
         }
+        case ACTION_DOPPLER_RAW: {
+          set(id, { raw: [...data.slice(7)] });
+          break;
+        }
         case ACTION_IR: {
           const value = [];
           const buff = data.slice(7);

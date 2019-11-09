@@ -56,6 +56,7 @@ module.exports.ACTION_RS485_MODE = 0xa0;
 module.exports.ACTION_RBUS_TRANSMIT = 0xa1;
 module.exports.ACTION_RS485_TRANSMIT = 0xa2;
 module.exports.ACTION_DOPPLER = 0xb0;
+module.exports.ACTION_DOPPLER_RAW = 0xb1;
 module.exports.ACTION_TEMPERATURE = 0xc0;
 module.exports.ACTION_TEMPERATURE_EXT = 0xc1;
 module.exports.ACTION_HUMIDITY = 0xc2;
