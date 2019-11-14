@@ -581,7 +581,8 @@ const run = (action) => {
         if (schedule && script) {
           schedules[id] = new CronJob(schedule, () => {
             run({ type: ACTION_SCRIPT_RUN, id: script });
-          }, null, true);
+          });
+          schedules[id].start();
           set(id, { state: true, script, schedule });
         } else {
           set(id, { state: false });
