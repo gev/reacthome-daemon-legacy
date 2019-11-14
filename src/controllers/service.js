@@ -589,7 +589,6 @@ const run = (action) => {
             },
             true
           );
-          [id].start();
           set(id, { state: true, script, schedule });
         } else {
           set(id, { state: false });
