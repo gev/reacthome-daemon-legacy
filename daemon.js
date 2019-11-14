@@ -1,6 +1,6 @@
 
 const { v4 } = require('uuid');
-const { DAEMON, CLIENT_SERVER_PORT, ACTION_SET, ACTION_SCRIPT_RUN, IMAGE } = require('./src/constants');
+const { DAEMON, CLIENT_SERVER_PORT, ACTION_SET, ACTION_SCRIPT_RUN, ACTION_SCHEDULE_START, ACTION_TIMER_START, IMAGE } = require('./src/constants');
 const { state, device, service, cpu, weather } = require('./src/controllers');
 const { get, set, count } = require('./src/actions');
 const discovery = require('./src/discovery');
@@ -19,6 +19,25 @@ const start = (id) => {
   const { project } = get(id) || {};
   if (project) {
     count(project);
+    const { timer = [], schedule = [] } = get(project) || {};
+    schedule.forEach(id => {
+      const { script, state, schedule } = get(id) || {};
+      if (state && schedule && script) {
+        service.run({ id, type: ACTION_SCHEDULE_START, schedule, script });
+      }
+    });
+    timer.forEach(id => {
+      const { script, state, time = 0, timestamp = 0 } = get(id) || {};
+      if (state && script) {
+        let dt = Date.now() - timestamp;
+        if (dt < time) {
+          dt = time - dt;
+        } else {
+          dt = 0;
+          service.run({ id, type: ACTION_TIMER_START, time: dt, script });
+        }
+      }
+    });
     const { onStart } = get(project) || {};
     if (onStart) {
       setTimeout(() => {
