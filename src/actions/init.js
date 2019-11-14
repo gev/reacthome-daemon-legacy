@@ -10,6 +10,7 @@ const {
   DEVICE_PORT,
   DEVICE_TYPE_DO8,
   DEVICE_TYPE_DO12,
+  DEVICE_TYPE_RELAY_2,
   DEVICE_TYPE_RELAY_6,
   DEVICE_TYPE_RELAY_12,
   DEVICE_TYPE_RELAY_24,
@@ -19,6 +20,7 @@ const {
   DEVICE_TYPE_DIM8,
   DEVICE_TYPE_DIM_8,
   DEVICE_TYPE_ARTNET,
+  DEVICE_TYPE_SMART_4,
   DEVICE_TYPE_SENSOR4,
   DEVICE_TYPE_PLC,
   DISCOVERY_INTERVAL
@@ -78,7 +80,7 @@ module.exports.initialize = (id) => {
         const channel = get(`${id}/${DO}/${i}`);
         a[i] = (channel && channel.value) || 0;
       }
-      const { is_rbus, baud, line_control } = get(`${id}/${RS485}/1`);
+      const { is_rbus = true, baud, line_control } = get(`${id}/${RS485}/1`) || {};
       a[ 7] = is_rbus;
       a[ 8] = (baud) & 0xff;
       a[ 9] = (baud >>  8) & 0xff;
@@ -92,7 +94,7 @@ module.exports.initialize = (id) => {
         const channel = get(`${id}/${DO}/${i}`);
         a[i] = (channel && channel.value) || 0;
       }
-      const { is_rbus, baud, line_control } = get(`${id}/${RS485}/1`);
+      const { is_rbus = true, baud, line_control } = get(`${id}/${RS485}/1`) || {};
       a[13] = is_rbus;
       a[14] = (baud) & 0xff;
       a[15] = (baud >>  8) & 0xff;
@@ -106,7 +108,7 @@ module.exports.initialize = (id) => {
         const channel = get(`${id}/${DO}/${i}`);
         a[i] = (channel && channel.value) || 0;
       }
-      const { is_rbus, baud, line_control } = get(`${id}/${RS485}/1`);
+      const { is_rbus = true, baud, line_control } = get(`${id}/${RS485}/1`) || {};
       a[25] = is_rbus;
       a[26] = (baud) & 0xff;
       a[27] = (baud >>  8) & 0xff;

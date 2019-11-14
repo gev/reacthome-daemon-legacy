@@ -35,25 +35,23 @@ module.exports.count_off = (id) => {
   count_off(site, type, id);
 };
 
+const bind = ['bind', 'r', 'g', 'b'];
 const count = (site, pool = []) => {
   const o = get(site) || {};
   o.count = {};
   Object.entries(o).forEach(([type, a]) => {
     if (Array.isArray(a)) {
       a.forEach(id => {
-        // if (pool.includes(id)) return;
-        // pool.push(id);
-        const { on, bind } = get(id) || {};
-        // if (on === true) {
-        //   count_on(site, type, id);
-        // } else if (bind) {
-        if (bind) {
-          const { value } = get(bind) || {};
+        const o = get(id) || {};
+        bind.forEach(i => {
+          if (o[i]) {
+            const { value } = get(o[i]) || {};
           if (value) {
             count_on(site, type, id);
           }
         }
-      });
+      })
+    });
     }
     if (Array.isArray(o.site)) o.site.forEach(i => count(i, pool));
   });
