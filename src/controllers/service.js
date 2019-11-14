@@ -578,8 +578,8 @@ const run = (action) => {
           schedules[id].stop();
           delete schedules[id];
         }
-        if (sheddule && script) {
-          sheddules[id] = new CronJob(shedule, () => {
+        if (schedule && script) {
+          sheddules[id] = new CronJob(schedule, () => {
             run({ type: ACTION_SCRIPT_RUN, id: script });
           }, null, true);
           set(id, { state: true, script, schedule });
