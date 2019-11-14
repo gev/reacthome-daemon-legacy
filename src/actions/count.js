@@ -36,6 +36,7 @@ module.exports.count_off = (id) => {
 };
 
 const bind = ['bind', 'r', 'g', 'b'];
+
 const count = (site, pool = []) => {
   const o = get(site) || {};
   o.count = {};

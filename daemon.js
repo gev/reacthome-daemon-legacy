@@ -15,6 +15,25 @@ const start = () => {
   const { project } = get(mac()) || {};
   if (project) {
     count(project);
+    const { timer = [], schedule = [] } = get(project) || {};
+    schedule.forEach(id => {
+      const { script, state, schedule } = get(id) || {};
+      if (state && schedule && script) {
+        service.run({ id, type: ACTION_SCHEDULE_START, schedule, script });
+      }
+    });
+    timer.forEach(id => {
+      const { script, state, time = 0, timestamp = 0 } = get(id) || {};
+      if (state && script) {
+        let dt = Date.now() - timestamp;
+        if (dt < time) {
+          dt = time - dt;
+        } else {
+          dt = 0;
+          service.run({ id, type: ACTION_TIMER_START, time: dt, script });
+        }
+      }
+    });
     const { onStart } = get(project) || {};
     if (onStart) {
       setTimeout(() => {

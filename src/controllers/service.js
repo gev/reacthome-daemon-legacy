@@ -1,4 +1,5 @@
 
+const { CronJob } = require('cron');
 const { exists, createWriteStream } = require('fs');
 const fetch = require('node-fetch');
 const crypto = require('crypto');
@@ -39,6 +40,8 @@ const {
   ACTION_SETPOINT,
   ACTION_TIMER_START,
   ACTION_TIMER_STOP,
+  ACTION_SCHEDULE_START,
+  ACTION_SCHEDULE_STOP,
   ACTION_CLOCK_START,
   ACTION_CLOCK_STOP,
   ACTION_CLOCK_TEST,
@@ -127,7 +130,8 @@ const { device, service } = require('../sockets');
 const mac = require('../mac');
 const { ac } = require('../drivers');
 
-const timer = {};
+const timers = {};
+const schedules = {};
 
 const DIM_VELOCITY = 128;
 const ARTNET_VELOCITY = 1;
@@ -617,8 +621,8 @@ const run = (action, address) => {
       }
       case ACTION_TIMER_START: {
         const { id, script, time } = action;
-        clearTimeout(timer[id]);
-        timer[id] = setTimeout(() => {
+        clearTimeout(timers[id]);
+        timers[id] = setTimeout(() => {
           set(id, { time: 0, state: false });
           run({ type: ACTION_SCRIPT_RUN, id: script });
         }, parseInt(time));
@@ -627,8 +631,40 @@ const run = (action, address) => {
       }
       case ACTION_TIMER_STOP: {
         const { id } = action;
-        clearTimeout(timer[id]);
+        clearTimeout(timers[id]);
         set(id, { time: 0, state: false });
+        break;
+      }
+      case ACTION_SCHEDULE_START: {
+        const { id, script, schedule } = action;
+        if (schedules[id]) {
+          schedules[id].stop();
+          delete schedules[id];
+        }
+        if (schedule && script) {
+          schedules[id] = new CronJob(
+            schedule, 
+            () => {
+              run({ type: ACTION_SCRIPT_RUN, id: script });
+            },
+            () => {
+              set(id, { state: false });    
+            },
+            true
+          );
+          set(id, { state: true, script, schedule });
+        } else {
+          set(id, { state: false });
+        }
+        break;
+      }
+      case ACTION_SCHEDULE_STOP: {
+        const { id } = action;
+        if (schedules[id]) {
+          schedules[id].stop();
+          delete schedules[id];
+        }
+        set(id, { state: false });
         break;
       }
       case ACTION_CLOCK_START: {
