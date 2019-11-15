@@ -199,8 +199,8 @@ const run = (action, address) => {
         if (id && type !== MOBILE) {
           set(id, { online: true, ip: address, type, multicast, version, ready });
           add(mac(), DEVICE, id);
-          clearTimeout(timer[id]);
-          timer[id] = setTimeout(() => {
+          clearTimeout(timers[id]);
+          timers[id] = setTimeout(() => {
             set(id, { online: false });
           }, 60 * DISCOVERY_INTERVAL);
         }
