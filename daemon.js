@@ -2,7 +2,7 @@
 const Koa = require('koa');
 const { v4 } = require('uuid');
 const { state, assets, device, service, cpu, weather } = require('./src/controllers');
-const { DAEMON, CLIENT_SERVER_PORT, ACTION_SET, ACTION_SCRIPT_RUN, IMAGE } = require('./src/constants');
+const { DAEMON, CLIENT_SERVER_PORT, ACTION_SET, ACTION_SCHEDULE_START, ACTION_TIMER_START, ACTION_SCRIPT_RUN, IMAGE } = require('./src/constants');
 const { get, set, count } = require('./src/actions');
 const drivers = require('./src/drivers');
 const mac = require('./src/mac');
