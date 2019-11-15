@@ -558,7 +558,7 @@ const run = (action, address) => {
         }
         if (v === value) return;
         const rgb = color.hsv.rgb(h, s, v);
-        const [ r, g, b ] = rgb;
+        const [ r, g, b ] = rgb || [0, 0, 0];
         bind.forEach((i, c) => {
           if (!o[i]) return;
           const { velocity } = get(o[i]) || {};
