@@ -212,7 +212,7 @@ module.exports.manage = () => {
         }
         case ACTION_TEMPERATURE_EXT: {
           const dev_id = data.slice(7, 15).map(i => `0${i.toString(16)}`.slice(-2)).join(':');
-          const temperature = data.readUInt16LE(15) / 100;
+          const temperature = data.readInt16LE(15) / 100;
           set(dev_id, { ip: address, online: true, temperature, type: DEVICE_TYPE_TEMPERATURE_EXT, version: '1.0' });
           add(mac(), DEVICE, dev_id);
           const { onTemperature: onTemperature, site } = get(dev_id);
