@@ -9,7 +9,7 @@ module.exports = ({ state = [], assets = [] }, session) => {
   state.forEach(id => {
     sendAction(session, { type: ACTION_SET, id,  payload: get(id) });
   });
-  // assets.forEach(asset => {
-  //   sendAsset(session, asset);
-  // });
+  assets.forEach(asset => {
+    sendAsset(session, asset);
+  });
 };

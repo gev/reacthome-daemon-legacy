@@ -354,7 +354,7 @@ module.exports.manage = () => {
           }
         }
         default: {
-          // console.log(data);
+          console.log(data);
         }
       }
     } catch (e) {
