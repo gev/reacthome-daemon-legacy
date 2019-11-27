@@ -16,11 +16,10 @@ module.exports.start = (id) => {
   socket.bind(() => {
     socket.setMulticastInterface(networkInterfaces().eth1[0].address)
     setInterval(() => {
-      const { code, title, project } = get(id);
       socket.send(JSON.stringify({
         id,
         type: DISCOVERY,
-        payload: { code, title, project, type: DAEMON, version: VERSION }
+        payload: get(id)
       }), CLIENT_PORT, CLIENT_GROUP);
     }, TIMEOUT);
   });
