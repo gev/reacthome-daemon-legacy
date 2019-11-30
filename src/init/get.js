@@ -6,15 +6,10 @@ const sendAsset = require('../assets/send');
 
 
 module.exports = ({ state = [], assets = [] }, session) => {
-  let i = 0;
   state.forEach(id => {
-    setTimeout(() => {
-      sendAction(session, { type: ACTION_SET, id,  payload: get(id) });
-    }, i++);
+    sendAction(session, { type: ACTION_SET, id,  payload: get(id) });
   });
   assets.forEach(asset => {
-    setTimeout(() => {
-      sendAsset(session, asset);
-    }, i++);
+    sendAsset(session, asset);
   });
 };
