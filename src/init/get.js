@@ -10,6 +10,7 @@ module.exports = ({ state = [], assets = [] }, session) => {
     sendAction(session, { type: ACTION_SET, id,  payload: get(id) });
   });
   assets.forEach(asset => {
+    console.log(asset);
     sendAsset(session, asset);
   });
 };
