@@ -6,6 +6,7 @@ const { CANDIDATE } = require('./constants');
 const { tmp, asset, appendFile, exists, rename, unlink } = require('../fs');
 const { run } = require('../controllers/service');
 const { onWatch, onStart } = require('../camera');
+const { TOKEN } = require('../notification/constantstypo');
 const { tokens } = require('../notification');
 const { broadcastAsset, broadcastAction } = require('./peer');
 const onGet = require('../init/get');
