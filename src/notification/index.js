@@ -11,11 +11,11 @@ firebase.initializeApp({
   databaseURL: 'https://reacthome-9021b.firebaseio.com'
 });
 
-module.exports.notify = ({ title, message }) => {
+module.exports.notify = (action) => {
   const { pool = [] } = get(TOKEN) || {};
   pool.forEach(token => {
     firebase.messaging()
-      .sendToDevice(token, { notification: { title, body: message } })
+      .sendToDevice(token, { notification: { title: action.title, body: action.message } })
       .catch(console.errorup);
   });
   broadcastAction(action);
