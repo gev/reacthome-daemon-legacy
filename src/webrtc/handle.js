@@ -20,7 +20,7 @@ module.exports.onAction = (session) => ({ data }) => {
     const action = JSON.parse(Buffer.from(data));
     switch (action.type) {
       case TOKEN: {
-        add(TOKEN, POOL, token);
+        add(TOKEN, POOL, action.token);
         break;
       }
       case GET: {
