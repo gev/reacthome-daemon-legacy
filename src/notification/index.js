@@ -13,7 +13,7 @@ const tokens = new Set();
 
 module.exports.tokens = tokens;
 
-module.export.notify = ({ title, message }) => {
+module.exports.notify = ({ title, message }) => {
   tokens.forEach(token => {
     firebase.messaging()
       .sendToDevice(token, { notification: { title, body: message } })
