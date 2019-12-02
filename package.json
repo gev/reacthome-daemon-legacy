@@ -11,6 +11,7 @@
     "debounce": "^1.2.0",
     "fast-deep-equal": "gev/fast-deep-equal",
     "fast-memoize": "^2.5.1",
+    "firebase-admin": "^8.8.0",
     "ip": "^1.1.5",
     "koa": "^2.8.1",
     "koa-mount": "^4.0.0",

@@ -53,7 +53,6 @@ const {
   ACTION_TV,
   ACTION_LEAKAGE_RESET,
   ACTION_SCRIPT_RUN,
-  NOTIFY,
   DEVICE_PORT,
   DEVICE_TYPE_DIM4,
   DEVICE_TYPE_DIM_4,
@@ -115,6 +114,8 @@ const {
   COOL,
   LIGHT_RGB
 } = require('../constants');
+const { NOTIFY } = require('../notification/constants');
+const { notify } = require('../notification');
 const {
   get,
   set,
@@ -848,7 +849,7 @@ const run = (action) => {
         break;
       }
       case NOTIFY: {
-        broadcastAction(action);
+        notify(action);
         break;
       }
       case ACTION_SCRIPT_RUN: {

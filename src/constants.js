@@ -43,8 +43,6 @@ module.exports.FAN = 'fan';
 module.exports.TV = 'TV';
 module.exports.AC = 'AC';
 
-module.exports.NOTIFY = 'notify';
-
 module.exports.STATE = 'state';
 module.exports.FIRMWARE = './firmware';
 

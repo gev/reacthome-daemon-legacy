@@ -2,7 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 const { promisify } = require('util');
-const { ASSETS, TMP } = require('./assets/constants');
+const { ASSETS, TMP, VAR } = require('./assets/constants');
 
 const p = (type) => (a = '') => path.join(type, a);
 

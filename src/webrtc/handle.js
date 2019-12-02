@@ -6,6 +6,7 @@ const { CANDIDATE } = require('./constants');
 const { tmp, asset, appendFile, exists, rename, unlink } = require('../fs');
 const { run } = require('../controllers/service');
 const { onWatch, onStart } = require('../camera');
+const { tokens } = require('../notification');
 const { broadcastAsset, broadcastAction } = require('./peer');
 const onGet = require('../init/get');
 const onAck = require('../sip/ack');
@@ -16,6 +17,10 @@ module.exports.onAction = (session) => ({ data }) => {
   try {
     const action = JSON.parse(Buffer.from(data));
     switch (action.type) {
+      case TOKEN: {
+        tokens.add(action.token);
+        break;
+      }
       case GET: {
         onGet(action, session);
         break;
