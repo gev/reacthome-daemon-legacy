@@ -4,7 +4,7 @@ const { broadcastAction } = require('../webrtc/peer');
 
 const serviceAccount = require('../../var/firebase.json');
 
-admin.initializeApp({
+firebase.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: 'https://reacthome-9021b.firebaseio.com'
 });
