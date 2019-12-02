@@ -12,10 +12,11 @@ firebase.initializeApp({
 });
 
 module.exports.notify = (action) => {
+  const { title, message } = action;
   const { pool = [] } = get(TOKEN) || {};
   pool.forEach(token => {
     firebase.messaging()
-      .sendToDevice(token, { notification: { title: action.title, body: action.message } })
+      .sendToDevice(token, { notification: { title, body: message } })
       .catch(console.errorup);
   });
   broadcastAction(action);
