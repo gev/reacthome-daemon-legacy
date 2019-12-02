@@ -3,11 +3,12 @@ const { GET } = require('../init/constants');
 const { ACK, BYE, CANCEL } = require('../sip/constants');
 const { START, WATCH } = require('../camera/constants');
 const { CANDIDATE } = require('./constants');
+const { POOL } = require('../constants');
 const { tmp, asset, appendFile, exists, rename, unlink } = require('../fs');
 const { run } = require('../controllers/service');
 const { onWatch, onStart } = require('../camera');
 const { TOKEN } = require('../notification/constants');
-const { tokens } = require('../notification');
+const { add } = require('../actions');
 const { broadcastAsset, broadcastAction } = require('./peer');
 const onGet = require('../init/get');
 const onAck = require('../sip/ack');
@@ -19,7 +20,7 @@ module.exports.onAction = (session) => ({ data }) => {
     const action = JSON.parse(Buffer.from(data));
     switch (action.type) {
       case TOKEN: {
-        tokens.add(action.token);
+        add(TOKEN, POOL, token);
         break;
       }
       case GET: {
