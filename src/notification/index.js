@@ -18,6 +18,6 @@ module.exports.notify = ({ title, message }) => {
       .sendToDevice(token, { notification: { title, body: message } })
       .catch(console.errorup);
   });
-  // broadcastAction(action);
+  broadcastAction(action);
 };
 
