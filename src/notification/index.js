@@ -15,7 +15,6 @@ module.exports.notify = (action) => {
   const { title, message } = action;
   const { pool = [] } = get(TOKEN) || {};
   pool.forEach(token => {
-    console.log(token, { notification: { title, body: message } });
     firebase.messaging()
       .sendToDevice(token, { notification: { title, body: message } })
       .catch(console.errorup);
