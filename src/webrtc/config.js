@@ -4,16 +4,12 @@ module.exports.gateURL = id => `wss://gate.reacthome.net/${id}`;
 module.exports.ICE = {
   iceServers: [
     {
-      // urls: 'stun:gate.reacthome.net'
-      urls: 'stun:stun.l.google.com:19302'
+      urls: 'stun:gate.reacthome.net'
     },
     {
-      // urls: 'turns:gate.reacthome.net',
-      // username: 'username',
-      // credential: 'password'
-      urls: 'turn:numb.viagenie.ca',
-      username: 'webrtc@live.com',
-      credential: 'muazkh'
+      urls: 'turns:gate.reacthome.net',
+      username: 'username',
+      credential: 'password'
     }
   ]
 };
