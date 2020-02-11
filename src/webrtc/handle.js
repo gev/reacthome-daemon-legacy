@@ -9,7 +9,7 @@ const { run } = require('../controllers/service');
 const { onWatch, onStart } = require('../camera');
 const { TOKEN } = require('../notification/constants');
 const { add } = require('../actions');
-const { broadcastAsset, broadcastAction } = require('./peer');
+const { broadcastAsset, broadcastAction, sendAction } = require('./peer');
 const onGet = require('../init/get');
 const onAck = require('../sip/ack');
 const onBye = require('../sip/bye');
@@ -49,6 +49,10 @@ module.exports.onAction = (session) => ({ data }) => {
       }
       case 'navigate': {
         broadcastAction(action);
+        break;
+      }
+      case 'echo': {
+        sendAction(session, action);
         break;
       }
       default: {
