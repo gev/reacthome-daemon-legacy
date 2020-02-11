@@ -60,6 +60,7 @@ module.exports.onAction = (session) => ({ data }) => {
       }
     }
   } catch(e) {
+    console.error(data.length);
     console.error(e);
   }
 };
