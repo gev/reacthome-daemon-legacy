@@ -51,16 +51,11 @@ module.exports.onAction = (session) => ({ data }) => {
         broadcastAction(action);
         break;
       }
-      case 'echo': {
-        sendAction(session, action);
-        break;
-      }
       default: {
         run(action);
       }
     }
   } catch(e) {
-    console.error(data.length);
     console.error(e);
   }
 };
