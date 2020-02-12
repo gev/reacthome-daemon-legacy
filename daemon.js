@@ -68,7 +68,6 @@ db.createReadStream()
     discovery.start(init.mac);
     webrtc.start(init.mac);
     janus.start();
-    ping.start();
     sip.start();
     start(init.mac);
   });

@@ -1,4 +1,6 @@
 
+module.exports.PING = 'ping';
+module.exports.PONG = 'pong';
 module.exports.OFFER = 'offer';
 module.exports.ANSWER= 'answer';
 module.exports.CANDIDATE = 'candidate';

@@ -2,7 +2,7 @@
 const { GET } = require('../init/constants');
 const { ACK, BYE, CANCEL } = require('../sip/constants');
 const { START, WATCH } = require('../camera/constants');
-const { CANDIDATE } = require('./constants');
+const { CANDIDATE, PING, PONG } = require('./constants');
 const { POOL } = require('../constants');
 const { tmp, asset, appendFile, exists, rename, unlink } = require('../fs');
 const { run } = require('../controllers/service');
@@ -15,10 +15,16 @@ const onAck = require('../sip/ack');
 const onBye = require('../sip/bye');
 const janus = require('../janus');
 
+const pong = {type: PONG};
+
 module.exports.onAction = (session) => ({ data }) => {
   try {
     const action = JSON.parse(Buffer.from(data));
     switch (action.type) {
+      case PING: {
+        sendAction(session, pong);
+        break;
+      }
       case TOKEN: {
         add(TOKEN, POOL, action.token);
         break;
