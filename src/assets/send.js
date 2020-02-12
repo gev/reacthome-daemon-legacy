@@ -1,6 +1,5 @@
 
 const fs = require('fs');
-const { sleep } = require('../util');
 const { asset, stat } = require('../fs');
 const { sendAsset } = require('../webrtc/peer');
 
@@ -19,7 +18,6 @@ module.exports = async (id, name) => {
     stream.on('readable', async () => {
       const chunk = stream.read(highWaterMark);
       if (chunk) {
-        await sleep(10);
         const header = Buffer.alloc(2 + 2 + 2 + 2);
         header.writeUInt16LE(transaction, 0);
         header.writeUInt16LE(total, 2);
