@@ -45,6 +45,11 @@ module.exports = (session, message, send, config) => {
           .then(() =>
             send({ type: ANSWER, jsep: peer.localDescription }))
           .catch(console.error);
+        if (peers.has(session)) {
+          peers.get(session).close();
+        }
+        actions.delete(session);
+        assets.delete(session);
         peers.set(session, peer);
         break;
       }
