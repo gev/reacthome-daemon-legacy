@@ -9,6 +9,6 @@ module.exports = {
   ...peer,
   start(id) {
     connect(id, signal);
-    start(signal);
+    // start(signal);
   }
 }
