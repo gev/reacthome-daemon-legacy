@@ -15,7 +15,7 @@ const deleteSession = session => {
   peers.delete(session);
 };
 
-module.exports = (session, message, send, config) => {
+module.exports = async (session, message, send, config) => {
   try {
     const action = JSON.parse(message);
     switch(action.type) {
