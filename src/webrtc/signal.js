@@ -62,12 +62,10 @@ module.exports = async (session, message, send, config) => {
       }
       case CANDIDATE: {
         if (peers.has(session)) {
-          const peer = peers.get(session);
-          if (peer.connectionState === CLOSED) {
+          try {
+            await peer.addIceCandidate(new RTCIceCandidate(action.candidate));
+          } catch (e) {
             deleteSession(session);
-          } else {
-            peer.addIceCandidate(new RTCIceCandidate(action.candidate))
-              .catch(console.error);
           }
         }
         break;
