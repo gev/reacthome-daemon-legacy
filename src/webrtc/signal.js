@@ -1,6 +1,6 @@
 
 const { RTCPeerConnection, RTCIceCandidate } = require('wrtc');
-const { OFFER, ANSWER, CANDIDATE, CLOSED, ACTION, ASSET } = require('./constants');
+const { OFFER, ANSWER, CANDIDATE, FAILED, ACTION, ASSET } = require('./constants');
 const { onAction, onAsset } = require('./handle');
 const { peers, actions, assets } = require('./peer');
 const { options } = require('./config');
@@ -41,32 +41,23 @@ module.exports = (session, message, send, config) => {
           };
         };
         peer.onconnectionstatechange = () => {
-          if (peer.connectionState === CLOSED) {
+          if (peer.connectionState === FAILED) {
             deleteSession(session);
           }
         };
-          peer.onicecandidate = ({ candidate }) => {
+        peer.onicecandidate = ({ candidate }) => {
           if (!candidate) return;
           send({ type: CANDIDATE, candidate });
         };
-        peer.setRemoteDescription(action.jsep)
-          .then(() => {
-            if (peer.connectionState === CLOSED) {
-              deleteSession(session);
-            } else {
-              peer.createAnswer(options);
-            }
-          })
-          .then(answer => {
-            if (peer.connectionState === CLOSED) {
-              deleteSession(session);
-            } else {
-              peer.setLocalDescription(answer);
-            }
-          })
-          .then(() => {send({ type: ANSWER, jsep: peer.localDescription })})
-          .catch(console.error);
-        peers.set(session, peer);
+        try {
+          await peer.setRemoteDescription(action.jsep);
+          const answer = await peer.createAnswer(options);
+          await peer.setLocalDescription(answer);
+          send({ type: ANSWER, jsep: peer.localDescription });
+          peers.set(session, peer);
+        } catch (e) {
+          deleteSession(session);
+        }
         break;
       }
       case CANDIDATE: {
