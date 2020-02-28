@@ -56,7 +56,6 @@ module.exports = async (session, message, send, config) => {
           send({ type: ANSWER, jsep: peer.localDescription });
           peers.set(session, peer);
         } catch (e) {
-          console.error(e);
           deleteSession(session);
         }
         break;
@@ -66,7 +65,6 @@ module.exports = async (session, message, send, config) => {
           try {
             await peers.get(session).addIceCandidate(new RTCIceCandidate(action.candidate));
           } catch (e) {
-            console.error(e);
             deleteSession(session);
           }
         }
