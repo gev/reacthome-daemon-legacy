@@ -6,6 +6,12 @@ const { peers, actions, assets } = require('./peer');
 const { options } = require('./config');
 const list = require('../init/list');
 
+const deleteSession = session => {
+  actions.delete(session);
+  assets.delete(session);
+  peers.delete(session);
+};
+
 module.exports = (session, message, send, config) => {
   try {
     const action = JSON.parse(message);
@@ -26,17 +32,13 @@ module.exports = (session, message, send, config) => {
               break;
             }
           }
-          channel.onerror = (err => {
-            actions.delete(session);
-            assets.delete(session);
-            peers.delete(session);
-          });
+          channel.onerror = () => {
+            deleteSession(session);
+          };
         };
         peer.onconnectionstatechange = () => {
           if (peer.connectionState === FAILED) {
-            actions.delete(session);
-            assets.delete(session);
-            peers.delete(session);
+            deleteSession(session);
           }
         };
           peer.onicecandidate = ({ candidate }) => {
@@ -47,11 +49,7 @@ module.exports = (session, message, send, config) => {
           .then(() => peer.createAnswer(options))
           .then(answer => {peer.setLocalDescription(answer)})
           .then(() => {send({ type: ANSWER, jsep: peer.localDescription })})
-          .catch((err) => {
-            actions.delete(session);
-            assets.delete(session);
-            peers.delete(session);
-          });
+          .catch(() => {deleteSession(session)});
         if (peers.has(session)) {
           peers.get(session).close();
         }
