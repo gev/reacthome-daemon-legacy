@@ -64,7 +64,7 @@ module.exports = async (session, message, send, config) => {
       case CANDIDATE: {
         if (peers.has(session)) {
           try {
-            await peer.addIceCandidate(new RTCIceCandidate(action.candidate));
+            await peers.get(session).addIceCandidate(new RTCIceCandidate(action.candidate));
           } catch (e) {
             console.error(e);
             deleteSession(session);
