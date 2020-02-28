@@ -26,7 +26,11 @@ module.exports = (session, message, send, config) => {
               break;
             }
           }
-          channel.onerror = console.error;
+          channel.onerror = (err => {
+            actions.delete(session);
+            assets.delete(session);
+            peers.delete(session);
+          });
         };
         peer.onconnectionstatechange = () => {
           if (peer.connectionState === FAILED) {
@@ -42,9 +46,12 @@ module.exports = (session, message, send, config) => {
         peer.setRemoteDescription(action.jsep)
           .then(() => peer.createAnswer(options))
           .then(answer => {peer.setLocalDescription(answer)})
-          .then(() =>
-            send({ type: ANSWER, jsep: peer.localDescription }))
-          .catch(console.error);
+          .then(() => {send({ type: ANSWER, jsep: peer.localDescription })})
+          .catch((err) => {
+            actions.delete(session);
+            assets.delete(session);
+            peers.delete(session);
+          });
         if (peers.has(session)) {
           peers.get(session).close();
         }
