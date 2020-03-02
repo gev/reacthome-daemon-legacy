@@ -15,6 +15,7 @@ const {
   DIM,
   ARTNET,
   ACTION_DO,
+  ACTION_GROUP,
   ACTION_DOPPLER,
   ACTION_DIMMER,
   ACTION_ARTNET,
@@ -170,6 +171,15 @@ const run = (action) => {
             device.send(Buffer.from([ACTION_DO, action.index, action.value]), dev.ip);
           }
         }
+        break;
+      }
+      case ACTION_GROUP: {
+        const buffer = Buffer.alloc(5);
+        buffer.writeUInt8(ACTION_GROUP, 0);
+        buffer.writeUInt8(action.index, 1);
+        buffer.writeUInt8(action.value, 2);
+        buffer.writeUInt16LE(action.delay, 3);
+        device.send(buffer, dev.ip);
         break;
       }
       case ACTION_DOPPLER: {

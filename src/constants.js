@@ -48,6 +48,7 @@ module.exports.FIRMWARE = './firmware';
 
 module.exports.ACTION_DO = 0x00;
 module.exports.ACTION_DI = 0x01;
+module.exports.ACTION_GROUP = 0x02;
 module.exports.ACTION_IR = 0x10;
 module.exports.ACTION_PNP = 0x11;
 module.exports.ACTION_RS485_MODE = 0xa0;

@@ -10,6 +10,7 @@ const {
   DEVICE_TYPE_PLC,
   ACTION_DI,
   ACTION_DO,
+  ACTION_GROUP,
   ACTION_IR,
   ACTION_RS485_MODE,
   ACTION_RS485_TRANSMIT,
@@ -157,6 +158,14 @@ module.exports.manage = () => {
               }
             }
           }
+          break;
+        }
+        case ACTION_GROUP: {
+          const index = data[7];
+          const value = data[8];
+          const delay = data.readUInt16LE(9);
+          const channel = `${id}/${GROUP}/${index}`;
+          set(channel, { value, delay });
           break;
         }
         case ACTION_RS485_MODE: {
