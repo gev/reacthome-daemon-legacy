@@ -175,11 +175,13 @@ const run = (action) => {
       }
       case ACTION_GROUP: {
         const dev = get(action.id);
+        const channel = `${id}/${GROUP}/${index}`;
         const buffer = Buffer.alloc(5);
+        const { value, delay } = get(chan) || {};
         buffer.writeUInt8(ACTION_GROUP, 0);
         buffer.writeUInt8(action.index, 1);
-        buffer.writeUInt8(action.value, 2);
-        buffer.writeUInt16LE(action.delay, 3);
+        buffer.writeUInt8(action.value || value, 2);
+        buffer.writeUInt16LE(action.delay || delay, 3);
         device.send(buffer, dev.ip);
         break;
       }
