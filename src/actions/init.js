@@ -3,6 +3,7 @@ const {
   DO,
   DI,
   DIM,
+  GROUP,
   RS485,
   ARTNET,
   ACTION_INITIALIZE,
@@ -90,17 +91,41 @@ module.exports.initialize = (id) => {
       break;
     }
     case DEVICE_TYPE_RELAY_12: {
-      for (let i = 1; i <= 12; i++) {
-        const channel = get(`${id}/${DO}/${i}`);
-        a[i] = (channel && channel.value) || 0;
+      const {version = ''} = get(id) || {};
+      const [major, minor] = version.split('.');
+      if (major >= 2) {
+        for (let i = 1; i <= 6; i++) {
+          const channel = get(`${id}/${GROUP}/${i}`) || {};
+          const {value = false, delay = 0} = channel;
+          a[i + 0] = (value);
+          a[i + 1] = (delay) & 0xff;
+          a[i + 2] = (delay >> 8) & 0xff;
+        }
+        for (let i = 1; i <= 12; i++) {
+          const channel = get(`${id}/${DO}/${i}`);
+          a[i + 18] = (channel && channel.value) || 0;
+        }
+        const { is_rbus = true, baud, line_control } = get(`${id}/${RS485}/1`) || {};
+        a[31] = is_rbus;
+        a[32] = (baud) & 0xff;
+        a[33] = (baud >>  8) & 0xff;
+        a[34] = (baud >> 16) & 0xff;
+        a[35] = (baud >> 24) & 0xff;
+        a[36] = line_control;
+      } else {
+        for (let i = 1; i <= 12; i++) {
+          const channel = get(`${id}/${DO}/${i}`);
+          a[i] = (channel && channel.value) || 0;
+        }
+        const { is_rbus = true, baud, line_control } = get(`${id}/${RS485}/1`) || {};
+        a[13] = is_rbus;
+        a[14] = (baud) & 0xff;
+        a[15] = (baud >>  8) & 0xff;
+        a[16] = (baud >> 16) & 0xff;
+        a[17] = (baud >> 24) & 0xff;
+        a[18] = line_control;
+  
       }
-      const { is_rbus = true, baud, line_control } = get(`${id}/${RS485}/1`) || {};
-      a[13] = is_rbus;
-      a[14] = (baud) & 0xff;
-      a[15] = (baud >>  8) & 0xff;
-      a[16] = (baud >> 16) & 0xff;
-      a[17] = (baud >> 24) & 0xff;
-      a[18] = line_control;
       break;
     }
     case DEVICE_TYPE_RELAY_24: {
