@@ -176,7 +176,7 @@ const run = (action) => {
       }
       case ACTION_GROUP: {
         const dev = get(action.id);
-        const channel = `${action.id}/${GROUP}/${index}`;
+        const channel = `${action.id}/${GROUP}/${action.index}`;
         const buffer = Buffer.alloc(5);
         const { value, delay } = get(chan) || {};
         buffer.writeUInt8(ACTION_GROUP, 0);
