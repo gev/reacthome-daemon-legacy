@@ -174,6 +174,7 @@ const run = (action) => {
         break;
       }
       case ACTION_GROUP: {
+        const dev = get(action.id);
         const buffer = Buffer.alloc(5);
         buffer.writeUInt8(ACTION_GROUP, 0);
         buffer.writeUInt8(action.index, 1);
