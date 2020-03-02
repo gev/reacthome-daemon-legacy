@@ -13,6 +13,7 @@ const {
   TV,
   DO,
   DIM,
+  GROUP,
   ARTNET,
   ACTION_DO,
   ACTION_GROUP,
