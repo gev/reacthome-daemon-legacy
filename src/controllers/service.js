@@ -178,7 +178,7 @@ const run = (action) => {
         const dev = get(action.id);
         const channel = `${action.id}/${GROUP}/${action.index}`;
         const buffer = Buffer.alloc(5);
-        const { value, delay } = get(chan) || {};
+        const { value, delay } = get(channel) || {};
         buffer.writeUInt8(ACTION_GROUP, 0);
         buffer.writeUInt8(action.index, 1);
         buffer.writeUInt8(action.value || value, 2);
