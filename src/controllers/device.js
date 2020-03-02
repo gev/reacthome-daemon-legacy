@@ -4,6 +4,7 @@ const {
   DO,
   DI,
   DIM,
+  GROUP,
   RS485,
   POOL,
   DEVICE,
