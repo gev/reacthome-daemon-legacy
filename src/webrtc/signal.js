@@ -20,14 +20,13 @@ module.exports = async (session, message, send, config) => {
     const action = JSON.parse(message);
     switch(action.type) {
       case OFFER: {
-        deleteSession(session);
         const peer = new RTCPeerConnection(config);
         peer.ondatachannel = ({ channel }) => {
           switch (channel.label) {
             case ACTION: {
               channel.onmessage = onAction(session);
               actions.set(session, channel);
-              list(session);
+              // list(session);
               break;
             }
             case ASSET: {
@@ -54,10 +53,10 @@ module.exports = async (session, message, send, config) => {
           const answer = await peer.createAnswer(options);
           await peer.setLocalDescription(answer);
           send({ type: ANSWER, jsep: peer.localDescription });
-          peers.set(session, peer);
         } catch (e) {
           deleteSession(session);
         }
+        peers.set(session, peer);
         break;
       }
       case CANDIDATE: {
