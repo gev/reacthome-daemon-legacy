@@ -19,6 +19,9 @@ module.exports = async (session, message, send, config) => {
   try {
     const action = JSON.parse(message);
     console.log(session, action.type);
+    if (peers.has(session)) {
+      console.log(peers.get(session).connectionState);
+    }
     switch(action.type) {
       case OFFER: {
         // if (peers.has(session)) {
