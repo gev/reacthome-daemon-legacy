@@ -18,6 +18,7 @@ const deleteSession = session => {
 module.exports = async (session, message, send, config) => {
   try {
     const action = JSON.parse(message);
+    console.log(session, action);
     switch(action.type) {
       case OFFER: {
         // if (peers.has(session)) {
