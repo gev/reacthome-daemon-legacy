@@ -17,7 +17,6 @@ const deleteSession = session => {
 
 module.exports = async (session, message, send, config) => {
   try {
-    deleteSession(session);
     const action = JSON.parse(message);
     switch(action.type) {
       case OFFER: {
