@@ -20,13 +20,13 @@ module.exports = async (session, message, send, config) => {
     const action = JSON.parse(message);
     switch(action.type) {
       case OFFER: {
-        if (peers.has(session)) {
-          const {connectionState} = peers.get(session);
-          if (connectionState === 'new' || 
-              connectionState === 'connecting' || 
-              connectionState === 'connected') return;
-        }
-        deleteSession(session);
+        // if (peers.has(session)) {
+        //   const {connectionState} = peers.get(session);
+        //   if (connectionState === 'new' || 
+        //       connectionState === 'connecting' || 
+        //       connectionState === 'connected') return;
+        //   deleteSession(session);
+        // }
         const peer = new RTCPeerConnection(config);
         peer.ondatachannel = ({ channel }) => {
           switch (channel.label) {
