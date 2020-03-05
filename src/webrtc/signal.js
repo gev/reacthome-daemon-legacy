@@ -20,6 +20,7 @@ module.exports = async (session, message, send, config) => {
     const action = JSON.parse(message);
     switch(action.type) {
       case OFFER: {
+        if (peers.has(session) && peers.get(session).connectionState === 'connecting') return;
         const peer = new RTCPeerConnection(config);
         peer.ondatachannel = ({ channel }) => {
           switch (channel.label) {
