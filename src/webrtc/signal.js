@@ -30,6 +30,7 @@ module.exports = async (session, message, send, config) => {
           // deleteSession(session);
         }
         const peer = new RTCPeerConnection(config);
+        peers.set(session, peer);
         peer.ondatachannel = ({ channel }) => {
           switch (channel.label) {
             case ACTION: {
@@ -65,7 +66,6 @@ module.exports = async (session, message, send, config) => {
         } catch (e) {
           deleteSession(session);
         }
-        peers.set(session, peer);
         break;
       }
       case CANDIDATE: {
