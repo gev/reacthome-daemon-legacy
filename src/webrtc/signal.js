@@ -1,6 +1,6 @@
 
 const { RTCPeerConnection, RTCIceCandidate } = require('wrtc');
-const { OFFER, ANSWER, CANDIDATE, FAILED, ACTION, ASSET } = require('./constants');
+const { OFFER, ANSWER, CANDIDATE, CONNECTING, CONNECTED, DISCONNECTED, ACTION, ASSET } = require('./constants');
 const { onAction, onAsset } = require('./handle');
 const { peers, actions, assets } = require('./peer');
 const { options } = require('./config');
@@ -20,10 +20,7 @@ module.exports = async (session, message, send, config) => {
     const action = JSON.parse(message);
     switch(action.type) {
       case OFFER: {
-        if (peers.has(session)) {
-          const {connectionState} = peers.get(session);
-          if (connectionState === 'new' || connectionState === 'connecting') return;
-        }
+        if (peers.has(session) && peers.get(session).iceConnectionState === 'connecting') return;
         const peer = new RTCPeerConnection(config);
         peers.set(session, peer);
         peer.ondatachannel = ({ channel }) => {
@@ -31,7 +28,6 @@ module.exports = async (session, message, send, config) => {
             case ACTION: {
               channel.onmessage = onAction(session);
               actions.set(session, channel);
-              // list(session);
               break;
             }
             case ASSET: {
@@ -45,10 +41,16 @@ module.exports = async (session, message, send, config) => {
           };
         };
         peer.onconnectionstatechange = () => {
-          console.log(session, peer.connectionState);
-          // if (peer.connectionState === FAILED) {
-          //   deleteSession(session);
-          // }
+          switch (peer.connectionState) {
+            case CONNECTED: {
+              list(session);
+              break;
+            }
+            case DISCONNECTED: {
+              deleteSession(session);
+              break;
+            }
+          }
         };
         peer.onicecandidate = ({ candidate }) => {
           if (!candidate) return;
