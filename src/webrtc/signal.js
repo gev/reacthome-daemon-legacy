@@ -29,6 +29,7 @@ module.exports = async (session, message, send, config) => {
             case ACTION: {
               channel.onmessage = onAction(session);
               actions.set(session, channel);
+              list(session);
               break;
             }
             case ASSET: {
@@ -43,10 +44,6 @@ module.exports = async (session, message, send, config) => {
         };
         peer.onconnectionstatechange = () => {
           switch (peer.connectionState) {
-            case CONNECTED: {
-              list(session);
-              break;
-            }
             case DISCONNECTED: {
               deleteSession(session);
               break;
