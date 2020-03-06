@@ -18,9 +18,10 @@ const deleteSession = session => {
 module.exports = async (session, message, send, config) => {
   try {
     const action = JSON.parse(message);
+    console.log(session, action.type);
     switch(action.type) {
       case OFFER: {
-        if (peers.has(session) && peers.get(session).iceConnectionState === 'connecting') return;
+        if (peers.has(session) && peers.get(session).iceConnectionState === CONNECTING) return;
         const peer = new RTCPeerConnection(config);
         peers.set(session, peer);
         peer.ondatachannel = ({ channel }) => {
