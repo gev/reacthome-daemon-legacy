@@ -18,16 +18,11 @@ const deleteSession = session => {
 module.exports = async (session, message, send, config) => {
   try {
     const action = JSON.parse(message);
-    console.log(session, action.type);
-    if (peers.has(session)) {
-      console.log(peers.get(session).connectionState);
-    }
     switch(action.type) {
       case OFFER: {
         if (peers.has(session)) {
           const {connectionState} = peers.get(session);
-          if (connectionState === 'connecting') return;
-          // deleteSession(session);
+          if (connectionState === 'new' || connectionState === 'connecting') return;
         }
         const peer = new RTCPeerConnection(config);
         peers.set(session, peer);
@@ -50,8 +45,9 @@ module.exports = async (session, message, send, config) => {
           };
         };
         peer.onconnectionstatechange = () => {
-          if (peer.connectionState === FAILED) {
-            deleteSession(session);
+          consile.log(session, peer.connectionState);
+          // if (peer.connectionState === FAILED) {
+          //   deleteSession(session);
           }
         };
         peer.onicecandidate = ({ candidate }) => {
