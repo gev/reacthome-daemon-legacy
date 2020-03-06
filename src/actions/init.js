@@ -96,10 +96,10 @@ module.exports.initialize = (id) => {
       if (major >= 2) {
         for (let i = 1; i <= 6; i++) {
           const channel = get(`${id}/${GROUP}/${i}`) || {};
-          const {value = false, delay = 0} = channel;
-          a[i + 0] = (value);
-          a[i + 1] = (delay) & 0xff;
-          a[i + 2] = (delay >> 8) & 0xff;
+          const {value = 0, delay = 0} = channel;
+          a[3 * i - 3] = value;
+          a[3 * i - 2] = (delay) & 0xff;
+          a[3 * i - 1] = (delay >> 8) & 0xff;
         }
         for (let i = 1; i <= 12; i++) {
           const channel = get(`${id}/${DO}/${i}`);
