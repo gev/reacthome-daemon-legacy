@@ -48,7 +48,7 @@ module.exports = async (session, message, send, config) => {
           consile.log(session, peer.connectionState);
           // if (peer.connectionState === FAILED) {
           //   deleteSession(session);
-          }
+          // }
         };
         peer.onicecandidate = ({ candidate }) => {
           if (!candidate) return;
