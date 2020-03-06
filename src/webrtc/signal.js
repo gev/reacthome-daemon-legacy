@@ -45,7 +45,7 @@ module.exports = async (session, message, send, config) => {
           };
         };
         peer.onconnectionstatechange = () => {
-          consile.log(session, peer.connectionState);
+          console.log(session, peer.connectionState);
           // if (peer.connectionState === FAILED) {
           //   deleteSession(session);
           // }
