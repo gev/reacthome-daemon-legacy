@@ -97,9 +97,11 @@ module.exports.initialize = (id) => {
         for (let i = 1; i <= 6; i++) {
           const channel = get(`${id}/${GROUP}/${i}`) || {};
           const {value = 0, delay = 0} = channel;
-          a[3 * i - 2] = value;
-          a[3 * i - 1] = (delay) & 0xff;
-          a[3 * i] = (delay >> 8) & 0xff;
+          a[5 * i - 2] = value;
+          a[5 * i - 1] = (delay) & 0xff;
+          a[5 * i - 0] = (delay >>  8) & 0xff;
+          a[5 * i + 1] = (delay >> 16) & 0xff;
+          a[5 * i + 2] = (delay >> 24) & 0xff;
         }
         for (let i = 1; i <= 12; i++) {
           const channel = get(`${id}/${DO}/${i}`);
