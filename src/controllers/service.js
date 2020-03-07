@@ -169,6 +169,13 @@ const run = (action) => {
             break;
           }
           case DEVICE_TYPE_RELAY_12: {
+            const {version = ''} = dev;
+            const [major, minor] = version.split('.');
+            if (major >= 2) {
+                    
+            } else {
+              device.send(Buffer.from([ACTION_DO, action.index, action.value]), dev.ip);
+            }
             const a = [ACTION_DO, action.index];
             if (action.value !== undefined) {
               a.push(action.value);
