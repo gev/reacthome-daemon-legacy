@@ -112,7 +112,6 @@ module.exports.initialize = (id) => {
         a[34] = (baud >> 16) & 0xff;
         a[35] = (baud >> 24) & 0xff;
         a[36] = line_control;
-        console.log(a);
       } else {
         for (let i = 1; i <= 12; i++) {
           const channel = get(`${id}/${DO}/${i}`);
