@@ -104,16 +104,21 @@ module.exports.initialize = (id) => {
           a[5 * i - 0] = (delay >> 24) & 0xff;
         }
         for (let i = 1; i <= 12; i++) {
-          const channel = get(`${id}/${DO}/${i}`);
-          a[i + 30] = (channel && channel.value) || 0;
+          const channel = get(`${id}/${DO}/${i}`) || {};
+          const {value = 0, timeout = 0} = channel;
+          a[5 * i + 26] = (value);
+          a[5 * i + 27] = (timeout) & 0xff;
+          a[5 * i + 28] = (timeout >>  8) & 0xff;
+          a[5 * i + 29] = (timeout >> 16) & 0xff;
+          a[5 * i + 30] = (timeout >> 24) & 0xff;
         }
         const { is_rbus = true, baud, line_control } = get(`${id}/${RS485}/1`) || {};
-        a[43] = is_rbus;
-        a[44] = (baud) & 0xff;
-        a[45] = (baud >>  8) & 0xff;
-        a[46] = (baud >> 16) & 0xff;
-        a[47] = (baud >> 24) & 0xff;
-        a[48] = line_control;
+        a[91] = is_rbus;
+        a[92] = (baud) & 0xff;
+        a[93] = (baud >>  8) & 0xff;
+        a[94] = (baud >> 16) & 0xff;
+        a[95] = (baud >> 24) & 0xff;
+        a[96] = line_control;
       } else {
         for (let i = 1; i <= 12; i++) {
           const channel = get(`${id}/${DO}/${i}`);
