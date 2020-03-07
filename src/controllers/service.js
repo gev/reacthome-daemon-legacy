@@ -172,21 +172,20 @@ const run = (action) => {
             const {version = ''} = dev;
             const [major, minor] = version.split('.');
             if (major >= 2) {
-                    
+              const a = [ACTION_DO, action.index];
+              if (action.value !== undefined) {
+                a.push(action.value);
+              }
+              if (action.timeout !== undefined) {
+                a.push((action.timeout) && 0xff);
+                a.push((action.timeout >>  8) && 0xff);
+                a.push((action.timeout >> 16) && 0xff);
+                a.push((action.timeout >> 24) && 0xff);
+              }
+              device.send(Buffer.from(a), dev.ip);
             } else {
               device.send(Buffer.from([ACTION_DO, action.index, action.value]), dev.ip);
             }
-            const a = [ACTION_DO, action.index];
-            if (action.value !== undefined) {
-              a.push(action.value);
-            }
-            if (action.timeout !== undefined) {
-              a.push((action.timeout) && 0xff);
-              a.push((action.timeout >>  8) && 0xff);
-              a.push((action.timeout >> 16) && 0xff);
-              a.push((action.timeout >> 24) && 0xff);
-            }
-            device.send(Buffer.from(a), dev.ip);
             break;
           }
           default: {
