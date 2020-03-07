@@ -177,12 +177,11 @@ const run = (action) => {
                 a.push(action.value);
               }
               if (action.timeout !== undefined) {
-                a.push((action.timeout) && 0xff);
-                a.push((action.timeout >>  8) && 0xff);
-                a.push((action.timeout >> 16) && 0xff);
-                a.push((action.timeout >> 24) && 0xff);
+                a.push((action.timeout) & 0xff);
+                a.push((action.timeout >>  8) & 0xff);
+                a.push((action.timeout >> 16) & 0xff);
+                a.push((action.timeout >> 24) & 0xff);
               }
-              console.log(action.timeout, a)
               device.send(Buffer.from(a), dev.ip);
             } else {
               device.send(Buffer.from([ACTION_DO, action.index, action.value]), dev.ip);
