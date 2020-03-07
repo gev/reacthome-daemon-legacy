@@ -179,10 +179,11 @@ const run = (action) => {
               a.push((a.timeout >> 16) && 0xff);
               a.push((a.timeout >> 24) && 0xff);
             }
+            device.send(Buffer.from(a), dev.ip);
             break;
           }
           default: {
-            device.send(Buffer.from(a), dev.ip);
+            device.send(Buffer.from([ACTION_DO, action.index, action.value]), dev.ip);
           }
         }
         break;
