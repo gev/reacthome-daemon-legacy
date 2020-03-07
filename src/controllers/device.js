@@ -147,6 +147,10 @@ module.exports.manage = () => {
           const channel = `${id}/${DO}/${index}`;
           const chan = get(channel);
           set(channel, { value });
+          if (data.length === 13) {
+            const timeout = data.readUInt32LE(9);
+            set(channel, { timeout });
+          };
           if (chan) {
             const { bind } = chan;
             if (bind) {
@@ -164,7 +168,7 @@ module.exports.manage = () => {
         case ACTION_GROUP: {
           const index = data[7];
           const value = data[8];
-          const delay = data.readUInt16LE(9);
+          const delay = data.readUInt32LE(9);
           const channel = `${id}/${GROUP}/${index}`;
           set(channel, { value, delay });
           break;
