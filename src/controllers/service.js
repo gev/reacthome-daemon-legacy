@@ -182,7 +182,7 @@ const run = (action) => {
             break;
           }
           default: {
-            device.send(Buffer.from([, , action.value]), dev.ip);
+            device.send(Buffer.from(a), dev.ip);
           }
         }
         break;
