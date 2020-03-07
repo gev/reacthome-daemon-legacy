@@ -168,8 +168,21 @@ const run = (action) => {
             device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...action.id.split(':').map(i => parseInt(i, 16)), ACTION_DO, action.index, action.value]), dev.ip);
             break;
           }
+          case DEVICE_TYPE_RELAY_12: {
+            const a = [ACTION_DO, action.index];
+            if (action.value !== undefined) {
+              a.push(action.value);
+            }
+            if (action.timeout !== undefined) {
+              a.push((a.timeout) && 0xff);
+              a.push((a.timeout >>  8) && 0xff);
+              a.push((a.timeout >> 16) && 0xff);
+              a.push((a.timeout >> 24) && 0xff);
+            }
+            break;
+          }
           default: {
-            device.send(Buffer.from([ACTION_DO, action.index, action.value]), dev.ip);
+            device.send(Buffer.from([, , action.value]), dev.ip);
           }
         }
         break;
