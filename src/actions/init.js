@@ -105,15 +105,15 @@ module.exports.initialize = (id) => {
         }
         for (let i = 1; i <= 12; i++) {
           const channel = get(`${id}/${DO}/${i}`);
-          a[i + 18] = (channel && channel.value) || 0;
+          a[i + 30] = (channel && channel.value) || 0;
         }
         const { is_rbus = true, baud, line_control } = get(`${id}/${RS485}/1`) || {};
-        a[31] = is_rbus;
-        a[32] = (baud) & 0xff;
-        a[33] = (baud >>  8) & 0xff;
-        a[34] = (baud >> 16) & 0xff;
-        a[35] = (baud >> 24) & 0xff;
-        a[36] = line_control;
+        a[43] = is_rbus;
+        a[44] = (baud) & 0xff;
+        a[45] = (baud >>  8) & 0xff;
+        a[46] = (baud >> 16) & 0xff;
+        a[47] = (baud >> 24) & 0xff;
+        a[48] = line_control;
       } else {
         for (let i = 1; i <= 12; i++) {
           const channel = get(`${id}/${DO}/${i}`);
