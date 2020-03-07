@@ -181,10 +181,10 @@ const run = (action) => {
               a.push(action.value);
             }
             if (action.timeout !== undefined) {
-              a.push((a.timeout) && 0xff);
-              a.push((a.timeout >>  8) && 0xff);
-              a.push((a.timeout >> 16) && 0xff);
-              a.push((a.timeout >> 24) && 0xff);
+              a.push((action.timeout) && 0xff);
+              a.push((action.timeout >>  8) && 0xff);
+              a.push((action.timeout >> 16) && 0xff);
+              a.push((action.timeout >> 24) && 0xff);
             }
             device.send(Buffer.from(a), dev.ip);
             break;
