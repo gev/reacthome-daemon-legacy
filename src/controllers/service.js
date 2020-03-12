@@ -160,7 +160,7 @@ const run = (action) => {
       case ACTION_DO: {
         const dev = get(action.id);
         if (dev.protocol === ZIGBEE) {
-          zigbee.on_ff(action.id, action.index, action.value);
+          zigbee.on_off(action.id, action.index, action.value);
           return;
         }
         const id = `${action.id}/${DO}/${action.index}`
