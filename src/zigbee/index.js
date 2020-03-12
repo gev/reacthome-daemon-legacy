@@ -29,6 +29,7 @@ module.exports.start = (id) => {
   });
 
   controller.on('deviceAnnounce', ({ device: { ieeeAddr }}) => {
+    console.log(ieeeAddr);
     online(ieeeAddr);
   });
 
