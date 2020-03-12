@@ -25,7 +25,6 @@
     "uuid": "^3.3.3",
     "wrtc": "^0.4.3",
     "ws": "^7.2.1",
-    "zigbee-herdsman": "^0.12.58",
-    "zigbee-herdsman-converters": "gev/zigbee-herdsman-converters"
+    "zigbee-herdsman": "^0.12.62"
   }
 }

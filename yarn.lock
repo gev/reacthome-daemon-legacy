@@ -386,13 +386,6 @@ async-limiter@~1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/async-limiter/-/async-limiter-1.0.1.tgz#dd379e94f0db8310b08291f9d64c3209766617fd"
 
-axios@*:
-  version "0.19.2"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-0.19.2.tgz#3ea36c5d8818d0d5f8a8a97a6d36b86cdc00cb27"
-  integrity sha512-fjgm5MvRHLhx+osE2xoekY70AhARk3a6hkN+3Io1jc00jtquGvxYlKlsFUhmUET0V5te6CcZI7lcv2Ym61mjHA==
-  dependencies:
-    follow-redirects "1.5.10"
-
 balanced-match@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
@@ -566,7 +559,7 @@ debounce@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/debounce/-/debounce-1.2.0.tgz#44a540abc0ea9943018dc0eaa95cce87f65cd131"
 
-debug@3.1.0, debug@=3.1.0, debug@~3.1.0:
+debug@3.1.0, debug@~3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/debug/-/debug-3.1.0.tgz#5bb5a0672628b64149566ba16819e61518c67261"
   dependencies:
@@ -800,13 +793,6 @@ firebase-admin@^8.8.0:
   optionalDependencies:
     "@google-cloud/firestore" "^2.6.0"
     "@google-cloud/storage" "^4.1.2"
-
-follow-redirects@1.5.10:
-  version "1.5.10"
-  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.5.10.tgz#7b7a9f9aea2fdff36786a94ff643ed07f4ff5e2a"
-  integrity sha512-0V5l4Cizzvqt5D44aTXbFZz+FtyXV1vrDN6qrelxtfYQKW0KO0W2T/hkE8xvGa/540LkZlkaUjO4ailYTFtHVQ==
-  dependencies:
-    debug "=3.1.0"
 
 fresh@~0.5.2:
   version "0.5.2"
@@ -1996,7 +1982,7 @@ tar-fs@^2.0.0:
     pump "^3.0.0"
     tar-stream "^2.0.0"
 
-tar-stream@*, tar-stream@^2.0.0:
+tar-stream@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/tar-stream/-/tar-stream-2.1.0.tgz#d1aaa3661f05b38b5acc9b7020efdca5179a2cc3"
   dependencies:
@@ -2197,17 +2183,10 @@ ylru@^1.2.0:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/ylru/-/ylru-1.2.1.tgz#f576b63341547989c1de7ba288760923b27fe84f"
 
-zigbee-herdsman-converters@gev/zigbee-herdsman-converters:
-  version "12.0.37"
-  resolved "https://codeload.github.com/gev/zigbee-herdsman-converters/tar.gz/02e16420e39689cca81e743b8b20d9f557b9db64"
-  dependencies:
-    axios "*"
-    tar-stream "*"
-
-zigbee-herdsman@^0.12.58:
-  version "0.12.58"
-  resolved "https://registry.yarnpkg.com/zigbee-herdsman/-/zigbee-herdsman-0.12.58.tgz#61da3991ae3a8eb72e427048ec4cac2811119632"
-  integrity sha512-mBQDsQ/e0Gfdi2gAjW88hWg8XTPyk3RJh0o8wgAT6GejBSpbw3HMT0yDAQHVJ5FxwjApNDWB1eqTtM1eE37jbw==
+zigbee-herdsman@^0.12.62:
+  version "0.12.62"
+  resolved "https://registry.yarnpkg.com/zigbee-herdsman/-/zigbee-herdsman-0.12.62.tgz#c4325c7d3925e122e3fbc6d14b9da0754feff5a0"
+  integrity sha512-XdZFC1FLEq+YTCb6Z9zKog72w+hZ+m0PTkvk9iSo+S05laP1xvAvPyF748/4/vtGg6CoHgvmn2hQhDrdTl9JuQ==
   dependencies:
     debug "^4.1.1"
     fast-deep-equal "^2.0.1"
