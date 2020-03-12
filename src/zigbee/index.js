@@ -58,7 +58,7 @@ module.exports.start = (id) => {
 
   controller.on('deviceAnnounce', ({ device: { ieeeAddr, networkAddress }}) => {
     console.log(ieeeAddr, networkAddress);
-    online(ieeeAddr);
+    online(ieeeAddr, networkAddress);
   });
 
   controller.on('mesaage', (event) => {
