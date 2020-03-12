@@ -8,26 +8,24 @@ const { online, offline } = require('./online');
 const addDevice = (id, device) => {
   add(id, DEVICE, device.ieeeAddr);
   // set(device.ieeeAddr);
-}
+};
 
 module.exports.start = (id) => {
   const controller = new Controller({ databasePath, serialPort });
 
   controller.on('deviceJoined', ({ device }) => {
-    addDevice(id, device);
     online(device.ieeeAddr);
+    addDevice(id, device);
   });
 
   controller.on('deviceLeave', ({ device: { ieeeAddr } }) => {
-    del(id, DEVICE, ieeeAddr);
     offline(ieeeAddr);
+    del(id, DEVICE, ieeeAddr);
   });
 
-  controller.on()
-
   controller.on('deviceInterview', ({ device: { ieeeAddr, interviewCompleted } }) => {
-    set(ieeeAddr, { interviewCompleted });
     online(ieeeAddr);
+    set(ieeeAddr, { interviewCompleted });
   });
 
   controller.on('deviceAnnounce', ({ device: { ieeeAddr }}) => {
@@ -36,14 +34,15 @@ module.exports.start = (id) => {
 
   controller.on('mesaage', (event) => {
     online(event.device.ieeeAddr);
-  })
+  });
 
   controller
   .start()
   .then(() => {
     controller.permitJoin(true);
     controller.getDevices().forEach(device => {
-     addDevice(id, device);
+      offline(id, device.ieeeAddr);
+      addDevice(id, device);
     });
   });
 };
