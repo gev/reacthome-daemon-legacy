@@ -1,9 +1,9 @@
 
-const { Controller } = require('zigbee-herdsman');
 const { set, add, del } = require('../actions');
 const { DEVICE, DO } = require('../constants');
-const { serialPort, databasePath, ZIGBEE } = require('./constants');
+const { ZIGBEE } = require('./constants');
 const { online, offline } = require('./online');
+const controller = require('./controller');
 const handle = require('./in');
 
 const config = ({ endpoints }) => 
@@ -41,7 +41,6 @@ const addDevice = (id, device) => {
 };
 
 module.exports.start = (id) => {
-  const controller = new Controller({ databasePath, serialPort });
 
   controller.on('deviceJoined', ({ device }) => {
     online(device.ieeeAddr, device.networkAddress);
