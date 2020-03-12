@@ -2,5 +2,5 @@
 const {zigbee} = require('../assets');
 
 module.exports.ZIGBEE = 'zigbee';
-module.exports.databasePath = { path: './data/dev.db' };
+module.exports.serialPort = { path: './dev/ttyAMA0' };
 module.exports.databasePath = zigbee('devices.json');
