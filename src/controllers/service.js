@@ -133,7 +133,7 @@ const mac = require('../mac');
 const { ac } = require('../drivers');
 const { broadcastAction } = require('../webrtc/peer');
 const { ZIGBEE } = require('../zigbee/constants');
-const handleZigbee = require('../zigbee/out');
+const zigbee = require('../zigbee/out');
 
 const timers = {};
 const schedules = {};
@@ -160,7 +160,7 @@ const run = (action) => {
       case ACTION_DO: {
         const dev = get(action.id);
         if (dev.protocol === ZIGBEE) {
-          handleZigbee(action);
+          zigbee.on_ff(action.id, action.index, action.value);
           return;
         }
         const id = `${action.id}/${DO}/${action.index}`
@@ -336,7 +336,7 @@ const run = (action) => {
           const [dev,,index] = o[i].split('/');
           const { ip, type: deviceType, protocol } = get(dev);
           if (protocol === ZIGBEE) {
-            handleZigbee(action);
+            zigbee.on(dev, index);
             return;
           }
           const value = isOn ? (i === 'bind' ? last.value : last[i]) : 255;
@@ -420,7 +420,7 @@ const run = (action) => {
           const [dev,,index] = o[i].split('/');
           const { ip, type: deviceType, protocol } = get(dev);
           if (protocol === ZIGBEE) {
-            handleZigbee(action);
+            zigbee.off(dev, index);
             return;
           }
           switch (deviceType) {
