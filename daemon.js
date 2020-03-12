@@ -7,6 +7,7 @@ const discovery = require('./src/discovery');
 const drivers = require('./src/drivers');
 const assets = require('./src/assets');
 const webrtc = require('./src/webrtc');
+const zigbee = require('./src/zigbee');
 const janus = require('./src/janus');
 const sip = require('./src/sip');
 const db = require('./src/db');
@@ -66,6 +67,7 @@ db.createReadStream()
     cpu.manage();
     discovery.start(init.mac);
     webrtc.start(init.mac);
+    zigbee.start(init.mac);
     // janus.start();
     sip.start();
     start(init.mac);
