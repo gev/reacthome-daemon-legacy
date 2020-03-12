@@ -3,15 +3,15 @@ const { set } = require('../actions');
 
 const TIMEOUT = 30000;
 
-const timer = new Map();
+const timers = new Map();
 
 const offline = (id) => {
   set(id, { online: false });
 }
 
 const online = (id) => {
-  clearInterval(timer.get(ig));
-  timer.set(id, setTimeout(offline, TIMEOUT, id));
+  clearInterval(timers.get(id));
+  timers.set(id, setTimeout(offline, TIMEOUT, id));
   set(id, { online: true });
 };
 
