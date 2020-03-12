@@ -2,13 +2,13 @@
 const fs = require('fs');
 const path = require('path');
 const { promisify } = require('util');
-const { ASSETS, TMP, ZIGBRR } = require('./assets/constants');
+const { ASSETS, TMP, ZIGBEE } = require('./assets/constants');
 
 const p = (type) => (a = '') => path.join(type, a);
 
 module.exports.tmp = p(TMP);
 module.exports.asset = p(ASSETS);
-module.exports.zigbee = p(ZIFBEE)
+module.exports.zigbee = p(ZIGBEE)
 module.exports.stat = promisify(fs.stat);
 module.exports.mkdir = promisify(fs.mkdir);
 module.exports.rename = promisify(fs.rename);
