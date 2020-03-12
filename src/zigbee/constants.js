@@ -1,5 +1,5 @@
 
-const {zigbee} = require('../assets');
+const { zigbee } = require('../fs');
 
 module.exports.ZIGBEE = 'zigbee';
 module.exports.serialPort = { path: './dev/ttyAMA0' };
