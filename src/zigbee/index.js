@@ -61,6 +61,7 @@ module.exports.start = (id) => {
   });
 
   controller.on('mesaage', (event) => {
+    console.log(JSON.stringify(event, null, 2));
     online(event.device.ieeeAddr, event.device.networkAddress);
   });
 
