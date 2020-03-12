@@ -1,7 +1,7 @@
 
 const { set } = require('../actions');
 
-const TIMEOUT = 30000;
+const TIMEOUT = 300000;
 
 const timers = new Map();
 
