@@ -4,6 +4,7 @@ const { set, add, del } = require('../actions');
 const { DEVICE, DO } = require('../constants');
 const { serialPort, databasePath, ZIGBEE } = require('./constants');
 const { online, offline } = require('./online');
+const handle = require('./in');
 
 const config = ({ endpoints }) => 
   endpoints.reduce((config, { ID, inputClusters }) => 
@@ -27,14 +28,15 @@ const config = ({ endpoints }) =>
     }, {});
 
 const addDevice = (id, device) => {
-  const { ieeeAddr, manufacturerName, modelID, powerSource } = device;
+  const { ieeeAddr, manufacturerName, modelID, powerSource, interviewCompleted } = device;
   add(id, DEVICE, ieeeAddr);
-  set(device.ieeeAddr, {
+  set(ieeeAddr, {
     protocol: ZIGBEE,
     vendor: manufacturerName,
     model: modelID,
     powerSource: powerSource,
-    config: config(device)
+    config: config(device),
+    interviewCompleted
   });
 };
 
@@ -57,13 +59,13 @@ module.exports.start = (id) => {
   });
 
   controller.on('deviceAnnounce', ({ device: { ieeeAddr, networkAddress }}) => {
-    console.log(ieeeAddr, networkAddress);
     online(ieeeAddr, networkAddress);
   });
 
-  controller.on('message', (event) => {
-    console.log(JSON.stringify(event, null, 2));
-    online(event.device.ieeeAddr, event.device.networkAddress);
+  controller.on('message', ({ device: { ieeeAddr, networkAddress }, endpoint }) => {
+    console.log(JSON.stringify(endpoint, null, 2));
+    online(ieeeAddr, networkAddress);
+    handle(ieeeAddr, endpoint);
   });
 
   controller
