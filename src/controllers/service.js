@@ -132,6 +132,8 @@ const { device } = require('../sockets');
 const mac = require('../mac');
 const { ac } = require('../drivers');
 const { broadcastAction } = require('../webrtc/peer');
+const { ZIGBEE } = require('../zigbee/constants');
+const handleZigbee = require('../zigbee/out');
 
 const timers = {};
 const schedules = {};
@@ -157,6 +159,10 @@ const run = (action) => {
       }
       case ACTION_DO: {
         const dev = get(action.id);
+        if (dev.protocol === ZIGBEE) {
+          handleZigbee(action);
+          return;
+        }
         const id = `${action.id}/${DO}/${action.index}`
         switch (dev.type) {
           case DRIVER_TYPE_BB_PLC1:
@@ -328,7 +334,11 @@ const run = (action) => {
           if (!o[i]) return;
           const { velocity, type } = get(o[i]) || {};
           const [dev,,index] = o[i].split('/');
-          const { ip, type: deviceType } = get(dev);
+          const { ip, type: deviceType, protocol } = get(dev);
+          if (protocol === ZIGBEE) {
+            handleZigbee(action);
+            return;
+          }
           const value = isOn ? (i === 'bind' ? last.value : last[i]) : 255;
           switch (deviceType) {
             case DEVICE_TYPE_DIM4:
@@ -408,6 +418,10 @@ const run = (action) => {
           if (!o[i]) return;
           const { velocity, type } = get(o[i]) || {};
           const [dev,,index] = o[i].split('/');
+          if (protocol === ZIGBEE) {
+            handleZigbee(action);
+            return;
+          }
           const { ip, type: deviceType } = get(dev);
           switch (deviceType) {
             case DEVICE_TYPE_DIM4:
