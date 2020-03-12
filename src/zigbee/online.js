@@ -12,7 +12,7 @@ const offline = (id) => {
 const online = (id) => {
   clearInterval(timer.get(ig));
   timer.set(id, setTimeout(offline, TIMEOUT, id));
-  set(id, { offline: false });
+  set(id, { online: true });
 };
 
 module.exports = { online, offline };
