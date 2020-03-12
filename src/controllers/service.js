@@ -168,6 +168,26 @@ const run = (action) => {
             device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...action.id.split(':').map(i => parseInt(i, 16)), ACTION_DO, action.index, action.value]), dev.ip);
             break;
           }
+          case DEVICE_TYPE_RELAY_12: {
+            const {version = ''} = dev;
+            const [major, minor] = version.split('.');
+            if (major >= 2) {
+              const a = [ACTION_DO, action.index];
+              if (action.value !== undefined) {
+                a.push(action.value);
+              }
+              if (action.timeout !== undefined) {
+                a.push((action.timeout) & 0xff);
+                a.push((action.timeout >>  8) & 0xff);
+                a.push((action.timeout >> 16) & 0xff);
+                a.push((action.timeout >> 24) & 0xff);
+              }
+              device.send(Buffer.from(a), dev.ip);
+            } else {
+              device.send(Buffer.from([ACTION_DO, action.index, action.value]), dev.ip);
+            }
+            break;
+          }
           default: {
             device.send(Buffer.from([ACTION_DO, action.index, action.value]), dev.ip);
           }
@@ -175,14 +195,15 @@ const run = (action) => {
         break;
       }
       case ACTION_GROUP: {
+        console.log(action);
         const dev = get(action.id);
         const channel = `${action.id}/${GROUP}/${action.index}`;
-        const buffer = Buffer.alloc(5);
+        const buffer = Buffer.alloc(7);
         const { value, delay } = get(channel) || {};
         buffer.writeUInt8(ACTION_GROUP, 0);
         buffer.writeUInt8(action.index, 1);
         buffer.writeUInt8(action.value === undefined ? value : action.value, 2);
-        buffer.writeUInt16LE(action.delay === undefined ? delay : action.delay, 3);
+        buffer.writeUInt32LE(action.delay === undefined ? delay : action.delay, 3);
         device.send(buffer, dev.ip);
         break;
       }

@@ -16,10 +16,10 @@ const split = (x, n) => x.reduce ((a, b, i) => {
 }, []);
 
 module.exports = async (session) => {
-  // split(state.list(), N).forEach(state => {
-  //   sendAction(session, { type: LIST, state });
-  // });
-  // split(await assets.list(), N).forEach(assets => {
-  //   sendAction(session, { type: LIST, assets });
-  // });
+  split(state.list(), N).forEach(state => {
+    sendAction(session, { type: LIST, state });
+  });
+  split(await assets.list(), N).forEach(assets => {
+    sendAction(session, { type: LIST, assets });
+  });
 };
