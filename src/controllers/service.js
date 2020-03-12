@@ -418,11 +418,11 @@ const run = (action) => {
           if (!o[i]) return;
           const { velocity, type } = get(o[i]) || {};
           const [dev,,index] = o[i].split('/');
+          const { ip, type: deviceType, protocol } = get(dev);
           if (protocol === ZIGBEE) {
             handleZigbee(action);
             return;
           }
-          const { ip, type: deviceType } = get(dev);
           switch (deviceType) {
             case DEVICE_TYPE_DIM4:
             case DEVICE_TYPE_DIM_4:
