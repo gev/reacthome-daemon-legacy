@@ -2,7 +2,7 @@
 const { set } = require('../actions');
 const { DO } = require('../constants');
 
-module.exports = (id, { clusters }) => {
+module.exports = (id, { ID, clusters }) => {
   Object
     .entries(clusters)
     .forEach(([key, { attributes }]) => {
