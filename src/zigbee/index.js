@@ -17,12 +17,13 @@ const config = ({ endpoints }) =>
           default:
             return;
         }
-        if (config[type]) {
+        if (Array.isArray(config[type])) {
           config[type].push(ID);
         } else {
           config[type] = [ID];
         }
-      })
+      });
+      return config;
     }, {});
 
 const addDevice = (id, device) => {
