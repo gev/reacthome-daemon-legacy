@@ -14,9 +14,9 @@ module.exports = (id, { ID, clusters }) => {
       switch(key) {
         case 'genOnOff': {
           const channel = `${id}/${DO}/${ID}`;
-          set(channel, { value: attributes.onOff });
           const chan = get(channel);
-          if (chan.bind) {
+          set(channel, { value: attributes.onOff });
+          if (chan && chan.bind) {
             if (chan.value !== attributes.onOff) {
               const script = chan[onDO[attributes.onOff]];
               if (script) {
