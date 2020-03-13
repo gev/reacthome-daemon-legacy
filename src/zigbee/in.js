@@ -1,5 +1,5 @@
 
-const { set, count_on, count_off, onHold, onClick } = require('../actions');
+const { get, set, count_on, count_off, onHold, onClick } = require('../actions');
 const { DO, onOn, onOff } = require('../constants');
 const { run } = require('../controllers/service');
 
