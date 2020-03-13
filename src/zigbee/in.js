@@ -15,14 +15,14 @@ module.exports = (id, { ID, clusters }) => {
         case 'genOnOff': {
           const channel = `${id}/${DO}/${ID}`;
           set(channel, { value: attributes.onOff });
-          const { bind, value } = get(channel);;
-          if (bind) {
-            if (value !== attributes.onOff) {
+          const chan = get(channel);
+          if (chan.bind) {
+            if (chan.value !== attributes.onOff) {
               const script = chan[onDO[attributes.onOff]];
               if (script) {
                 run({ type: ACTION_SCRIPT_RUN, id: script });
               }
-              count[attributes.onOff](bind);
+              count[attributes.onOff](chan.bind);
             }
           }
         break;
