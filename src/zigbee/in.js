@@ -1,6 +1,6 @@
 
 const { get, set, count_on, count_off, onHold, onClick } = require('../actions');
-const { DO, onOn, onOff } = require('../constants');
+const { DO, onOn, onOff, ACTION_SCRIPT_RUN } = require('../constants');
 const { run } = require('../controllers/service');
 
 const onDI = [onOff, onOn, onHold, onClick];
