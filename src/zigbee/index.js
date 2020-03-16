@@ -78,7 +78,7 @@ module.exports.start = (id) => {
     setInterval(() => {
       controller.getDevices().forEach(device => {
         device.lqi()
-          .then(lqi => {console.log(JSON.stringify(lqi, 2, ))})
+          .then(lqi => {console.log(JSON.stringify(lqi.neighbors, null, 2))})
           .catch(console.error);
       });
     }, 10000);
