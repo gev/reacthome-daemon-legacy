@@ -58,6 +58,7 @@ module.exports.start = (id) => {
   });
 
   controller.on('deviceAnnounce', ({ device: { ieeeAddr, networkAddress }}) => {
+    controller.getDeviceByIeeeAddr(ieeeAddr).lqi(console.log);
     online(ieeeAddr, networkAddress);
   });
 
