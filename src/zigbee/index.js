@@ -58,7 +58,6 @@ module.exports.start = (id) => {
   });
 
   controller.on('deviceAnnounce', ({ device: { ieeeAddr, networkAddress }}) => {
-    controller.getDeviceByIeeeAddr(ieeeAddr).lqi(console.log);
     online(ieeeAddr, networkAddress);
   });
 
@@ -76,5 +75,12 @@ module.exports.start = (id) => {
       offline(id, device.ieeeAddr);
       addDevice(id, device);
     });
+    setInterval(() => {
+      controller.getDevices().forEach(device => {
+        device.lqi()
+          .then(lqi => {console.log(JSON.stringify(lqi, 2, ))})
+          .catch(console.error);
+      });
+    }, 10000);
   });
 };
