@@ -1,5 +1,5 @@
 
-const { set, add, del } = require('../actions');
+const { get, set, add, del } = require('../actions');
 const { DEVICE, DO } = require('../constants');
 const { ZIGBEE } = require('./constants');
 const { online, offline } = require('./online');
@@ -77,8 +77,9 @@ module.exports.start = (id) => {
     });
     setInterval(() => {
       controller.getDevices().forEach(device => {
+        const {code} = get(device.ieeeAddr) || {};
         device.lqi()
-          .then(lqi => {console.log(device.ieeeAddr, JSON.stringify(lqi.neighbors, null, 2))})
+          .then(lqi => {console.log(code || device.ieeeAddr, device.networkAddress, JSON.stringify(lqi.neighbors, null, 2))})
           .catch(console.error);
       });
     }, 10000);
