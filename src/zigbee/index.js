@@ -43,9 +43,9 @@ module.exports.start = (id) => {
     addDevice(id, device);
   });
 
-  controller.on('deviceLeave', ({ device: { ieeeAddr } }) => {
-    offline(ieeeAddr);
-    del(id, DEVICE, ieeeAddr);
+  controller.on('deviceLeave', ({ device }) => {
+    offline(device.ieeeAddr);
+    del(id, DEVICE, device.ieeeAddr);
   });
 
   controller.on('deviceInterview', ({ device }) => {
@@ -53,14 +53,16 @@ module.exports.start = (id) => {
     addDevice(id, device);
   });
 
-  controller.on('deviceAnnounce', ({ device: { ieeeAddr, networkAddress }}) => {
-    online(ieeeAddr, networkAddress);
+  controller.on('deviceAnnounce', ({ device }) => {
+    online(device.ieeeAddr, device.networkAddress);
+    addDevice(id, device);
   });
 
-  controller.on('message', ({ device: { ieeeAddr, networkAddress }, endpoint }) => {
+  controller.on('message', ({ device, endpoint }) => {
     // console.log(JSON.stringify(endpoint, null, 2));
-    online(ieeeAddr, networkAddress);
-    handle(ieeeAddr, endpoint);
+    addDevice(id, device);
+    online(device.ieeeAddr, device.networkAddress);
+    handle(device.ieeeAddr, endpoint);
   });
 
   controller
@@ -75,7 +77,7 @@ module.exports.start = (id) => {
       // }
       // await device.removeFromDatabase();
       // offline(id, device.ieeeAddr);
-      addDevice(id, device);
+      // addDevice(id, device);
     });
     // setInterval(() => {
     //   controller.getDevices().forEach(device => {
