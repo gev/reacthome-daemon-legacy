@@ -12,7 +12,7 @@ const config = ({ endpoints }) =>
     {
       inputClusters.forEach(id => {
         if (clusters.has(id)) {
-          const cluster = clusters.get(di);
+          const cluster = clusters.get(id);
           if (Array.isArray(config[cluster])) {
             config[cluster].push(ID);
           } else {
