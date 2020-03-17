@@ -67,9 +67,15 @@ module.exports.start = (id) => {
   .start()
   .then(() => {
     controller.permitJoin(true);
-    controller.getDevices().forEach(device => {
-      offline(id, device.ieeeAddr);
-      addDevice(id, device);
+    controller.getDevices().forEach(async device => {
+      try {
+        await device.removeFromNetwork();
+      } catch (e) {
+        console.log(e);
+      }
+      await device.removeFromDatabase();
+      // offline(id, device.ieeeAddr);
+      // addDevice(id, device);
     });
     // setInterval(() => {
     //   controller.getDevices().forEach(device => {
