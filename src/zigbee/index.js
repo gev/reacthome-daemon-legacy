@@ -1,27 +1,25 @@
 
 const { get, set, add, del } = require('../actions');
-const { DEVICE, DO } = require('../constants');
+const { DEVICE } = require('../constants');
 const { ZIGBEE } = require('./constants');
 const { online, offline } = require('./online');
 const controller = require('./controller');
+const clusters = require('./clusters');
 const handle = require('./in');
+
+const 
 
 const config = ({ endpoints }) => 
   endpoints.reduce((config, { ID, inputClusters }) => 
     {
-      inputClusters.forEach(cluster => {
-        let type;
-        switch(cluster) {
-          case 6:
-            type = DO
-            break;
-          default:
-            return;
-        }
-        if (Array.isArray(config[type])) {
-          config[type].push(ID);
-        } else {
-          config[type] = [ID];
+      inputClusters.forEach(id => {
+        if (clusters.has(dispatchEvent)) {
+          const cluster = clusters.get(di);
+          if (Array.isArray(config[cluster])) {
+            config[cluster].push(ID);
+          } else {
+            config[cluster] = [ID];
+          }
         }
       });
       return config;

@@ -27,6 +27,7 @@ module.exports.MOBILE = 'mobile';
 module.exports.DO = 'do';
 module.exports.DI = 'di';
 module.exports.DIM = 'dim';
+module.exports.COLOR = 'color';
 module.exports.GROUP = 'group';
 module.exports.RS485 = 'rs485';
 module.exports.ARTNET = 'artnet';
