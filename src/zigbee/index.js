@@ -11,7 +11,7 @@ const config = ({ endpoints }) =>
   endpoints.reduce((config, { ID, inputClusters }) => 
     {
       inputClusters.forEach(id => {
-        if (clusters.has(dispatchEvent)) {
+        if (clusters.has(id)) {
           const cluster = clusters.get(di);
           if (Array.isArray(config[cluster])) {
             config[cluster].push(ID);
