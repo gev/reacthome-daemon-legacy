@@ -58,7 +58,7 @@ module.exports.start = (id) => {
   });
 
   controller.on('message', ({ device: { ieeeAddr, networkAddress }, endpoint }) => {
-    console.log(JSON.stringify(endpoint, null, 2));
+    // console.log(JSON.stringify(endpoint, null, 2));
     online(ieeeAddr, networkAddress);
     handle(ieeeAddr, endpoint);
   });
