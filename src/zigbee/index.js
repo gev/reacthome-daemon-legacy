@@ -75,7 +75,7 @@ module.exports.start = (id) => {
       } catch (e) {
         console.log(e);
       }
-      // await device.removeFromDatabase();
+      await device.removeFromDatabase();
       // offline(id, device.ieeeAddr);
       // addDevice(id, device);
     });
