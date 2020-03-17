@@ -8,6 +8,7 @@ const db = require('../db');
 module.exports.get = state.get;
 
 const apply = (id, p) => {
+  if (!id) return;
   const payload = { ...p, timestamp: Date.now() };
   state.set(id, payload);
   broadcastAction({ type: ACTION_SET, id, payload });
