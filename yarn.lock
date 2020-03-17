@@ -1894,6 +1894,11 @@ sip@^0.0.5:
   dependencies:
     ws "^6.1.0"
 
+slip@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/slip/-/slip-1.0.2.tgz#ba45a923034d6cf41b1a27aebe7128282c8d551f"
+  integrity sha1-ukWpIwNNbPQbGieuvnEoKCyNVR8=
+
 snakeize@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/snakeize/-/snakeize-0.1.0.tgz#10c088d8b58eb076b3229bb5a04e232ce126422d"
@@ -2183,12 +2188,13 @@ ylru@^1.2.0:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/ylru/-/ylru-1.2.1.tgz#f576b63341547989c1de7ba288760923b27fe84f"
 
-zigbee-herdsman@^0.12.62:
-  version "0.12.62"
-  resolved "https://registry.yarnpkg.com/zigbee-herdsman/-/zigbee-herdsman-0.12.62.tgz#c4325c7d3925e122e3fbc6d14b9da0754feff5a0"
-  integrity sha512-XdZFC1FLEq+YTCb6Z9zKog72w+hZ+m0PTkvk9iSo+S05laP1xvAvPyF748/4/vtGg6CoHgvmn2hQhDrdTl9JuQ==
+zigbee-herdsman@^0.12.64:
+  version "0.12.64"
+  resolved "https://registry.yarnpkg.com/zigbee-herdsman/-/zigbee-herdsman-0.12.64.tgz#d78d48fcdad257ff9198d2c924289a699082f260"
+  integrity sha512-VmXGONwIiBJgmGQVCQToz/lZ64iw7j888OPXqXWEHzoOqvBNFbqGmEfkR/DF6y/3rF5h0p6Rwds3Yb1lFj9kdg==
   dependencies:
     debug "^4.1.1"
     fast-deep-equal "^2.0.1"
     mixin-deep "^2.0.1"
     serialport "8.0.6"
+    slip "^1.0.2"
