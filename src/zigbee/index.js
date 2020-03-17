@@ -7,8 +7,6 @@ const controller = require('./controller');
 const clusters = require('./clusters');
 const handle = require('./in');
 
-const 
-
 const config = ({ endpoints }) => 
   endpoints.reduce((config, { ID, inputClusters }) => 
     {
