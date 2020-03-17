@@ -69,7 +69,7 @@ module.exports.start = (id) => {
   .start()
   .then(() => {
     // controller.reset();
-    controller.permitJoin(false);
+    controller.permitJoin(true);
     controller.getDevices().forEach(async device => {
       // try {
       //   await device.removeFromNetwork();
