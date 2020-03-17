@@ -38,7 +38,9 @@ const addDevice = (id, device) => {
 
 module.exports.start = (id) => {
 
-  controller.on('deviceJoined', ({ device }) => {
+  controller.on('deviceJoined', event => {
+    console.log(JSON.stringify(event, null, 2));
+    const {device} = event;
     online(device.ieeeAddr, device.networkAddress);
     addDevice(id, device);
   });
