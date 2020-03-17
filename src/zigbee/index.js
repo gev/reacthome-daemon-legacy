@@ -68,14 +68,15 @@ module.exports.start = (id) => {
   controller
   .start()
   .then(() => {
+    controller.reset();
     controller.permitJoin(true);
     controller.getDevices().forEach(async device => {
-      try {
-        await device.removeFromNetwork();
-      } catch (e) {
-        console.log(e);
-      }
-      await device.removeFromDatabase();
+      // try {
+      //   await device.removeFromNetwork();
+      // } catch (e) {
+      //   console.log(e);
+      // }
+      // await device.removeFromDatabase();
       // offline(id, device.ieeeAddr);
       // addDevice(id, device);
     });
