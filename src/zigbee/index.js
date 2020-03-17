@@ -38,11 +38,8 @@ const addDevice = (id, device) => {
 
 module.exports.start = (id) => {
 
-  controller.on('deviceJoined', event => {
-    console.log(JSON.stringify(event, null, 2));
-    const {device} = event;
+  controller.on('deviceJoined', ({ device }) => {
     online(device.ieeeAddr, device.networkAddress);
-    addDevice(id, device);
   });
 
   controller.on('deviceLeave', ({ device: { ieeeAddr } }) => {
@@ -50,9 +47,9 @@ module.exports.start = (id) => {
     del(id, DEVICE, ieeeAddr);
   });
 
-  controller.on('deviceInterview', ({ device: { ieeeAddr, networkAddress, interviewCompleted } }) => {
-    online(ieeeAddr, networkAddress);
-    set(ieeeAddr, { interviewCompleted });
+  controller.on('deviceInterview', ({ device }) => {
+    online(device.ieeeAddr, device.networkAddress);
+    addDevice(id, device);
   });
 
   controller.on('deviceAnnounce', ({ device: { ieeeAddr, networkAddress }}) => {
