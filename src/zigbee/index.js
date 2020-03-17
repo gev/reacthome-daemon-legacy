@@ -68,7 +68,7 @@ module.exports.start = (id) => {
   controller
   .start()
   .then(() => {
-    controller.reset();
+    // controller.reset();
     controller.permitJoin(true);
     controller.getDevices().forEach(async device => {
       // try {
