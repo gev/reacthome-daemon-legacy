@@ -1,11 +1,11 @@
 const { ON, OFF } = require('../constants');
 const controller = require('./controller');
 
-const on_off = (id, index, value) => {
+const on_off = async (id, index, value) => {
   try {
     const device = controller.getDeviceByIeeeAddr(id);
     const endpoint = device.getEndpoint(Number.parseInt(index));
-    endpoint.command('genOnOff', value ? 'on' : 'off', {});
+    await endpoint.command('genOnOff', value ? 'on' : 'off', {});
   } catch (e) {
     console.error(e);
   }
