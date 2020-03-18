@@ -73,12 +73,12 @@ module.exports.start = (id) => {
     // controller.reset('soft');
     // controller.reset('hard');
     controller.getDevices().forEach(async device => {
-      try {
-        await device.removeFromNetwork();
-      } catch (e) {
-        console.log(e);
-      }
-      await device.removeFromDatabase();
+      // try {
+      //   await device.removeFromNetwork();
+      // } catch (e) {
+      //   console.log(e);
+      // }
+      // await device.removeFromDatabase();
       // offline(id, device.ieeeAddr);
       // addDevice(id, device);
     });
