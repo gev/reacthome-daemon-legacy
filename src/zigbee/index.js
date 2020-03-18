@@ -68,10 +68,10 @@ module.exports.start = (id) => {
   controller
   .start()
   .then(() => {
-    // controller.reset();
     controller.permitJoin(true);
     controller.setTransmitPower(19);
     // controller.reset('soft');
+    controller.reset('hard');
     controller.getDevices().forEach(async device => {
       // try {
       //   await device.removeFromNetwork();
