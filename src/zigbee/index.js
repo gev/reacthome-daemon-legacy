@@ -71,7 +71,7 @@ module.exports.start = (id) => {
     controller.permitJoin(true);
     controller.setTransmitPower(19);
     // controller.reset('soft');
-    controller.reset('hard');
+    // controller.reset('hard');
     controller.getDevices().forEach(async device => {
       // try {
       //   await device.removeFromNetwork();
