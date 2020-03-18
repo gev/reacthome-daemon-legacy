@@ -69,7 +69,7 @@ module.exports.start = (id) => {
   .start()
   .then(() => {
     controller.permitJoin(true);
-    controller.setTransmitPower(5);
+    controller.setTransmitPower(0);
     // controller.reset('soft');
     // controller.reset('hard');
     console.log(controller.getDevices().length);
