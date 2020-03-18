@@ -72,6 +72,7 @@ module.exports.start = (id) => {
     controller.setTransmitPower(5);
     // controller.reset('soft');
     // controller.reset('hard');
+    console.log(controller.getDevices().length);
     controller.getDevices().forEach(async device => {
       // try {
       //   await device.removeFromNetwork();
