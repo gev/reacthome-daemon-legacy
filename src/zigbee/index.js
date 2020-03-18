@@ -69,7 +69,7 @@ module.exports.start = (id) => {
   .start()
   .then(() => {
     controller.permitJoin(true);
-    controller.setTransmitPower(5);
+    controller.setTransmitPower(19);
     // controller.reset('soft');
     // controller.reset('hard');
     console.log(controller.getDevices().length);
@@ -83,13 +83,13 @@ module.exports.start = (id) => {
       // offline(id, device.ieeeAddr);
       addDevice(id, device);
     });
-    setInterval(() => {
-      controller.getDevices().forEach(device => {
-        const {code} = get(device.ieeeAddr) || {};
-        device.lqi()
-          .then(lqi => {console.log(code || device.ieeeAddr, device.networkAddress, JSON.stringify(lqi.neighbors, null, 2))})
-          .catch(console.error);
-      });
-    }, 60000);
+    // setInterval(() => {
+    //   controller.getDevices().forEach(device => {
+    //     const {code} = get(device.ieeeAddr) || {};
+    //     device.lqi()
+    //       .then(lqi => {console.log(code || device.ieeeAddr, device.networkAddress, JSON.stringify(lqi.neighbors, null, 2))})
+    //       .catch(console.error);
+    //   });
+    // }, 60000);
   });
 };
