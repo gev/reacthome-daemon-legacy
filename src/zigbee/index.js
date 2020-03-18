@@ -68,7 +68,7 @@ module.exports.start = (id) => {
   controller
   .start()
   .then(() => {
-    controller.permitJoin(true);
+    controller.permitJoin(false);
     controller.setTransmitPower(-6);
     // controller.reset('soft');
     // controller.reset('hard');
