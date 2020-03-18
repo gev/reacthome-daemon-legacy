@@ -80,7 +80,7 @@ module.exports.start = (id) => {
       // }
       // await device.removeFromDatabase();
       // offline(id, device.ieeeAddr);
-      // addDevice(id, device);
+      addDevice(id, device);
     });
     // setInterval(() => {
     //   controller.getDevices().forEach(device => {
