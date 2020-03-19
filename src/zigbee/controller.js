@@ -1,5 +1,13 @@
 const { Controller } = require('zigbee-herdsman');
-const { serialPort, databasePath, ZIGBEE } = require('./constants');
+const { zigbee } = require('../fs');
 
-module.exports = new Controller({ databasePath, serialPort });
+module.exports = new Controller({
+  databasePath: zigbee('devices.json'), 
+  serialPort: {
+    path: '/dev/ttyAMA0',
+  }, 
+  network: {
+    channelList: [3]
+  }
+});
 
