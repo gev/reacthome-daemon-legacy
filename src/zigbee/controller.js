@@ -7,7 +7,7 @@ module.exports = new Controller({
     path: '/dev/ttyAMA0',
   }, 
   network: {
-    channelList: [3]
-  } 
+    channelList: [3],
+  },
 });
 
