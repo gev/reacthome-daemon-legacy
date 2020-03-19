@@ -74,7 +74,7 @@ module.exports.start = (id) => {
       console.log(JSON.stringify(param, null, 2));
     });
     // controller.reset('soft');
-    // controller.reset('hard');
+    controller.reset('hard');
     console.log(controller.getDevices().length);
     controller.getDevices().forEach(async device => {
       // try {
