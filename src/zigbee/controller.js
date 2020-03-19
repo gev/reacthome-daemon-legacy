@@ -8,6 +8,6 @@ module.exports = new Controller({
   }, 
   network: {
     channelList: [3]
-  }
+  } 
 });
 
