@@ -6,8 +6,8 @@ module.exports = new Controller({
   serialPort: {
     path: '/dev/ttyS0',
   }, 
-  network: {
-    channelList: [25],
-  },
+  // network: {
+  //   channelList: [25],
+  // },
 });
 
