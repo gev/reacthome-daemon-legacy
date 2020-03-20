@@ -87,9 +87,9 @@ module.exports.start = (id) => {
       addDevice(id, device);
     });
     setInterval(() => {
+      console.log('-----------------------------------------------------------------');
       controller.getDevices().forEach(async device => {
       const {code} = get(device.ieeeAddr) || {};
-      console.log('-----------------------------------------------------------------');
       console.log(code || device.ieeeAddr);
       try {
         const lqi = await device.lqi();
