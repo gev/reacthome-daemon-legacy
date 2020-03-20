@@ -86,13 +86,21 @@ module.exports.start = (id) => {
       // offline(id, device.ieeeAddr);
       addDevice(id, device);
     });
-    // setInterval(() => {
-    //   controller.getDevices().forEach(device => {
-    //     const {code} = get(device.ieeeAddr) || {};
-    //     device.lqi()
-    //       .then(lqi => {console.log(code || device.ieeeAddr, device.networkAddress, JSON.stringify(lqi.neighbors, null, 2))})
-    //       .catch(console.error);
-    //   });
-    // }, 60000);
+    setInterval(async () => {
+      controller.getDevices().forEach(device => {
+      const {code} = get(device.ieeeAddr) || {};
+      console.log('-----------------------------------------------------------------');
+      console.log(code || device.ieeeAddr);
+      try {
+        const lqi = await device.lqi();
+        const table = await device.routingTable();
+        console.log('lqi:', device.networkAddress, JSON.stringify(lqi, null, 2));
+        console.log('routing table:', device.networkAddress, JSON.stringify(table, null, 2));
+      } catch (e) {
+        console.error(e);
+      }
+      console.log();
+  });
+}, 60000);
   });
 };
