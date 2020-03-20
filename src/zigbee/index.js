@@ -87,14 +87,15 @@ module.exports.start = (id) => {
       addDevice(id, device);
     });
     setInterval(async () => {
-      console.log('-----------------------------------------------------------------');
       controller.getDevices().forEach(device => {
       const {code} = get(device.ieeeAddr) || {};
+      console.log('-----------------------------------------------------------------');
+      console.log(code || device.ieeeAddr);
       try {
         const lqi = await device.lqi();
         const table = await device.routingTable();
-        console.log('lqi:', code || device.ieeeAddr, device.networkAddress, JSON.stringify(lqi.neighbors, null, 2));
-        console.log('routing table:', code || device.ieeeAddr, device.networkAddress, JSON.stringify(table, null, 2));
+        console.log('lqi:', device.networkAddress, JSON.stringify(lqi, null, 2));
+        console.log('routing table:', device.networkAddress, JSON.stringify(table, null, 2));
       } catch (e) {
         console.error(e);
       }
