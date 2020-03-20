@@ -97,7 +97,7 @@ module.exports.start = (id) => {
         const table = await device.routingTable();
         console.log('routing table:', device.networkAddress, JSON.stringify(table, null, 2));
       } catch (e) {
-        console.error(e);
+        // console.error(e);
       }
       console.log();
   });
