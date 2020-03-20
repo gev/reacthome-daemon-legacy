@@ -86,8 +86,8 @@ module.exports.start = (id) => {
       // offline(id, device.ieeeAddr);
       addDevice(id, device);
     });
-    setInterval(async () => {
-      controller.getDevices().forEach(device => {
+    setInterval(() => {
+      controller.getDevices().forEach(async device => {
       const {code} = get(device.ieeeAddr) || {};
       console.log('-----------------------------------------------------------------');
       console.log(code || device.ieeeAddr);
