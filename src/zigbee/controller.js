@@ -6,10 +6,10 @@ module.exports = new Controller({
   serialPort: {
     path: '/dev/ttyAMA0',
     adapter: 'zstack',
+    rtscts: false,
   }, 
   network: {
     channelList: [14],
   },
-  disableDefaultResponse: true,
 });
 
