@@ -12,7 +12,7 @@ const offline = (id) => {
 const online = (id, address) => {
   clearInterval(timers.get(id));
   timers.set(id, setTimeout(offline, TIMEOUT, id));
-  set(id, { online: true, address });
+  set(id, { online: true, address: address + ' 0x' + address.toString(16) });
 };
 
 module.exports = { online, offline };
