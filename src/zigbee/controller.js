@@ -5,6 +5,7 @@ module.exports = new Controller({
   databasePath: zigbee('devices.json'), 
   serialPort: {
     path: '/dev/ttyAMA0',
+    adapter: 'zstack',
   }, 
   network: {
     channelList: [14],
