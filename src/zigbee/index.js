@@ -68,7 +68,7 @@ module.exports.start = (id) => {
   controller
   .start()
   .then(() => {
-    controller.permitJoin(true);
+    controller.permitJoin(false);
     //controller.setTransmitPower(0xc5);
     controller.getNetworkParameters().then(param => {
       console.log(JSON.stringify(param, null, 2));
@@ -92,21 +92,21 @@ module.exports.start = (id) => {
 //        device.ping().catch(console.error);
 //      });
 //    }, 6);
-    setInterval(() => {
-      console.log('-----------------------------------------------------------------');
-      controller.getDevices().forEach(async device => {
-        const {code} = get(device.ieeeAddr) || {};
-        console.log(code || device.ieeeAddr);
-        try {
-          const lqi = await device.lqi();
-          console.log('lqi:', device.networkAddress, JSON.stringify(lqi, null, 2));
-          const table = await device.routingTable();
-          console.log('routing table:', device.networkAddress, JSON.stringify(table, null, 2));
-        } catch (e) {
+//    setInterval(() => {
+//      console.log('-----------------------------------------------------------------');
+//      controller.getDevices().forEach(async device => {
+//        const {code} = get(device.ieeeAddr) || {};
+//        console.log(code || device.ieeeAddr);
+//        try {
+//          const lqi = await device.lqi();
+//          console.log('lqi:', device.networkAddress, JSON.stringify(lqi, null, 2));
+//          const table = await device.routingTable();
+//          console.log('routing table:', device.networkAddress, JSON.stringify(table, null, 2));
+//        } catch (e) {
           // console.error(e);
-        }
-        console.log();
-      });
-    }, 300000);
+//        }
+//        console.log();
+//      });
+//    }, 300000);
   });
 };
