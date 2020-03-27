@@ -58,11 +58,11 @@ module.exports.start = (id) => {
     addDevice(id, device);
   });
 
-  controller.on('message', ({ device, endpoint }) => {
-    console.log(JSON.stringify(endpoint, null, 2));
+  controller.on('message', ({ device, endpoint, data }) => {
+    console.log(JSON.stringify(data, null, 2));
     addDevice(id, device);
     online(device.ieeeAddr, device.networkAddress);
-    handle(device.ieeeAddr, endpoint);
+    handle(device.ieeeAddr, endpoint, data);
   });
 
   controller
