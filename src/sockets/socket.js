@@ -54,8 +54,12 @@ module.exports = (discovery, interval, port, listen, multicast, hasQueue, delay 
   socket
     .on('error', console.error)
     .bind(listen, () => {
-      socket.setMulticastInterface(multicast);
-      setInterval(discovery(socket), interval);
+      try {
+        socket.setMulticastInterface(multicast);
+        setInterval(discovery(socket), interval);
+      } catch (e) {
+        console.error(e)
+      }
     });
 
     const handle = (handler) => {
