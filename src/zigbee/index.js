@@ -8,17 +8,17 @@ const clusters = require('./clusters');
 const handle = require('./in');
 
 const config = ({ endpoints }) => 
-  endpoints.reduce((config, { ID, inputClusters, configureReporting }) => 
+  endpoints.reduce((config, endpoint) => 
     {
-      inputClusters.forEach(id => {
+      endpoint.inputClusters.forEach(id => {
         if (clusters.has(id)) {
           const cluster = clusters.get(id);
           if (Array.isArray(cluster.type)) {
             cluster.type.forEach(type => {
               if (Array.isArray(config[type])) {
-                config[type].push(ID);
+                config[type].push(endpoint.ID);
               } else {
-                config[type] = [ID];
+                config[type] = [endpoint.ID];
               }
             });
           }
@@ -27,7 +27,7 @@ const config = ({ endpoints }) =>
               .entries(cluster.config)
               .forEach(async ([attribute, payload]) => {
                 try {
-                  await configureReporting(attribute, payload);
+                  await endpoint.configureReporting(attribute, payload);
                 }
                 catch (e) {
                   console.error(e);
