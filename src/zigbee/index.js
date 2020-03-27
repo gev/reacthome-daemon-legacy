@@ -59,7 +59,7 @@ module.exports.start = (id) => {
   });
 
   controller.on('message', ({ device, endpoint }) => {
-    // console.log(JSON.stringify(endpoint, null, 2));
+    console.log(JSON.stringify(endpoint, null, 2));
     addDevice(id, device);
     online(device.ieeeAddr, device.networkAddress);
     handle(device.ieeeAddr, endpoint);
