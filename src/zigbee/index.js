@@ -13,13 +13,27 @@ const config = ({ endpoints }) =>
       inputClusters.forEach(id => {
         if (clusters.has(id)) {
           const cluster = clusters.get(id);
-          cluster.type.forEach(type => {
-            if (Array.isArray(config[type])) {
-              config[type].push(ID);
-            } else {
-              config[type] = [ID];
-            }
-          });
+          if (Array.isArray(cluster.type)) {
+            cluster.type.forEach(type => {
+              if (Array.isArray(config[type])) {
+                config[type].push(ID);
+              } else {
+                config[type] = [ID];
+              }
+            });
+          }
+          if (cluster.config) {
+            Object
+              .entries(cluster.config)
+              .forEach(async ([attribute, payload]) => {
+                try {
+                  await endpoint.configureReporting(attribute, payload);
+                }
+                catch (e) {
+                  console.error(e);
+                }
+              })
+          }
         }
       });
       return config;
