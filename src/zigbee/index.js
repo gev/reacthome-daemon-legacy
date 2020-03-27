@@ -13,11 +13,13 @@ const config = ({ endpoints }) =>
       inputClusters.forEach(id => {
         if (clusters.has(id)) {
           const cluster = clusters.get(id);
-          if (Array.isArray(config[cluster])) {
-            config[cluster].push(ID);
-          } else {
-            config[cluster] = [ID];
-          }
+          cluster.type.forEach(type => {
+            if (Array.isArray(config[type])) {
+              config[type].push(ID);
+            } else {
+              config[type] = [ID];
+            }
+          });
         }
       });
       return config;
