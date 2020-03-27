@@ -20,9 +20,9 @@ clusters.set(0x0300, {
   type: [
     COLOR
   ], 
-  config: [
-    {}
-  ]
+  // config: [
+  //   {}
+  // ]
 });
 
 module.exports = clusters;
