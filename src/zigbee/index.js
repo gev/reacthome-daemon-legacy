@@ -86,6 +86,7 @@ module.exports.start = (id) => {
     //   offline(id, device.ieeeAddr);
       addDevice(id, device);
       online(device.ieeeAddr, device.networkAddress);
+      console.log(JSON.stringify(device, null, 2));
     });
 //    setInterval(() => {
 //      controller.getDevices().forEach(device => {
