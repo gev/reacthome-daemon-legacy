@@ -56,7 +56,7 @@ module.exports.start = (id) => {
 
   controller.on('deviceJoined', ({ device }) => {
     online(device.ieeeAddr, device.networkAddress);
-    addDevice(id, device);
+    // addDevice(id, device);
   });
 
   controller.on('deviceLeave', ({ device }) => {
@@ -71,14 +71,14 @@ module.exports.start = (id) => {
 
   controller.on('deviceAnnounce', ({ device }) => {
     online(device.ieeeAddr, device.networkAddress);
-    addDevice(id, device);
+    // addDevice(id, device);
   });
 
   controller.on('message', ({ device, endpoint, data, type }) => {
     console.log('-------------------');
     console.log(JSON.stringify({type, endpoint, data}, null, 2));
     console.log();
-    addDevice(id, device);
+    // addDevice(id, device);
     online(device.ieeeAddr, device.networkAddress);
     handle(device.ieeeAddr, endpoint, data);
   });
