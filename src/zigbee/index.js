@@ -8,7 +8,7 @@ const clusters = require('./clusters');
 const handle = require('./in');
 
 const config = ({ endpoints }) => 
-  endpoints.reduce((config, { ID, inputClusters }) => 
+  endpoints.reduce((config, { ID, inputClusters, configureReporting }) => 
     {
       inputClusters.forEach(id => {
         if (clusters.has(id)) {
@@ -27,7 +27,7 @@ const config = ({ endpoints }) =>
               .entries(cluster.config)
               .forEach(async ([attribute, payload]) => {
                 try {
-                  await endpoint.configureReporting(attribute, payload);
+                  await configureReporting(attribute, payload);
                 }
                 catch (e) {
                   console.error(e);
