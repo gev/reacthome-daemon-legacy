@@ -58,8 +58,10 @@ module.exports.start = (id) => {
     addDevice(id, device);
   });
 
-  controller.on('message', ({ device, endpoint, data }) => {
-    console.log(JSON.stringify({endpoint, data}, null, 2));
+  controller.on('message', ({ device, endpoint, data, type }) => {
+    console.log('-------------------');
+    console.log(JSON.stringify({type, endpoint, data}, null, 2));
+    console.log();
     addDevice(id, device);
     online(device.ieeeAddr, device.networkAddress);
     handle(device.ieeeAddr, endpoint, data);
@@ -86,7 +88,9 @@ module.exports.start = (id) => {
     //   offline(id, device.ieeeAddr);
       addDevice(id, device);
       online(device.ieeeAddr, device.networkAddress);
+      console.log('==========================');
       console.log(JSON.stringify(device, null, 2));
+      console.log();
     });
 //    setInterval(() => {
 //      controller.getDevices().forEach(device => {
