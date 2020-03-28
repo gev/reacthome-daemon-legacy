@@ -70,7 +70,7 @@ module.exports.start = (id) => {
     //   }
     //   await device.removeFromDatabase();
     //   offline(id, device.ieeeAddr);
-      addDevice(id, device);
+      // addDevice(id, device);
       online(device.ieeeAddr, device.networkAddress);
       console.log('==========================');
       console.log(JSON.stringify(device, null, 2));
