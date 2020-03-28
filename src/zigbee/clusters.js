@@ -67,7 +67,7 @@ module.exports = (endpoints) => {
           const configure = clusters.get(id);
           const cluster = await configure(endpoint);
           if (Array.isArray(cluster)) {
-            cluster.type.forEach(cluster => {
+            cluster.forEach(cluster => {
               if (Array.isArray(config[cluster])) {
                 config[cluster].push(endpoint.ID);
               } else {
