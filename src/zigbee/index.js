@@ -33,6 +33,8 @@ module.exports.start = (id) => {
   });
 
   controller.on('deviceInterview', ({ device }) => {
+    console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+    console.log('intrview', device);
     online(device.ieeeAddr, device.networkAddress);
     addDevice(id, device);
   });
