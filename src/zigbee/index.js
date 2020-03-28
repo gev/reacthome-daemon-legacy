@@ -27,7 +27,7 @@ const config = ({ endpoints }) =>
               .entries(cluster.config)
               .forEach(async ([key, value]) => {
                 try {
-                  await endpoint.bind(key, controller);
+                  await endpoint.bind(key, controller.getEndpoint(1));
                   await endpoint.configureReporting(key, value);
                 }
                 catch (e) {
