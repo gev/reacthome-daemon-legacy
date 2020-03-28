@@ -62,7 +62,7 @@ clusters.set(0x0405, configure([HUMIDITY], 'msRelativeHumidity', [{
 module.exports = (endpoints) => {
   endpoints.reduce((config, endpoint) => 
     {
-      endpoint.inputClusters.forEach(id => {
+      endpoint.inputClusters.forEach(async id => {
         if (clusters.has(id)) {
           const configure = clusters.get(id);
           const cluster = await configure(endpoint);
