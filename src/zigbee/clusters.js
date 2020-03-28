@@ -10,7 +10,7 @@ const type = (res) => async () => {
 
 const configure = (res, cluster, config) => async (endpoint) => {
   try {
-    console.log(bind, res, cluster, config)
+    console.log('bind', res, cluster, config)
     await endpoint.bind(cluster, controller.getDevicesByType('Coordinator')[0].getEndpoint(1));
     await endpoint.configureReporting(cluster, config, {disableDefaultResponse: true});
   } catch (e) {
