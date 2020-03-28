@@ -30,14 +30,14 @@ clusters.set(0x0300, type([COLOR]));
 
 clusters.set(0x0402, configure([TEMPERATURE], 'msTemperatureMeasurement', [{
   attribute: 'measuredValue',
-  minimumReportInterval: 0,
+  minimumReportInterval: 60,
   maximumReportInterval: 3600,
   reportableChange: 10,
 }]));
 
 clusters.set(0x0405, configure([HUMIDITY], 'msRelativeHumidity', [{
   attribute: 'measuredValue',
-  minimumReportInterval: 0,
+  minimumReportInterval: 60,
   maximumReportInterval: 3600,
   reportableChange: 10,
 }]));
@@ -79,7 +79,7 @@ module.exports = (endpoints) => {
           }
         }
       });
-      console.log(debug);
+      console.log(config);
       return config;
     }, {});
 };
