@@ -4,7 +4,7 @@ const controller = require('./controller');
 
 const clusters = new Map();
 
-const type = (res) => () => {
+const type = (res) => async () => {
   return res;
 }
 
@@ -64,7 +64,8 @@ module.exports = (endpoints) => {
     {
       endpoint.inputClusters.forEach(id => {
         if (clusters.has(id)) {
-          const cluster = clusters.get(id)(endpoint);
+          const configure = clusters.get(id);
+          const cluster = await configure(endpoint);
           if (Array.isArray(cluster)) {
             cluster.type.forEach(cluster => {
               if (Array.isArray(config[cluster])) {
