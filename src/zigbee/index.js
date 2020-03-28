@@ -7,48 +7,15 @@ const controller = require('./controller');
 const clusters = require('./clusters');
 const handle = require('./in');
 
-const config = ({ endpoints }) => 
-  endpoints.reduce((config, endpoint) => 
-    {
-      endpoint.inputClusters.forEach(id => {
-        if (clusters.has(id)) {
-          const cluster = clusters.get(id);
-          if (Array.isArray(cluster.type)) {
-            cluster.type.forEach(type => {
-              if (Array.isArray(config[type])) {
-                config[type].push(endpoint.ID);
-              } else {
-                config[type] = [endpoint.ID];
-              }
-            });
-          }
-          if (cluster.config) {
-            Object
-              .entries(cluster.config)
-              .forEach(async ([key, value]) => {
-                try {
-                  await endpoint.bind(key, controller.getEndpoint(1));
-                  await endpoint.configureReporting(key, value);
-                }
-                catch (e) {
-                  console.error(e);
-                }
-              })
-          }
-        }
-      });
-      return config;
-    }, {});
-
 const addDevice = (id, device) => {
-  const { ieeeAddr, manufacturerName, modelID, powerSource, interviewCompleted } = device;
+  const { ieeeAddr, manufacturerName, modelID, powerSource, interviewCompleted, endpoints } = device;
   add(id, DEVICE, ieeeAddr);
   set(ieeeAddr, {
     protocol: ZIGBEE,
     vendor: manufacturerName,
     model: modelID,
     powerSource: powerSource,
-    config: config(device),
+    config: clusters(endpoints),
     interviewCompleted
   });
 };
