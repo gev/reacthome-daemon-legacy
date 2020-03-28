@@ -25,9 +25,10 @@ const config = ({ endpoints }) =>
           if (cluster.config) {
             Object
               .entries(cluster.config)
-              .forEach(async ([attribute, payload]) => {
+              .forEach(async ([key, value]) => {
                 try {
-                  await endpoint.configureReporting(attribute, payload);
+                  await endpoint.bind(key, controller);
+                  await endpoint.configureReporting(key, value);
                 }
                 catch (e) {
                   console.error(e);
