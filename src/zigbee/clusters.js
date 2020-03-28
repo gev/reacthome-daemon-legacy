@@ -67,6 +67,7 @@ module.exports = (endpoints) => {
         if (clusters.has(id)) {
           const configure = clusters.get(id);
           const cluster = await configure(endpoint);
+          console.log(cluster);
           if (Array.isArray(cluster)) {
             cluster.forEach(cluster => {
               if (Array.isArray(config[cluster])) {
@@ -78,6 +79,7 @@ module.exports = (endpoints) => {
           }
         }
       });
+      console.log(debug);
       return config;
     }, {});
 };
