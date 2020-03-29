@@ -4,7 +4,7 @@ const { zigbee } = require('../fs');
 module.exports = new Controller({
   databasePath: zigbee('devices.json'), 
   serialPort: {
-    path: '/dev/ttyACM0',
+    path: '/dev/ttyAMA0',
     adapter: 'zstack',
   }, 
   network: {
