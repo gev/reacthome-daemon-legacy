@@ -8,14 +8,17 @@ const type = (res) => async () => {
   return res;
 }
 
-const configure = (res, cluster, config) => async (endpoint) => {
+const bind = async (endpoint, cluster, config) => {
   try {
-    console.log('bind', res, cluster, config)
     await endpoint.bind(cluster, controller.getDevicesByType('Coordinator')[0].getEndpoint(1));
-    await endpoint.configureReporting(cluster, config, {disableDefaultResponse: true});
+    await endpoint.configureReporting(cluster, config);
   } catch (e) {
     console.error(e);
   }
+};
+
+const configure = (res, cluster, config) => (endpoint) => {
+  bind(endpoint, cluster, config)
   return res;
 }
 
@@ -42,31 +45,12 @@ clusters.set(0x0405, configure([HUMIDITY], 'msRelativeHumidity', [{
   reportableChange: 10,
 }]));
 
-// clusters.set(0x0006, {
-//   type: [
-//     DO
-//   ], 
-//   config: {
-//     genOnOff: [{
-//     }]
-//   }
-// });
-// clusters.set(0x0300, {
-//   type: [
-//     COLOR
-//   ], 
-//   // config: [
-//   //   {}
-//   // ]
-// });
-
 module.exports = (endpoints) => {
   endpoints.reduce((config, endpoint) => 
     {
-      endpoint.inputClusters.forEach(async id => {
+      endpoint.inputClusters.forEach(id => {
         if (clusters.has(id)) {
-          const configure = clusters.get(id);
-          const cluster = await configure(endpoint);
+          const cluster = clusters.get(id)(endpoint);
           console.log(cluster);
           if (Array.isArray(cluster)) {
             cluster.forEach(cluster => {

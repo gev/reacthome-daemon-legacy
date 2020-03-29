@@ -10,5 +10,6 @@ module.exports = new Controller({
   network: {
     channelList: [14],
   },
+  concurrent: 16,
 });
 
