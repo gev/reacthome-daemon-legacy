@@ -42,7 +42,7 @@ module.exports.start = (id) => {
   controller.on('deviceAnnounce', ({ device }) => {
     online(device.ieeeAddr, device.networkAddress);
     console.log('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
-    console.log('annonce', device);
+    console.log('annonce', JSON.stringify(device, null, 2));
     // addDevice(id, device);
   });
 
