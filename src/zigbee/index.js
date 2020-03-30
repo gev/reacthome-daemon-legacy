@@ -41,6 +41,8 @@ module.exports.start = (id) => {
 
   controller.on('deviceAnnounce', ({ device }) => {
     online(device.ieeeAddr, device.networkAddress);
+    console.log('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+    console.log('annonce', device);
     // addDevice(id, device);
   });
 
@@ -65,15 +67,11 @@ module.exports.start = (id) => {
     // controller.reset('hard');
     console.log(controller.getDevices().length);
     controller.getDevices().forEach(async device => {
-    //   try {
-    //     await device.removeFromNetwork();
-    //   } catch (e) {
-    //     console.log(e);
-    //   }
-    //   await device.removeFromDatabase();
-    //   offline(id, device.ieeeAddr);
       // addDevice(id, device);
-      online(device.ieeeAddr, device.networkAddress);
+      // online(device.ieeeAddr, device.networkAddress);
+      // device.endpoints.forEach(endpoint => {
+      //   const {inputClusters}
+      // });
       console.log('==========================');
       console.log(JSON.stringify(device, null, 2));
       console.log();
