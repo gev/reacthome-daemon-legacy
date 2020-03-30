@@ -68,7 +68,7 @@ module.exports.start = (id) => {
     // controller.reset('hard');
     console.log(controller.getDevices().length);
     controller.getDevices().forEach(async device => {
-      // addDevice(id, device);
+      addDevice(id, device);
       // online(device.ieeeAddr, device.networkAddress);
       // device.endpoints.forEach(endpoint => {
       //   const {inputClusters}
