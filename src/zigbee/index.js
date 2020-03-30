@@ -67,7 +67,7 @@ module.exports.start = (id) => {
     // controller.reset('soft');
     // controller.reset('hard');
     console.log(controller.getDevices().length);
-    controller.getDevices().forEach(async device => {
+    controller.getDevices().forEach(device => {
       addDevice(id, device);
       // online(device.ieeeAddr, device.networkAddress);
       // device.endpoints.forEach(endpoint => {
