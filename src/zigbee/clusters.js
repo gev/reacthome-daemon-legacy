@@ -10,8 +10,8 @@ const type = (res) => async () => {
 
 const bind = async (endpoint, cluster, config) => {
   try {
-    await endpoint.bind(cluster, controller.getDevicesByType('Coordinator')[0].getEndpoint(1));
-    await endpoint.configureReporting(cluster, config);
+    // await endpoint.bind(cluster, controller.getDevicesByType('Coordinator')[0].getEndpoint(1));
+    // await endpoint.configureReporting(cluster, config);
   } catch (e) {
     console.error(e);
   }
