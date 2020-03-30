@@ -44,7 +44,7 @@ module.exports.start = (id) => {
     device.endpoints.forEach(endpoint => {
       handle(device.ieeeAddr, endpoint);
     });
-    // addDevice(id, device);
+    addDevice(id, device);
   });
 
   controller.on('message', ({ device, endpoint, data, type }) => {
