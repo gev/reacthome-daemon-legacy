@@ -45,25 +45,23 @@ clusters.set(0x0405, configure([HUMIDITY], 'msRelativeHumidity', [{
   reportableChange: 10,
 }]));
 
-module.exports = (endpoints) => {
-  endpoints.reduce((config, endpoint) => 
-    {
-      endpoint.inputClusters.forEach(id => {
-        if (clusters.has(id)) {
-          const cluster = clusters.get(id)(endpoint);
-          console.log(cluster);
-          if (Array.isArray(cluster)) {
-            cluster.forEach(cluster => {
-              if (Array.isArray(config[cluster])) {
-                config[cluster].push(endpoint.ID);
-              } else {
-                config[cluster] = [endpoint.ID];
-              }
-            });
-          }
+module.exports = (endpoints) =>
+  endpoints.reduce((config, endpoint) => {
+    endpoint.inputClusters.forEach(id => {
+      if (clusters.has(id)) {
+        const cluster = clusters.get(id)(endpoint);
+        console.log(cluster);
+        if (Array.isArray(cluster)) {
+          cluster.forEach(cluster => {
+            if (Array.isArray(config[cluster])) {
+              config[cluster].push(endpoint.ID);
+            } else {
+              config[cluster] = [endpoint.ID];
+            }
+          });
         }
-      });
-      console.log(config);
-      return config;
-    }, {});
-};
+      }
+    });
+    console.log(config);
+    return config;
+  }, {});

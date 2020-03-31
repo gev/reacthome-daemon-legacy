@@ -71,11 +71,8 @@ module.exports.start = (id) => {
       device.endpoints.forEach(endpoint => {
         handle(device.ieeeAddr, endpoint);
       });
-        addDevice(id, device);
+      addDevice(id, device);
       // online(device.ieeeAddr, device.networkAddress);
-      // device.endpoints.forEach(endpoint => {
-      //   const {inputClusters}
-      // });
       console.log('==========================');
       console.log(JSON.stringify(device, null, 2));
       console.log();
