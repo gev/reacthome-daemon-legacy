@@ -54,6 +54,7 @@ module.exports.start = (id) => {
     // console.log();
     online(device.ieeeAddr, device.networkAddress);
     handle(device.ieeeAddr, endpoint, data);
+    addDevice(id, device);
   });
 
   controller
