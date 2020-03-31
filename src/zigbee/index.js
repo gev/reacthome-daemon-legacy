@@ -76,9 +76,9 @@ module.exports.start = (id) => {
       // device.endpoints.forEach(endpoint => {
       //   const {inputClusters}
       // });
-      // console.log('==========================');
-      // console.log(JSON.stringify(device, null, 2));
-      // console.log();
+      console.log('==========================');
+      console.log(JSON.stringify(device, null, 2));
+      console.log();
     });
 //    setInterval(() => {
 //      controller.getDevices().forEach(device => {
