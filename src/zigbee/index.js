@@ -70,7 +70,7 @@ module.exports.start = (id) => {
       console.log('-------------------');
       console.log(JSON.stringify(device, null, 2));
       console.log();
-      addDevice(id, device);
+      // addDevice(id, device);
     });
 //    setInterval(() => {
 //      console.log('-----------------------------------------------------------------');
