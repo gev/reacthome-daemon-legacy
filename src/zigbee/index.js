@@ -42,7 +42,7 @@ module.exports.start = (id) => {
     device.endpoints.forEach(endpoint => {
       handle(device.ieeeAddr, endpoint);
     });
-    addDevice(id, device);
+    // addDevice(id, device);
     // console.log('-------------------');
     // console.log(JSON.stringify({device}, null, 2));
     // console.log();
