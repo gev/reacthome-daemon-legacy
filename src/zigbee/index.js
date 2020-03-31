@@ -43,9 +43,9 @@ module.exports.start = (id) => {
       handle(device.ieeeAddr, endpoint);
     });
     addDevice(id, device);
-    console.log('-------------------');
-    console.log(JSON.stringify({device}, null, 2));
-    console.log();
+    // console.log('-------------------');
+    // console.log(JSON.stringify({device}, null, 2));
+    // console.log();
   });
 
   controller.on('message', ({ device, endpoint, data, type }) => {
