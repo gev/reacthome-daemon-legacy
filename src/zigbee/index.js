@@ -33,8 +33,6 @@ module.exports.start = (id) => {
   });
 
   controller.on('deviceInterview', ({ device }) => {
-    // console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
-    // console.log('intrview', device);
     online(device.ieeeAddr, device.networkAddress);
     addDevice(id, device);
   });
@@ -45,13 +43,15 @@ module.exports.start = (id) => {
       handle(device.ieeeAddr, endpoint);
     });
     addDevice(id, device);
+    console.log('-------------------');
+    console.log(JSON.stringify({device}, null, 2));
+    console.log();
   });
 
   controller.on('message', ({ device, endpoint, data, type }) => {
     // console.log('-------------------');
     // console.log(JSON.stringify({type, endpoint, data}, null, 2));
     // console.log();
-    // addDevice(id, device);
     online(device.ieeeAddr, device.networkAddress);
     handle(device.ieeeAddr, endpoint, data);
   });
@@ -64,24 +64,10 @@ module.exports.start = (id) => {
     controller.getNetworkParameters().then(param => {
       console.log(JSON.stringify(param, null, 2));
     });
-    // controller.reset('soft');
-    // controller.reset('hard');
     console.log(controller.getDevices().length);
     controller.getDevices().forEach(device => {
-      device.endpoints.forEach(endpoint => {
-        handle(device.ieeeAddr, endpoint);
-      });
       addDevice(id, device);
-      // online(device.ieeeAddr, device.networkAddress);
-      console.log('==========================');
-      console.log(JSON.stringify(device, null, 2));
-      console.log();
     });
-//    setInterval(() => {
-//      controller.getDevices().forEach(device => {
-//        device.ping().catch(console.error);
-//      });
-//    }, 6000);
 //    setInterval(() => {
 //      console.log('-----------------------------------------------------------------');
 //      controller.getDevices().forEach(async device => {
