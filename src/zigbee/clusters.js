@@ -4,7 +4,7 @@ const controller = require('./controller');
 
 const clusters = new Map();
 
-const type = (res) => async () => {
+const type = (res) => () => {
   return res;
 }
 
@@ -18,7 +18,7 @@ const bind = async (endpoint, cluster, config) => {
 };
 
 const configure = (res, cluster, config) => (endpoint) => {
-  bind(endpoint, cluster, config)
+  bind(endpoint, cluster, config);
   return res;
 }
 
