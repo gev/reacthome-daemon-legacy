@@ -12,6 +12,7 @@ const bind = async (endpoint, cluster, config) => {
   try {
     await endpoint.bind(cluster, controller.getDevicesByType('Coordinator')[0].getEndpoint(1));
     await endpoint.configureReporting(cluster, config);
+    console.log('bind', endpoint, cluster);
   } catch (e) {
     console.error(e);
   }
