@@ -9,7 +9,7 @@ const handle = require('./in');
 
 const addDevice = (id, device) => {
   const { ieeeAddr, manufacturerName, modelID, powerSource, interviewCompleted, endpoints } = device;
-  add(id, DEVICE, ieeeAddr);
+  // add(id, DEVICE, ieeeAddr);
   set(ieeeAddr, {
     protocol: ZIGBEE,
     vendor: manufacturerName,
