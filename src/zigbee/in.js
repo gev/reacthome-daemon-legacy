@@ -8,12 +8,12 @@ const onDO = [onOff, onOn];
 const count = [count_off, count_on];
 
 module.exports = (id, { ID, clusters }) => {
-  console.log(id, ID, clusters)
   Object
     .entries(clusters)
     .forEach(([key, { attributes }]) => {
       switch(key) {
         case 'genOnOff': {
+          console.log(id, ID, key, attributes);
           const channel = `${id}/${DO}/${ID}`;
           const chan = get(channel);
           set(channel, { value: attributes.onOff });
