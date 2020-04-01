@@ -7,7 +7,7 @@ const on_off = async (id, index, value) => {
     const endpoint = device.getEndpoint(Number.parseInt(index));
     await endpoint.command('genOnOff', value ? 'on' : 'off', {});
   } catch (e) {
-    console.error(e);
+    console.error(id, index, value, e);
   }
 };
 
