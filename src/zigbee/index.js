@@ -49,9 +49,9 @@ module.exports.start = (id) => {
   });
 
   controller.on('message', ({ device, endpoint, data, type }) => {
-    console.log('message', device.ieeeAddr)
-    // console.log('-------------------');
-    // console.log(JSON.stringify({type, endpoint, data}, null, 2));
+    // console.log('message', device.ieeeAddr)
+    console.log('-------------------');
+    console.log(JSON.stringify({type, endpoint, data}, null, 2));
     // console.log();
     online(device.ieeeAddr, device.networkAddress);
     handle(device.ieeeAddr, endpoint, data);
