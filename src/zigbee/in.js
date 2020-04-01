@@ -8,6 +8,7 @@ const onDO = [onOff, onOn];
 const count = [count_off, count_on];
 
 module.exports = (id, { ID, clusters }) => {
+  console.log(id, ID, clusters)
   Object
     .entries(clusters)
     .forEach(([key, { attributes }]) => {
