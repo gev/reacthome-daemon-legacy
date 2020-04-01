@@ -23,21 +23,25 @@ const addDevice = (id, device) => {
 module.exports.start = (id) => {
 
   controller.on('deviceJoined', ({ device }) => {
+    console.log('join', device.ieeeAddr)
     online(device.ieeeAddr, device.networkAddress);
     addDevice(id, device);
   });
 
   controller.on('deviceLeave', ({ device }) => {
+    console.log('leave', device.ieeeAddr)
     offline(device.ieeeAddr);
     del(id, DEVICE, device.ieeeAddr);
   });
 
   controller.on('deviceInterview', ({ device }) => {
+    console.log('interview', device.ieeeAddr)
     online(device.ieeeAddr, device.networkAddress);
     addDevice(id, device);
   });
 
   controller.on('deviceAnnounce', ({ device }) => {
+    console.log('annonce', device.ieeeAddr)
     online(device.ieeeAddr, device.networkAddress);
     device.endpoints.forEach(endpoint => {
       handle(device.ieeeAddr, endpoint);
@@ -45,9 +49,10 @@ module.exports.start = (id) => {
   });
 
   controller.on('message', ({ device, endpoint, data, type }) => {
-    console.log('-------------------');
-    console.log(JSON.stringify({type, endpoint, data}, null, 2));
-    console.log();
+    console.log('message', device.ieeeAddr)
+    // console.log('-------------------');
+    // console.log(JSON.stringify({type, endpoint, data}, null, 2));
+    // console.log();
     online(device.ieeeAddr, device.networkAddress);
     handle(device.ieeeAddr, endpoint, data);
   });
@@ -62,6 +67,8 @@ module.exports.start = (id) => {
     });
     console.log(controller.getDevices().length);
     controller.getDevices().forEach(device => {
+      console.log('-----------------------------------------------------------------');
+      console.log(JSON.stringify(device, null, 2));
       device.endpoints.forEach(endpoint => {
         handle(device.ieeeAddr, endpoint);
       });
