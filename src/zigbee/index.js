@@ -62,6 +62,9 @@ module.exports.start = (id) => {
     });
     console.log(controller.getDevices().length);
     controller.getDevices().forEach(device => {
+      device.endpoints.forEach(endpoint => {
+        handle(device.ieeeAddr, endpoint);
+      });
       addDevice(id, device);
     });
 //    setInterval(() => {
