@@ -25,6 +25,7 @@ module.exports = (id, { ID, clusters }) => {
               count[attributes.onOff](chan.bind);
             }
           }
+          // case ''
         break;
         }
       }
