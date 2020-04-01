@@ -43,9 +43,6 @@ module.exports.start = (id) => {
   controller.on('deviceAnnounce', ({ device }) => {
     console.log('annonce', device.ieeeAddr)
     online(device.ieeeAddr, device.networkAddress);
-    device.endpoints.forEach(endpoint => {
-      handle(device.ieeeAddr, endpoint);
-    });
   });
 
   controller.on('message', ({ device, endpoint, data, type }) => {
