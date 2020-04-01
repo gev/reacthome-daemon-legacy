@@ -12,12 +12,13 @@ module.exports = (id, { ID, clusters }) => {
     .entries(clusters)
     .forEach(([key, { attributes }]) => {
       switch(key) {
+        case 'genBasic': {
+          break;
+        }
         case 'genOnOff': {
           const channel = `${id}/${DO}/${ID}`;
           const chan = get(channel);
-          console.log(chan);
           set(channel, { value: attributes.onOff });
-          console.log(channel, { value: attributes.onOff });
           if (chan && chan.bind) {
             if (chan.value !== attributes.onOff) {
               const script = chan[onDO[attributes.onOff]];
@@ -27,8 +28,10 @@ module.exports = (id, { ID, clusters }) => {
               count[attributes.onOff](chan.bind);
             }
           }
-          // case ''
-        break;
+          break;
+        }
+        default: {
+          console.log(id, ID, key, attributes);
         }
       }
     });
