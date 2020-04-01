@@ -24,7 +24,7 @@ module.exports.start = (id) => {
 
   controller.on('deviceJoined', ({ device }) => {
     online(device.ieeeAddr, device.networkAddress);
-    // addDevice(id, device);
+    add(id, DEVICE, device.ieeeAddr);
   });
 
   controller.on('deviceLeave', ({ device }) => {
@@ -39,13 +39,6 @@ module.exports.start = (id) => {
 
   controller.on('deviceAnnounce', ({ device }) => {
     online(device.ieeeAddr, device.networkAddress);
-    device.endpoints.forEach(endpoint => {
-      handle(device.ieeeAddr, endpoint);
-    });
-    // addDevice(id, device);
-    // console.log('-------------------');
-    // console.log(JSON.stringify({device}, null, 2));
-    // console.log();
   });
 
   controller.on('message', ({ device, endpoint, data, type }) => {
@@ -54,23 +47,19 @@ module.exports.start = (id) => {
     // console.log();
     online(device.ieeeAddr, device.networkAddress);
     handle(device.ieeeAddr, endpoint, data);
-    addDevice(id, device);
   });
 
   controller
   .start()
   .then(() => {
     controller.permitJoin(true);
-    //controller.setTransmitPower(0xc5);
+    controller.setTransmitPower(22);
     controller.getNetworkParameters().then(param => {
       console.log(JSON.stringify(param, null, 2));
     });
     console.log(controller.getDevices().length);
     controller.getDevices().forEach(device => {
-      console.log('-------------------');
-      console.log(JSON.stringify(device, null, 2));
-      console.log();
-      // addDevice(id, device);
+      addDevice(id, device);
     });
 //    setInterval(() => {
 //      console.log('-----------------------------------------------------------------');
