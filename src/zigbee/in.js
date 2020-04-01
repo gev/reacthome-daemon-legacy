@@ -13,10 +13,11 @@ module.exports = (id, { ID, clusters }) => {
     .forEach(([key, { attributes }]) => {
       switch(key) {
         case 'genOnOff': {
-          console.log(id, ID, key, attributes);
           const channel = `${id}/${DO}/${ID}`;
           const chan = get(channel);
+          console.log(chan);
           set(channel, { value: attributes.onOff });
+          console.log(channel, { value: attributes.onOff });
           if (chan && chan.bind) {
             if (chan.value !== attributes.onOff) {
               const script = chan[onDO[attributes.onOff]];
