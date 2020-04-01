@@ -24,7 +24,7 @@ module.exports.start = (id) => {
 
   controller.on('deviceJoined', ({ device }) => {
     online(device.ieeeAddr, device.networkAddress);
-    add(id, DEVICE, device.ieeeAddr);
+    addDevice(id, device);
   });
 
   controller.on('deviceLeave', ({ device }) => {
