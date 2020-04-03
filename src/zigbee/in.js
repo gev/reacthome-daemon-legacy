@@ -11,7 +11,6 @@ module.exports = (id, { ID, clusters }) => {
   Object
     .entries(clusters)
     .forEach(([key, { attributes }]) => {
-      console.log(id, key, attributes);
       switch(key) {
         case 'genBasic': {
           break;
@@ -29,7 +28,7 @@ module.exports = (id, { ID, clusters }) => {
               count[attributes.onOff](chan.bind);
             }
           }
-          break;
+          // break;
         }
         case 'msTemperatureMeasurement': {
           set(id, { temperature: attributes.measuredValue / 100 });
@@ -37,7 +36,7 @@ module.exports = (id, { ID, clusters }) => {
           if (onTemperature) {
             run({type: ACTION_SCRIPT_RUN, id: onTemperature });
           }
-          break;
+          // break;
         }
         case 'msRelativeHumidity': {
           set(id, { humidity: attributes.measuredValue / 100 });
@@ -45,7 +44,7 @@ module.exports = (id, { ID, clusters }) => {
           if (onHumidity) {
             run({type: ACTION_SCRIPT_RUN, id: onHumidity });
           }
-          break;
+          // break;
         }
         default: {
           console.log(id, ID, key, attributes);
