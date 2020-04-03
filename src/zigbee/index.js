@@ -38,6 +38,9 @@ module.exports.start = (id) => {
     console.log('interview', device.ieeeAddr)
     online(device.ieeeAddr, device.networkAddress);
     addDevice(id, device);
+    device.endpoints.forEach(endpoint => {
+      handle(device.ieeeAddr, endpoint);
+    })
   });
 
   controller.on('deviceAnnounce', ({ device }) => {
@@ -45,13 +48,13 @@ module.exports.start = (id) => {
     online(device.ieeeAddr, device.networkAddress);
   });
 
-  controller.on('message', ({ device, endpoint, data, type }) => {
+  controller.on('message', ({ device, endpoint }) => {
     // console.log('message', device.ieeeAddr)
     // console.log('-------------------');
     // console.log(JSON.stringify({type, endpoint, data}, null, 2));
     // console.log();
     online(device.ieeeAddr, device.networkAddress);
-    handle(device.ieeeAddr, endpoint, data);
+    handle(device.ieeeAddr, endpoint);
   });
 
   controller
@@ -64,8 +67,8 @@ module.exports.start = (id) => {
     });
     console.log(controller.getDevices().length);
     controller.getDevices().forEach(device => {
-      console.log('-----------------------------------------------------------------');
-      console.log(JSON.stringify(device, null, 2));
+      // console.log('-----------------------------------------------------------------');
+      // console.log(JSON.stringify(device, null, 2));
       device.endpoints.forEach(endpoint => {
         handle(device.ieeeAddr, endpoint);
       });
