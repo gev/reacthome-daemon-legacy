@@ -27,7 +27,7 @@ const configure = (res, cluster, config) => (endpoint) => {
 clusters.set(0x0006, configure([DO], 'genOnOff', [{
   attribute: 'onOff',
   minimumReportInterval: 0,
-  maximumReportInterval: 3600,
+  maximumReportInterval: 1,
   reportableChange: 0,
 }]));
 

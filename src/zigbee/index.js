@@ -64,8 +64,8 @@ module.exports.start = (id) => {
     });
     console.log(controller.getDevices().length);
     controller.getDevices().forEach(device => {
-      // console.log('-----------------------------------------------------------------');
-      // console.log(JSON.stringify(device, null, 2));
+      console.log('-----------------------------------------------------------------');
+      console.log(JSON.stringify(device, null, 2));
       device.endpoints.forEach(endpoint => {
         handle(device.ieeeAddr, endpoint);
       });
