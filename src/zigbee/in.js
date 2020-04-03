@@ -30,6 +30,22 @@ module.exports = (id, { ID, clusters }) => {
           }
           break;
         }
+        case 'msTemperatureMeasurement': {
+          set(id, { humidity: attributes.measuredValue / 100 });
+          const { onTenperature } = get(id);
+          if (onTenperature) {
+            run({type: ACTION_SCRIPT_RUN, id: onTenperature });
+          }
+          break;
+        }
+        case 'msRelativeHumidity': {
+          set(id, { humidity: attributes.measuredValue / 100 });
+          const { onHumidity } = get(id);
+          if (onHumidity) {
+            run({type: ACTION_SCRIPT_RUN, id: onHumidity });
+          }
+          break;
+        }
         default: {
           console.log(id, ID, key, attributes);
         }
