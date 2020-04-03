@@ -32,9 +32,9 @@ module.exports = (id, { ID, clusters }) => {
         }
         case 'msTemperatureMeasurement': {
           set(id, { temperature: attributes.measuredValue / 100 });
-          const { onTenperature } = get(id);
-          if (onTenperature) {
-            run({type: ACTION_SCRIPT_RUN, id: onTenperature });
+          const { onTemperature } = get(id);
+          if (onTemperature) {
+            run({type: ACTION_SCRIPT_RUN, id: onTemperature });
           }
           break;
         }
