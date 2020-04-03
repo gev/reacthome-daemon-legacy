@@ -31,7 +31,7 @@ module.exports = (id, { ID, clusters }) => {
           break;
         }
         case 'msTemperatureMeasurement': {
-          set(id, { humidity: attributes.measuredValue / 100 });
+          set(id, { temperature: attributes.measuredValue / 100 });
           const { onTenperature } = get(id);
           if (onTenperature) {
             run({type: ACTION_SCRIPT_RUN, id: onTenperature });
