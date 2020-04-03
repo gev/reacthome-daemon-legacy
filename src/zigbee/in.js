@@ -11,6 +11,7 @@ module.exports = (id, { ID, clusters }) => {
   Object
     .entries(clusters)
     .forEach(([key, { attributes }]) => {
+      console.log(id, key, attributes);
       switch(key) {
         case 'genBasic': {
           break;
