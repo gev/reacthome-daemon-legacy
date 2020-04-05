@@ -48,9 +48,9 @@ module.exports.start = (id) => {
     online(device.ieeeAddr, device.networkAddress);
   });
 
-  controller.on('message', ({ device, endpoint }) => {
+  controller.on('message', ({ device, endpoint, data }) => {
     online(device.ieeeAddr, device.networkAddress);
-    handle(device.ieeeAddr, endpoint);
+    handle(device.ieeeAddr, endpoint, data);
   });
 
   controller

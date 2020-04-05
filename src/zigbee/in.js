@@ -7,7 +7,7 @@ const onDI = [onOff, onOn, onHold, onClick];
 const onDO = [onOff, onOn];
 const count = [count_off, count_on];
 
-module.exports = (id, { ID, clusters }) => {
+module.exports = (id, { ID, clusters }, data) => {
   Object
     .entries(clusters)
     .forEach(([key, { attributes }]) => {
@@ -50,7 +50,7 @@ module.exports = (id, { ID, clusters }) => {
           break;
         }
         default: {
-          console.log(id, ID, key, attributes);
+          console.log(id, ID, key, attributes, data);
         }
       }
     });
