@@ -27,6 +27,7 @@ module.exports.MOBILE = 'mobile';
 module.exports.DO = 'do';
 module.exports.DI = 'di';
 module.exports.DIM = 'dim';
+module.exports.ALARM = 'alarm';
 module.exports.COLOR = 'color';
 module.exports.HUMIDITY = 'humidity';
 module.exports.TEMPERATURE = 'temperature';

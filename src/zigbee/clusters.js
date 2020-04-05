@@ -1,5 +1,5 @@
 
-const { DO, COLOR, TEMPERATURE, HUMIDITY } = require('../constants');
+const { DO, ALARM, COLOR, TEMPERATURE, HUMIDITY } = require('../constants');
 const controller = require('./controller');
 
 const clusters = new Map();
@@ -45,6 +45,13 @@ clusters.set(0x0405, configure([HUMIDITY], 'msRelativeHumidity', [{
   minimumReportInterval: 60,
   maximumReportInterval: 300,
   reportableChange: 10,
+}]));
+
+clusters.set(0x0500, configure([ALARM], 'ssIasZone', [{
+  attribute: 'zoneState',
+  minimumReportInterval: 0,
+  maximumReportInterval: 1,
+  reportableChange: 0,
 }]));
 
 module.exports = (endpoints) =>
