@@ -28,7 +28,7 @@ module.exports = (id, { ID, clusters }, data) => {
               count[attributes.onOff](chan.bind);
             }
           }
-          console.log(id, ID, key, attributes);
+          console.log(id, ID, key, attributes, data);
           break;
         }
         case 'msTemperatureMeasurement': {
@@ -37,7 +37,7 @@ module.exports = (id, { ID, clusters }, data) => {
           if (onTemperature) {
             run({type: ACTION_SCRIPT_RUN, id: onTemperature });
           }
-          console.log(id, ID, key, attributes);
+          console.log(id, ID, key, attributes, data);
           break;
         }
         case 'msRelativeHumidity': {
@@ -46,7 +46,7 @@ module.exports = (id, { ID, clusters }, data) => {
           if (onHumidity) {
             run({type: ACTION_SCRIPT_RUN, id: onHumidity });
           }
-          console.log(id, ID, key, attributes);
+          console.log(id, ID, key, attributes, data);
           break;
         }
         default: {
