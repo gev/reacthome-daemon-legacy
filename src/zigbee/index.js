@@ -51,7 +51,6 @@ module.exports.start = (id) => {
   controller.on('message', ({ device, endpoint, data }) => {
     online(device.ieeeAddr, device.networkAddress);
     handle(device.ieeeAddr, endpoint, data);
-    addDevice(id, device);
   });
 
   controller
@@ -69,7 +68,7 @@ module.exports.start = (id) => {
       device.endpoints.forEach(endpoint => {
         handle(device.ieeeAddr, endpoint);
       });
-      addDevice(id, device);
+      // addDevice(id, device);
     });
   //  setInterval(() => {
   //    console.log('-----------------------------------------------------------------');
