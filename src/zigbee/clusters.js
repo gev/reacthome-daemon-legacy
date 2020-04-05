@@ -52,6 +52,11 @@ clusters.set(0x0500, configure([ALARM], 'ssIasZone', [{
   minimumReportInterval: 0,
   maximumReportInterval: 1,
   reportableChange: 0,
+}, {
+  attribute: 'iasCieAddr',
+  minimumReportInterval: 0,
+  maximumReportInterval: 1,
+  reportableChange: 0,
 }]));
 
 module.exports = (endpoints) =>
