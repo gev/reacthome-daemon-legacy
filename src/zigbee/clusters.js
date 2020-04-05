@@ -47,17 +47,17 @@ clusters.set(0x0405, configure([HUMIDITY], 'msRelativeHumidity', [{
   reportableChange: 10,
 }]));
 
-clusters.set(0x0500, configure([ALARM], 'ssIasZone', [{
-  attribute: 'zoneState',
-  minimumReportInterval: 0,
-  maximumReportInterval: 1,
-  reportableChange: 0,
-}, {
-  attribute: 'iasCieAddr',
-  minimumReportInterval: 0,
-  maximumReportInterval: 1,
-  reportableChange: 0,
-}]));
+// clusters.set(0x0500, configure([ALARM], 'ssIasZone', [{
+//   attribute: 'zoneState',
+//   minimumReportInterval: 0,
+//   maximumReportInterval: 1,
+//   reportableChange: 0,
+// }, {
+//   attribute: 'iasCieAddr',
+//   minimumReportInterval: 0,
+//   maximumReportInterval: 1,
+//   reportableChange: 0,
+// }]));
 
 module.exports = (endpoints) =>
   endpoints.reduce((config, endpoint) => {
