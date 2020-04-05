@@ -216,7 +216,7 @@
     nan "^2.13.2"
     prebuild-install "^5.2.1"
 
-"@serialport/bindings@^8.0.6":
+"@serialport/bindings@^8.0.7":
   version "8.0.7"
   resolved "https://registry.yarnpkg.com/@serialport/bindings/-/bindings-8.0.7.tgz#2a58f60f1e24ee4549be6f9e0e37b3359d038a1c"
   integrity sha512-IqudDL8ne2Y2S0W5fKA6wdgHCIA2e2OIaPVYhGy6duE6legNHFY+05CLicHAyAeTocXmHU7rVNxzVQrOG5tM4g==
@@ -1829,13 +1829,13 @@ semver@^6.0.0, semver@^6.2.0:
   resolved "https://registry.yarnpkg.com/semver/-/semver-6.3.0.tgz#ee0a64c8af5e8ceea67687b133761e1becbd1d3d"
   integrity sha512-b39TBaTSfV6yBrapU89p5fKekE2m/NwnDocOVruQFS1/veMgdzuPcnOM34M6CwxW8jH/lxEa5rBoDeUwu5HHTw==
 
-serialport@8.0.6:
-  version "8.0.6"
-  resolved "https://registry.yarnpkg.com/serialport/-/serialport-8.0.6.tgz#9cf7ae80c443f1d327c2894a77445e56ef64ca88"
-  integrity sha512-TDdP374kZ4+iYKqZbx47eSnJEMoQQfZwztAikWFjZORU1HokOSc3KVuyACy1yX2cVK6u+3C7PmBK3N31CLxMWg==
+serialport@8.0.7:
+  version "8.0.7"
+  resolved "https://registry.yarnpkg.com/serialport/-/serialport-8.0.7.tgz#9f28b1b7c47333a0962f5505a1c3feb1d90f89a9"
+  integrity sha512-R9bfNebs2dblYf5sD/Aaa7j8+siP4X7TGT02lqHM9DF5fyjlrPGXmsLw9+LKOz1AvjGjkxf2NzBVnDpqRX7clQ==
   dependencies:
     "@serialport/binding-mock" "^8.0.6"
-    "@serialport/bindings" "^8.0.6"
+    "@serialport/bindings" "^8.0.7"
     "@serialport/parser-byte-length" "^8.0.6"
     "@serialport/parser-cctalk" "^8.0.6"
     "@serialport/parser-delimiter" "^8.0.6"
@@ -2188,13 +2188,12 @@ ylru@^1.2.0:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/ylru/-/ylru-1.2.1.tgz#f576b63341547989c1de7ba288760923b27fe84f"
 
-zigbee-herdsman@^0.12.72:
-  version "0.12.72"
-  resolved "https://registry.yarnpkg.com/zigbee-herdsman/-/zigbee-herdsman-0.12.72.tgz#f2b124dd564b988409eef5de678a2f70137b973a"
-  integrity sha512-QwIJ6BzxtkC3lZ7C1qvNserVZBck2wi7esSC7P4ZZ+Pg03dMn3U2nHpFFDaK3JfBPjho+hd8MEN6DqmQPrqJBQ==
+zigbee-herdsman@gev/zigbee-herdsman:
+  version "0.12.75"
+  resolved "https://codeload.github.com/gev/zigbee-herdsman/tar.gz/3ba9dbcf6760cfdc22a8e7691dce5ef91bd192f8"
   dependencies:
     debug "^4.1.1"
     fast-deep-equal "^2.0.1"
     mixin-deep "^2.0.1"
-    serialport "8.0.6"
+    serialport "8.0.7"
     slip "^1.0.2"
