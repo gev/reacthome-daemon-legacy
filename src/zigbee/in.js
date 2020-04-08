@@ -49,7 +49,17 @@ module.exports = (id, { ID, clusters }, data) => {
           console.log(id, ID, key, attributes, data);
           break;
         }
+        case 'ssIasZone': {
+          if (attributes.zoneState > 0) {
+            set(id, { alarm: Date.now() });
+          }
+          console.log(id, ID, key, attributes, data);
+          break;
+        }
         default: {
+          if (attributes.zoneState > 0) {
+            set(id, { alarm: Date.now() });
+          }
           console.log(id, ID, key, attributes, data);
         }
       }
