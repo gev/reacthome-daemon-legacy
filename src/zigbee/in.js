@@ -53,7 +53,7 @@ module.exports = (id, { ID, clusters }, data) => {
           if (attributes.zoneState > 0) {
             set(id, { alarm: Date.now() });
             const { onAlarm } = get(id);
-            if (onTemperature) {
+            if (onAlarm) {
               run({type: ACTION_SCRIPT_RUN, id: onAlarm });
             }
           }
@@ -64,7 +64,7 @@ module.exports = (id, { ID, clusters }, data) => {
           if (attributes.zoneState > 0) {
             set(id, { alarm: Date.now() });
             const { onAlarm } = get(id);
-            if (onTemperature) {
+            if (onAlarm) {
               run({type: ACTION_SCRIPT_RUN, id: onAlarm });
             }
           }
