@@ -52,6 +52,10 @@ module.exports = (id, { ID, clusters }, data) => {
         case 'ssIasZone': {
           if (attributes.zoneState > 0) {
             set(id, { alarm: Date.now() });
+            const { onAlarm } = get(id);
+            if (onTemperature) {
+              run({type: ACTION_SCRIPT_RUN, id: onAlarm });
+            }
           }
           console.log(id, ID, key, attributes, data);
           break;
@@ -59,6 +63,10 @@ module.exports = (id, { ID, clusters }, data) => {
         default: {
           if (attributes.zoneState > 0) {
             set(id, { alarm: Date.now() });
+            const { onAlarm } = get(id);
+            if (onTemperature) {
+              run({type: ACTION_SCRIPT_RUN, id: onAlarm });
+            }
           }
           console.log(id, ID, key, attributes, data);
         }
