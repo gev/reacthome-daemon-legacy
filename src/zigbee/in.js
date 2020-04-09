@@ -61,7 +61,7 @@ module.exports = (id, { ID, clusters }, data) => {
           break;
         }
         default: {
-          if (attributes.zoneState > 0) {
+          if ((attributes.zonestatus & 0x1) > 0) {
             set(id, { alarm: Date.now() });
             const { onAlarm } = get(id);
             if (onAlarm) {
