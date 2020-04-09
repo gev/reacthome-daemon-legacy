@@ -68,7 +68,7 @@ module.exports.start = (id) => {
       device.endpoints.forEach(endpoint => {
         handle(device.ieeeAddr, endpoint);
       });
-      // addDevice(id, device);
+      addDevice(id, device);
     });
   //  setInterval(() => {
   //    console.log('-----------------------------------------------------------------');
