@@ -13,6 +13,7 @@ module.exports = (id, { ID, clusters }, data) => {
     .forEach(([key, { attributes }]) => {
       switch(key) {
         case 'genBasic': {
+          console.log(id, ID, key, attributes, data);
           break;
         }
         case 'genOnOff': {
