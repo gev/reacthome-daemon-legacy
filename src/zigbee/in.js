@@ -13,6 +13,13 @@ module.exports = (id, { ID, clusters }, data) => {
     .forEach(([key, { attributes }]) => {
       switch(key) {
         case 'genBasic': {
+          if ((data.zonestatus & 0x1)) {
+            set(id, { alarm: Date.now() });
+            const { onAlarm } = get(id);
+            if (onAlarm) {
+              run({type: ACTION_SCRIPT_RUN, id: onAlarm });
+            }
+          }
           console.log(id, ID, key, attributes, data);
           break;
         }
