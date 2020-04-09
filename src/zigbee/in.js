@@ -50,7 +50,7 @@ module.exports = (id, { ID, clusters }, data) => {
           break;
         }
         case 'ssIasZone': {
-          if (attributes.zoneState > 0) {
+          if (data.zonestatus & 0x1) {
             set(id, { alarm: Date.now() });
             const { onAlarm } = get(id);
             if (onAlarm) {
@@ -61,7 +61,7 @@ module.exports = (id, { ID, clusters }, data) => {
           break;
         }
         default: {
-          if ((attributes.zonestatus & 0x1)) {
+          if ((data.zonestatus & 0x1)) {
             set(id, { alarm: Date.now() });
             const { onAlarm } = get(id);
             if (onAlarm) {
