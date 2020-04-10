@@ -7,7 +7,7 @@ const onDI = [onOff, onOn, onHold, onClick];
 const onDO = [onOff, onOn];
 const count = [count_off, count_on];
 
-module.exports = (id, { ID, clusters, inClusterList }, data) => {
+module.exports = (id, { ID, clusters, inputClusters }, data) => {
   console.log(inClusterList);
   Object
     .entries(clusters)
