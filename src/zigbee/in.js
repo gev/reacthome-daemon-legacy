@@ -8,7 +8,7 @@ const onDO = [onOff, onOn];
 const count = [count_off, count_on];
 
 module.exports = (id, { ID, clusters, inputClusters }, data) => {
-  console.log(inClusterList);
+  console.log(inputClusters);
   Object
     .entries(clusters)
     .forEach(([key, { attributes }]) => {
