@@ -14,12 +14,13 @@ module.exports = (id, { ID, clusters, inputClusters }, data) => {
     .forEach(([key, { attributes }]) => {
       switch(key) {
         case 'genBasic': {
-          if ((data.zonestatus & 0x1)) {
-            set(id, { alarm: Date.now() });
-            const { onAlarm } = get(id);
-            if (onAlarm) {
-              run({type: ACTION_SCRIPT_RUN, id: onAlarm });
-            }
+          const value = data.zonestatus & 0x1;
+          set(id, { value });
+          const device = get(id);
+          const script = device[onDO[value]];
+          const { script } = get(id);
+          if (script) {
+            run({type: ACTION_SCRIPT_RUN, id: script });
           }
           console.log(id, ID, key, attributes, data);
           break;
@@ -59,23 +60,25 @@ module.exports = (id, { ID, clusters, inputClusters }, data) => {
           break;
         }
         case 'ssIasZone': {
-          if (data.zonestatus & 0x1) {
-            set(id, { alarm: Date.now() });
-            const { onAlarm } = get(id);
-            if (onAlarm) {
-              run({type: ACTION_SCRIPT_RUN, id: onAlarm });
-            }
+          const value = data.zonestatus & 0x1;
+          set(id, { value });
+          const device = get(id);
+          const script = device[onDO[value]];
+          const { script } = get(id);
+          if (script) {
+            run({type: ACTION_SCRIPT_RUN, id: script });
           }
           console.log(id, ID, key, attributes, data);
           break;
         }
         default: {
-          if ((data.zonestatus & 0x1)) {
-            set(id, { alarm: Date.now() });
-            const { onAlarm } = get(id);
-            if (onAlarm) {
-              run({type: ACTION_SCRIPT_RUN, id: onAlarm });
-            }
+          const value = data.zonestatus & 0x1;
+          set(id, { value });
+          const device = get(id);
+          const script = device[onDO[value]];
+          const { script } = get(id);
+          if (script) {
+            run({type: ACTION_SCRIPT_RUN, id: script });
           }
           console.log(id, ID, key, attributes, data);
         }
