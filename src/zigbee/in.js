@@ -18,7 +18,6 @@ module.exports = (id, { ID, clusters, inputClusters }, data) => {
           set(id, { value });
           const device = get(id);
           const script = device[onDO[value]];
-          const { script } = get(id);
           if (script) {
             run({type: ACTION_SCRIPT_RUN, id: script });
           }
@@ -64,7 +63,6 @@ module.exports = (id, { ID, clusters, inputClusters }, data) => {
           set(id, { value });
           const device = get(id);
           const script = device[onDO[value]];
-          const { script } = get(id);
           if (script) {
             run({type: ACTION_SCRIPT_RUN, id: script });
           }
@@ -76,7 +74,6 @@ module.exports = (id, { ID, clusters, inputClusters }, data) => {
           set(id, { value });
           const device = get(id);
           const script = device[onDO[value]];
-          const { script } = get(id);
           if (script) {
             run({type: ACTION_SCRIPT_RUN, id: script });
           }
