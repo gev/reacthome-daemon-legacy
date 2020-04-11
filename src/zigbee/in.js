@@ -13,17 +13,6 @@ module.exports = (id, { ID, clusters, inputClusters }, data) => {
     .entries(clusters)
     .forEach(([key, { attributes }]) => {
       switch(key) {
-        case 'genBasic': {
-          const value = data.zonestatus & 0x1;
-          set(id, { value });
-          const device = get(id);
-          const script = device[onDO[value]];
-          if (script) {
-            run({type: ACTION_SCRIPT_RUN, id: script });
-          }
-          console.log(id, ID, key, attributes, data);
-          break;
-        }
         case 'genOnOff': {
           const channel = `${id}/${DO}/${ID}`;
           const chan = get(channel);
@@ -54,17 +43,6 @@ module.exports = (id, { ID, clusters, inputClusters }, data) => {
           const { onHumidity } = get(id);
           if (onHumidity) {
             run({type: ACTION_SCRIPT_RUN, id: onHumidity });
-          }
-          console.log(id, ID, key, attributes, data);
-          break;
-        }
-        case 'ssIasZone': {
-          const value = data.zonestatus & 0x1;
-          set(id, { value });
-          const device = get(id);
-          const script = device[onDO[value]];
-          if (script) {
-            run({type: ACTION_SCRIPT_RUN, id: script });
           }
           console.log(id, ID, key, attributes, data);
           break;
