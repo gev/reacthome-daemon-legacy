@@ -80,19 +80,9 @@ clusters.set(0x0500, configure([ALARM], 'ssIasZone', [{
 
 module.exports = (endpoints) =>
   endpoints.reduce((config, endpoint) => {
-    endpoint.inputClusters.forEach(id => {
-      if (clusters.has(id)) {
-        const cluster = clusters.get(id)(endpoint);
-        if (Array.isArray(cluster)) {
-          cluster.forEach(cluster => {
-            if (Array.isArray(config[cluster])) {
-              config[cluster].push(endpoint.ID);
-            } else {
-              config[cluster] = [endpoint.ID];
-            }
-          });
-        }
-      }
-    });
+    const cluster = endpoint.inputClusters
+      .filter(id => clusters.has(id))
+      .map(id => clusters.get(id)(endpoint));
+    config.push({id: endpoint.ID, cluster});
     return config;
-  }, {});
+  }, []);
