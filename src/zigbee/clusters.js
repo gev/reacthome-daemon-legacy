@@ -1,5 +1,5 @@
 
-const { DO, ALARM, COLOR, TEMPERATURE, HUMIDITY } = require('../constants');
+const { DO, ALARM, COLOR, LEVEL, TEMPERATURE, HUMIDITY } = require('../constants');
 const controller = require('./controller');
 
 const clusters = new Map();
@@ -22,10 +22,29 @@ const bind = async (endpoint, cluster, config) => {
 const configure = (res, cluster, config) => (endpoint) => {
   bind(endpoint, cluster, config);
   return res;
-}
+};
 
 clusters.set(0x0006, configure([DO], 'genOnOff', [{
   attribute: 'onOff',
+  minimumReportInterval: 0,
+  maximumReportInterval: 1,
+  reportableChange: 0,
+}]));
+
+clusters.set(0x0008, configure([COLOR], 'genLevelCtrl', [{
+  attribute: 'currentLevel',
+  minimumReportInterval: 0,
+  maximumReportInterval: 1,
+  reportableChange: 0,
+}]));
+
+clusters.set(0x0300, configure([LEVEL], 'lightingColorCtrl', [{
+  attribute: 'currentHue',
+  minimumReportInterval: 0,
+  maximumReportInterval: 1,
+  reportableChange: 0,
+}, {
+  attribute: 'currentSaturation',
   minimumReportInterval: 0,
   maximumReportInterval: 1,
   reportableChange: 0,

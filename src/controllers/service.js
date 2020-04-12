@@ -114,7 +114,10 @@ const {
   STOP,
   HEAT,
   COOL,
-  LIGHT_RGB
+  LIGHT_RGB,
+  COLOR,
+  MOVE_TO_LEVEL,
+  MOVE_TO_HUE_SATURATION,
 } = require('../constants');
 const { NOTIFY } = require('../notification/constants');
 const { notify } = require('../notification');

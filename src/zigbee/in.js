@@ -1,6 +1,6 @@
 
 const { get, set, count_on, count_off, onHold, onClick } = require('../actions');
-const { DO, onOn, onOff, ACTION_SCRIPT_RUN } = require('../constants');
+const { ENDPOINT, DO, onOn, onOff, ACTION_SCRIPT_RUN } = require('../constants');
 const { run } = require('../controllers/service');
 
 const onDI = [onOff, onOn, onHold, onClick];
@@ -14,7 +14,7 @@ module.exports = (id, { ID, clusters, inputClusters }, data) => {
     .forEach(([key, { attributes }]) => {
       switch(key) {
         case 'genOnOff': {
-          const channel = `${id}/${DO}/${ID}`;
+          const channel = `${id}/${ENDPOINT}/${ID}`;
           const chan = get(channel);
           set(channel, { value: attributes.onOff });
           if (chan && chan.bind) {
@@ -26,6 +26,30 @@ module.exports = (id, { ID, clusters, inputClusters }, data) => {
               count[attributes.onOff](chan.bind);
             }
           }
+          console.log(id, ID, key, attributes, data);
+          break;
+        }
+        case 'genLevelCtrl': {
+          const channel = `${id}/${ENDPOINT}/${ID}`;
+          const chan = get(channel);
+          set(channel, { value: attributes.level });
+          if (chan && chan.bind) {
+            const l = attributes.level ? 1 : 0;
+            const l_ = chan.level ? 1 : 0;
+            if (l !== l_) {
+              const script = chan[onDO[l]];
+              if (script) {
+                run({ type: ACTION_SCRIPT_RUN, id: script });
+              }
+              count[l](chan.bind);
+            }
+          }
+          console.log(id, ID, key, attributes, data);
+          break;
+        }
+        case 'lightingColorCtrl': {
+          const channel = `${id}/${ENDPOINT}/${ID}`;
+          set(channel, {hue: currentHue, saturation: currentSaturation})
           console.log(id, ID, key, attributes, data);
           break;
         }
