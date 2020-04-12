@@ -83,6 +83,8 @@ module.exports = (endpoints) =>
     const cluster = endpoint.inputClusters
       .filter(id => clusters.has(id))
       .map(id => clusters.get(id)(endpoint));
-    config.push({id: endpoint.ID, cluster});
+    if (cluster.length > 0) {
+      config.push({id: endpoint.ID, cluster});
+    }
     return config;
   }, []);
