@@ -31,14 +31,14 @@ clusters.set(0x0006, configure(DO, 'genOnOff', [{
   reportableChange: 0,
 }]));
 
-clusters.set(0x0008, configure(COLOR, 'genLevelCtrl', [{
+clusters.set(0x0008, configure(LEVEL, 'genLevelCtrl', [{
   attribute: 'currentLevel',
   minimumReportInterval: 0,
   maximumReportInterval: 1,
   reportableChange: 0,
 }]));
 
-clusters.set(0x0300, configure(LEVEL, 'lightingColorCtrl', [{
+clusters.set(0x0300, configure(COLOR, 'lightingColorCtrl', [{
   attribute: 'currentHue',
   minimumReportInterval: 0,
   maximumReportInterval: 1,
