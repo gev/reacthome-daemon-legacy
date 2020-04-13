@@ -26,7 +26,7 @@ const move_to_hue_saturation = async (id, index, enhancehue, saturation, directi
   await endpoint.command('lightingColorCtrl', 'enhancedMoveToHueAndSaturation',  {enhancehue, saturation, direction, transtime}, {});
 };
 
-const move_to_hue = async (id, index, hue, direction = 1, transtime = 10) => {
+const move_to_hue = async (id, index, hue, direction = 0, transtime = 0) => {
   const device = controller.getDeviceByIeeeAddr(id);
   const endpoint = device.getEndpoint(Number.parseInt(index));
   await endpoint.command('lightingColorCtrl', 'moveToHue',  {hue, direction, transtime}, {});
