@@ -55,6 +55,10 @@ const {
   ACTION_TV,
   ACTION_LEAKAGE_RESET,
   ACTION_SCRIPT_RUN,
+  ACTION_MOVE_TO_HUE,
+  ACTION_MOVE_TO_SATURATION,
+  ACTION_MOVE_TO_HUE_SATURATION,
+  ACTION_MOVE_TO_LEVEL,
   DEVICE_PORT,
   DEVICE_TYPE_DIM4,
   DEVICE_TYPE_DIM_4,
@@ -223,7 +227,6 @@ const run = (action) => {
       }
       case ACTION_DIMMER: {
         const dev = get(action.id) || {};
-        const id = `${action.id}/${DIM}/${action.index}`;
         let velocity = DIM_VELOCITY;
         if (dev.type === DRIVER_TYPE_ARTNET) {
           velocity = ARTNET_VELOCITY;
@@ -244,6 +247,27 @@ const run = (action) => {
         case DIM_OFF:
           device.send(Buffer.from([ACTION_DIMMER, action.index, action.action]), dev.ip);
             break;
+        }
+        break;
+      }
+      case ACTION_MOVE_TO_HUE: {
+        const dev = get(action.id) || {};
+        if (dev.protocol === ZIGBEE) {
+          zigbee.move_to_hue(action.id, action.index, action.value);
+        }
+        break;
+      }
+      case ACTION_MOVE_TO_SATURATION: {
+        const dev = get(action.id) || {};
+        if (dev.protocol === ZIGBEE) {
+          zigbee.move_to_saturation(action.id, action.index, action.value);
+        }
+        break;
+      }
+      case ACTION_MOVE_TO_LEVEL: {
+        const dev = get(action.id) || {};
+        if (dev.protocol === ZIGBEE) {
+          zigbee.move_to_level(action.id, action.index, action.value);
         }
         break;
       }

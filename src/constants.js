@@ -30,8 +30,6 @@ module.exports.DIM = 'dim';
 module.exports.ENDPOINT = 'endpoint';
 module.exports.ALARM = 'alarm';
 module.exports.COLOR = 'color';
-module.exports.MOVE_TO_LEVEL = 'move_to_level';
-module.exports.MOVE_TO_HUE_SATURATION = 'move_to_hue_saturation';
 module.exports.LEVEL = 'level';
 module.exports.HUMIDITY = 'humidity';
 module.exports.TEMPERATURE = 'temperature';
@@ -119,6 +117,11 @@ module.exports.ACTION_TOGGLE = 'ACTION_TOGGLE';
 module.exports.ACTION_TV = 'ACTION_TV';
 module.exports.ACTION_LEAKAGE_RESET = 'ACTION_LEAKAGE_RESET';
 module.exports.ACTION_SCRIPT_RUN = 'ACTION_SCRIPT_RUN';
+
+module.exports.ACTION_MOVE_TO_HUE = 'ACTION_MOVE_TO_HUE';
+module.exports.ACTION_MOVE_TO_SATURATION = 'ACTION_MOVE_TO_SATURATION';
+module.exports.ACTION_MOVE_TO_HUE_SATURATION = 'ACTION_MOVE_TO_HUE_SATURATION';
+module.exports.ACTION_MOVE_TO_LEVEL = 'ACTION_MOVE_TO_LEVEL';
 
 module.exports.OFF = 0x0;
 module.exports.ON = 0x1;
