@@ -32,9 +32,9 @@ module.exports = (id, { ID, clusters, inputClusters }, data) => {
         case 'genLevelCtrl': {
           const channel = `${id}/${ENDPOINT}/${ID}`;
           const chan = get(channel);
-          set(channel, { value: attributes.level });
+          set(channel, { level: attributes.currentLevel });
           if (chan && chan.bind) {
-            const l = attributes.level ? 1 : 0;
+            const l = attributes.currentLevel ? 1 : 0;
             const l_ = chan.level ? 1 : 0;
             if (l !== l_) {
               const script = chan[onDO[l]];
@@ -49,7 +49,7 @@ module.exports = (id, { ID, clusters, inputClusters }, data) => {
         }
         case 'lightingColorCtrl': {
           const channel = `${id}/${ENDPOINT}/${ID}`;
-          set(channel, {hue: currentHue, saturation: currentSaturation})
+          set(channel, {hue: attributes.currentHue, saturation: attributes.currentSaturation})
           console.log(id, ID, key, attributes, data);
           break;
         }
