@@ -23,7 +23,7 @@ const move_to_level = async (id, index, level, transtime = 0) => {
 const move_to_hue_saturation = async (id, index, enhancehue, saturation, direction = 0, transtime = 0) => {
   const device = controller.getDeviceByIeeeAddr(id);
   const endpoint = device.getEndpoint(Number.parseInt(index));
-  await endpoint.command('lightingColorCtrl', 'enhancedMoveToHueAndSaturationen',  {enhancehue, saturation, direction, transtime}, {});
+  await endpoint.command('lightingColorCtrl', 'enhancedMoveToHueAndSaturation',  {enhancehue, saturation, direction, transtime}, {});
 };
 
 const move_to_hue = async (id, index, enhancehue, direction = 0, transtime = 0) => {
@@ -35,7 +35,7 @@ const move_to_hue = async (id, index, enhancehue, direction = 0, transtime = 0) 
 const move_to_saturation = async (id, index, saturation, transtime = 0) => {
   const device = controller.getDeviceByIeeeAddr(id);
   const endpoint = device.getEndpoint(Number.parseInt(index));
-  await endpoint.command('lightingColorCtrl', 'moveToSaturationen',  {saturation, transtime}, {});
+  await endpoint.command('lightingColorCtrl', 'moveToSaturation',  {saturation, transtime}, {});
 };
 
 
