@@ -24,21 +24,21 @@ const configure = (res, cluster, config) => (endpoint) => {
   return res;
 };
 
-clusters.set(0x0006, configure([DO], 'genOnOff', [{
+clusters.set(0x0006, configure(DO, 'genOnOff', [{
   attribute: 'onOff',
   minimumReportInterval: 0,
   maximumReportInterval: 1,
   reportableChange: 0,
 }]));
 
-clusters.set(0x0008, configure([COLOR], 'genLevelCtrl', [{
+clusters.set(0x0008, configure(COLOR, 'genLevelCtrl', [{
   attribute: 'currentLevel',
   minimumReportInterval: 0,
   maximumReportInterval: 1,
   reportableChange: 0,
 }]));
 
-clusters.set(0x0300, configure([LEVEL], 'lightingColorCtrl', [{
+clusters.set(0x0300, configure(LEVEL, 'lightingColorCtrl', [{
   attribute: 'currentHue',
   minimumReportInterval: 0,
   maximumReportInterval: 1,
@@ -50,23 +50,21 @@ clusters.set(0x0300, configure([LEVEL], 'lightingColorCtrl', [{
   reportableChange: 0,
 }]));
 
-clusters.set(0x0300, type([COLOR]));
-
-clusters.set(0x0402, configure([TEMPERATURE], 'msTemperatureMeasurement', [{
+clusters.set(0x0402, configure(TEMPERATURE, 'msTemperatureMeasurement', [{
   attribute: 'measuredValue',
   minimumReportInterval: 60,
   maximumReportInterval: 300,
   reportableChange: 10,
 }]));
 
-clusters.set(0x0405, configure([HUMIDITY], 'msRelativeHumidity', [{
+clusters.set(0x0405, configure(HUMIDITY, 'msRelativeHumidity', [{
   attribute: 'measuredValue',
   minimumReportInterval: 60,
   maximumReportInterval: 300,
   reportableChange: 10,
 }]));
 
-clusters.set(0x0500, configure([ALARM], 'ssIasZone', [{
+clusters.set(0x0500, configure(ALARM, 'ssIasZone', [{
   attribute: 'zoneState',
   minimumReportInterval: 0,
   maximumReportInterval: 1,
