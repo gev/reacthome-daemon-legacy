@@ -7,12 +7,15 @@ const { options } = require('./config');
 const list = require('../init/list');
 
 const deleteSession = session => {
-  if (peers.has(session)) {
-    peers.get(session).close();
+  const close = (map) => {
+    if (map.has(session)) {
+      map.get(session).close();
+      map.delete(session);
+    }
   }
-  actions.delete(session);
-  assets.delete(session);
-  peers.delete(session);
+  close(actions);
+  close(assets);
+  close(peers);
 };
 
 module.exports = async (session, message, send, config) => {
