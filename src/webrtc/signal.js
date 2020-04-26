@@ -17,9 +17,6 @@ const deleteSession = session => {
   close(assets);
   close(peers);
   console.warn('Close session', session);
-  // actions.delete(session);
-  // assets.delete(session);
-  // peers.delete(session);
 };
 
 module.exports = async (session, message, send, config) => {
@@ -36,7 +33,7 @@ module.exports = async (session, message, send, config) => {
             case ACTION: {
               channel.onmessage = onAction(session);
               actions.set(session, channel);
-              // list(session);
+              list(session);
               break;
             }
             case ASSET: {
