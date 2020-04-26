@@ -45,7 +45,8 @@ module.exports = async (session, message, send, config) => {
             }
           }
           channel.onerror = () => {
-            deleteSession(session);
+            console.error(e);
+            // deleteSession(session);
           };
         };
         peer.onconnectionstatechange = () => {
@@ -66,7 +67,8 @@ module.exports = async (session, message, send, config) => {
           await peer.setLocalDescription(answer);
           send({ type: ANSWER, jsep: peer.localDescription });
         } catch (e) {
-          deleteSession(session);
+          console.error(e);
+          // deleteSession(session);
         }
         break;
       }
@@ -75,7 +77,8 @@ module.exports = async (session, message, send, config) => {
           try {
             await peers.get(session).addIceCandidate(new RTCIceCandidate(action.candidate));
           } catch (e) {
-            deleteSession(session);
+            console.error(e);
+            // deleteSession(session);
           }
         }
         break;
