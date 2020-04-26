@@ -4,7 +4,6 @@ const { OFFER, ANSWER, CANDIDATE, CONNECTING, CONNECTED, DISCONNECTED, ACTION, A
 const { onAction, onAsset } = require('./handle');
 const { peers, actions, assets } = require('./peer');
 const { options } = require('./config');
-const list = require('../init/list');
 
 const deleteSession = session => {
   const close = (map) => {
@@ -33,7 +32,6 @@ module.exports = async (session, message, send, config) => {
             case ACTION: {
               channel.onmessage = onAction(session);
               actions.set(session, channel);
-              list(session);
               break;
             }
             case ASSET: {
