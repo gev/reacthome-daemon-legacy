@@ -7,19 +7,19 @@ const { options } = require('./config');
 const list = require('../init/list');
 
 const deleteSession = session => {
-  // const close = (map) => {
-  //   if (map.has(session)) {
-  //     map.get(session).close();
-  //     map.delete(session);
-  //   }
-  // }
-  // close(actions);
-  // close(assets);
-  // close(peers);
+  const close = (map) => {
+    if (map.has(session)) {
+      map.get(session).close();
+      map.delete(session);
+    }
+  }
+  close(actions);
+  close(assets);
+  close(peers);
   console.warn('Close session', session);
-  actions.delete(session);
-  assets.delete(session);
-  peers.delete(session);
+  // actions.delete(session);
+  // assets.delete(session);
+  // peers.delete(session);
 };
 
 module.exports = async (session, message, send, config) => {
