@@ -17,7 +17,7 @@ const split = (x, n) => x.reduce ((a, b, i) => {
 
 module.exports = async (session) => {
   split(state.list(), N).forEach(state => {
-    for (let i = 0; i < 100;i++)
+    for (let i = 0; i < 1000; i++)
     sendAction(session, { type: LIST, state });
   });
   // split(await assets.list(), N).forEach(assets => {
