@@ -10,7 +10,6 @@ const sendMessage = (channel, data) => {
 }
 
 const send = (channels, handle) => (session, data) => {
-  for (let i = 0; i < 100; i++)
   if (channels.has(session)) {
     handle(channels.get(session), data);
   }
@@ -18,7 +17,7 @@ const send = (channels, handle) => (session, data) => {
 
 const broadcast = (channels, handle) => (data, ignore) => {
   for (let [session, channel] of channels.entries()) {
-    for (let i = 0; i < 100; i++)
+    for (let i = 0; i < 1000; i++)
     if (session !== ignore) {
       handle(channel, data);
     }
