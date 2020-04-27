@@ -4,8 +4,10 @@ const assets = new Map();
 const actions = new Map();
 
 const sendMessage = (channel, data) => {
-  if (channel.readyState === 'open') {
+  try {
     channel.send(data);
+  } catch (e) {
+    console.error(e);
   }
 }
 
