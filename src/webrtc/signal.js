@@ -60,8 +60,10 @@ module.exports = async (session, message, send, config) => {
           send({ type: CANDIDATE, candidate });
         };
         try {
+          console.log('offer', action.jsep);
           await peer.setRemoteDescription(action.jsep);
           const answer = await peer.createAnswer(options);
+          console.log('answer', answer);
           await peer.setLocalDescription(answer);
           send({ type: ANSWER, jsep: peer.localDescription });
         } catch (e) {
