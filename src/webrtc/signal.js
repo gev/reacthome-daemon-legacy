@@ -1,6 +1,6 @@
 
 const { RTCPeerConnection, RTCIceCandidate } = require('wrtc');
-const { OFFER, ANSWER, CANDIDATE, CONNECTING, CONNECTED, DISCONNECTED, ACTION, ASSET } = require('./constants');
+const { OFFER, ANSWER, CANDIDATE, CONNECTING, CONNECTED, DISCONNECTED, FAILED, ACTION, ASSET } = require('./constants');
 const { onAction, onAsset } = require('./handle');
 const { peers, actions, assets } = require('./peer');
 const { options } = require('./config');
@@ -48,10 +48,10 @@ module.exports = async (session, message, send, config) => {
           };
         };
         peer.onconnectionstatechange = () => {
-          console.log('peer status', session, peer.connectionState);
           switch (peer.connectionState) {
+            case FAILED:
             case DISCONNECTED: {
-              deleteSession(session);
+                deleteSession(session);
               break;
             }
           }
