@@ -3,6 +3,12 @@ const peers = new Map();
 const assets = new Map();
 const actions = new Map();
 
+setInterval(() => {
+  console.log('peers', peers);
+  console.log('assets', assets);
+  console.log('actions', actions);
+}, 10000);
+
 const sendMessage = (channel, data) => {
   try {
     channel.send(data);
