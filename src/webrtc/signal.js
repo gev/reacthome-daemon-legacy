@@ -48,7 +48,7 @@ module.exports = async (session, message, send, config) => {
           };
         };
         peer.onconnectionstatechange = () => {
-          console.log('peer status', session, peer.connectionState);
+          // console.log('peer status', session, peer.connectionState);
           switch (peer.connectionState) {
             case DISCONNECTED: {
               deleteSession(session);
