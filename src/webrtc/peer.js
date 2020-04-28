@@ -4,9 +4,9 @@ const assets = new Map();
 const actions = new Map();
 
 setInterval(() => {
-  console.log('peers', peers);
-  console.log('assets', assets);
-  console.log('actions', actions);
+  console.log('peers', peers.keys());
+  console.log('assets', assets.keys());
+  console.log('actions', actions.keys());
 }, 10000);
 
 const sendMessage = (channel, data) => {
