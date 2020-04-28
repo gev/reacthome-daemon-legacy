@@ -26,10 +26,10 @@ module.exports = async (session, message, send, config) => {
     switch(action.type) {
       case OFFER: {
         if (peers.has(session)) {
-          const {iceConnectionState} = peers.get(session);
-          if (iceConnectionState === CONNECTING || iceConnectionState === CONNECTED) {
-            return;
-          }
+          // const {iceConnectionState} = peers.get(session);
+          // if (iceConnectionState === CONNECTING || iceConnectionState === CONNECTED) {
+          //   return;
+          // }
           deleteSession(session);
         }
         const peer = new RTCPeerConnection(config);
