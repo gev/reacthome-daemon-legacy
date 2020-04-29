@@ -11,7 +11,7 @@ setInterval(() => {
 
 const sendMessage = (channel, data) => {
   try {
-    // channel.send(data);
+    channel.send(data);
   } catch (e) {
     console.error(e);
   }
