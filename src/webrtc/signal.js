@@ -13,11 +13,9 @@ const deleteSession = session => {
       map.delete(session);
     }
   }
-  // close(actions);
-  // close(assets);
   close(peers);
-  assets.delete(session);
-  actions.delete(session);
+  close(actions);
+  close(assets);
   console.warn('Close session', session);
 };
 
