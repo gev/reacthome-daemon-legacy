@@ -9,12 +9,12 @@ const list = require('../init/list');
 const deleteSession = session => {
   const close = (map) => {
     if (map.has(session)) {
-      // map.get(session).close();
+      map.get(session).close();
       map.delete(session);
     }
   }
-  close(actions);
-  close(assets);
+  // close(actions);
+  // close(assets);
   close(peers);
   console.warn('Close session', session);
 };
