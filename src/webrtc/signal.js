@@ -16,6 +16,8 @@ const deleteSession = session => {
   // close(actions);
   // close(assets);
   close(peers);
+  assets.delete(session);
+  actions.delete(session);
   console.warn('Close session', session);
 };
 
