@@ -5,4 +5,4 @@ setInterval(() => {
   setTimeout(() => {
     // peer.close();
   }, 1000);
-}, 10000);
+}, 30000);
