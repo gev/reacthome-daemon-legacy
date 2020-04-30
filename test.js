@@ -4,7 +4,7 @@ const { RTCPeerConnection, RTCIceCandidate } = require('wrtc');
 const {ICE, options} = require('./src/webrtc/config');
 
 
-setTimeout(() => {
+setInterval(() => {
   const peer = new RTCPeerConnection();
   setTimeout(() => {
     peer.close();
