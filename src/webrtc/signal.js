@@ -25,15 +25,17 @@ module.exports = async (session, message, send, config) => {
     console.log(session, action.type);
     switch(action.type) {
       case OFFER: {
-        if (peers.has(session)) {
-          const {iceConnectionState} = peers.get(session);
-          if (iceConnectionState === CONNECTING || iceConnectionState === CONNECTED) {
-          // if (iceConnectionState === CONNECTING) {
-              return;
-          }
-          // deleteSession(session);
-        }
+        // if (peers.has(session)) {
+        //   const {iceConnectionState} = peers.get(session);
+        //   if (iceConnectionState === CONNECTING || iceConnectionState === CONNECTED) {
+        //   // if (iceConnectionState === CONNECTING) {
+        //       return;
+        //   }
+        //   // deleteSession(session);
+        // }
         const peer = new RTCPeerConnection(config);
+        peer.close();
+        return;
         peers.set(session, peer);
         peer.ondatachannel = ({ channel }) => {
           switch (channel.label) {
