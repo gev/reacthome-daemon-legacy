@@ -31,7 +31,7 @@ module.exports = async (session, message, send, config) => {
           if (iceConnectionState === CONNECTING) {
               return;
           }
-          deleteSession(session);
+          // deleteSession(session);
         }
         const peer = new RTCPeerConnection(config);
         peers.set(session, peer);
