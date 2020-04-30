@@ -4,8 +4,11 @@ const { RTCPeerConnection } = require('wrtc');
 setTimeout(() => {
   for (let i = 0; i < 1; i++) {
     const peer = new RTCPeerConnection();
+    peer.onconnectionstatechange = () => {
+      console.log(peer.connectionState)
+    }
   // setTimeout(() => {
-    peer.close();
+    // peer.close();
   // }, 1000);
   }
 }, 10000);
