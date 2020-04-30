@@ -27,8 +27,8 @@ module.exports = async (session, message, send, config) => {
       case OFFER: {
         if (peers.has(session)) {
           const {iceConnectionState} = peers.get(session);
-          // if (iceConnectionState === CONNECTING || iceConnectionState === CONNECTED) {
-          if (iceConnectionState === CONNECTING) {
+          if (iceConnectionState === CONNECTING || iceConnectionState === CONNECTED) {
+          // if (iceConnectionState === CONNECTING) {
               return;
           }
           // deleteSession(session);
