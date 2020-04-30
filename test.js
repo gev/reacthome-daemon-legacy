@@ -1,12 +1,8 @@
-
-
-const { RTCPeerConnection, RTCIceCandidate } = require('wrtc');
-const {ICE, options} = require('./src/webrtc/config');
-
+const { RTCPeerConnection } = require('wrtc');
 
 setInterval(() => {
-  const peer = new RTCPeerConnection(ICE);
+  const peer = new RTCPeerConnection();
   setTimeout(() => {
-    peer.close();
+    // peer.close();
   }, 5000);
 }, 10000);
