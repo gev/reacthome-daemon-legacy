@@ -7,8 +7,8 @@ setTimeout(() => {
     peer.onconnectionstatechange = () => {
       console.log(peer.connectionState)
     }
-  // setTimeout(() => {
-    // peer.close();
-  // }, 1000);
+    setTimeout(() => {
+      peer.close();
+    }, 1000);
   }
 }, 10000);
