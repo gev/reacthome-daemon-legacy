@@ -2,7 +2,7 @@ const { RTCPeerConnection } = require('wrtc');
 
 setInterval(() => {
   const peer = new RTCPeerConnection();
-  setTimeout(() => {
+  // setTimeout(() => {
     peer.close();
-  }, 1000);
+  // }, 1000);
 }, 10000);
