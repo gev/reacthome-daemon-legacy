@@ -4,5 +4,5 @@ setInterval(() => {
   const peer = new RTCPeerConnection();
   setTimeout(() => {
     // peer.close();
-  }, 500);
-}, 1000);
+  }, 1000);
+}, 5000);
