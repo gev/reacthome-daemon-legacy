@@ -9,13 +9,14 @@ const list = require('../init/list');
 const deleteSession = session => {
   const close = (map) => {
     if (map.has(session)) {
-      // map.get(session).close();
+      map.get(session).close();
       map.delete(session);
     }
   }
-  close(peers);
   close(actions);
   close(assets);
+  close(peers);
+  if (gc) gc();
   console.warn('Close session', session);
 };
 
@@ -31,7 +32,7 @@ module.exports = async (session, message, send, config) => {
           // if (iceConnectionState === CONNECTING) {
               return;
           }
-          // deleteSession(session);
+          deleteSession(session);
         }
         const peer = new RTCPeerConnection(config);
         peers.set(session, peer);
