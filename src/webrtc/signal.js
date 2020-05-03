@@ -16,14 +16,14 @@ const deleteSession = session => {
   // close(actions);
   // close(assets);
   // close(peers);
-  if (peers.has(session)) {
-    peers.get(session).close();
-    peers.delete(session);
-  }
   if (actions.has(session)) {
     actions.delete(session);
   }
+  if (assets.has(session)) {
+    assets.delete(session);
+  }
   if (peers.has(session)) {
+    peers.get(session).close();
     peers.delete(session);
   }
   if (gc) gc();
