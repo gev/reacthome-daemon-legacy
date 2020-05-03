@@ -5,8 +5,8 @@ setInterval(() => {
   // for (let i = 0; i < 1; i++) {
     const peer = new RTCPeerConnection();
     setTimeout(() => {
-      peer.close();
+      //peer.close();
       // gc();
-    }, 5000);
+    }, 3000);
   // }
-}, 10000);
+}, 5000);
