@@ -2,7 +2,6 @@
 const { GET } = require('../init/constants');
 const { ACK, BYE, CANCEL } = require('../sip/constants');
 const { START, WATCH } = require('../camera/constants');
-const { CANDIDATE, PING, PONG } = require('./constants');
 const { POOL } = require('../constants');
 const { run } = require('../controllers/service');
 const { onWatch, onStart } = require('../camera');
@@ -48,7 +47,7 @@ module.exports = (message) => {
         onStart(action);
         break;
       }
-      case CANDIDATE: {
+      case 'candidate': {
         janus.trickle(action);
         break;
       }
