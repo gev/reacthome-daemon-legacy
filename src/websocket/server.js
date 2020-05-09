@@ -10,13 +10,15 @@ module.exports = () => {
   const server = new Server({ port });
   server.on('connection', (socket) => {
     const session = uuid();
-    const send = (message) => {
-      soket.send(JSON.stringify(message));
-    } 
     socket.on('message', message => {
       handle(session, message);
     });
     socket.on('error', console.error);
-    peers.set(session, send);
+    peers.set(session, {
+      send(message) {
+        soket.send(JSON.stringify(message));
+      }
+    });
   });
 };
+ 

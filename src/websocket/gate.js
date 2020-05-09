@@ -13,15 +13,16 @@ const sessions = new Set();
 
 const connect = (id) => {
   const socket = new WebSocket(gateURL(id), PROTOCOL);
-  const send = (session) => (message) => {
-    socket.send(`${session}${JSON.stringify(message)}`);
-  };
   socket.on('message', (message) => {
     const session = message.substring(0, 36);
     if (!isUUID.test(session)) return;
     if (!sessions.has(session)) {
       sessions.add(session);
-      peers.set(session, send(session));
+      peers.set(session, {
+        send(message) {
+          socket.send(`${session}${JSON.stringify(message)}`);
+        }
+      });
     }
     handle(session, message.substring(36));
   });
