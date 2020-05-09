@@ -21,7 +21,6 @@ const connect = (id, handle) => {
       session,
       message.substring(36),
       action => socket.send(`${session}${JSON.stringify(action)}`),
-      ICE
     );
   });
   socket.on('close', () => {

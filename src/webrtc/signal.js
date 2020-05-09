@@ -6,31 +6,7 @@ const { peers, actions, assets } = require('./peer');
 const { options } = require('./config');
 const list = require('../init/list');
 
-const deleteSession = session => {
-  // const close = (map) => {
-  //   if (map.has(session)) {
-  //     map.get(session).close();
-  //     map.delete(session);
-  //   }
-  // }
-  // close(actions);
-  // close(assets);
-  // close(peers);
-  if (actions.has(session)) {
-    actions.delete(session);
-  }
-  if (assets.has(session)) {
-    assets.delete(session);
-  }
-  if (peers.has(session)) {
-    peers.get(session).close();
-    peers.delete(session);
-  }
-  if (gc) gc();
-  console.warn('Close session', session);
-};
-
-module.exports = async (session, message, send, config) => {
+module.exports = async (session, message, send) => {
   try {
     const action = JSON.parse(message);
     console.log(session, action.type);

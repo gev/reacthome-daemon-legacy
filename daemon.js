@@ -6,7 +6,7 @@ const { get, set, count } = require('./src/actions');
 const discovery = require('./src/discovery');
 const drivers = require('./src/drivers');
 const assets = require('./src/assets');
-const webrtc = require('./src/webrtc');
+const websocket = require('./src/websocket');
 const zigbee = require('./src/zigbee');
 const janus = require('./src/janus');
 const sip = require('./src/sip');
@@ -67,7 +67,7 @@ db.createReadStream()
     drivers.manage();
     cpu.manage();
     discovery.start(init.mac);
-    webrtc.start(init.mac);
+    websocket.start(init.mac);
     zigbee.start(init.mac);
     // janus.start();
     sip.start();
