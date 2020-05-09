@@ -5,7 +5,7 @@ const uuid = require('uuid/v4');
 const janus = require('../janus');
 const { ACK } = require('../sip/constants');
 const { GENERATE } = require('../janus/constants');
-const { broadcast } = require('../websoket/peer');
+const { broadcast } = require('../websocket/peer');
 const calls = require('./calls');
 
 module.exports = ({ jsep, session_id, handle_id, call_id }, session) => {

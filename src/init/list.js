@@ -1,6 +1,6 @@
 
 const state = require('../controllers/state');
-const { send } = require('../websoket/peer');
+const { send } = require('../websocket/peer');
 const { LIST } = require('./constants');
 
 module.exports = async (session) => {

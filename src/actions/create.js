@@ -1,7 +1,7 @@
 
 const { contains } = require('fast-deep-equal');
 const { ACTION_SET, CLIENT_PORT, CLIENT_GROUP } = require('../constants');
-const { broadcast } = require('../websoket/peer');
+const { broadcast } = require('../websocket/peer');
 const state = require('../controllers/state');
 const db = require('../db');
 
