@@ -13,16 +13,10 @@ const onAck = require('../sip/ack');
 const onBye = require('../sip/bye');
 const janus = require('../janus');
 
-const pong = {type: PONG};
-
 module.exports = (message) => {
   try {
     const action = JSON.parse(message);
     switch (action.type) {
-      case PING: {
-        send(session, pong);
-        break;
-      }
       case TOKEN: {
         add(TOKEN, POOL, action.token);
         break;
