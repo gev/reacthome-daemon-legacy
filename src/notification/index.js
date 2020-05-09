@@ -1,6 +1,6 @@
 
 const firebase = require('firebase-admin');
-const { broadcastAction } = require('../webrtc/peer');
+const { broadcast } = require('../websocket/peer');
 const { get } = require('../actions');
 const { TOKEN } = require('./constants');
 
@@ -19,6 +19,6 @@ module.exports.notify = (action) => {
       .sendToDevice(token, { notification: { title, body: message } })
       .catch(console.errorup);
   });
-  broadcastAction(action);
+  broadcast(action);
 };
 

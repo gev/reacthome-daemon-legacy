@@ -1,7 +1,7 @@
 
 const { contains } = require('fast-deep-equal');
 const { ACTION_SET, CLIENT_PORT, CLIENT_GROUP } = require('../constants');
-const { broadcastAction } = require('../webrtc/peer');
+const { broadcast } = require('../websoket/peer');
 const state = require('../controllers/state');
 const db = require('../db');
 
@@ -11,7 +11,7 @@ const apply = (id, p) => {
   if (!id) return;
   const payload = { ...p, timestamp: Date.now() };
   state.set(id, payload);
-  broadcastAction({ type: ACTION_SET, id, payload });
+  broadcast({ type: ACTION_SET, id, payload });
   try {
     db.put(id, state.get(id), (err) => {
       if (err) console.error(err);

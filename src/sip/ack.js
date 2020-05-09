@@ -5,11 +5,11 @@ const uuid = require('uuid/v4');
 const janus = require('../janus');
 const { ACK } = require('../sip/constants');
 const { GENERATE } = require('../janus/constants');
-const { broadcastAction } = require('../webrtc/peer');
+const { broadcast } = require('../websoket/peer');
 const calls = require('./calls');
 
 module.exports = ({ jsep, session_id, handle_id, call_id }, session) => {
-  broadcastAction({ type: ACK, call_id }, session);
+  broadcast({ type: ACK, call_id }, session);
   janus.sendMessage(session_id, handle_id, { request: GENERATE }, jsep, ({ plugindata }) => {
     if (!plugindata) return;
     if (calls.has(call_id)) {

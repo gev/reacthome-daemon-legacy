@@ -2,7 +2,7 @@
 const sip = require('sip');
 const calls = require('./calls');
 const janus = require('../janus');
-const { broadcastAction } = require('../webrtc/peer');
+const { broadcast } = require('../websocket/peer');
 const { BYE, HANGUP } = require('./constants');
 
 module.exports = ({ call_id }, session) => {
@@ -20,7 +20,7 @@ module.exports = ({ call_id }, session) => {
       }
     };
     sip.send(rq);
-    broadcastAction({ type: BYE, call_id }, session);
+    broadcast({ type: BYE, call_id }, session);
     janus.sendMessage(session_id, handle_id, { request: HANGUP })
     calls.delete(call_id);
   }

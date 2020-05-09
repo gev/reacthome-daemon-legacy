@@ -138,7 +138,7 @@ const {
 const { device } = require('../sockets');
 const mac = require('../mac');
 const { ac } = require('../drivers');
-const { broadcastAction } = require('../webrtc/peer');
+const { broadcast } = require('../websocket/peer');
 const { ZIGBEE } = require('../zigbee/constants');
 const zigbee = require('../zigbee/out');
 

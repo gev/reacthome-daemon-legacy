@@ -5,9 +5,8 @@ const SDP = require('sdp-transform');
 const uuid = require('uuid/v4');
 const janus = require('../janus');
 const { fixSDP } = require('../sdp');
-const { broadcastAction } = require('../webrtc');
+const { broadcast } = require('../websoket/peer');
 const { PROCESS } = require('../janus/constants');
-const { OFFER } = require('../webrtc/constants');
 const { INVITE, BYE, CANCEL, HANGUP } = require('./constants');
 const { get } = require('../actions')
 const calls = require('./calls');
@@ -30,7 +29,7 @@ module.exports.onCancel = (request) => {
   rs = sip.makeResponse(request, 200, 'Ok');
   rs.headers.to.params.tag = call_id;
   sip.send(rs);
-  broadcastAction({ type: CANCEL, call_id });
+  broadcast({ type: CANCEL, call_id });
   if (calls.has(call_id)) {
     const { session_id, handle_id } = calls.get(call_id);
     janus.sendMessage(session_id, handle_id, { request: HANGUP })
@@ -44,7 +43,7 @@ module.exports.onBye = (request) => {
   rs.headers.contact = [{ uri: request.headers.contact[0].uri }];
   rs.headers.to.params.tag = call_id;
   sip.send(rs);
-  broadcastAction({ type: BYE, call_id });
+  broadcast({ type: BYE, call_id });
   if (calls.has(call_id)) {
     const { session_id, handle_id } = calls.get(call_id);
     janus.sendMessage(session_id, handle_id, { request: HANGUP })
@@ -93,7 +92,7 @@ module.exports.onInvite = (request) => {
       o.media = o.media.filter(media => media.type === 'audio');
       janus.sendMessage(session_id, handle_id, {
         request: PROCESS,
-        type: OFFER,
+        type: 'offer',
         sdp: SDP.write(o)
       }, ({ jsep }) => {
         if (jsep) {
@@ -101,7 +100,7 @@ module.exports.onInvite = (request) => {
           const o = SDP.parse(jsep.sdp);
           o.media = o.media.filter(media => media.type === 'audio');
           jsep.sdp = SDP.write(o);
-          broadcastAction({ type: INVITE, jsep, session_id, handle_id, call_id, from });
+          broadcast({ type: INVITE, jsep, session_id, handle_id, call_id, from });
         }
       });
     });
