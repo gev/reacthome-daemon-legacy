@@ -10,7 +10,7 @@ module.exports.send = (session, message) => {
 };
 
 module.exports.broadcast = (message, ignore) => {
-  for (const [session, peer] of peers.entries) {
+  for (const [session, peer] of peers.entries()) {
     if (session !== ignore) {
       peer.send(message);
     }
