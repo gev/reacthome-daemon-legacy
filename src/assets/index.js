@@ -8,8 +8,3 @@ module.exports.init = async () => {
   await init(VAR);
   Promise.all(init(DB, ASSETS, TMP, ZIGBEE));
 };
-
-module.exports.list = async () => Promise.all(
-  (await readdir(ASSETS))
-    .map(async (i) => [i, (await stat(asset(i))).mtimeMs])
-);

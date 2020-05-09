@@ -2,7 +2,7 @@
 const janus = require('../janus');
 const { get } = require('../actions');
 const { fixSDP } = require('../sdp');
-const { sendAction } = require('../webrtc/peer');
+const { send } = require('../websocket/peer');
 const { CREATE } = require('../janus/constants');
 const { RTSP, WATCH, START } = require('./constants');
 
@@ -22,7 +22,7 @@ module.exports.onWatch = ({ id, preview, audio = false, video = true }, session)
             // jsep.sdp = fixSDP(jsep.sdp);
             // jsep.sdp = jsep.sdp.replace('42801E', '42e01f');
             // jsep.sdp = jsep.sdp.replace('420029', '42e01f');
-            sendAction(session, { type: WATCH, id, session_id, handle_id, stream_id, jsep });
+            send(session, { type: WATCH, id, session_id, handle_id, stream_id, jsep });
           }
         });
       };
