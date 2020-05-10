@@ -1,5 +1,5 @@
 
-const { GET } = require('../init/constants');
+const { GET, LIST } = require('../init/constants');
 const { ACK, BYE, CANCEL } = require('../sip/constants');
 const { START, WATCH } = require('../camera/constants');
 const { POOL } = require('../constants');
@@ -9,6 +9,7 @@ const { TOKEN } = require('../notification/constants');
 const { add } = require('../actions');
 const { broadcast, send } = require('./peer');
 const onGet = require('../init/get');
+const onList = require('../init/list');
 const onAck = require('../sip/ack');
 const onBye = require('../sip/bye');
 const janus = require('../janus');
@@ -17,6 +18,10 @@ module.exports = (session, message) => {
   try {
     const action = JSON.parse(message);
     switch (action.type) {
+      case LIST: {
+        onList(session);
+        break;
+      }
       case TOKEN: {
         add(TOKEN, POOL, action.token);
         break;
