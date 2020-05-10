@@ -16,9 +16,8 @@ module.exports = () => {
     socket.on('error', console.error);
     peers.set(session, {
       send(message) {
-        soket.send(JSON.stringify(message));
+        socket.send(JSON.stringify(message));
       }
     });
   });
 };
- 
