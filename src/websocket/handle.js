@@ -15,7 +15,6 @@ const janus = require('../janus');
 
 module.exports = (message) => {
   try {
-    console.log(message);
     const action = JSON.parse(message);
     switch (action.type) {
       case TOKEN: {
