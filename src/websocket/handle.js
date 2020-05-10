@@ -13,7 +13,7 @@ const onAck = require('../sip/ack');
 const onBye = require('../sip/bye');
 const janus = require('../janus');
 
-module.exports = (message) => {
+module.exports = (session, message) => {
   try {
     const action = JSON.parse(message);
     switch (action.type) {
