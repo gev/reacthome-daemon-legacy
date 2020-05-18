@@ -8,7 +8,6 @@ const ircodes = require('reacthome-ircodes');
 const drivers = require('../drivers');
 const {
   VERSION,
-  asset,
   AC,
   TV,
   DO,
