@@ -161,6 +161,7 @@ const run = (action) => {
         break;
       }
       case ACTION_ASSET: {
+        console.log(action);
         const { name, payload } = action;
         writeFile(asset(name), Buffer.from(payload, 'base64')).catch(console.error);
         break;
