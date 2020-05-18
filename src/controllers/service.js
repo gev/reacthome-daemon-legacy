@@ -25,6 +25,7 @@ const {
   ACTION_BOOTLOAD,
   ACTION_INIT,
   ACTION_SET,
+  ACTION_ASSET,
   ACTION_DOWNLOAD,
   ACTION_RGB,
   ACTION_IR,
@@ -141,6 +142,7 @@ const { ac } = require('../drivers');
 const { broadcast } = require('../websocket/peer');
 const { ZIGBEE } = require('../zigbee/constants');
 const zigbee = require('../zigbee/out');
+const { asset, writeFile } = require('../fs');
 
 const timers = {};
 const schedules = {};
@@ -157,6 +159,11 @@ const run = (action) => {
       case ACTION_SET: {
         const { id, payload } = action;
         set(id, payload);
+        break;
+      }
+      case ACTION_ASSET: {
+        const { name, payload } = action;
+        writeFile(asset(name), Buffer.from(payload, 'base64')).catch(console.error);
         break;
       }
       case ACTION_FIND_ME: {
