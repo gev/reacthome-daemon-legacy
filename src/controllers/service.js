@@ -7,7 +7,6 @@ const color = require('color-convert');
 const ircodes = require('reacthome-ircodes');
 const drivers = require('../drivers');
 const {
-  LIST,
   VERSION,
   AC,
   TV,
@@ -124,6 +123,7 @@ const {
   MOVE_TO_LEVEL,
   MOVE_TO_HUE_SATURATION,
 } = require('../constants');
+const {LIST } = require('../init/constants');
 const { NOTIFY } = require('../notification/constants');
 const { notify } = require('../notification');
 const {
