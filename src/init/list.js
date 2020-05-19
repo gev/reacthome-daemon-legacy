@@ -6,7 +6,7 @@ const { LIST } = require('./constants');
 module.exports = async (session) => {
   const state = list();
   const assets = [];
-  Object.values(({image}) => {
+  Object.values(state).forEach(({image}) => {
     if (image && !assets.includes(image)) {
       assets.push(image);
     }
