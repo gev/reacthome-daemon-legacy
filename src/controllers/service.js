@@ -161,9 +161,12 @@ const run = (action) => {
         break;
       }
       case ACTION_ASSET: {
-        console.log(action);
         const { name, payload } = action;
-        writeFile(asset(name), Buffer.from(payload, 'base64')).catch(console.error);
+        writeFile(asset(name), Buffer.from(payload, 'base64'))
+          .then(() => {
+            broadcast({ type: LIST,  assets: [name] });
+          })
+          .catch(console.error);
         break;
       }
       case ACTION_FIND_ME: {

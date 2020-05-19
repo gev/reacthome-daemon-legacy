@@ -14,6 +14,7 @@ module.exports.mkdir = promisify(fs.mkdir);
 module.exports.rename = promisify(fs.rename);
 module.exports.unlink = promisify(fs.unlink);
 module.exports.readdir = promisify(fs.readdir);
+module.exports.readFile = promisify(fs.readFile);
 module.exports.writeFile = promisify(fs.writeFile);
 module.exports.appendFile = promisify(fs.appendFile);
 module.exports.exists = file => new Promise(resolve => fs.exists(file, resolve));
