@@ -7,6 +7,7 @@ const color = require('color-convert');
 const ircodes = require('reacthome-ircodes');
 const drivers = require('../drivers');
 const {
+  LIST,
   VERSION,
   AC,
   TV,
