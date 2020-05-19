@@ -17,3 +17,11 @@ module.exports.list = () =>
                                     (payload instanceof Object) &&
                                      payload.timestamp)
         .map(([id, { timestamp }]) => [id, timestamp]);
+
+module.exports.assets = () =>
+  Object.values(state).reduce((assets, {image}) => {
+    if (image && ! assets.includes(image)) {
+      assets.push(image);
+    }
+    return assets;
+  }, []);
