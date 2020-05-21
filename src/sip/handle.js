@@ -32,7 +32,7 @@ module.exports.onCancel = (request) => {
   broadcast({ type: CANCEL, call_id });
   if (calls.has(call_id)) {
     const { session_id, handle_id } = calls.get(call_id);
-    janus.sendMessage(session_id, handle_id, { request: HANGUP })
+    janus.send(session_id, handle_id, { request: HANGUP })
   }
 };
 
@@ -46,7 +46,7 @@ module.exports.onBye = (request) => {
   broadcast({ type: BYE, call_id });
   if (calls.has(call_id)) {
     const { session_id, handle_id } = calls.get(call_id);
-    janus.sendMessage(session_id, handle_id, { request: HANGUP })
+    janus.send(session_id, handle_id, { request: HANGUP })
   }
 };
 
@@ -90,7 +90,7 @@ module.exports.onInvite = (request) => {
       calls.set(call_id, { session_id, handle_id, request });
       const o = SDP.parse(request.content);
       o.media = o.media.filter(media => media.type === 'audio');
-      janus.sendMessage(session_id, handle_id, {
+      janus.send(session_id, handle_id, {
         request: PROCESS,
         type: 'offer',
         sdp: SDP.write(o)

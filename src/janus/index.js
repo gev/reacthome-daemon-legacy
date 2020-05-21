@@ -16,7 +16,7 @@ module.exports.attachPlugin = (session_id, plugin, callback) => {
   });
 };
 
-module.exports.sendMessage = (session_id, handle_id, body, jsep, callback) => {
+module.exports.send = (session_id, handle_id, body, jsep, callback) => {
   if (callback === undefined) {
     if (jsep instanceof Function) {
       callback = jsep;
