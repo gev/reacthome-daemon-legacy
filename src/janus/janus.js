@@ -13,6 +13,8 @@ let socket;
 const connect = () => {
   socket = new WebSocket('ws://localhost:8188', 'janus-protocol');
   socket.on('message', (message) => {
+    console.log('++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+    console.log(action);
     try {
       const action = JSON.parse(message);
       if (action.transaction) {
@@ -20,9 +22,6 @@ const connect = () => {
           const callback = callbacks.get(action.transaction);
           callback(action);
         }
-      } else if (action.janus === TRICKLE) {
-        console.log('++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-        console.log(action);
       }
     } catch (e) {
       console.error(e);
