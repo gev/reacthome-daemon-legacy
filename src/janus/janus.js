@@ -13,10 +13,10 @@ let socket;
 const connect = () => {
   socket = new WebSocket('ws://localhost:8188', 'janus-protocol');
   socket.on('message', (message) => {
-    console.log('++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-    console.log(action);
     try {
       const action = JSON.parse(message);
+      console.log('++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+      console.log(action);
       if (action.transaction) {
         if (callbacks.has(action.transaction)) {
           const callback = callbacks.get(action.transaction);
