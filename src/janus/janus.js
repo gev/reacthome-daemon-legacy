@@ -15,8 +15,6 @@ const connect = () => {
   socket.on('message', (message) => {
     try {
       const action = JSON.parse(message);
-      console.log('++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-      console.log(action);
       if (action.transaction) {
         if (callbacks.has(action.transaction)) {
           const callback = callbacks.get(action.transaction);
