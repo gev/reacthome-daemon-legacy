@@ -4,7 +4,7 @@ const uuid = require('uuid/v4');
 const { TRICKLE } =require('./constants');
 
 const TIMEOUT_RECONNECT = 1000;
-const TIMEOUT_TRANSACTION = 10000;
+const TIMEOUT_TRANSACTION = 30000;
 
 const callbacks = new Map();
 
