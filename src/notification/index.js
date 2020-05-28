@@ -16,9 +16,12 @@ module.exports.notify = (action) => {
   const { pool = [] } = get(TOKEN) || {};
   pool.forEach(token => {
     firebase.messaging()
-      .sendToDevice(token, { notification: { title, body: message } })
+      .sendToDevice(token, {
+        priority: 'high',
+        contentAvailable: true,
+        notification: { title, body: message }
+      })
       .catch(console.errorup);
   });
   broadcast(action);
 };
-
