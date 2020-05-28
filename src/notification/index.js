@@ -17,7 +17,8 @@ module.exports.notify = (action) => {
   pool.forEach(token => {
     firebase.messaging()
       .sendToDevice(token, {
-        notification: { title, body: message }
+        notification: { title, body: message },
+        data: {}
       }, {
         priority: 'high',
         contentAvailable: true,
