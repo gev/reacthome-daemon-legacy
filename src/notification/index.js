@@ -38,7 +38,7 @@ const params = {
   contentAvailable: true,
 };
 
-const send = (tokken, message) => {
+const send = (token, message) => {
   firebase.messaging()
     .sendToDevice(token, message, params)
     .catch(console.error);
