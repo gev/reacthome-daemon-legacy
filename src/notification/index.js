@@ -66,7 +66,7 @@ module.exports.notify = (action) => {
     type: NOTIFY,
     notification : {
       title: action.title || title || code,
-      body: message
+      body: action.message
     }
   });
 };
