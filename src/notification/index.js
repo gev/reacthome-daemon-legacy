@@ -49,7 +49,7 @@ const broadcast = (message) => {
   const { pool = [] } = get(TOKEN) || {};
   pool.forEach(token => {
     if (tokens.has(token)) {
-      message.type = NOTIFY
+      message.type = NOTIFY;
       tokens.get(token).send(message, (err) => {
         if (err) {
           send(token, message);
