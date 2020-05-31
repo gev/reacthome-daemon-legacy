@@ -6,8 +6,8 @@ const { POOL } = require('../constants');
 const { run } = require('../controllers/service');
 const { onWatch, onStart } = require('../camera');
 const { TOKEN } = require('../notification/constants');
-const { add } = require('../actions');
-const { broadcast, send } = require('./peer');
+const { addToken } = require('../notification');
+const { broadcast } = require('./peer');
 const onGet = require('../init/get');
 const onList = require('../init/list');
 const onAck = require('../sip/ack');
@@ -23,7 +23,7 @@ module.exports = (session, message) => {
         break;
       }
       case TOKEN: {
-        add(TOKEN, POOL, action.token);
+        addToken(action, session);
         break;
       }
       case GET: {
