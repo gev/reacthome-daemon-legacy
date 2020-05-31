@@ -49,7 +49,7 @@ const broadcast = (message) => {
   const { pool = [] } = get(TOKEN) || {};
   pool.forEach(token => {
     if (tokens.has(token)) {
-      tokens.get(token).send(message, (err) => {
+      tokens.get(token).send({type: NOTIFY,...message}, (err) => {
         if (err) {
           send(token, message);
         }
@@ -63,7 +63,6 @@ const broadcast = (message) => {
 module.exports.notify = (action) => {
   const {title, code} = get(mac())
   broadcast({
-    type: NOTIFY,
     notification : {
       title: action.title || title || code,
       body: action.message
