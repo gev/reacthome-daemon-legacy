@@ -2,6 +2,7 @@
 const firebase = require('firebase-admin');
 const { peers } = require('../websocket/peer');
 const { get, add } = require('../actions');
+const mac = require('../mac');
 const { POOL } = require('../constants');
 const { TOKEN, NOTIFY } = require('./constants');
 
@@ -44,19 +45,33 @@ const send = (token, message) => {
     .catch(console.error);
 };
 
-module.exports.notify = (action) => {
+const broadcast = (message) => {
   const { pool = [] } = get(TOKEN) || {};
-  const notification = { title: action.title, body: action.message };
-  const data = {};
   pool.forEach(token => {
     if (tokens.has(token)) {
-      tokens.get(token).send({ type: NOTIFY, notification, data }, (err) => {
+      tokens.get(token).send(message, (err) => {
         if (err) {
-          send(token, { notification, data });
+          send(token, message);
         }
       });
     } else {
-      send(token, { notification, data });
+      send(token, message);
     }
   });
 };
+
+module.exports.notify = (action) => {
+  const {title, code} = get(mac())
+  broadcast({
+    type: NOTIFY,
+    notification : {
+      title: action.title || title || code,
+      body: message
+    }
+  });
+};
+
+module.exports.broadcast = (data) => {
+  broadcast({data});
+};
+
