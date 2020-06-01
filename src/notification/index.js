@@ -88,11 +88,11 @@ const actionMessage = (action) => ({
 });
 
 module.exports.sendAction = (token, action) => {
-  send(token, action, actionMessage(message));
+  send(token, action, actionMessage(action));
 };
 
 module.exports.broadcastAction = (action) => {
-  broadcast(action, actionMessage(message));
+  broadcast(action, actionMessage(action));
 };
 
 
