@@ -5,7 +5,7 @@ const SDP = require('sdp-transform');
 const uuid = require('uuid/v4');
 const janus = require('../janus');
 const { fixSDP } = require('../sdp');
-// const { broadcast } = require('../notification');
+const notification = require('../notification');
 const { broadcast } = require('../websocket/peer');
 const { PROCESS } = require('../janus/constants');
 const { INVITE, BYE, CANCEL, HANGUP } = require('./constants');
@@ -101,7 +101,7 @@ module.exports.onInvite = (request) => {
           const o = SDP.parse(jsep.sdp);
           o.media = o.media.filter(media => media.type === 'audio');
           jsep.sdp = SDP.write(o);
-          broadcast({ type: INVITE, jsep, session_id, handle_id, call_id, from });
+          notification.broadcast({ type: INVITE, jsep, session_id, handle_id, call_id, from });
         }
       });
     });

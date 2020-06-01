@@ -45,12 +45,11 @@ const send = (token, message) => {
     .catch(console.error);
 };
 
-const broadcast = (message) => {
+const broadcast = (action, message) => {
   const { pool = [] } = get(TOKEN) || {};
   pool.forEach(token => {
     if (tokens.has(token)) {
-      message.type = NOTIFY;
-      tokens.get(token).send(message, (err) => {
+      tokens.get(token).send(action, (err) => {
         if (err) {
           send(token, message);
         }
@@ -62,16 +61,15 @@ const broadcast = (message) => {
 };
 
 module.exports.notify = (action) => {
-  const {title, code} = get(mac())
-  broadcast({
-    notification : {
-      title: action.title || title || code,
-      body: action.message
-    }
-  });
+  const {title, code} = get(mac());
+  const notification = {
+    title: action.title || title || code,
+    body: action.message
+  };
+  broadcast({type: NOTIFY, notification}, {notification});
 };
 
 module.exports.broadcast = (data) => {
-  broadcast({data});
+  broadcast(data, {data});
 };
 
