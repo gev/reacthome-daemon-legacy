@@ -83,8 +83,10 @@ module.exports.broadcastNotification = (action) => {
 };
 
 const actionMessage = (action) => ({
-  id: mac(),
-  data: {action: JSON.stringify(action)}
+  data: {
+    id: mac(),
+    action: JSON.stringify(action)
+  }
 });
 
 module.exports.sendAction = (token, action) => {
