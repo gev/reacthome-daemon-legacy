@@ -5,7 +5,7 @@ const SDP = require('sdp-transform');
 const uuid = require('uuid/v4');
 const janus = require('../janus');
 const { fixSDP } = require('../sdp');
-const { broadcast } = require('../websocket/peer');
+const { broadcast } = require('../notification');
 const { PROCESS } = require('../janus/constants');
 const { INVITE, BYE, CANCEL, HANGUP } = require('./constants');
 const { get } = require('../actions')
@@ -78,6 +78,7 @@ const findIntercom = (id, auth) => {
 };
 
 module.exports.onInvite = (request) => {
+  console.log(request);
   const { auth } = url.parse(request.headers.from.uri);
   const { project } = get(mac()) || {};
   const from = findIntercom(project, auth);
@@ -100,7 +101,7 @@ module.exports.onInvite = (request) => {
           const o = SDP.parse(jsep.sdp);
           o.media = o.media.filter(media => media.type === 'audio');
           jsep.sdp = SDP.write(o);
-          console.log({ type: INVITE, jsep, session_id, handle_id, call_id, from });
+          broadcast({ type: INVITE, jsep, session_id, handle_id, call_id, from });
         }
       });
     });
