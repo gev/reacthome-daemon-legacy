@@ -78,6 +78,7 @@ const findIntercom = (id, auth) => {
 };
 
 module.exports.onInvite = (request) => {
+  console.log(Request)
   const { auth } = url.parse(request.headers.from.uri);
   const { project } = get(mac()) || {};
   const from = findIntercom(project, auth);
