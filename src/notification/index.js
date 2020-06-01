@@ -82,12 +82,17 @@ module.exports.broadcastNotification = (action) => {
   broadcast({type: NOTIFY, notification}, {notification});
 };
 
+const actionMessage = (action) => ({
+  id: mac(),
+  data: {action: JSON.stringify(action)}
+});
+
 module.exports.sendAction = (token, action) => {
-  send(token, action, {data: {action: JSON.stringify(action)}});
+  send(token, action, actionMessage(message));
 };
 
 module.exports.broadcastAction = (action) => {
-  broadcast(action, {data: {action: JSON.stringify(action)}});
+  broadcast(action, actionMessage(message));
 };
 
 
