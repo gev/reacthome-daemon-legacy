@@ -39,37 +39,56 @@ const params = {
   contentAvailable: true,
 };
 
-const send = (token, message) => {
+const push = (token, message) => {
   firebase.messaging()
     .sendToDevice(token, message, params)
     .catch(console.error);
 };
 
+const send = (token, action, message) => {
+  if (tokens.has(token)) {
+    tokens.get(token).send(action, (err) => {
+      if (err) {
+        push(token, message);
+      }
+    });
+  } else {
+    push(token, message);
+  }
+}
+
 const broadcast = (action, message) => {
   const { pool = [] } = get(TOKEN) || {};
   pool.forEach(token => {
-    if (tokens.has(token)) {
-      tokens.get(token).send(action, (err) => {
-        if (err) {
-          send(token, message);
-        }
-      });
-    } else {
-      send(token, message);
-    }
+    send(token, action, message);
   });
 };
 
-module.exports.notify = (action) => {
+const notificationMessage = (action) => {
   const {title, code} = get(mac());
-  const notification = {
+  return {
     title: action.title || title || code,
     body: action.message
   };
+};
+
+module.exports.sendNotification = (token, action) => {
+  const notification = notificationMessage(action);
+  send(token, {type: NOTIFY, notification}, {notification});
+};
+
+module.exports.broadcastNotification = (action) => {
+  const notification = notificationMessage(action);
   broadcast({type: NOTIFY, notification}, {notification});
 };
 
-module.exports.broadcast = (data) => {
-  broadcast(data, {data});
+module.exports.sendAction = (token, action) => {
+  send(token, action, {data: {action: JSON.stringify(action)}});
 };
+
+module.exports.broadcastAction = (action) => {
+  broadcast(action, {data: {action: JSON.stringify(action)}});
+};
+
+
 

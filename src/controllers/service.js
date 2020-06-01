@@ -125,7 +125,7 @@ const {
 } = require('../constants');
 const {LIST } = require('../init/constants');
 const { NOTIFY } = require('../notification/constants');
-const { notify } = require('../notification');
+const { broadcastNotification } = require('../notification');
 const {
   get,
   set,
@@ -936,7 +936,7 @@ const run = (action) => {
         break;
       }
       case NOTIFY: {
-        notify(action);
+        broadcastNotification(action);
         break;
       }
       case ACTION_SCRIPT_RUN: {

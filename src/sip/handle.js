@@ -101,7 +101,7 @@ module.exports.onInvite = (request) => {
           const o = SDP.parse(jsep.sdp);
           o.media = o.media.filter(media => media.type === 'audio');
           jsep.sdp = SDP.write(o);
-          notification.broadcast({ type: INVITE, jsep, session_id, handle_id, call_id, from });
+          notification.broadcastAction({ type: INVITE, jsep, session_id, handle_id, call_id, from });
         }
       });
     });
