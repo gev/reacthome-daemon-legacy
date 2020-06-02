@@ -40,14 +40,12 @@ const params = {
 };
 
 const push = (token, message) => {
-  console.log(token, message)
   firebase.messaging()
     .sendToDevice(token, message, params)
     .catch(console.error);
 };
 
 const send = (token, action, message) => {
-  console.log(token, action, message)
   if (tokens.has(token)) {
     tokens.get(token).send(action, (err) => {
       if (err) {
@@ -80,7 +78,6 @@ module.exports.sendNotification = (token, action) => {
 };
 
 module.exports.broadcastNotification = (action) => {
-  console.log(action)
   const notification = notificationMessage(action);
   broadcast({type: NOTIFY, notification}, {notification});
 };
