@@ -83,6 +83,10 @@ module.exports.broadcastNotification = (action) => {
 };
 
 const actionMessage = (action) => ({
+  notification: {
+    title: 'debug',
+    body: action.type,
+  },
   data: {
     id: mac(),
     action: JSON.stringify(action)
@@ -94,6 +98,7 @@ module.exports.sendAction = (token, action) => {
 };
 
 module.exports.broadcastAction = (action) => {
+  console.log(action);
   broadcast(action, actionMessage(action));
 };
 
