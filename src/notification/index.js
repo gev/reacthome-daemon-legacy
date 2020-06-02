@@ -58,6 +58,7 @@ const send = (token, action, message) => {
 }
 
 const broadcast = (action, message) => {
+  console.log(action, message);
   const { pool = [] } = get(TOKEN) || {};
   pool.forEach(token => {
     send(token, action, message);
