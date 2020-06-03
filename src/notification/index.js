@@ -18,7 +18,7 @@ firebase.initializeApp({
 module.exports.addToken = ({ token }, session) => {
   add(TOKEN, POOL, token);
   if (peers.has(session)) {
-    console.log('add', token, session);
+    console.log('add', token, session, peers.get(session));
     tokens.set(token, peers.get(session));
   }
 };
