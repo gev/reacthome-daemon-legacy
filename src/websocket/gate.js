@@ -15,6 +15,7 @@ const sessions = new Set();
 const connect = (id) => {
   const socket = new WebSocket(gateURL(id), PROTOCOL);
   socket.on('message', (data) => {
+    console.log(session);
     const session = data.substring(0, 36);
     if (!isUUID.test(session)) return;
     const message = data.substring(36);
