@@ -14,18 +14,24 @@ const sessions = new Set();
 
 const connect = (id) => {
   const socket = new WebSocket(gateURL(id), PROTOCOL);
-  socket.on('message', (message) => {
-    const session = message.substring(0, 36);
+  socket.on('message', (data) => {
+    const session = data.substring(0, 36);
     if (!isUUID.test(session)) return;
-    if (!sessions.has(session)) {
-      sessions.add(session);
-      peers.set(session, {
-        send(message, cb) {
-          socket.send(`${session}${JSON.stringify(message)}`, cb);
-        }
-      });
+    const message = data.substring(36);
+    if (message) {
+      if (!sessions.has(session)) {
+        sessions.add(session);
+        peers.set(session, {
+          send(message, cb) {
+            socket.send(`${session}${JSON.stringify(message)}`, cb);
+          }
+        });
+      }
+      handle(session, message);
+    } else {
+      sessions.delete(session);
+      peers.delete(session);
     }
-    handle(session, message.substring(36));
   });
   socket.on('close', () => {
     for(const session of sessions) {
