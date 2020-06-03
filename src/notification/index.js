@@ -28,7 +28,7 @@ module.exports.deleteToken = (token) => {
 };
 
 module.exports.deleteTokenBySession = (session) => {
-  console.log('del', session);
+  console.log('del', session, tokens);
   for (const [token, peer] in tokens.entries()) {
     console.log(token, peer);
     if (peer.session === session) {
