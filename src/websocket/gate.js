@@ -1,7 +1,7 @@
 
 const WebSocket = require('ws');
 const { isUUID } = require('../uuid');
-const { deleteTokenByPeer } = require('../notification');
+const { deleteTokenBySession } = require('../notification');
 const { peers } = require('./peer');
 const handle = require('./handle');
 
@@ -15,7 +15,6 @@ const sessions = new Set();
 const connect = (id) => {
   const socket = new WebSocket(gateURL(id), PROTOCOL);
   socket.on('message', (data) => {
-    console.log(data);
     const session = data.substring(0, 36);
     if (!isUUID.test(session)) return;
     const message = data.substring(36);
@@ -23,6 +22,7 @@ const connect = (id) => {
       if (!sessions.has(session)) {
         sessions.add(session);
         peers.set(session, {
+          session,
           send(message, cb) {
             socket.send(`${session}${JSON.stringify(message)}`, cb);
           }
@@ -30,15 +30,16 @@ const connect = (id) => {
       }
       handle(session, message);
     } else {
+      deleteTokenBySession(session);
       sessions.delete(session);
       peers.delete(session);
     }
   });
   socket.on('close', () => {
     for(const session of sessions) {
-      peers.delete(session);
+      deleteTokenBySession(session);
       sessions.delete(session);
-      deleteTokenByPeer(session);
+      peers.delete(session);
     }
     setTimeout(connect, TIMEOUT, id);
   });

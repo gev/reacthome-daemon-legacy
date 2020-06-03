@@ -26,10 +26,10 @@ module.exports.deleteToken = (token) => {
   tokens.delete(token);
 };
 
-module.exports.deleteTokenByPeer = (peer) => {
-  for (const [key, value] in tokens.entries()) {
-    if (value === peer) {
-      tokens.delete(key);
+module.exports.deleteTokenBySession = (session) => {
+  for (const [token, peer] in tokens.entries()) {
+    if (peer.session === session) {
+      tokens.delete(token);
     }
   }
 };

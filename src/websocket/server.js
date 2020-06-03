@@ -1,7 +1,7 @@
 
 const { Server } = require('ws');
 const uuid = require('uuid/v4');
-const { deleteTokenByPeer } = require('../notification');
+const { deleteTokenBySession } = require('../notification');
 const { peers } = require('./peer');
 const handle = require('./handle');
 
@@ -16,12 +16,13 @@ module.exports = () => {
     });
     socket.on('error', console.error);
     peers.set(session, {
+      session,
       send(message, cb) {
         socket.send(JSON.stringify(message), cb);
       }
     });
     socket.on('close', () => {
-      deleteTokenByPeer(session);
+      deleteTokenBySession(session);
       peers.delete(session);
     })
   });
