@@ -30,6 +30,7 @@ const connect = (id) => {
       }
       handle(session, message);
     } else {
+      console.log(session)
       deleteTokenBySession(session);
       sessions.delete(session);
       peers.delete(session);
