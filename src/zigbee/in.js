@@ -8,7 +8,6 @@ const onDO = [onOff, onOn];
 const count = [count_off, count_on];
 
 module.exports = (id, { ID, clusters, inputClusters }, data) => {
-  console.log(inputClusters);
   Object
     .entries(clusters)
     .forEach(([key, { attributes }]) => {
@@ -26,7 +25,6 @@ module.exports = (id, { ID, clusters, inputClusters }, data) => {
               count[attributes.onOff](chan.bind);
             }
           }
-          console.log(id, ID, key, attributes, data);
           break;
         }
         case 'genLevelCtrl': {
@@ -44,13 +42,11 @@ module.exports = (id, { ID, clusters, inputClusters }, data) => {
               count[l](chan.bind);
             }
           }
-          console.log(id, ID, key, attributes, data);
           break;
         }
         case 'lightingColorCtrl': {
           const channel = `${id}/${ENDPOINT}/${ID}`;
           set(channel, {hue: attributes.currentHue, saturation: attributes.currentSaturation})
-          console.log(id, ID, key, attributes, data);
           break;
         }
         case 'msTemperatureMeasurement': {
@@ -59,7 +55,6 @@ module.exports = (id, { ID, clusters, inputClusters }, data) => {
           if (onTemperature) {
             run({type: ACTION_SCRIPT_RUN, id: onTemperature });
           }
-          console.log(id, ID, key, attributes, data);
           break;
         }
         case 'msRelativeHumidity': {
@@ -68,7 +63,6 @@ module.exports = (id, { ID, clusters, inputClusters }, data) => {
           if (onHumidity) {
             run({type: ACTION_SCRIPT_RUN, id: onHumidity });
           }
-          console.log(id, ID, key, attributes, data);
           break;
         }
         default: {
@@ -79,7 +73,6 @@ module.exports = (id, { ID, clusters, inputClusters }, data) => {
           if (script) {
             run({type: ACTION_SCRIPT_RUN, id: script });
           }
-          console.log(id, ID, key, attributes, data);
         }
       }
     });

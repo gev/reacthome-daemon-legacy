@@ -166,7 +166,6 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_GROUP: {
-          console.log(data)
           const index = data[7];
           const value = data[8];
           const delay = data.readUInt32LE(9);
@@ -368,9 +367,8 @@ module.exports.manage = () => {
             }
           }
         }
-        default: {
-          console.log(data);
-        }
+        // default: {
+        // }
       }
     } catch (e) {
       console.error(e)

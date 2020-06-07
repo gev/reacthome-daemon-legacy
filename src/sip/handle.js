@@ -9,7 +9,7 @@ const notification = require('../notification');
 const { broadcast } = require('../websocket/peer');
 const { PROCESS } = require('../janus/constants');
 const { INVITE, BYE, CANCEL, HANGUP } = require('./constants');
-const { get } = require('../actions')
+const { get } = require('../actions');
 const calls = require('./calls');
 const mac = require('../mac');
 

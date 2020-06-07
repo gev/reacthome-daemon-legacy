@@ -42,8 +42,6 @@ module.exports.onWatch = ({ id, preview, audio = false, video = true }, session)
           rtsp_user, rtsp_pwd,
           videofmtp: 'profile-level-id=42e01f;packetization-mode=1'
         }, ({ plugindata }) => {
-          console.log('*************************************************')
-          console.log(plugindata);
           const stream_id = plugindata.data.stream.id;
           streams.set(url, stream_id);
           watch(stream_id);

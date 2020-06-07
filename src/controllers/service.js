@@ -219,7 +219,6 @@ const run = (action) => {
         break;
       }
       case ACTION_GROUP: {
-        console.log(action);
         const dev = get(action.id);
         const channel = `${action.id}/${GROUP}/${action.index}`;
         const buffer = Buffer.alloc(7);
