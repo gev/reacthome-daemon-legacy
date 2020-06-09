@@ -76,7 +76,10 @@ clusters.set(0x0500, configure(ALARM, 'ssIasZone', [{
 }]));
 
 clusters.set(0x0102, configure(CLOSURE, 'closuresWindowCovering', [{
-  
+  attribute: 'zoneState',
+  minimumReportInterval: 0,
+  maximumReportInterval: 1,
+  reportableChange: 0,
 }]));
 
 module.exports = (endpoints) =>
