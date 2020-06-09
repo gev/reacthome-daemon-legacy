@@ -29,6 +29,7 @@ module.exports.DI = 'di';
 module.exports.DIM = 'dim';
 module.exports.ENDPOINT = 'endpoint';
 module.exports.ALARM = 'alarm';
+module.exports.CLOSURE = 'closure';
 module.exports.COLOR = 'color';
 module.exports.LEVEL = 'level';
 module.exports.HUMIDITY = 'humidity';

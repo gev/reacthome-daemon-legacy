@@ -1,5 +1,5 @@
 
-const { DO, ALARM, COLOR, LEVEL, TEMPERATURE, HUMIDITY } = require('../constants');
+const { DO, ALARM, COLOR, LEVEL, TEMPERATURE, HUMIDITY, CLOSURE } = require('../constants');
 const controller = require('./controller');
 
 const clusters = new Map();
@@ -73,6 +73,10 @@ clusters.set(0x0500, configure(ALARM, 'ssIasZone', [{
   minimumReportInterval: 0,
   maximumReportInterval: 1,
   reportableChange: 0,
+}]));
+
+clusters.set(0x0102, configure(CLOSURE, 'closuresWindowCovering', [{
+  
 }]));
 
 module.exports = (endpoints) =>
