@@ -47,7 +47,6 @@ const zclCmdLookup = {
 };
 
 const closure = async (id, index, action) => {
-  console.log(id, index, action);
   const device = controller.getDeviceByIeeeAddr(id);
   const endpoint = device.getEndpoint(Number.parseInt(index));
   await endpoint.command('closuresWindowCovering', zclCmdLookup[action], {});
