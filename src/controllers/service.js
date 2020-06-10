@@ -122,6 +122,7 @@ const {
   COLOR,
   MOVE_TO_LEVEL,
   MOVE_TO_HUE_SATURATION,
+  CLOSURE, CLOSE, OPEN, START,
 } = require('../constants');
 const {LIST } = require('../init/constants');
 const { NOTIFY } = require('../notification/constants');
@@ -937,6 +938,14 @@ const run = (action) => {
       case NOTIFY: {
         broadcastNotification(action);
         break;
+      }
+      case CLOSURE: {
+        const { id, value } = action;
+        const { protocol } = get(id) || {};
+        if (protocol === ZIGBEE) {
+          zigbee.closure(id, value);
+        }
+        break; 
       }
       case ACTION_SCRIPT_RUN: {
         const { id } = action;

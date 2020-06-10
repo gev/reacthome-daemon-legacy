@@ -38,6 +38,11 @@ const move_to_saturation = async (id, index, saturation, transtime = 0) => {
   await endpoint.command('lightingColorCtrl', 'moveToSaturation',  {saturation, transtime}, {});
 };
 
+const closure = async (id, action) => {
+  const device = controller.getDeviceByIeeeAddr(id);
+  const endpoint = device.getEndpoint(Number.parseInt(index));
+  await endpoint.command('lightingColorCtrl', 'moveToSaturation',  {saturation, transtime}, {});
+};
 
 module.exports = {
   on_off, 
@@ -47,4 +52,5 @@ module.exports = {
   move_to_saturation,
   move_to_hue_saturation,
   move_to_level,
+  closure,
 };
