@@ -940,10 +940,10 @@ const run = (action) => {
         break;
       }
       case CLOSURE: {
-        const { id, value } = action;
+        const { id, index, value } = action;
         const { protocol } = get(id) || {};
         if (protocol === ZIGBEE) {
-          zigbee.closure(id, value);
+          zigbee.closure(id, index, value);
         }
         break; 
       }
