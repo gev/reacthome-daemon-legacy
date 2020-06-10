@@ -29,7 +29,6 @@ module.exports.DI = 'di';
 module.exports.DIM = 'dim';
 module.exports.ENDPOINT = 'endpoint';
 module.exports.ALARM = 'alarm';
-module.exports.CLOSURE = 'closure';
 module.exports.COLOR = 'color';
 module.exports.LEVEL = 'level';
 module.exports.HUMIDITY = 'humidity';
@@ -88,6 +87,10 @@ module.exports.BOOTLOAD_FINISH = 0x0f;
 module.exports.BOOTLOAD_WRITE = 0x00;
 module.exports.BOOTLOAD_SUCCESS = 0x01;
 module.exports.BOOTLOAD_FINISH = 0x0f;
+
+module.exports.ACTION_STOP = 'ACTION_STOP';
+module.exports.ACTION_OPEN = 'ACTION_OPEN';
+module.exports.ACTION_CLOSE = 'ACTION_CLOSE';
 
 module.exports.ACTION_SET = 'ACTION_SET';
 module.exports.ACTION_ASSET = 'ACTION_ASSET';
@@ -219,6 +222,10 @@ module.exports.OPERATOR_GT = 'OPERATOR_GT';
 module.exports.HEAT = 'heat';
 module.exports.COOL = 'cool';
 module.exports.STOP = 'stop';
+
+module.exports.CLOSURE = 'closure';
+module.exports.OPEN = 'open';
+module.exports.CLOSE = 'close';
 
 module.exports.DRIVER_TYPE_RS21 = 'RS21';
 module.exports.DRIVER_TYPE_ARTNET = 'ARTNET';
