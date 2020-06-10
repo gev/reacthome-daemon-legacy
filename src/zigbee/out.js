@@ -38,10 +38,18 @@ const move_to_saturation = async (id, index, saturation, transtime = 0) => {
   await endpoint.command('lightingColorCtrl', 'moveToSaturation',  {saturation, transtime}, {});
 };
 
-const closure = async (id, action) => {
+const zclCmdLookup = {
+  'open': 'upOpen',
+  'close': 'downClose',
+  'stop': 'stop',
+  'on': 'upOpen',
+  'off': 'downClose',
+};
+
+const closure = async (id, index, action) => {
   const device = controller.getDeviceByIeeeAddr(id);
   const endpoint = device.getEndpoint(Number.parseInt(index));
-  await endpoint.command('lightingColorCtrl', 'moveToSaturation',  {saturation, transtime}, {});
+  await endpoint.command('closuresWindowCovering', zclCmdLookup[action], {});
 };
 
 module.exports = {
