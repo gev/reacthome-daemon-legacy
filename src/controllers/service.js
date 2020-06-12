@@ -122,7 +122,7 @@ const {
   COLOR,
   MOVE_TO_LEVEL,
   MOVE_TO_HUE_SATURATION,
-  CLOSURE, CLOSE, OPEN, START,
+  CLOSURE, CLOSE, OPEN, START, ACTION_OPEN,
 } = require('../constants');
 const {LIST } = require('../init/constants');
 const { NOTIFY } = require('../notification/constants');
@@ -175,6 +175,23 @@ const run = (action) => {
         const dev = get(action.id);
         device.send(Buffer.from([ACTION_FIND_ME, action.finding]), dev.ip);
         break;
+      }
+      case ACTION_OPEN: 
+      case ACTION_STOP: 
+      case ACTION_CLOSE: {
+        const { id, type } = action;
+        const o = get(id) || {};
+        if (o.disabled) return;
+        if (o.onOpen) {
+          run({ type: ACTION_SCRIPT_RUN, id: o.onOpen });
+        }
+        if (o.bind) {
+          const [dev,,index] = o.bind.split('/');
+          const {protocol} = get(dev) || {};
+          if (protocol === ZIGBEE) {
+            zigbee.closure(dev, index, type);
+          }
+        }
       }
       case ACTION_DO: {
         const dev = get(action.id);

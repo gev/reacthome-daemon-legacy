@@ -1,4 +1,4 @@
-const { ON, OFF } = require('../constants');
+const { ON, OFF, ACTION_OPEN, ACTION_STOP } = require('../constants');
 const controller = require('./controller');
 
 const on_off = async (id, index, value) => {
@@ -39,6 +39,9 @@ const move_to_saturation = async (id, index, saturation, transtime = 0) => {
 };
 
 const zclCmdLookup = {
+  [ACTION_OPEN]: 'upOpen',
+  [ACTION_CLOSE]: 'upOpen',
+  [ACTION_STOP]: 'stop',
   'open': 'upOpen',
   'close': 'downClose',
   'stop': 'stop',
