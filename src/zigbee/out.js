@@ -40,7 +40,7 @@ const move_to_saturation = async (id, index, saturation, transtime = 0) => {
 
 const zclCmdLookup = {
   [ACTION_OPEN]: 'upOpen',
-  [ACTION_CLOSE]: 'upOpen',
+  [ACTION_CLOSE]: 'downClose',
   [ACTION_STOP]: 'stop',
   'open': 'upOpen',
   'close': 'downClose',

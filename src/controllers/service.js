@@ -180,10 +180,15 @@ const run = (action) => {
       case ACTION_STOP: 
       case ACTION_CLOSE: {
         const { id, type } = action;
+        const script = ({
+          [ACTION_OPEN]: 'onOpen',
+          [ACTION_CLOSE]: 'onClose',
+          [ACTION_STOP]: 'onStop',
+        })[type];
         const o = get(id) || {};
         if (o.disabled) return;
-        if (o.onOpen) {
-          run({ type: ACTION_SCRIPT_RUN, id: o.onOpen });
+        if (o[script]) {
+          run({ type: ACTION_SCRIPT_RUN, id: o[script] });
         }
         if (o.bind) {
           const [dev,,index] = o.bind.split('/');
