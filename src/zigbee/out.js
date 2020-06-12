@@ -1,4 +1,4 @@
-const { ON, OFF, ACTION_OPEN, ACTION_STOP } = require('../constants');
+const { ON, OFF, ACTION_OPEN, ACTION_CLOSE, ACTION_STOP } = require('../constants');
 const controller = require('./controller');
 
 const on_off = async (id, index, value) => {
