@@ -122,7 +122,7 @@ const {
   COLOR,
   MOVE_TO_LEVEL,
   MOVE_TO_HUE_SATURATION,
-  CLOSURE, CLOSE, OPEN, START, ACTION_OPEN, ACTION_STOP,
+  CLOSURE, CLOSE, OPEN, START, ACTION_OPEN, ACTION_STOP, ACTION_CLOSE,
 } = require('../constants');
 const {LIST } = require('../init/constants');
 const { NOTIFY } = require('../notification/constants');
