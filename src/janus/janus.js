@@ -38,7 +38,7 @@ const send = (action, callback) => {
     if (callback) {
       callbacks.set(transaction, callback);
       setTimeout(() => {
-        callbacks.delete(transaction)
+        // callbacks.delete(transaction)
       }, TIMEOUT_TRANSACTION);
     }
     socket.send(JSON.stringify({ ...action, transaction }));
