@@ -215,6 +215,7 @@ const run = (action) => {
             device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...action.id.split(':').map(i => parseInt(i, 16)), ACTION_DO, action.index, action.value]), dev.ip);
             break;
           }
+          case DEVICE_TYPE_RELAY_6:
           case DEVICE_TYPE_RELAY_12: {
             const {version = ''} = dev;
             const [major, minor] = version.split('.');
