@@ -35,22 +35,23 @@ module.exports.onWatch = ({ id, preview, audio = false, video = true }, session)
         u.username = '';
         u.password = '';
           janus.send(session_id, handle_id, {
-          request: CREATE,
-          type: RTSP,
-          audio, video,
-          url: u.toString(),
-          rtsp_user, rtsp_pwd,
-          videofmtp: 'profile-level-id=42e01f;packetization-mode=1'
-        }, ({ plugindata }) => {
-          const stream_id = plugindata.data.stream.id;
-          streams.set(url, stream_id);
-          watch(stream_id);
-        });
+            request: CREATE,
+            type: RTSP,
+            audio, video,
+            url: u.toString(),
+            rtsp_user, rtsp_pwd,
+            videofmtp: 'profile-level-id=42e01f;packetization-mode=1'
+          }, ({ plugindata }) => {
+            const stream_id = plugindata.data.stream.id;
+            streams.set(url, stream_id);
+            watch(stream_id);
+          });
       }
     });
   });
 };
 
 module.exports.onStart = ({ session_id, handle_id, stream_id, jsep }, session) => {
+  jsep.trickle = false;
   janus.send(session_id, handle_id, { request: START, id: stream_id }, jsep);
 };
