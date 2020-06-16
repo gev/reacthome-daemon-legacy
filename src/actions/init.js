@@ -77,17 +77,47 @@ module.exports.initialize = (id) => {
       break;
     }
     case DEVICE_TYPE_RELAY_6: {
-      for (let i = 1; i <= 6; i++) {
-        const channel = get(`${id}/${DO}/${i}`);
-        a[i] = (channel && channel.value) || 0;
+      const {version = ''} = get(id) || {};
+      const [major, minor] = version.split('.');
+      if (major >= 2) {
+        for (let i = 1; i <= 3; i++) {
+          const channel = get(`${id}/${GROUP}/${i}`) || {};
+          const {value = 0, delay = 0} = channel;
+          a[5 * i - 4] = value;
+          a[5 * i - 3] = (delay) & 0xff;
+          a[5 * i - 2] = (delay >>  8) & 0xff;
+          a[5 * i - 1] = (delay >> 16) & 0xff;
+          a[5 * i - 0] = (delay >> 24) & 0xff;
+        }
+        for (let i = 1; i <= 6; i++) {
+          const channel = get(`${id}/${DO}/${i}`) || {};
+          const {value = 0, timeout = 0} = channel;
+          a[5 * i + 11] = (value);
+          a[5 * i + 12] = (timeout) & 0xff;
+          a[5 * i + 13] = (timeout >>  8) & 0xff;
+          a[5 * i + 14] = (timeout >> 16) & 0xff;
+          a[5 * i + 15] = (timeout >> 24) & 0xff;
+        }
+        const { is_rbus = true, baud, line_control } = get(`${id}/${RS485}/1`) || {};
+        a[46] = is_rbus;
+        a[47] = (baud) & 0xff;
+        a[48] = (baud >>  8) & 0xff;
+        a[49] = (baud >> 16) & 0xff;
+        a[50] = (baud >> 24) & 0xff;
+        a[51] = line_control;
+      } else {
+        for (let i = 1; i <= 6; i++) {
+          const channel = get(`${id}/${DO}/${i}`);
+          a[i] = (channel && channel.value) || 0;
+        }
+        const { is_rbus = true, baud, line_control } = get(`${id}/${RS485}/1`) || {};
+        a[ 7] = is_rbus;
+        a[ 8] = (baud) & 0xff;
+        a[ 9] = (baud >>  8) & 0xff;
+        a[10] = (baud >> 16) & 0xff;
+        a[11] = (baud >> 24) & 0xff;
+        a[12] = line_control;
       }
-      const { is_rbus = true, baud, line_control } = get(`${id}/${RS485}/1`) || {};
-      a[ 7] = is_rbus;
-      a[ 8] = (baud) & 0xff;
-      a[ 9] = (baud >>  8) & 0xff;
-      a[10] = (baud >> 16) & 0xff;
-      a[11] = (baud >> 24) & 0xff;
-      a[12] = line_control;
       break;
     }
     case DEVICE_TYPE_RELAY_12: {
@@ -131,7 +161,6 @@ module.exports.initialize = (id) => {
         a[16] = (baud >> 16) & 0xff;
         a[17] = (baud >> 24) & 0xff;
         a[18] = line_control;
-  
       }
       break;
     }

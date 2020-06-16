@@ -1,7 +1,6 @@
 
 const WebSocket = require('ws');
 const uuid = require('uuid/v4');
-const { TRICKLE } =require('./constants');
 
 const TIMEOUT_RECONNECT = 1000;
 const TIMEOUT_TRANSACTION = 30000;
