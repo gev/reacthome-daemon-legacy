@@ -8,7 +8,7 @@ const { RTSP, WATCH, START } = require('./constants');
 
 const streams = new Map();
 
-module.exports.onWatch = ({ id, preview, offer_audio = false, video = true }, session) => {
+module.exports.onWatch = ({ id, preview, audio = false, video = true }, session) => {
   const camera = get(id);
   if (!camera) return;
   const { main_URL, preview_URL } = camera;
