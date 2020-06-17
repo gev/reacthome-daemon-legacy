@@ -54,6 +54,7 @@ module.exports.onWatch = ({ id, preview, audio = false, video = true }, session)
 };
 
 module.exports.onStart = ({ session_id, handle_id, jsep }) => {
+  console.log(jsep);
   janus.send(session_id, handle_id, { request: START }, jsep, (data) => {
     console.log('data', JSON.stringify(data, null, 2));
   });
