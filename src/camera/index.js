@@ -8,15 +8,13 @@ const { RTSP, WATCH, START } = require('./constants');
 
 const streams = new Map();
 
-let janus_session_id;
-
 module.exports.onWatch = ({ id, preview, audio = false, video = true }, session) => {
   const camera = get(id);
   if (!camera) return;
   const { main_URL, preview_URL } = camera;
   const url = preview ? (preview_URL || main_URL) : main_URL;
   if (!url) return;
-  const attach = (session_id) => {
+  janus.createSession((session_id) => {
     janus.attachPlugin(session_id, 'janus.plugin.streaming', (handle_id) => {
       const watch = (stream_id) => {
         janus.send(session_id, handle_id, { request: WATCH, id: stream_id }, (data) => {
@@ -52,15 +50,7 @@ module.exports.onWatch = ({ id, preview, audio = false, video = true }, session)
           });
       }
     });
-  };
-  if (janus_session_id) {
-    attach(janus_session_id);
-  } else {
-    janus.createSession((session_id) => {
-      janus_session_id = session_id;
-      attach(janus_session_id);
-    });
-  }
+  });
 };
 
 module.exports.onStart = ({ session_id, handle_id, jsep }) => {
