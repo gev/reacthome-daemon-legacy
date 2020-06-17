@@ -17,8 +17,9 @@ module.exports.onWatch = ({ id, preview, audio = false, video = true }, session)
   janus.createSession((session_id) => {
     janus.attachPlugin(session_id, 'janus.plugin.streaming', (handle_id) => {
       const watch = (stream_id) => {
-        janus.send(session_id, handle_id, { request: WATCH, id: stream_id }, ({jsep}) => {
-          console.log('jsep', jsep);
+        janus.send(session_id, handle_id, { request: WATCH, id: stream_id }, (data) => {
+          console.log('data', data);
+          const {jsep} = data;
           if (jsep) {
             jsep.sdp = fixSDP(jsep.sdp);
             // jsep.sdp = jsep.sdp.replace('42801E', '42e01f');
