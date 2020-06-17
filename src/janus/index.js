@@ -8,7 +8,7 @@ let session_id;
 
 module.exports.createSession = (callback) => {
   if (session_id) {
-    collback(session_id);
+    callback(session_id);
   } else {
     send({ janus: CREATE }, ({ data }) => {
       session_id = data.id;
