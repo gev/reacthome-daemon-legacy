@@ -8,7 +8,7 @@ const { RTSP, WATCH, START } = require('./constants');
 
 const streams = new Map();
 
-module.exports.onWatch = ({ id, preview, offer_audio = false, offer_video = true }, session) => {
+module.exports.onWatch = ({ id, preview, audio = false, video = true }, session) => {
   const camera = get(id);
   if (!camera) return;
   const { main_URL, preview_URL } = camera;
@@ -17,7 +17,7 @@ module.exports.onWatch = ({ id, preview, offer_audio = false, offer_video = true
   janus.createSession((session_id) => {
     janus.attachPlugin(session_id, 'janus.plugin.streaming', (handle_id) => {
       const watch = (stream_id) => {
-        janus.send(session_id, handle_id, { request: WATCH, id: stream_id, offer_audio, offer_video, offer_data: false }, ({jsep}) => {
+        janus.send(session_id, handle_id, { request: WATCH, id: stream_id, offer_audio: audio, offer_video: video, offer_data: false }, ({jsep}) => {
           if (jsep) {
             jsep.sdp = fixSDP(jsep.sdp);
             // jsep.sdp = jsep.sdp.replace('42801E', '42e01f');
