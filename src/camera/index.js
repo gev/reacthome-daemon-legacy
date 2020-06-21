@@ -4,6 +4,7 @@ const { get } = require('../actions');
 const { fixSDP } = require('../sdp');
 const { send } = require('../websocket/peer');
 const { CREATE } = require('../janus/constants');
+const { bind } = require('../janus');
 const { RTSP, WATCH, START } = require('./constants');
 
 const streams = new Map();
@@ -16,6 +17,7 @@ module.exports.onWatch = ({ id, preview, audio = false, video = true }, session)
   if (!url) return;
   janus.createSession((session_id) => {
     janus.attachPlugin(session_id, 'janus.plugin.streaming', (handle_id) => {
+      bind(handle_id, session);
       const watch = (stream_id) => {
         janus.send(session_id, handle_id, { request: WATCH, id: stream_id }, (data) => {
           // console.log('data', JSON.stringify(data, null, 2));

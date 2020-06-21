@@ -1,5 +1,5 @@
 
-const { connect, send } = require('./janus');
+const { connect, send, bind } = require('./janus');
 const { CREATE, ATTACH, MESSAGE, TRICKLE } =require('./constants');
 
 module.exports.start = connect;
@@ -36,3 +36,5 @@ module.exports.send = (session_id, handle_id, body, jsep, callback) => {
 module.exports.trickle = ({ session_id, handle_id, candidate }, callback) => {
   send({ janus: TRICKLE, session_id, handle_id, candidates: [candidate] }, callback);
 };
+
+module.exports.bind = bind;

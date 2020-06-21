@@ -1,11 +1,14 @@
 
 const WebSocket = require('ws');
 const uuid = require('uuid/v4');
+const { TRICKLE } = require('./constants');
 
 const TIMEOUT_RECONNECT = 1000;
 const TIMEOUT_TRANSACTION = 30000;
+const TIMEOUT_TRICKLE = 60000;
 
 const callbacks = new Map();
+const handlers = new Map();
 
 let socket;
 
@@ -20,6 +23,8 @@ const connect = () => {
           const callback = callbacks.get(action.transaction);
           callback(action);
         }
+      } else if (action.janus === TRICKLE) {
+        // const {}
       }
     } catch (e) {
       console.error(e);
@@ -47,4 +52,12 @@ const send = (action, callback) => {
   }
 };
 
-module.exports = { connect, send };
+const bind = (handle_id, session) => {
+  handlers.set(handle_id, session);
+  setTimeout(() => {
+    // handlers.delete(handle_id);
+  }, TIMEOUT_TRICKLE)
+};
+
+
+module.exports = { connect, send, bind };

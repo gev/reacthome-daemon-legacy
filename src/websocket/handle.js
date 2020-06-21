@@ -12,6 +12,8 @@ const onGet = require('../init/get');
 const onList = require('../init/list');
 const onAck = require('../sip/ack');
 const onBye = require('../sip/bye');
+const { PTY } = require('../terminal/constants');
+const onPTY = require('../terminal');
 const janus = require('../janus');
 
 module.exports = (session, message) => {
@@ -45,6 +47,9 @@ module.exports = (session, message) => {
       case START: {
         onStart(action);
         break;
+      }
+      case PTY: {
+        onPTY(action, session);
       }
       case 'candidate': {
         janus.trickle(action);
