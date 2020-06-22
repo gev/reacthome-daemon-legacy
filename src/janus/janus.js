@@ -25,9 +25,9 @@ const connect = () => {
           callback(action);
         }
       } else if (action.janus === TRICKLE) {
-        const {sender: handle_id, candidate} = acton;
+        const {session_id, sender: handle_id, candidate} = acton;
         const session = handlers.get(handle_id);
-        peer.send(session, {type: CANDIDATE, handle_id, candidate});
+        peer.send(session, {type: CANDIDATE, session_id, handle_id, candidate});
       }
     } catch (e) {
       console.error(e);
