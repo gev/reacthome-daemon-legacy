@@ -50,6 +50,7 @@ module.exports = (session, message) => {
       }
       case PTY: {
         onPTY(action, session);
+        break;
       }
       case 'candidate': {
         janus.trickle(action);

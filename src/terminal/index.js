@@ -26,6 +26,10 @@ const getPTY = (session) => {
   return pty;
 }
 
-module.exports = (action, session) => {
-  getPTY(session).write(action.chunk);
+module.exports = ({chunk, rows, cols}, session) => {
+  const pty = getPTY(session);
+  pty.resize(cols, rows);
+  if (chunk !== undefined) {
+    pty.write(chunk);
+  }
 };
