@@ -4,17 +4,11 @@ const { CREATE, ATTACH, MESSAGE, TRICKLE } =require('./constants');
 
 module.exports.start = connect;
 
-let session_id;
-
 module.exports.createSession = (callback) => {
-  if (session_id) {
+  send({ janus: CREATE }, ({ data }) => {
+    session_id = data.id;
     callback(session_id);
-  } else {
-    send({ janus: CREATE }, ({ data }) => {
-      session_id = data.id;
-      callback(session_id);
-    });
-  }
+  });
 };
 
 module.exports.attachPlugin = (session_id, plugin, callback) => {
