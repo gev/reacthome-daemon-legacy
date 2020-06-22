@@ -1,7 +1,8 @@
 
 const WebSocket = require('ws');
 const uuid = require('uuid/v4');
-const { TRICKLE } = require('./constants');
+const peer = require('../websocket/peer');
+const { TRICKLE, CANDIDATE } = require('./constants');
 
 const TIMEOUT_RECONNECT = 1000;
 const TIMEOUT_TRANSACTION = 30000;
@@ -24,7 +25,9 @@ const connect = () => {
           callback(action);
         }
       } else if (action.janus === TRICKLE) {
-        // const {}
+        const {sender: handle_id, candidate} = acton;
+        const session = handlers.get(handle_id);
+        peer.send(session, {type: CANDIDATE, handle_id, candidate});
       }
     } catch (e) {
       console.error(e);
