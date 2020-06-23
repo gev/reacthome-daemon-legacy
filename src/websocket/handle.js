@@ -15,6 +15,7 @@ const onBye = require('../sip/bye');
 const { PTY } = require('../terminal/constants');
 const onPTY = require('../terminal');
 const janus = require('../janus');
+const { CANDIDATE } = require('../janus/constants');
 
 module.exports = (session, message) => {
   try {
@@ -52,7 +53,7 @@ module.exports = (session, message) => {
         onPTY(action, session);
         break;
       }
-      case 'candidate': {
+      case CANDIDATE: {
         janus.trickle(action);
         break;
       }
