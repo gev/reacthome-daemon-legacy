@@ -23,7 +23,7 @@ module.exports.onWatch = ({ id, preview, audio = false, video = true }, session)
           // console.log('data', JSON.stringify(data, null, 2));
           const {jsep} = data;
           if (jsep) {
-            jsep.sdp = fixSDP(jsep.sdp);
+            // jsep.sdp = fixSDP(jsep.sdp);
             // jsep.sdp = jsep.sdp.replace('42801E', '42e01f');
             // jsep.sdp = jsep.sdp.replace('420029', '42e01f');
             send(session, { type: WATCH, id, session_id, handle_id, stream_id, jsep });
