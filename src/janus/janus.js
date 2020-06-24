@@ -2,6 +2,7 @@
 const WebSocket = require('ws');
 const uuid = require('uuid/v4');
 const peer = require('../websocket/peer');
+const { streams } = require('../camera/streams');
 const { TRICKLE, CANDIDATE } = require('./constants');
 
 const TIMEOUT_RECONNECT = 1000;
@@ -38,6 +39,7 @@ const connect = () => {
   });
   socket.on('error', console.error);
   callbacks.clear();
+  streams.clear();
 };
 
 const send = (action, callback) => {

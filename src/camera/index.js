@@ -1,31 +1,25 @@
 
 const janus = require('../janus');
 const { get } = require('../actions');
-const { fixSDP } = require('../sdp');
 const { send } = require('../websocket/peer');
 const { CREATE } = require('../janus/constants');
 const { bind } = require('../janus');
 const { RTSP, WATCH, START } = require('./constants');
-
-const streams = new Map();
+const { hashCode } = require('../util');
+const { streams } = require('./streams');
 
 module.exports.onWatch = ({ id, preview, audio = false, video = true }, session) => {
   const camera = get(id);
   if (!camera) return;
-  const { main_URL, preview_URL } = camera;
+  const { main_URL, preview_URL, } = camera;
   const url = preview ? (preview_URL || main_URL) : main_URL;
   if (!url) return;
   janus.createSession((session_id) => {
     janus.attachPlugin(session_id, 'janus.plugin.streaming', (handle_id) => {
       bind(handle_id, session);
       const watch = (stream_id) => {
-        janus.send(session_id, handle_id, { request: WATCH, id: stream_id }, (data) => {
-          // console.log('data', JSON.stringify(data, null, 2));
-          const {jsep} = data;
+        janus.send(session_id, handle_id, { request: WATCH, id: stream_id }, ({jsep}) => {
           if (jsep) {
-            // jsep.sdp = fixSDP(jsep.sdp);
-            // jsep.sdp = jsep.sdp.replace('42801E', '42e01f');
-            // jsep.sdp = jsep.sdp.replace('420029', '42e01f');
             send(session, { type: WATCH, id, session_id, handle_id, stream_id, jsep });
           }
         });
@@ -40,6 +34,7 @@ module.exports.onWatch = ({ id, preview, audio = false, video = true }, session)
         u.password = '';
           janus.send(session_id, handle_id, {
             request: CREATE,
+            id: hashCode(url),
             type: RTSP,
             audio, video,
             url: u.toString(),
@@ -51,7 +46,7 @@ module.exports.onWatch = ({ id, preview, audio = false, video = true }, session)
             watch(stream_id);
           });
       }
-    });
+    })
   });
 };
 
