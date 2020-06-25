@@ -39,7 +39,7 @@ module.exports.onWatch = ({ id, preview, audio = false, video = true }, session)
             audio, video,
             url: u.toString(),
             rtsp_user, rtsp_pwd,
-            // videofmtp: 'profile-level-id=42e01f;packetization-mode=1'
+            videofmtp: 'profile-level-id=42e01f'//;packetization-mode=1'
           }, ({ plugindata }) => {
             const stream_id = plugindata.data.stream.id;
             streams.set(url, stream_id);
