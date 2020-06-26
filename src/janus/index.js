@@ -13,10 +13,8 @@ const callbacks = new Map();
 const handlers = new Map();
 
 let socket;
-let session_id;
 
 const connect = () => {
-  session_id = null;
   socket = new WebSocket('ws://localhost:8188', 'janus-protocol');
   socket.on('message', (message) => {
     try {
@@ -67,24 +65,19 @@ module.exports.bind = (handle_id, session) => {
 };
 
 module.exports.createSession = (callback) => {
-  if (session_id) {
-    callback();
-  } else {
-    send({ janus: CREATE }, ({ data }) => {
-      session_id = data.id;
-      callback();
-    });
-  }
+  send({ janus: CREATE }, ({ data }) => {
+    session_id = data.id;
+    callback(data.id);
+  });
 };
 
-module.exports.attachPlugin = (plugin, callback) => {
-  console.log(session_id);
+module.exports.attachPlugin = (session_id, plugin, callback) => {
   send({ janus: ATTACH, session_id, plugin }, ({ data }) => {
     callback(data.id);
   });
 };
 
-module.exports.send = (handle_id, body, jsep, callback) => {
+module.exports.send = (session_id, handle_id, body, jsep, callback) => {
   if (callback === undefined) {
     if (jsep instanceof Function) {
       callback = jsep;
@@ -94,7 +87,7 @@ module.exports.send = (handle_id, body, jsep, callback) => {
   send({ janus: MESSAGE, session_id, handle_id, body, jsep }, callback);
 };
 
-module.exports.trickle = ({ handle_id, candidate }, callback) => {
+module.exports.trickle = ({ session_id, handle_id, candidate }, callback) => {
   send({ janus: TRICKLE, session_id, handle_id, candidate }, callback);
 };
 

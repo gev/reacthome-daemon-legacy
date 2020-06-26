@@ -7,7 +7,7 @@ const { BYE, HANGUP } = require('./constants');
 
 module.exports = ({ call_id }, session) => {
   if (calls.has(call_id)) {
-    const { handle_id, request } = calls.get(call_id);
+    const { session_id, handle_id, request } = calls.get(call_id);
     const rq = {
       method: 'BYE',
       uri: request.headers.contact[0].uri,
@@ -21,7 +21,7 @@ module.exports = ({ call_id }, session) => {
     };
     sip.send(rq);
     broadcast({ type: BYE, call_id }, session);
-    janus.send(handle_id, { request: HANGUP })
+    janus.send(session_id, handle_id, { request: HANGUP })
     calls.delete(call_id);
   }
 };
