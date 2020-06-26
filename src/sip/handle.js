@@ -87,7 +87,7 @@ module.exports.onInvite = (request) => {
   sip.send(rs100(call_id, request));
   sip.send(rs180(call_id, request));
   janus.createSession((session_id) => {
-    janus.attachPlugin('janus.plugin.nosip', (handle_id) => {
+    janus.attachPlugin(session_id, 'janus.plugin.nosip', (handle_id) => {
       calls.set(call_id, { session_id, handle_id, request });
       const o = SDP.parse(request.content);
       o.media = o.media.filter(media => media.type === 'audio');

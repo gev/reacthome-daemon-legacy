@@ -11,7 +11,7 @@ module.exports.onWatch = ({ url, audio = false, video = true }, session) => {
   if (!url) return;
   const stream_id = hashCode(url);
   janus.createSession((session_id) => {
-    janus.attachPlugin('janus.plugin.streaming', (session_id, handle_id) => {
+    janus.attachPlugin(session_id, 'janus.plugin.streaming', (handle_id) => {
       bind(handle_id, session);
       const watch = (stream_id) => {
         janus.send(session_id, handle_id, { request: WATCH, id: stream_id }, ({jsep}) => {
