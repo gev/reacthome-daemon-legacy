@@ -9,13 +9,13 @@ const { streams } = require('./streams');
 
 module.exports.onWatch = ({ url, audio = false, video = true }, session) => {
   if (!url) return;
-  janus.createSession((session_id) => {
-    janus.attachPlugin(session_id, 'janus.plugin.streaming', (handle_id) => {
+  janus.createSession(() => {
+    janus.attachPlugin('janus.plugin.streaming', (handle_id) => {
       bind(handle_id, session);
       const watch = (stream_id) => {
-        janus.send(session_id, handle_id, { request: WATCH, id: stream_id }, ({jsep}) => {
+        janus.send(handle_id, { request: WATCH, id: stream_id }, ({jsep}) => {
           if (jsep) {
-            send(session, { type: WATCH, url, session_id, handle_id, stream_id, jsep });
+            send(session, { type: WATCH, url, handle_id, stream_id, jsep });
           }
         });
       };
@@ -27,7 +27,7 @@ module.exports.onWatch = ({ url, audio = false, video = true }, session) => {
         const rtsp_pwd = u.password;
         u.username = '';
         u.password = '';
-          janus.send(session_id, handle_id, {
+          janus.send(handle_id, {
             request: CREATE,
             id: hashCode(url),
             type: RTSP,
@@ -45,6 +45,6 @@ module.exports.onWatch = ({ url, audio = false, video = true }, session) => {
   });
 };
 
-module.exports.onStart = ({ session_id, handle_id, jsep }) => {
-  janus.send(session_id, handle_id, { request: START }, jsep);
+module.exports.onStart = ({ handle_id, jsep }) => {
+  janus.send(handle_id, { request: START }, jsep);
 };

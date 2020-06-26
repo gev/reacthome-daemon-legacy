@@ -67,23 +67,23 @@ module.exports.bind = (handle_id, session) => {
 };
 
 module.exports.createSession = (callback) => {
-  if (session_id) {
-    callback(session_id);
+  if (c) {
+    callback();
   } else {
     send({ janus: CREATE }, ({ data }) => {
       session_id = data.id;
-      callback(session_id);
+      callback();
     });
   }
 };
 
-module.exports.attachPlugin = (session_id, plugin, callback) => {
+module.exports.attachPlugin = (plugin, callback) => {
   send({ janus: ATTACH, session_id, plugin }, ({ data }) => {
     callback(data.id);
   });
 };
 
-module.exports.send = (session_id, handle_id, body, jsep, callback) => {
+module.exports.send = (handle_id, body, jsep, callback) => {
   if (callback === undefined) {
     if (jsep instanceof Function) {
       callback = jsep;
@@ -93,7 +93,7 @@ module.exports.send = (session_id, handle_id, body, jsep, callback) => {
   send({ janus: MESSAGE, session_id, handle_id, body, jsep }, callback);
 };
 
-module.exports.trickle = ({ session_id, handle_id, candidate }, callback) => {
+module.exports.trickle = ({ handle_id, candidate }, callback) => {
   send({ janus: TRICKLE, session_id, handle_id, candidate }, callback);
 };
 
