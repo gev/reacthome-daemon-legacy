@@ -78,6 +78,7 @@ module.exports.createSession = (callback) => {
 };
 
 module.exports.attachPlugin = (plugin, callback) => {
+  console.log(session_id);
   send({ janus: ATTACH, session_id, plugin }, ({ data }) => {
     callback(data.id);
   });
