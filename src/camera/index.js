@@ -9,6 +9,7 @@ const { streams } = require('./streams');
 
 module.exports.onWatch = ({ url, audio = false, video = true }, session) => {
   if (!url) return;
+  const stream_id = hashCode(url);
   janus.createSession(() => {
     janus.attachPlugin('janus.plugin.streaming', (handle_id) => {
       bind(handle_id, session);
@@ -29,14 +30,13 @@ module.exports.onWatch = ({ url, audio = false, video = true }, session) => {
         u.password = '';
           janus.send(handle_id, {
             request: CREATE,
-            id: hashCode(url),
+            id: stream_id,
             type: RTSP,
             audio, video,
             url: u.toString(),
             rtsp_user, rtsp_pwd,
             videofmtp: 'level-asymmetry-allowed=1;profile-level-id=42e01f;packetization-mode=1'
-          }, ({ plugindata }) => {
-            const stream_id = plugindata.data.stream.id;
+          }, () => {
             streams.set(url, stream_id);
             watch(stream_id);
           });
