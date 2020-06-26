@@ -48,6 +48,6 @@ module.exports.onWatch = ({ url, audio = false, video = true }, session) => {
 module.exports.onStart = ({ session_id, handle_id, jsep }) => {
   janus.send(session_id, handle_id, { request: START }, jsep);
   setInterval (() => {
-    janus.send(session_id, undefined, {});
+    janus.send(session_id, handle_id, { request: 'info' });
   }, 10000);
 };
