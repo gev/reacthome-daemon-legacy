@@ -1,6 +1,5 @@
 
 const janus = require('../janus');
-const { get } = require('../actions');
 const { send } = require('../websocket/peer');
 const { CREATE } = require('../janus/constants');
 const { bind } = require('../janus');
@@ -8,11 +7,7 @@ const { RTSP, WATCH, START } = require('./constants');
 const { hashCode } = require('../util');
 const { streams } = require('./streams');
 
-module.exports.onWatch = ({ id, preview, audio = false, video = true }, session) => {
-  const camera = get(id);
-  if (!camera) return;
-  const { main_URL, preview_URL, } = camera;
-  const url = preview ? (preview_URL || main_URL) : main_URL;
+module.exports.onWatch = ({ url, audio = false, video = true }, session) => {
   if (!url) return;
   janus.createSession((session_id) => {
     janus.attachPlugin(session_id, 'janus.plugin.streaming', (handle_id) => {
@@ -20,7 +15,7 @@ module.exports.onWatch = ({ id, preview, audio = false, video = true }, session)
       const watch = (stream_id) => {
         janus.send(session_id, handle_id, { request: WATCH, id: stream_id }, ({jsep}) => {
           if (jsep) {
-            send(session, { type: WATCH, id, session_id, handle_id, stream_id, jsep });
+            send(session, { type: WATCH, url, session_id, handle_id, stream_id, jsep });
           }
         });
       };
