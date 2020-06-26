@@ -67,7 +67,7 @@ module.exports.bind = (handle_id, session) => {
 };
 
 module.exports.createSession = (callback) => {
-  if (callback) {
+  if (session_id) {
     callback();
   } else {
     send({ janus: CREATE }, ({ data }) => {
@@ -78,7 +78,6 @@ module.exports.createSession = (callback) => {
 };
 
 module.exports.attachPlugin = (plugin, callback) => {
-  console.log(session_id);
   send({ janus: ATTACH, session_id, plugin }, ({ data }) => {
     callback(data.id);
   });
