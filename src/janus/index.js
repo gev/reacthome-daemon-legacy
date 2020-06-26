@@ -66,7 +66,6 @@ module.exports.bind = (handle_id, session) => {
 
 module.exports.createSession = (callback) => {
   send({ janus: CREATE }, ({ data }) => {
-    session_id = data.id;
     callback(data.id);
   });
 };
