@@ -2,9 +2,9 @@
 const { GET, LIST } = require('../init/constants');
 const { ACK, BYE, CANCEL, INFO } = require('../sip/constants');
 const { START, WATCH } = require('../camera/constants');
-const { POOL } = require('../constants');
+const { POOL, STOP } = require('../constants');
 const { run } = require('../controllers/service');
-const { onWatch, onStart } = require('../camera');
+const { onWatch, onStart, onStop } = require('../camera');
 const { TOKEN } = require('../notification/constants');
 const { addToken } = require('../notification');
 const { broadcast } = require('./peer');
@@ -51,6 +51,10 @@ module.exports = (session, message) => {
       }
       case START: {
         onStart(action);
+        break;
+      }
+      case STOP: {
+        onStop(action);
         break;
       }
       case PTY: {
