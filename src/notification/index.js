@@ -6,10 +6,9 @@ const mac = require('../mac');
 const { POOL } = require('../constants');
 const { TOKEN, NOTIFY } = require('./constants');
 
-const tokens = new Map();
-
 const serviceAccount = require('../../var/firebase.json');
-const { INVITE } = require('../sip/constants');
+
+const tokens = new Map();
 
 firebase.initializeApp({
   credential: firebase.credential.cert(serviceAccount),
@@ -99,11 +98,11 @@ const inviteMessage = (action) => {
 };
 
 module.exports.sendInvite = (token, action) => {
-  send(token, {type: INVITE, ...action}, inviteMessage(action));
+  send(token, action, inviteMessage(action));
 };
 
 module.exports.broadcastInvite = (action) => {
-  broadcast({type: INVITE, ...action}, inviteMessage(action));
+  broadcast(action, inviteMessage(action));
 };
 
 
