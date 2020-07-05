@@ -83,10 +83,6 @@ module.exports.broadcastNotification = (action) => {
 };
 
 const actionMessage = (action) => ({
-  notification: {
-    title: 'debug',
-    body: action.type,
-  },
   data: {
     id: mac(),
     action: JSON.stringify(action)
