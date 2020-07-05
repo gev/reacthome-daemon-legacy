@@ -9,6 +9,7 @@ const { TOKEN, NOTIFY } = require('./constants');
 const tokens = new Map();
 
 const serviceAccount = require('../../var/firebase.json');
+const { INVITE } = require('../sip/constants');
 
 firebase.initializeApp({
   credential: firebase.credential.cert(serviceAccount),
@@ -82,23 +83,27 @@ module.exports.broadcastNotification = (action) => {
   broadcast({type: NOTIFY, notification}, {notification});
 };
 
-const actionMessage = (action) => ({
-  notification: {
-    title: 'debug',
-    body: action.type,
-  },
-  data: {
-    id: mac(),
-    action: JSON.stringify(action)
-  }
-});
-
-module.exports.sendAction = (token, action) => {
-  send(token, action, actionMessage(action));
+const inviteMessage = (action) => {
+  const {title, code} = get(mac());
+  const from = get(action.from);
+  return {
+    notification: {
+      title: title || code,
+      body: from.title || from.code
+    },
+    data: {
+      id: mac(),
+      action: JSON.stringify(action)
+    }
+  };
 };
 
-module.exports.broadcastAction = (action) => {
-  broadcast(action, actionMessage(action));
+module.exports.sendInvite = (token, action) => {
+  send(token, {type: INVITE, ...action}, inviteMessage(action));
+};
+
+module.exports.broadcastInvite = (action) => {
+  broadcast({type: INVITE, ...action}, inviteMessage(action));
 };
 
 
