@@ -3,7 +3,7 @@ const janus = require('../janus');
 const { send } = require('../websocket/peer');
 const { CREATE } = require('../janus/constants');
 const { bind } = require('../janus');
-const { RTSP, WATCH, START, STOP } = require('./constants');
+const { RTSP, WATCH, START, STOP, PAUSE } = require('./constants');
 const { hashCode } = require('../util');
 const { streams } = require('./streams');
 
@@ -51,4 +51,8 @@ module.exports.onStart = ({ session_id, handle_id, jsep }) => {
 
 module.exports.onStop = ({ session_id, handle_id }) => {
   janus.send(session_id, handle_id, { request: STOP });
+};
+
+module.exports.onPause = ({ session_id, handle_id }) => {
+  janus.send(session_id, handle_id, { request: PAUSE });
 };
