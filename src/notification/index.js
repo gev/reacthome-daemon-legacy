@@ -58,10 +58,11 @@ const send = (token, action, message) => {
 }
 
 const broadcast = (action, message) => {
-  const { pool = [] } = get(TOKEN) || {};
-  pool.forEach(token => {
-    send(token, action, message);
-  });
+  peers.broadcast(action);
+  // const { pool = [] } = get(TOKEN) || {};
+  // pool.forEach(token => {
+  //   send(token, action, message);
+  // });
 };
 
 const notificationMessage = (action) => {
