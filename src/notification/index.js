@@ -1,6 +1,6 @@
 
 const firebase = require('firebase-admin');
-const { peers } = require('../websocket/peer');
+const { broadcast: broadcast_ } = require('../websocket/peer');
 const { get, add } = require('../actions');
 const mac = require('../mac');
 const { POOL } = require('../constants');
@@ -58,7 +58,7 @@ const send = (token, action, message) => {
 }
 
 const broadcast = (action, message) => {
-  peers.broadcast(action);
+  broadcast_(action);
   // const { pool = [] } = get(TOKEN) || {};
   // pool.forEach(token => {
   //   send(token, action, message);
