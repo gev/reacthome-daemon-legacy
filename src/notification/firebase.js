@@ -11,8 +11,7 @@ const params = {
   priority: 'high',
 };
 
-module.exports.push = (token, title, body, data) => {
-  console.log('firebase', token, title, body, data)
+module.exports.send = (token, title, body, data) => {
   const message = {
     notification: {title, body},
     data

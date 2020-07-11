@@ -2,21 +2,20 @@
 const apn = require('./apn');
 const firebase = require('./firebase');
 const { peers } = require('../websocket/peer');
-const { get, set } = require('../actions');
+const { get, add } = require('../actions');
 const mac = require('../mac');
 const { TOKEN } = require('./constants');
-
-set(TOKEN, {pool:{}});
+const { ac } = require('../drivers');
 
 const tokens = new Map();
 
-const service = new Map([
+const services = new Map([
   ['ios', apn],
   ['android', firebase],
 ]);
 
 module.exports.addToken = ({token, os}, session) => {
-  set(TOKEN, {[token]: os});
+  add(mac(), os, token);
   if (peers.has(session)) {
     const peer = peers.get(session);
     tokens.set(token, peer);
@@ -31,41 +30,44 @@ module.exports.deleteToken = (session) => {
   }
 };
 
+const send = (title, message, payload, action) => (service) => (token) => {
+  if (tokens.has(token)) {
+    console.log('send', token, action)
+    tokens.get(token).send(action, (err) => {
+      if (err) {
+        service.send(token, title, message, payload);
+      }
+    });
+  } else {
+    service.send(token, title, message, payload);
+  }
+};
+
 const getTitle = (id) => {
   const {title, code} = get(id);
   return title || code;
 };
 
-const push = (token, os, action) => {
-  console.log('push', token, os, action)
-  if (service.has(os)) {
-    const id = mac();
-    service.get(os).push(
-      token,
-      action.title || getTitle(id), 
-      action.body || getTitle(action.id),
-      {id, action: JSON.stringify(action)}
-    );
-  }
-};
-
-const send = (token, os, action) => {
-  if (tokens.has(token)) {
-    console.log('send', token, action)
-    tokens.get(token).send(action, (err) => {
-      if (err) {
-        push(token, os, action);
-      }
-    });
-  } else {
-    push(token, os, action);
-  }
+const getSender = (action) => {
+  const id = mac();
+  let {title, message, ...payload} = action;
+  title = title || getTitle(id);
+  message = message || getTitle(action.id);
+  return send(
+    title, 
+    message, 
+    {id, action: JSON.stringify(payload)},
+    {title, message, ...payload}
+  );
 }
 
 module.exports.broadcast = (action) => {
-  console.log('broadcast', action);
-  const pool = get(TOKEN) || {};
-  Object.entries(pool).forEach(([token, os]) => {
-    send(token, os, action);
-  });
+  const sendTo = getSender(action);
+  const daemon = get(mac()) || {};
+  for(const [os, service] of services.entries()) {
+    const pool = daemon[os];
+    if (Array.isArray(pool)) {
+      pool.forEach(sendTo(service));
+    }
+  }
 };
