@@ -37,6 +37,7 @@ const getTitle = (id) => {
 };
 
 const push = (token, os, action) => {
+  console.log('push', token, os, action)
   if (service.has(os)) {
     const id = mac();
     service.get(os).push(
@@ -49,6 +50,7 @@ const push = (token, os, action) => {
 };
 
 const send = (token, os, action) => {
+  console.log('send', token, os, action)
   if (tokens.has(token)) {
     tokens.get(token).send(action, (err) => {
       if (err) {
@@ -61,6 +63,7 @@ const send = (token, os, action) => {
 }
 
 module.exports.broadcast = (action) => {
+  console.log('broadcast', action);
   const pool = get(TOKEN) || {};
   Object.entries(pool).forEach(([token, os]) => {
     send(token, os, action);
