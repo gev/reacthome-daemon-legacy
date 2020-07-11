@@ -1,7 +1,7 @@
 
 const WebSocket = require('ws');
 const { isUUID } = require('../uuid');
-const { deleteTokenBySession } = require('../notification');
+const { deleteToken } = require('../notification');
 const { peers } = require('./peer');
 const handle = require('./handle');
 
@@ -30,14 +30,14 @@ const connect = (id) => {
       }
       handle(session, message);
     } else {
-      deleteTokenBySession(session);
+      deleteToken(session);
       sessions.delete(session);
       peers.delete(session);
     }
   });
   socket.on('close', () => {
     for(const session of sessions) {
-      deleteTokenBySession(session);
+      deleteToken(session);
       sessions.delete(session);
       peers.delete(session);
     }
