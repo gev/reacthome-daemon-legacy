@@ -32,7 +32,6 @@ module.exports.deleteToken = (session) => {
 
 const send = (title, message, payload, action) => (service) => (token) => {
   if (tokens.has(token)) {
-    console.log('send', token, action)
     tokens.get(token).send(action, (err) => {
       if (err) {
         service.send(token, title, message, payload);
