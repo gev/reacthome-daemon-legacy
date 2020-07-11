@@ -2,10 +2,12 @@
 const apn = require('./apn');
 const firebase = require('./firebase');
 const { peers } = require('../websocket/peer');
-const { get, add } = require('../actions');
+const { get, set } = require('../actions');
 const mac = require('../mac');
 const { POOL } = require('../constants');
 const { TOKEN } = require('./constants');
+
+set(TOKEN, {pool:{}});
 
 const tokens = new Map();
 
@@ -15,7 +17,7 @@ const service = new Map([
 ]);
 
 module.exports.addToken = ({token, os}, session) => {
-  add(TOKEN, POOL, {token, os});
+  set(TOKEN, {[token]: os});
   if (peers.has(session)) {
     const peer = peers.get(session);
     tokens.set(token, peer);
@@ -59,8 +61,8 @@ const send = (token, os, action) => {
 }
 
 module.exports.broadcast = (action) => {
-  const { pool = [] } = get(TOKEN) || {};
-  pool.forEach(({token, os}) => {
+  const pool = get(TOKEN) || {};
+  Object.entries(pool).forEach(([token, os]) => {
     send(token, os, action);
   });
 };
