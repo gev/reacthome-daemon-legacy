@@ -4,7 +4,6 @@ const firebase = require('./firebase');
 const { peers } = require('../websocket/peer');
 const { get, set } = require('../actions');
 const mac = require('../mac');
-const { POOL } = require('../constants');
 const { TOKEN } = require('./constants');
 
 set(TOKEN, {pool:{}});
@@ -39,6 +38,7 @@ const getTitle = (id) => {
 
 const push = (token, os, action) => {
   if (service.has(os)) {
+    const id = mac();
     service.get(os).push(
       token,
       action.title || getTitle(id), 
