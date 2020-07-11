@@ -50,8 +50,8 @@ const push = (token, os, action) => {
 };
 
 const send = (token, os, action) => {
-  console.log('send', token, os, action)
   if (tokens.has(token)) {
+    console.log('send', token, action)
     tokens.get(token).send(action, (err) => {
       if (err) {
         push(token, os, action);
