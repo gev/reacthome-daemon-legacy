@@ -14,6 +14,6 @@ module.exports.send = (token, alert, topic, payload) => {
   note.topic = topic;
   note.payload = payload;
   provider.send(note, token)
-    .then(console.log)
+    .then(res => console.log(JSON.stringify(res, null, 2)))
     .catch(console.error);
 };
