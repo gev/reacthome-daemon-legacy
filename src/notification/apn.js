@@ -8,8 +8,8 @@ const provider = new apn.Provider({
   production: false
 });
 
-module.exports.send = (token, alert, body, payload) => {
-  const note = new apn.Notification({topic, alert, body, payload});
+module.exports.send = (token, title, body, payload) => {
+  const note = new apn.Notification({topic, title, body, payload});
   provider.send(note, token)
     .then(res => console.log(JSON.stringify(res, null, 2)))
     .catch(console.error);
