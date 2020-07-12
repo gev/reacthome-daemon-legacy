@@ -15,6 +15,7 @@ module.exports.send = (token, title, body, payload) => {
   message.contentAvailable = contentAvailable;
   message.payload = payload;
   message.topic = topic;
+  console.log(message.aps);
   // const message = new apn.Notification({
   //   topic, title, body, sound, payload, contentAvailable
   // });
