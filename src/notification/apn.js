@@ -10,10 +10,9 @@ const provider = new apn.Provider({
 });
 
 module.exports.send = (token, title, body, payload) => {
-  const note = new apn.Notification({
-    topic, title, body, sound,
-    payload: {...payload, 'content-available': 1}
+  const message = new apn.Notification({
+    topic, title, body, sound, payload
   });
-  provider.send(note, token)
+  provider.send(message, token)
     .catch(console.error);
 };
