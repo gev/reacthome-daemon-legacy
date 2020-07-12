@@ -11,15 +11,10 @@ const provider = new apn.Provider({
 });
 
 module.exports.send = (token, title, body, payload) => {
-  const message = new apn.Notification();
-  message.aps["content-available"] = payload;
-  message.topic = topic;
-  message.payload = payload;
-  console.log(message);
-  const message1 = new apn.Notification({
+  const message = new apn.Notification({
     topic, title, body, sound, payload, contentAvailable
   });
-  console.log(message1);
+  console.log(message);
   provider.send(message, token)
     .catch(console.error);
 };
