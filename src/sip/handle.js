@@ -81,8 +81,8 @@ const findIntercom = (id, auth) => {
 module.exports.onInvite = (request) => {
   const { auth } = url.parse(request.headers.from.uri);
   const { project } = get(mac()) || {};
-  const from = findIntercom(project, auth);
-  if (!from) return;
+  const id = findIntercom(project, auth);
+  if (!id) return;
   const call_id = request.headers['call-id'];
   sip.send(rs100(call_id, request));
   sip.send(rs180(call_id, request));
@@ -101,7 +101,7 @@ module.exports.onInvite = (request) => {
           const o = SDP.parse(jsep.sdp);
           o.media = o.media.filter(media => media.type === 'audio');
           jsep.sdp = SDP.write(o);
-          notification.broadcast({type: INVITE, from, session_id, handle_id, call_id, jsep});
+          notification.broadcast({type: INVITE, id, session_id, handle_id, call_id, jsep});
         }
       });
     });
