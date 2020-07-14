@@ -1,5 +1,4 @@
 
-const apn = require('./apn');
 const firebase = require('./firebase');
 const { peers } = require('../websocket/peer');
 const { get, add } = require('../actions');
@@ -9,13 +8,8 @@ const { ac } = require('../drivers');
 
 const tokens = new Map();
 
-const services = new Map([
-  ['ios', apn],
-  ['android', firebase],
-]);
-
-module.exports.addToken = ({token, os}, session) => {
-  add(mac(), os, token);
+module.exports.addToken = ({token}, session) => {
+  add(mac(), TOKEN, token);
   if (peers.has(session)) {
     const peer = peers.get(session);
     tokens.set(token, peer);
@@ -30,15 +24,15 @@ module.exports.deleteToken = (session) => {
   }
 };
 
-const send = (title, message, payload, action) => (service) => (token) => {
+const send = (title, message, payload, action) => (token) => {
   if (tokens.has(token)) {
     tokens.get(token).send(action, (err) => {
       if (err) {
-        service.send(token, title, message, payload);
+        firebase.send(token, title, message, payload);
       }
     });
   } else {
-    service.send(token, title, message, payload);
+    firebase.send(token, title, message, payload);
   }
 };
 
@@ -47,26 +41,16 @@ const getTitle = (id) => {
   return title || code;
 };
 
-const getSender = (action) => {
+module.exports.broadcast = (action) => {
   const id = mac();
   let {title, message, ...payload} = action;
   title = title || getTitle(id);
   message = message || getTitle(action.id);
-  return send(
+  const {token} = get(mac()) || [];
+  token.forEach(send(
     title, 
     message, 
     {id, action: JSON.stringify(payload)},
     {title, message, ...payload}
-  );
-}
-
-module.exports.broadcast = (action) => {
-  const sendTo = getSender(action);
-  const daemon = get(mac()) || {};
-  for(const [os, service] of services.entries()) {
-    const pool = daemon[os];
-    if (Array.isArray(pool)) {
-      pool.forEach(sendTo(service));
-    }
-  }
+  ));
 };
