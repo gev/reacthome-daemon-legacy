@@ -15,7 +15,6 @@ firebase.initializeApp({
 });
 
 module.exports.send = (token, title, body, data) => {
-  console.log(token, title, body, data);
   const message = {
     notification: {title, body, sound},
     data
