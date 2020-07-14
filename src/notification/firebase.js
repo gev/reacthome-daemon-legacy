@@ -4,6 +4,7 @@ const account = require('../../var/firebase.json');
 
 const params = {
   priority: 'high',
+  contentAvailable: true,
 };
 
 firebase.initializeApp({
