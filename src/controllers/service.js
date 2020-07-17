@@ -959,7 +959,7 @@ const run = (action) => {
         break;
       }
       case NOTIFY: {
-        notification.broadcast(action);
+        notification.broadcastNotification(action);
         break;
       }
       case CLOSURE: {
