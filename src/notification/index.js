@@ -3,8 +3,7 @@ const firebase = require('firebase-admin');
 const { peers } = require('../websocket/peer');
 const { get, add } = require('../actions');
 const mac = require('../mac');
-const { POOL } = require('../constants');
-const { TOKEN, NOTIFY } = require('./constants');
+const { TOKEN } = require('./constants');
 
 const serviceAccount = require('../../var/firebase.json');
 
@@ -16,25 +15,6 @@ firebase.initializeApp({
   credential: firebase.credential.cert(serviceAccount),
   databaseURL: 'https://reacthome-9021b.firebaseio.com'
 });
-
-module.exports.addToken = ({ token }, session) => {
-  add(TOKEN, POOL, token);
-  if (peers.has(session)) {
-    tokens.set(token, peers.get(session));
-  }
-};
-
-module.exports.deleteToken = (token) => {
-  tokens.delete(token);
-};
-
-module.exports.deleteTokenBySession = (session) => {
-  for (let [token, peer] of tokens.entries()) {
-    if (peer.session === session) {
-      tokens.delete(token);
-    }
-  }
-};
 
 const params = {
   priority: 'high',
@@ -82,15 +62,25 @@ const dataMessage = (action) => ({
   data: data(action),
 });
 
-const broadcast = (action, message) => {
+const broadcast = (message) => (action) => {
   const { token = [] } = get(mac()) || {};
-  token.forEach(send(action, message));
+  token.forEach(send(action, message(action)));
 };
 
-module.exports.broadcastNotification = (action) => {
-  broadcast(action, notificationMessage(action));
+module.exports.broadcastNotification = brooadcast(notificationMessage);
+module.exports.broadcastAction = broadcast(dataMessage);
+
+module.exports.addToken = ({ token }, session) => {
+  add(mac(), TOKEN, token);
+  if (peers.has(session)) {
+    tokens.set(token, peers.get(session));
+  }
 };
 
-module.exports.broadcastAction = (action) => {
-  broadcast(action, dataMessage(action));
+module.exports.deleteToken = (session) => {
+  for (let [token, peer] of tokens.entries()) {
+    if (peer.session === session) {
+      tokens.delete(token);
+    }
+  }
 };
