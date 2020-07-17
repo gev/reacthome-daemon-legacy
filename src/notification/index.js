@@ -73,8 +73,6 @@ const data = (action) => ({
   action: JSON.stringify(action),
 });
 
-const 
-
 const notificationMessage = (action) => ({
   notification: notification(action),
   data: data(action),
