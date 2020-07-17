@@ -67,7 +67,7 @@ const broadcast = (message) => (action) => {
   token.forEach(send(action, message(action)));
 };
 
-module.exports.broadcastNotification = brooadcast(notificationMessage);
+module.exports.broadcastNotification = broadcast(notificationMessage);
 module.exports.broadcastAction = broadcast(dataMessage);
 
 module.exports.addToken = ({ token }, session) => {
