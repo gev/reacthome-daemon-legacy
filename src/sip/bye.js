@@ -8,6 +8,7 @@ const { BYE, HANGUP } = require('./constants');
 
 module.exports = ({ call_id }, session) => {
   if (calls.has(call_id)) {
+    console.log('bye', call_id);
     const { session_id, handle_id, request } = calls.get(call_id);
     const rq = {
       method: BYE,
