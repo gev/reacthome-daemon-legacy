@@ -40,6 +40,7 @@ module.exports = (session, message) => {
         break;
       }
       case BYE: {
+        console.log(action);
         onBye(action, session);
         break;
       }
