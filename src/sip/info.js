@@ -7,7 +7,7 @@ const { BYE, HANGUP, INFO } = require('./constants');
 
 module.exports = ({ call_id, signal = '', duration = 100 }, session) => {
   if (calls.has(call_id)) {
-    const { session_id, handle_id, request } = calls.get(call_id);
+    const { request } = calls.get(call_id);
     const content = `Signal=${signal}\nDuration=${duration}`;
     const rq = {
       method: 'INFO',
@@ -26,6 +26,5 @@ module.exports = ({ call_id, signal = '', duration = 100 }, session) => {
     sip.send(rq);
     broadcast({ type: BYE, call_id }, session);
     janus.send(session_id, handle_id, { request: HANGUP })
-    calls.delete(call_id);
   }
 };

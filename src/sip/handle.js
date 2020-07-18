@@ -34,6 +34,7 @@ module.exports.onCancel = (request) => {
   if (calls.has(call_id)) {
     const { session_id, handle_id } = calls.get(call_id);
     janus.send(session_id, handle_id, { request: HANGUP })
+    calls.delete(call_id);
   }
 };
 
@@ -48,6 +49,7 @@ module.exports.onBye = (request) => {
   if (calls.has(call_id)) {
     const { session_id, handle_id } = calls.get(call_id);
     janus.send(session_id, handle_id, { request: HANGUP })
+    calls.delete(call_id);
   }
 };
 
