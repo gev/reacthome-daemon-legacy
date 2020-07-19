@@ -11,7 +11,6 @@ const options = {
 
 module.exports.start = () => {
   sip.start(options, (request) => {
-    console.log(request);
     switch(request.method) {
       case REGISTER: {
         onRegister(request);
