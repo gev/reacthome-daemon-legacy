@@ -6,3 +6,4 @@ module.exports.TRICKLE = 'trickle';
 module.exports.PROCESS = 'process';
 module.exports.GENERATE = 'generate';
 module.exports.CANDIDATE = 'candidate';
+module.exports.KEEPALIVE = 'keepalive';

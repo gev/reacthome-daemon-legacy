@@ -3,7 +3,7 @@ const WebSocket = require('ws');
 const uuid = require('uuid/v4');
 const peer = require('../websocket/peer');
 const { streams } = require('../camera/streams');
-const { CREATE, ATTACH, MESSAGE, TRICKLE, CANDIDATE } =require('./constants');
+const { CREATE, ATTACH, MESSAGE, TRICKLE, CANDIDATE, KEEPALIVE } =require('./constants');
 
 const TIMEOUT_RECONNECT = 1000;
 const TIMEOUT_TRANSACTION = 30000;
@@ -13,6 +13,8 @@ const callbacks = new Map();
 const handlers = new Map();
 
 let socket;
+
+const sessions = new Map();
 
 const connect = () => {
   socket = new WebSocket('ws://localhost:8188', 'janus-protocol');
@@ -88,6 +90,10 @@ module.exports.send = (session_id, handle_id, body, jsep, callback) => {
 
 module.exports.trickle = ({ session_id, handle_id, candidate }, callback) => {
   send({ janus: TRICKLE, session_id, handle_id, candidate }, callback);
+};
+
+module.exports.keepalive = ({session_id}) => {
+  send({ janus: KEEPALIVE, session_id });
 };
 
 module.exports.start = connect;

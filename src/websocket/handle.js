@@ -16,7 +16,7 @@ const onInfo = require('../sip/info');
 const { PTY } = require('../terminal/constants');
 const onPTY = require('../terminal');
 const janus = require('../janus');
-const { CANDIDATE } = require('../janus/constants');
+const { CANDIDATE, KEEPALIVE } = require('../janus/constants');
 const { ac } = require('../drivers');
 
 module.exports = (session, message) => {
@@ -62,12 +62,15 @@ module.exports = (session, message) => {
         onPause(action);
         break;
       }
-      case PTY: {
-        onPTY(action, session);
-        break;
+      case KEEPALIVE: {
+        janus.keepalive(action);
       }
       case CANDIDATE: {
         janus.trickle(action);
+        break;
+      }
+      case PTY: {
+        onPTY(action, session);
         break;
       }
       case 'navigate': {
