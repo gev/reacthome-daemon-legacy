@@ -68,7 +68,7 @@ const broadcast = (message) => (action) => {
   const { token = [] } = get(mac()) || {};
   // token.forEach(send(action, message(action)));
   firebase.messaging()
-    .sendToDevice(token, message, params)
+    .sendToDevice(token, message(action), params)
     .then(console.log)
     .catch(console.error);
 };
