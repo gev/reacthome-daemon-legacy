@@ -24,6 +24,7 @@ const params = {
 const push = (token, message) => {
   firebase.messaging()
     .sendToDevice(token, message, params)
+    .then(console.log)
     .catch(console.error);
 };
 
@@ -64,7 +65,7 @@ const dataMessage = (action) => ({
 
 const broadcast = (message) => (action) => {
   const { token = [] } = get(mac()) || {};
-  token.forEach(send(action, message(action)));
+  // token.forEach(send(action, message(action)));
 };
 
 module.exports.broadcastNotification = broadcast(notificationMessage);
