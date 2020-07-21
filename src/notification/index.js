@@ -29,15 +29,15 @@ const push = (token, message) => {
 };
 
 const send = (action, message) => (token) => {
-  if (tokens.has(token)) {
-    tokens.get(token).send(action, (err) => {
-      if (err) {
-        push(token, message);
-      }
-    });
-  } else {
+  // if (tokens.has(token)) {
+  //   tokens.get(token).send(action, (err) => {
+  //     if (err) {
+  //       push(token, message);
+  //     }
+  //   });
+  // } else {
     push(token, message);
-  }
+  // }
 }
 
 const notification = (action) => {
