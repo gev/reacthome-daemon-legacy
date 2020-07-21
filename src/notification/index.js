@@ -61,11 +61,6 @@ const notificationMessage = (action) => ({
 })
 
 const dataMessage = (action) => ({
-  notification: {
-    title: 'test',
-    body: 'intercom',
-    sound,
-  },
   data: data(action),
 });
 
