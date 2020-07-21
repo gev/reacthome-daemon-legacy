@@ -30,15 +30,15 @@ const push = (token, message) => {
 
 const send = (action, message) => (token) => {
     console.log(token);
-  // if (tokens.has(token)) {
-  //   tokens.get(token).send(action, (err) => {
-  //     if (err) {
-  //       push(token, message);
-  //     }
-  //   });
-  // } else {
+  if (tokens.has(token)) {
+    tokens.get(token).send(action, (err) => {
+      if (err) {
+        push(token, message);
+      }
+    });
+  } else {
     push(token, message);
-  // }
+  }
 }
 
 const notification = (action) => {
@@ -66,11 +66,7 @@ const dataMessage = (action) => ({
 
 const broadcast = (message) => (action) => {
   const { token = [] } = get(mac()) || {};
-  // token.forEach(send(action, message(action)));
-  firebase.messaging()
-    .sendToDevice(token, message(action), params)
-    .then(console.log)
-    .catch(console.error);
+  token.forEach(send(action, message(action)));
 };
 
 module.exports.broadcastNotification = broadcast(notificationMessage);
