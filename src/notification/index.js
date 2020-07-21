@@ -29,6 +29,7 @@ const push = (token, message) => {
 };
 
 const send = (action, message) => (token) => {
+    console.log(token);
   // if (tokens.has(token)) {
   //   tokens.get(token).send(action, (err) => {
   //     if (err) {
