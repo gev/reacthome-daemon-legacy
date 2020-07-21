@@ -61,6 +61,7 @@ db.createReadStream()
     }
     // console.log(init.mac);
     await assets.init();
+    set(init.mac, {token:[]});
     state.init(init);
     weather.manage();
     device.manage();
