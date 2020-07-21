@@ -45,6 +45,7 @@ module.exports = (session, message) => {
       }
       case INFO: {
         onInfo(action);
+        break;
       }
       case WATCH: {
         onWatch(action, session);
@@ -64,6 +65,7 @@ module.exports = (session, message) => {
       }
       case KEEPALIVE: {
         janus.keepalive(action);
+        break;
       }
       case CANDIDATE: {
         janus.trickle(action);
