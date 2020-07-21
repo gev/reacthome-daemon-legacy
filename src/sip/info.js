@@ -24,7 +24,5 @@ module.exports = ({ call_id, signal = '', duration = 100 }, session) => {
       content
     };
     sip.send(rq);
-    broadcast({ type: BYE, call_id }, session);
-    janus.send(session_id, handle_id, { request: HANGUP })
   }
 };
