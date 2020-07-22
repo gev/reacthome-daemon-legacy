@@ -26,8 +26,8 @@ const push = (token, message) => {
   firebase.messaging()
     .sendToDevice(token, message, params)
     .then(({results = []} = {}) => {
-      console.log(results);
       for (const result of results) {
+        console.log(result);
         if (result.error) {
           del(mac(), TOKEN, token);
           tokens.delete(token);
