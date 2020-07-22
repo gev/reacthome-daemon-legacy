@@ -37,7 +37,7 @@ module.exports.add = (id, field, subject) => {
 
 module.exports.del = (id, field, subject) => {
   const prev = state.get(id);
-  if (prev && prev[field] && prev[field].includes(subject)) return;
+  if (prev && prev[field] && !prev[field].includes(subject)) return;
   apply(id, {
     [field]: prev[field].filter(i => i !== subject)
   });
