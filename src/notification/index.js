@@ -1,7 +1,7 @@
 
 const firebase = require('firebase-admin');
 const { peers } = require('../websocket/peer');
-const { get, add } = require('../actions');
+const { get, add, del } = require('../actions');
 const mac = require('../mac');
 const { TOKEN } = require('./constants');
 
@@ -26,7 +26,10 @@ const push = (token, message) => {
   firebase.messaging()
     .sendToDevice(token, message, params)
     .then(console.log)
-    .catch(console.error);
+    .catch(() => {
+      del(mac(), TOKEN, token);
+      tokens.delete(token);
+    });
 };
 
 const send = (action, message) => (token) => {
