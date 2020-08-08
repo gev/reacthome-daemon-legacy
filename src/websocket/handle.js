@@ -1,13 +1,12 @@
 
 const { GET, LIST } = require('../init/constants');
-const { ACK, BYE, CANCEL, INFO } = require('../sip/constants');
+const { ACK, BYE, INFO } = require('../sip/constants');
 const { START, STOP, WATCH, PAUSE } = require('../camera/constants');
-const { POOL } = require('../constants');
 const { run } = require('../controllers/service');
 const { onWatch, onStart, onStop, onPause } = require('../camera');
 const { TOKEN } = require('../notification/constants');
 const { addToken } = require('../notification');
-const { broadcast } = require('./peer');
+const { broadcast, peers } = require('./peer');
 const onGet = require('../init/get');
 const onList = require('../init/list');
 const onAck = require('../sip/ack');
@@ -17,10 +16,12 @@ const { PTY } = require('../terminal/constants');
 const onPTY = require('../terminal');
 const janus = require('../janus');
 const { CANDIDATE, KEEPALIVE } = require('../janus/constants');
-const { ac } = require('../drivers');
 
 module.exports = (session, message) => {
   try {
+    const peer = peers.get(session);
+    peer.online = true;
+    peer.timestamp = Date.now();
     const action = JSON.parse(message);
     switch (action.type) {
       case LIST: {
@@ -77,6 +78,10 @@ module.exports = (session, message) => {
       }
       case 'navigate': {
         broadcast(action);
+        break;
+      }
+      case 'offline': {
+        peer.online = false;
         break;
       }
       default: {

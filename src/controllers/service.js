@@ -65,6 +65,7 @@ const {
   DEVICE_TYPE_DIM8,
   DEVICE_TYPE_DIM_8,
   DEVICE_TYPE_RELAY_2,
+  DEVICE_TYPE_RELAY_2_DIN,
   DEVICE_TYPE_RELAY_6,
   DEVICE_TYPE_RELAY_12,
   DEVICE_TYPE_RELAY_24,
@@ -211,7 +212,8 @@ const run = (action) => {
             drivers.handle(action);
             break;
           }
-          case DEVICE_TYPE_RELAY_2: {
+          case DEVICE_TYPE_RELAY_2: 
+          case DEVICE_TYPE_RELAY_2_DIN: {
             device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...action.id.split(':').map(i => parseInt(i, 16)), ACTION_DO, action.index, action.value]), dev.ip);
             break;
           }
@@ -419,7 +421,8 @@ const run = (action) => {
               }
               break;
             }
-            case DEVICE_TYPE_RELAY_2: {
+            case DEVICE_TYPE_RELAY_2: 
+            case DEVICE_TYPE_RELAY_2_DIN :{
               device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...dev.split(':').map(i => parseInt(i, 16)), ACTION_DO, index, ON]), ip);
               break;
             }
@@ -500,7 +503,8 @@ const run = (action) => {
               }
               break;
             }
-            case DEVICE_TYPE_RELAY_2: {
+            case DEVICE_TYPE_RELAY_2: 
+            case DEVICE_TYPE_RELAY_2_DIN: {
               device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...dev.split(':').map(i => parseInt(i, 16)), ACTION_DO, index, OFF]), ip);
               break;
             }

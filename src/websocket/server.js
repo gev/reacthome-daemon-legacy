@@ -17,6 +17,8 @@ module.exports = () => {
     socket.on('error', console.error);
     peers.set(session, {
       session,
+      online: true,
+      timestamp: Date.now(),
       send(message, cb) {
         socket.send(JSON.stringify(message), cb);
       }

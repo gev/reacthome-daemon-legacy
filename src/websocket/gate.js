@@ -23,6 +23,8 @@ const connect = (id) => {
         sessions.add(session);
         peers.set(session, {
           session,
+          online: true,
+          timestamp: Date.now(),
           send(message, cb) {
             socket.send(`${session}${JSON.stringify(message)}`, cb);
           }

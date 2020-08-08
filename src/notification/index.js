@@ -40,7 +40,9 @@ const push = (token, message) => {
 const send = (action, message) => (token) => {
     console.log(token);
   if (tokens.has(token)) {
-    tokens.get(token).send(action, (err) => {
+    const peer = tokens.get(token);
+
+    peer.send(action, (err) => {
       if (err) {
         push(token, message);
       }

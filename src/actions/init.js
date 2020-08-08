@@ -76,6 +76,37 @@ module.exports.initialize = (id) => {
       }
       break;
     }
+    case DEVICE_TYPE_RELAY_2:
+    case DEVICE_TYPE_RELAY_2_DIN: {
+      const {version = ''} = get(id) || {};
+      const [major, minor] = version.split('.');
+      if (major >= 2) {
+        for (let i = 1; i <= 1; i++) {
+          const channel = get(`${id}/${GROUP}/${i}`) || {};
+          const {value = 0, delay = 0} = channel;
+          a[5 * i - 4] = value;
+          a[5 * i - 3] = (delay) & 0xff;
+          a[5 * i - 2] = (delay >>  8) & 0xff;
+          a[5 * i - 1] = (delay >> 16) & 0xff;
+          a[5 * i - 0] = (delay >> 24) & 0xff;
+        }
+        for (let i = 1; i <= 2; i++) {
+          const channel = get(`${id}/${DO}/${i}`) || {};
+          const {value = 0, timeout = 0} = channel;
+          a[5 * i + 1] = (value);
+          a[5 * i + 2] = (timeout) & 0xff;
+          a[5 * i + 3] = (timeout >>  8) & 0xff;
+          a[5 * i + 4] = (timeout >> 16) & 0xff;
+          a[5 * i + 5] = (timeout >> 24) & 0xff;
+        }
+      } else {
+        for (let i = 1; i <= 2; i++) {
+          const channel = get(`${id}/${DO}/${i}`);
+          a[i] = (channel && channel.value) || 0;
+        }
+      }
+      break;
+    }
     case DEVICE_TYPE_RELAY_6: {
       const {version = ''} = get(id) || {};
       const [major, minor] = version.split('.');
