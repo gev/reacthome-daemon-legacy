@@ -127,7 +127,6 @@ const {
 } = require('../constants');
 const {LIST } = require('../init/constants');
 const { NOTIFY } = require('../notification/constants');
-const { RING } = require('../ring/constants');
 const notification = require('../notification');
 const {
   get,
@@ -146,6 +145,7 @@ const { broadcast } = require('../websocket/peer');
 const { ZIGBEE } = require('../zigbee/constants');
 const zigbee = require('../zigbee/out');
 const { asset, writeFile } = require('../fs');
+const { RING } = require('../ring/constants');
 
 const timers = {};
 const schedules = {};
