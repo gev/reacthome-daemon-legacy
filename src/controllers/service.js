@@ -126,7 +126,7 @@ const {
   CLOSURE, CLOSE, OPEN, START, ACTION_OPEN, ACTION_STOP, ACTION_CLOSE,
 } = require('../constants');
 const {LIST } = require('../init/constants');
-const { NOTIFY } = require('../notification/constants');
+const { NOTIFY, RING } = require('../notification/constants');
 const notification = require('../notification');
 const {
   get,
@@ -965,6 +965,9 @@ const run = (action) => {
       case NOTIFY: {
         notification.broadcastNotification(action);
         break;
+      }
+      case RING: {
+        notification.broadcastAction(action);
       }
       case CLOSURE: {
         const { id, index, value } = action;
