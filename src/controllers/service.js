@@ -126,7 +126,8 @@ const {
   CLOSURE, CLOSE, OPEN, START, ACTION_OPEN, ACTION_STOP, ACTION_CLOSE,
 } = require('../constants');
 const {LIST } = require('../init/constants');
-const { NOTIFY, RING } = require('../notification/constants');
+const { NOTIFY } = require('../notification/constants');
+const { RING } = require('../ring/constants');
 const notification = require('../notification');
 const {
   get,
