@@ -968,6 +968,7 @@ const run = (action) => {
       }
       case RING: {
         notification.broadcastAction(action);
+        break;
       }
       case CLOSURE: {
         const { id, index, value } = action;
