@@ -184,7 +184,7 @@ const run = (action) => {
         const o = get(action.id) || {};
         if (o.disabled) return;
         if (o.bind) {
-          const [dev,,index] = o.bind.split('/');
+          const [dev,type,index] = o.bind.split('/');
           const {protocol} = get(dev) || {};
           if (protocol === ZIGBEE) {
             zigbee.closure(dev, index, action.type);
@@ -196,6 +196,8 @@ const run = (action) => {
             if (o[script]) {
               run({ type: ACTION_SCRIPT_RUN, id: o[script] });
             }
+          } else if (type === GROUP) {
+            run({ type: ACTION_DO, id: dev, index, value: action.type });
           }
         }
         break;
