@@ -467,10 +467,14 @@ const run = (action) => {
         bind.forEach((i) => {
           if (!o[i]) return;
           const { velocity, type } = get(o[i]) || {};
-          const [dev,,index] = o[i].split('/');
+          const [dev, bindType, index] = o[i].split('/');
           const { ip, type: deviceType, protocol } = get(dev);
           if (protocol === ZIGBEE) {
             zigbee.on(dev, index);
+            return;
+          }
+          if (bindType === GROUP) {
+            run({type: ACTION_OPEN, id: dev, index});
             return;
           }
           const value = isOn ? (i === 'bind' ? last.value : last[i]) : 255;
@@ -552,10 +556,14 @@ const run = (action) => {
         bind.forEach((i) => {
           if (!o[i]) return;
           const { velocity, type } = get(o[i]) || {};
-          const [dev,,index] = o[i].split('/');
+          const [dev, bindType, index] = o[i].split('/');
           const { ip, type: deviceType, protocol } = get(dev);
           if (protocol === ZIGBEE) {
             zigbee.off(dev, index);
+            return;
+          }
+          if (bindType === GROUP) {
+            run({type: ACTION_OPEN, id: dev, index});
             return;
           }
           switch (deviceType) {
