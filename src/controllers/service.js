@@ -457,7 +457,6 @@ const run = (action) => {
       case ACTION_ON: {
         const { id } = action;
         const o = get(id) || {};
-        console.log(action, o);
         if (o.disabled) return;
         set(id, { value: true });
         if (o.onOn) {
@@ -475,7 +474,7 @@ const run = (action) => {
             return;
           }
           if (bindType === GROUP) {
-            run({type: ACTION_OPEN, id: dev, index});
+            run({type: ACTION_OPEN, id: o[i]});
             return;
           }
           const value = isOn ? (i === 'bind' ? last.value : last[i]) : 255;
@@ -548,7 +547,6 @@ const run = (action) => {
       case ACTION_OFF: {
         const { id } = action;
         const o = get(id) || {};
-        console.log(action, o);
         set(id, { value: false });
         if (o.onOff) {
           run({ type: ACTION_SCRIPT_RUN, id: o.onOff });
@@ -564,7 +562,7 @@ const run = (action) => {
             return;
           }
           if (bindType === GROUP) {
-            console.log({type: ACTION_CLOSE, id: dev, index});
+            run({type: ACTION_CLOSE, id: o[i]});
             return;
           }
           switch (deviceType) {
