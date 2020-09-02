@@ -154,7 +154,7 @@ module.exports.manage = () => {
             const timeout = data.readUInt32LE(9);
             set(cid, { timeout });
           };
-          if (group && group.value) {
+          if (group && group.enabled) {
             if (value) {
               if (group === CLOSE_OPEN) {
                 set(gid, {value: index % 2 === 1});
@@ -178,10 +178,10 @@ module.exports.manage = () => {
         }
         case ACTION_GROUP: {
           const index = data[7];
-          const value = data[8];
+          const enabled = data[8];
           const delay = data.readUInt32LE(9);
           const channel = `${id}/${GROUP}/${index}`;
-          set(channel, { value, delay });
+          set(channel, { enabled, delay });
           break;
         }
         case ACTION_RS485_MODE: {
