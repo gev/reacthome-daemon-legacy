@@ -147,7 +147,7 @@ module.exports.manage = () => {
           const value = data[8];
           const cid = `${id}/${DO}/${index}`;
           const channel = get(cid);
-          const gid = `${id}/${GROUP}/${(index << 1) + 1}`;
+          const gid = `${id}/${GROUP}/${(index >> 1) + 1}`;
           const group = get(gid);
           set(cid, { value });
           if (data.length === 13) {
