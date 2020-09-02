@@ -474,7 +474,7 @@ const run = (action) => {
             return;
           }
           if (bindType === GROUP) {
-            run({type: ACTION_OPEN, id: o[i]});
+            run({type: ACTION_OPEN, id});
             return;
           }
           const value = isOn ? (i === 'bind' ? last.value : last[i]) : 255;
@@ -562,7 +562,7 @@ const run = (action) => {
             return;
           }
           if (bindType === GROUP) {
-            run({type: ACTION_CLOSE, id: o[i]});
+            run({type: ACTION_CLOSE, id});
             return;
           }
           switch (deviceType) {
