@@ -51,7 +51,8 @@ const {
   onDoppler,
   onHumidity,
   onIllumination,
-  onTemperature
+  onTemperature,
+  CLOSE_OPEN
 } = require('../constants');
 const {
   get,
@@ -144,18 +145,28 @@ module.exports.manage = () => {
         case ACTION_DO: {
           const index = data[7];
           const value = data[8];
-          const channel = `${id}/${DO}/${index}`;
-          const chan = get(channel);
-          set(channel, { value });
+          const cid = `${id}/${DO}/${index}`;
+          const channel = get(cid);
+          const gid = `${id}/${GROUP}/${(index << 1) + 1}`;
+          const group = get(gid);
+          set(cid, { value });
           if (data.length === 13) {
             const timeout = data.readUInt32LE(9);
-            set(channel, { timeout });
+            set(cid, { timeout });
           };
-          if (chan) {
-            const { bind } = chan;
+          if (group && group.value) {
+            if (value) {
+              if (group === CLOSE_OPEN) {
+                set(gid, {value: index % 2 === 1});
+              } else {
+                set(gid, {value: index % 2 === 0});
+              }
+            }
+          } else if (channel) {
+            const { bind } = channel;
             if (bind) {
-              if (chan.value !== value) {
-                const script = chan[onDO[value]];
+              if (channel.value !== value) {
+                const script = channel[onDO[value]];
                 if (script) {
                   run({ type: ACTION_SCRIPT_RUN, id: script });
                 }
