@@ -548,6 +548,7 @@ const run = (action) => {
       case ACTION_OFF: {
         const { id } = action;
         const o = get(id) || {};
+        console.log(action, o);
         if (o.disabled) return;
         set(id, { value: false });
         if (o.onOff) {
