@@ -455,6 +455,7 @@ const run = (action) => {
         break;
       }
       case ACTION_ON: {
+        console.log(action);
         const { id } = action;
         const o = get(id) || {};
         if (o.disabled) return;
@@ -563,7 +564,7 @@ const run = (action) => {
             return;
           }
           if (bindType === GROUP) {
-            run({type: ACTION_OPEN, id: dev, index});
+            run({type: ACTION_CLOSE, id: dev, index});
             return;
           }
           switch (deviceType) {
