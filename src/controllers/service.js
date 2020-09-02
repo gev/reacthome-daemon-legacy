@@ -549,7 +549,6 @@ const run = (action) => {
         const { id } = action;
         const o = get(id) || {};
         console.log(action, o);
-        if (o.disabled) return;
         set(id, { value: false });
         if (o.onOff) {
           run({ type: ACTION_SCRIPT_RUN, id: o.onOff });
@@ -565,7 +564,7 @@ const run = (action) => {
             return;
           }
           if (bindType === GROUP) {
-            run({type: ACTION_CLOSE, id: dev, index});
+            console.log({type: ACTION_CLOSE, id: dev, index});
             return;
           }
           switch (deviceType) {
