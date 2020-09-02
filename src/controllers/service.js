@@ -322,7 +322,7 @@ const run = (action) => {
         const { value, delay } = get(channel) || {};
         buffer.writeUInt8(ACTION_GROUP, 0);
         buffer.writeUInt8(action.index, 1);
-        buffer.writeUInt8(action.value === undefined ? value : action.value, 2);
+        buffer.writeUInt8(action.enabled === undefined ? enabled : action.enabled, 2);
         buffer.writeUInt32LE(action.delay === undefined ? delay : action.delay, 3);
         device.send(buffer, dev.ip);
         break;
