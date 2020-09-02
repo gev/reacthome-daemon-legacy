@@ -123,7 +123,7 @@ const {
   COLOR,
   MOVE_TO_LEVEL,
   MOVE_TO_HUE_SATURATION,
-  CLOSURE, CLOSE, OPEN, START, ACTION_OPEN, ACTION_STOP, ACTION_CLOSE,
+  CLOSURE, CLOSE, OPEN, START, ACTION_OPEN, ACTION_STOP, ACTION_CLOSE, CLOSE_OPEN,
 } = require('../constants');
 const {LIST } = require('../init/constants');
 const { NOTIFY } = require('../notification/constants');
@@ -181,24 +181,24 @@ const run = (action) => {
       case ACTION_OPEN: 
       case ACTION_STOP: 
       case ACTION_CLOSE: {
-        const { id, type } = action;
-        const script = ({
-          [ACTION_OPEN]: 'onOpen',
-          [ACTION_CLOSE]: 'onClose',
-          [ACTION_STOP]: 'onStop',
-        })[type];
-        const o = get(id) || {};
+        const o = get(action.id) || {};
         if (o.disabled) return;
-        if (o[script]) {
-          run({ type: ACTION_SCRIPT_RUN, id: o[script] });
-        }
         if (o.bind) {
           const [dev,,index] = o.bind.split('/');
           const {protocol} = get(dev) || {};
           if (protocol === ZIGBEE) {
-            zigbee.closure(dev, index, type);
+            zigbee.closure(dev, index, action.type);
+            const script = ({
+              [ACTION_OPEN]: 'onOpen',
+              [ACTION_CLOSE]: 'onClose',
+              [ACTION_STOP]: 'onStop',
+            })[action.type];
+            if (o[script]) {
+              run({ type: ACTION_SCRIPT_RUN, id: o[script] });
+            }
           }
         }
+        break;
       }
       case ACTION_DO: {
         const dev = get(action.id);
@@ -215,7 +215,41 @@ const run = (action) => {
           }
           case DEVICE_TYPE_RELAY_2: 
           case DEVICE_TYPE_RELAY_2_DIN: {
-            device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...action.id.split(':').map(i => parseInt(i, 16)), ACTION_DO, action.index, action.value]), dev.ip);
+            switch (action.value) {
+              case ACTION_OPEN: 
+              case ACTION_CLOSE: 
+              case ACTION_STOP: {
+                const group = get(`${action.id}/${GROUP}/${action.index}`);
+                if (!group || !group.value) return;
+                switch (action.value) {
+                  case ACTION_STOP: {
+                    device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...action.id.split(':').map(i => parseInt(i, 16)), ACTION_DO, 2 * action.index - 1, 0]), dev.ip);
+                    device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...action.id.split(':').map(i => parseInt(i, 16)), ACTION_DO, 2 * action.index, 0]), dev.ip);
+                    break;
+                  }
+                  case ACTION_OPEN: {
+                    if (group.type === CLOSE_OPEN) {
+                      device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...action.id.split(':').map(i => parseInt(i, 16)), ACTION_DO, 2 * action.index, 1]), dev.ip);
+                    } else {
+                      device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...action.id.split(':').map(i => parseInt(i, 16)), ACTION_DO, 2 * action.index - 1, 1]), dev.ip);
+                    }
+                    break;
+                  }
+                  case ACTION_CLOSE: {
+                    if (group.type === CLOSE_OPEN) {
+                      device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...action.id.split(':').map(i => parseInt(i, 16)), ACTION_DO, 2 * action.index - 1, 1]), dev.ip);
+                    } else {
+                      device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...action.id.split(':').map(i => parseInt(i, 16)), ACTION_DO, 2 * action.index, 1]), dev.ip);
+                    }
+                    break;
+                  }
+                }
+                break;
+              }
+              default: {
+                device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...action.id.split(':').map(i => parseInt(i, 16)), ACTION_DO, action.index, action.value]), dev.ip);
+              }
+            }
             break;
           }
           case DEVICE_TYPE_RELAY_6:
@@ -223,17 +257,51 @@ const run = (action) => {
             const {version = ''} = dev;
             const [major, minor] = version.split('.');
             if (major >= 2) {
-              const a = [ACTION_DO, action.index];
-              if (action.value !== undefined) {
-                a.push(action.value);
+              switch (action.value) {
+                case ACTION_OPEN: 
+                case ACTION_CLOSE: 
+                case ACTION_STOP: {
+                  const group = get(`${action.id}/${GROUP}/${action.index}`);
+                  if (!group || !group.value) return;
+                  switch (action.value) {
+                    case ACTION_STOP: {
+                      device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...action.id.split(':').map(i => parseInt(i, 16)), ACTION_DO, 2 * action.index - 1, 0]), dev.ip);
+                      device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...action.id.split(':').map(i => parseInt(i, 16)), ACTION_DO, 2 * action.index, 0]), dev.ip);
+                      break;
+                    }
+                    case ACTION_OPEN: {
+                      if (group.type === CLOSE_OPEN) {
+                        device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...action.id.split(':').map(i => parseInt(i, 16)), ACTION_DO, 2 * action.index, 1]), dev.ip);
+                      } else {
+                        device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...action.id.split(':').map(i => parseInt(i, 16)), ACTION_DO, 2 * action.index - 1, 1]), dev.ip);
+                      }
+                      break;
+                    }
+                    case ACTION_CLOSE: {
+                      if (group.type === CLOSE_OPEN) {
+                        device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...action.id.split(':').map(i => parseInt(i, 16)), ACTION_DO, 2 * action.index - 1, 1]), dev.ip);
+                      } else {
+                        device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...action.id.split(':').map(i => parseInt(i, 16)), ACTION_DO, 2 * action.index, 1]), dev.ip);
+                      }
+                      break;
+                    }
+                  }
+                  break;
+                }
+                default: {
+                  const a = [ACTION_DO, action.index];
+                  if (action.value !== undefined) {
+                    a.push(action.value);
+                  }
+                  if (action.timeout !== undefined) {
+                    a.push((action.timeout) & 0xff);
+                    a.push((action.timeout >>  8) & 0xff);
+                    a.push((action.timeout >> 16) & 0xff);
+                    a.push((action.timeout >> 24) & 0xff);
+                  }
+                  device.send(Buffer.from(a), dev.ip);
+                }
               }
-              if (action.timeout !== undefined) {
-                a.push((action.timeout) & 0xff);
-                a.push((action.timeout >>  8) & 0xff);
-                a.push((action.timeout >> 16) & 0xff);
-                a.push((action.timeout >> 24) & 0xff);
-              }
-              device.send(Buffer.from(a), dev.ip);
             } else {
               device.send(Buffer.from([ACTION_DO, action.index, action.value]), dev.ip);
             }

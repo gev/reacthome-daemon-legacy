@@ -92,6 +92,9 @@ module.exports.ACTION_STOP = 'ACTION_STOP';
 module.exports.ACTION_OPEN = 'ACTION_OPEN';
 module.exports.ACTION_CLOSE = 'ACTION_CLOSE';
 
+module.exports.OPEN_CLOSE = 'open_close';
+module.exports.CLOSE_OPEN = 'close_open';
+
 module.exports.ACTION_SET = 'ACTION_SET';
 module.exports.ACTION_ASSET = 'ACTION_ASSET';
 module.exports.ACTION_INIT = 'ACTION_INIT';
