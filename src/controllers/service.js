@@ -222,7 +222,7 @@ const run = (action) => {
               case ACTION_CLOSE: 
               case ACTION_STOP: {
                 const group = get(`${action.id}/${GROUP}/${action.index}`);
-                if (!group || !group.value) return;
+                if (!group || !group.enabled) return;
                 switch (action.value) {
                   case ACTION_STOP: {
                     device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...action.id.split(':').map(i => parseInt(i, 16)), ACTION_DO, 2 * action.index - 1, 0]), dev.ip);
@@ -264,7 +264,7 @@ const run = (action) => {
                 case ACTION_CLOSE: 
                 case ACTION_STOP: {
                   const group = get(`${action.id}/${GROUP}/${action.index}`);
-                  if (!group || !group.value) return;
+                  if (!group || !group.enabled) return;
                   switch (action.value) {
                     case ACTION_STOP: {
                       device.send(Buffer.from([ACTION_DO, 2 * action.index - 1, 0]), dev.ip);
