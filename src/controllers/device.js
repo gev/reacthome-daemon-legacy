@@ -52,9 +52,7 @@ const {
   onHumidity,
   onIllumination,
   onTemperature,
-  CLOSE_OPEN,
-  OPEN,
-  CLOSE
+  CLOSE_OPEN
 } = require('../constants');
 const {
   get,
@@ -149,7 +147,7 @@ module.exports.manage = () => {
           const value = data[8];
           const cid = `${id}/${DO}/${index}`;
           const channel = get(cid);
-          const gid = `${id}/${GROUP}/${(index >> 1) + 1}`;
+          const gid = `${id}/${GROUP}/${((index - 1) >> 1) + 1}`;
           const group = get(gid);
           set(cid, { value });
           if (data.length === 13) {
@@ -159,9 +157,9 @@ module.exports.manage = () => {
           if (group && group.enabled) {
             if (value) {
               if (group === CLOSE_OPEN) {
-                set(gid, {value: index % 2 ? OPEN : CLOSE});
+                set(gid, {value: index % 2 === 1});
               } else {
-                set(gid, {value: index % 2 ? CLOSE : OPEN});
+                set(gid, {value: index % 2 === 0});
               }
             }
           } else if (channel) {
