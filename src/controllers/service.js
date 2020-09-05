@@ -317,9 +317,9 @@ const run = (action) => {
       }
       case ACTION_GROUP: {
         const dev = get(action.id);
-        const channel = `${action.id}/${GROUP}/${action.index}`;
+        const group = `${action.id}/${GROUP}/${action.index}`;
         const buffer = Buffer.alloc(7);
-        const { value, delay } = get(channel) || {};
+        const { enabled, delay } = get(group) || {};
         buffer.writeUInt8(ACTION_GROUP, 0);
         buffer.writeUInt8(action.index, 1);
         buffer.writeUInt8(action.enabled === undefined ? enabled : action.enabled, 2);
