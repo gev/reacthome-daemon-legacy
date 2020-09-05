@@ -52,7 +52,9 @@ const {
   onHumidity,
   onIllumination,
   onTemperature,
-  CLOSE_OPEN
+  CLOSE_OPEN,
+  OPEN,
+  CLOSE
 } = require('../constants');
 const {
   get,
@@ -157,9 +159,9 @@ module.exports.manage = () => {
           if (group && group.enabled) {
             if (value) {
               if (group === CLOSE_OPEN) {
-                set(gid, {value: index % 2 === 1});
+                set(gid, {value: index % 2 ? OPEN : CLOSE});
               } else {
-                set(gid, {value: index % 2 === 0});
+                set(gid, {value: index % 2 ? CLOSE : OPEN});
               }
             }
           } else if (channel) {
