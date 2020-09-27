@@ -30,10 +30,10 @@ module.exports.onCancel = (request) => {
   rs = sip.makeResponse(request, 200, 'Ok');
   rs.headers.to.params.tag = call_id;
   sip.send(rs);
-  broadcast({ type: CANCEL, call_id });
   if (calls.has(call_id)) {
     const { session_id, handle_id } = calls.get(call_id);
     janus.send(session_id, handle_id, { request: HANGUP })
+    broadcast({ type: CANCEL, session_id, handle_id, call_id });
     calls.delete(call_id);
   }
 };
