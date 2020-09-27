@@ -75,7 +75,7 @@ const notificationMessage = (action) => ({
 
 const dataMessage = (action) => ({
   notification: {
-    topic: 'net.reacthome.voip'
+    title: 'test'
   },
   data: data(action),
 });
