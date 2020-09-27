@@ -21,7 +21,7 @@ module.exports = ({ session_id, handle_id, call_id }, session) => {
       }
     };
     sip.send(rq);
-    broadcast({ type: BYE, call_id }, session);
+    broadcast({ type: BYE, session_id, handle_id, call_id }, session);
     janus.send(session_id, handle_id, { request: HANGUP })
     calls.delete(call_id);
   }
