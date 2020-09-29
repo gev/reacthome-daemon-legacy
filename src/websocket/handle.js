@@ -40,7 +40,7 @@ module.exports = (session, message) => {
         if (action.call_id) {
           onAck(action, session);
         } else {
-          broadcast(action, session);
+          broadcast({type: BYE, ring: action.ring}, session);
         }
         break;
       }
@@ -48,7 +48,7 @@ module.exports = (session, message) => {
         if (action.call_id) {
           onBye(action, session);
         } else {
-          broadcast(action, session);
+          broadcast({type: BYE, ring: action.ring}, session);
         }
         break;
       }
