@@ -37,18 +37,18 @@ module.exports = (session, message) => {
         break;
       }
       case ACK: {
-        if (action.ring) {
-          broadcast(action, session);
-        } else {
+        if (action.call_id) {
           onAck(action, session);
+        } else {
+          broadcast(action, session);
         }
         break;
       }
       case BYE: {
-        if (action.ring) {
-          broadcast(action, session);
-        } else {
+        if (action.call_id) {
           onBye(action, session);
+        } else {
+          broadcast(action, session);
         }
         break;
       }
