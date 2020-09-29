@@ -37,11 +37,19 @@ module.exports = (session, message) => {
         break;
       }
       case ACK: {
-        onAck(action, session);
+        if (action.call_id) {
+          onAck(action, session);
+        } else {
+          broadcast(action, session);
+        }
         break;
       }
       case BYE: {
-        onBye(action, session);
+        if (action.call_id) {
+          onBye(action, session);
+        } else {
+          broadcast(action, session);
+        }
         break;
       }
       case INFO: {
