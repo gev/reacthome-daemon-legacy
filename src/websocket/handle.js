@@ -40,6 +40,7 @@ module.exports = (session, message) => {
         if (action.call_id) {
           onAck(action, session);
         } else {
+          console.log(action);
           broadcast(action, session);
         }
         break;
@@ -48,6 +49,7 @@ module.exports = (session, message) => {
         if (action.call_id) {
           onBye(action, session);
         } else {
+          console.log(action);
           broadcast(action, session);
         }
         break;
