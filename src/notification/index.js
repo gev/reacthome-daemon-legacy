@@ -27,6 +27,7 @@ const push = (token, message) => {
     .sendToDevice(token, message, params)
     .then(({results = []} = {}) => {
       for (const result of results) {
+        console.log(result)
         if (result.error) {
           del(mac(), TOKEN, token);
           tokens.delete(token);
