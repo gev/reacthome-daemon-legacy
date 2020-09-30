@@ -73,6 +73,7 @@ const notificationMessage = (action) => ({
 })
 
 const dataMessage = (action) => ({
+  notification: {title: 'push'},
   data: data(action),
 });
 
