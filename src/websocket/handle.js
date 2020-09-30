@@ -90,6 +90,7 @@ module.exports = (session, message) => {
         break;
       }
       case 'state': {
+        console.log(action);
         peer.state = action.value;
         break;
       }

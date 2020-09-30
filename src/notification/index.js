@@ -40,7 +40,7 @@ const push = (token, message) => {
 const send = (action, message) => (token) => {
   if (tokens.has(token)) {
     const peer = tokens.get(token);
-    if (true || peer.state === 'active') {
+    if (peer.state === 'active') {
       peer.send(action, (err) => {
         if (err) {
           push(token, message);
