@@ -23,11 +23,12 @@ const params = {
 };
 
 const push = (token, message) => {
+  console.log(token, message);
   firebase.messaging()
     .sendToDevice(token, message, params)
     .then(({results = []} = {}) => {
       for (const result of results) {
-        console.log(result)
+        console.log(token, result);
         if (result.error) {
           del(mac(), TOKEN, token);
           tokens.delete(token);
