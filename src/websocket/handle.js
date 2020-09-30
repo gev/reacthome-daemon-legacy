@@ -20,7 +20,6 @@ const { CANDIDATE, KEEPALIVE } = require('../janus/constants');
 module.exports = (session, message) => {
   try {
     const peer = peers.get(session);
-    peer.online = true;
     peer.timestamp = Date.now();
     const action = JSON.parse(message);
     switch (action.type) {
@@ -90,8 +89,8 @@ module.exports = (session, message) => {
         broadcast(action);
         break;
       }
-      case 'offline': {
-        peer.online = false;
+      case 'state': {
+        peer.state = action.value;
         break;
       }
       default: {
