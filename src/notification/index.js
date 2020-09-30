@@ -27,7 +27,6 @@ const push = (token, message) => {
     .sendToDevice(token, message, params)
     .then(({results = []} = {}) => {
       for (const result of results) {
-        console.log(result);
         if (result.error) {
           del(mac(), TOKEN, token);
           tokens.delete(token);
@@ -74,9 +73,6 @@ const notificationMessage = (action) => ({
 })
 
 const dataMessage = (action) => ({
-  notification: {
-    title: 'test'
-  },
   data: data(action),
 });
 
