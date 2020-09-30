@@ -19,7 +19,7 @@ firebase.initializeApp({
 const params = {
   priority: 'high',
   contentAvailable: true,
-  timeToLive: 0,
+  // timeToLive: 0,
 };
 
 const push = (token, message) => {
