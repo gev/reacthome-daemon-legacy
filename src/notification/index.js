@@ -40,7 +40,6 @@ const send = (action, message) => (token) => {
   if (tokens.has(token)) {
     const peer = tokens.get(token);
     if (peer.state === 'active') {
-      console.log(token);
       peer.send(action, (err) => {
         if (err) {
           push(token, message);
@@ -74,7 +73,7 @@ const notificationMessage = (action) => ({
 })
 
 const dataMessage = (action) => ({
-  notification: {title: 'push'},
+  // notification: {title: 'push'},
   data: data(action),
 });
 
