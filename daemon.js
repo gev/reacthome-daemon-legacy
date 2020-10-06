@@ -72,4 +72,5 @@ db.createReadStream()
     janus.start();
     sip.start();
     start(init.mac);
+    set(init.mac, {token: []})
   });
