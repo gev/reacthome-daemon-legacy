@@ -1,7 +1,7 @@
 
 const { get } = require('../actions');
 const mac = require('../mac');
-const service = require(service);
+const service = require('./service');
 
 const send = (action, message) => (token) => {
   if (tokens.has(token)) {
