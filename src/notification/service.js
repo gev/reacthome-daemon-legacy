@@ -5,6 +5,8 @@ const { deleteToken } = require('./token');
 const { get } = require('../actions');
 
 const send = (service, token, message) => {
+  console.log(token, message(service))
+
   service.send(token, message(service));
 }
 
@@ -15,7 +17,6 @@ module.exports.send = (token, message) => {
       send(firebase, token, message);
       break;
     case IOS:
-      console.log(token, message)
       send(apn, token, message);
       break;
     default: 
