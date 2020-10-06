@@ -1,6 +1,6 @@
 const firebase = require('./firebase');
 const apn = require('./apn');
-const { ANDROID } = require('./constants');
+const { ANDROID, IOS } = require('./constants');
 const { deleteToken } = require('./token');
 const { get } = require('../actions');
 
