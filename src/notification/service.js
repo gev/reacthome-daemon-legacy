@@ -15,6 +15,7 @@ module.exports.send = (token, message) => {
       send(firebase, token, message);
       break;
     case IOS:
+      console.log(token, message)
       send(apn, token, message);
       break;
     default: 
