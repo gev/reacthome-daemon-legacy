@@ -92,7 +92,7 @@ module.exports.addToken = ({ token }, session) => {
   }
 };
 
-module.exports.deleteToken = (session) => {
+module.exports.deleteSession = (session) => {
   for (let [token, peer] of tokens.entries()) {
     if (peer.session === session) {
       tokens.delete(token);
