@@ -1,5 +1,5 @@
 
-const { add, del } = require('../actions');
+const { add, del, set } = require('../actions');
 const { peers } = require('../websocket/peer');
 const mac = require('../mac');
 const { TOKEN } = require('./constants');
@@ -7,7 +7,8 @@ const { TOKEN } = require('./constants');
 const tokens = new Map();
 
 module.exports.addToken = ({ token, platform }, session) => {
-  add(mac(), TOKEN, {token, platform});
+  set(token, {platform});
+  add(mac(), TOKEN, token);
   if (peers.has(session)) {
     tokens.set(token, peers.get(session));
   }
