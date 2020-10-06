@@ -21,6 +21,7 @@ module.exports.notificationMessage = (action) => {
     title: action.title || title || code,
     body: action.message,
     topic: 'net.reacthome',
+    pushType: 'alert',
     payload: payload(action)
   });
 };
