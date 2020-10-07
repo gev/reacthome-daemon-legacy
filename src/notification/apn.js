@@ -29,7 +29,7 @@ module.exports.notificationMessage = (action) => {
 
 module.exports.dataMessage = (action) => {
   return new apn.Notification({
-    topic: 'net.reacthome.voip',
+    topic: 'net.reacthome',
     pushType: 'voip',
     payload: payload(action),
   });
