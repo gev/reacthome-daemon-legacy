@@ -7,7 +7,7 @@ const token = require('../../var/apn.json');
 
 provider = new apn.Provider({
   token,
-  production: true
+  production: false,
 });
 
 const payload = (action) => ({
@@ -20,6 +20,7 @@ module.exports.notificationMessage = (action) => {
   return new apn.Notification({
     title: action.title || title || code,
     body: action.message,
+    sound: 'default',
     topic: 'net.reacthome',
     pushType: 'alert',
     payload: payload(action)
