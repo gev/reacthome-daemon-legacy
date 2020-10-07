@@ -6,7 +6,6 @@ const { get } = require('../actions');
 
 const send = (service, token, message) => {
   console.log(token, message(service))
-
   service.send(token, message(service));
 }
 
@@ -25,4 +24,4 @@ module.exports.send = (token, message) => {
 };
 
 module.exports.notificationMessage = (action) => ({notificationMessage}) => notificationMessage(action);
-module.exports.dataMessage = (action) => ({dadaMessage}) => dadaMessage(action);
+module.exports.dataMessage = (action) => ({dataMessage}) => dataMessage(action);
