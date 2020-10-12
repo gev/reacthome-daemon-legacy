@@ -50,7 +50,7 @@ const crc = buffer => {
   return crc;
 }
 
-setTimeout(() => {
+setInterval(() => {
   const {ip} = get(id);
   const buffer = Buffer.alloc(10);
   buffer.writeUInt8(ACTION_RS485_TRANSMIT, 0);
