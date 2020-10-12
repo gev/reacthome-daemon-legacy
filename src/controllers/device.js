@@ -128,7 +128,6 @@ module.exports.manage = () => {
         case ACTION_DI: {
           const index = data[7];
           const value = data[8];
-          console.log(value);
           const channel = `${id}/${DI}/${index}`;
           const chan = get(channel);
           if (chan && (chan.value !== value)) {
