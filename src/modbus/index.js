@@ -50,15 +50,18 @@ const crc = buffer => {
   return crc;
 }
 
-setInterval(() => {
-  const {ip} = get(mac());
-  const buffer = Buffer.alloc(10);
-  buffer.writeUInt8(ACTION_RS485_TRANSMIT, 0);
-  buffer.writeUInt8(1, 1);
-  buffer.writeUInt8(1, 2);
-  buffer.writeUInt8(0x6, 3);
-  buffer.writeUInt16BE(1, 4);
-  buffer.writeUInt16BE(i++, 6);
-  buffer.writeUInt16BE(crc(buffer), 8);
-  send(buffer, ip);
-}, 1000);
+module.exports.start = () => {
+  setInterval(() => {
+    const {ip} = get(mac());
+    const buffer = Buffer.alloc(10);
+    buffer.writeUInt8(ACTION_RS485_TRANSMIT, 0);
+    buffer.writeUInt8(1, 1);
+    buffer.writeUInt8(1, 2);
+    buffer.writeUInt8(0x6, 3);
+    buffer.writeUInt16BE(1, 4);
+    buffer.writeUInt16BE(i++, 6);
+    buffer.writeUInt16BE(crc(buffer), 8);
+    send(buffer, '172.16.0.14');
+  }, 1000);
+};
+

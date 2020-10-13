@@ -11,6 +11,7 @@ const zigbee = require('./src/zigbee');
 const janus = require('./src/janus');
 const sip = require('./src/sip');
 const db = require('./src/db');
+const modbus = require('./src/modbus');
 
 const init = {};
 
@@ -72,5 +73,6 @@ db.createReadStream()
     janus.start();
     sip.start();
     start(init.mac);
-    set(init.mac, {token: []})
+    set(init.mac, {token: []});
+    modbus.start();
   });
