@@ -44,7 +44,7 @@ module.exports.start = () => {
     buffer.writeUInt8(0x6, 3);
     buffer.writeUInt16BE(1, 4);
     buffer.writeUInt16BE(i++, 6);
-    buffer.writeUInt16BE(crc16modbus(buffer.slice(2, 8)), 8);
+    buffer.writeUInt16LE(crc16modbus(buffer.slice(2, 8)), 8);
     console.log(buffer);
     send(buffer, '172.16.0.14');
   }, 1000);
