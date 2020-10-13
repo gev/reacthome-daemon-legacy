@@ -1,7 +1,6 @@
 
 const {get} = require('../actions');
 const { ACTION_RS485_TRANSMIT } = require('../constants');
-const crc16 = require('../crc16');
 const { send } = require('../sockets/device');
 
 module.exports.readCoils = (id, address, length) => {
@@ -44,7 +43,7 @@ module.exports.start = () => {
     buffer.writeUInt8(0x6, 3);
     buffer.writeUInt16BE(1, 4);
     buffer.writeUInt16BE(3, 6);
-    buffer.writeUInt16BE(crc16(buffer, 2, 6), 8);
+    buffer.writeUInt16BE(crc16(buffer.slice(2, 8)), 8);
     console.log(buffer);
     send(buffer, '172.16.0.14');
   }, 1000);
