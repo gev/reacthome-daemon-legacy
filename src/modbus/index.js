@@ -60,6 +60,7 @@ module.exports.start = () => {
     buffer.writeUInt16BE(1, 4);
     buffer.writeUInt16BE(i++, 6);
     buffer.writeUInt16BE(crc(buffer), 8);
+    console.log(buffer);
     send(buffer, '172.16.0.14');
   }, 1000);
 };
