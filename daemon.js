@@ -81,15 +81,15 @@ db.createReadStream()
 
   setInterval(() => {
     setTimeout(() => {
-      consloe.log('write register');
+      console.log('write register');
       send(modbus.writeRegister(1, 1, 0, i), '172.16.0.14');
     }, 1000);
     setTimeout(() => {
-      consloe.log('write registers');
+      console.log('write registers');
       send(modbus.writeRegisters(1, 1, 0, [i + 1, i + 2]), '172.16.0.14');
     }, 2000);
     setTimeout(() => {
-      consloe.log('read holding registers');
+      console.log('read holding registers');
       send(modbus.readHoldingRegisters(1, 1, 0, 2), '172.16.0.14');
     }, 3000);
     i += 3;
