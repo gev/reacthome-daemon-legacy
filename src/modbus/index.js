@@ -38,7 +38,7 @@ module.exports.writeRegisters = rtu(
     buffer.writeUInt16BE(data.length, 6);
     buffer.writeUInt8(2 * data.length, 8);
     for (let i = 0; i < data.length; i++) {
-      buffer.writeUInt16BE(value, 2 * i + 9);
+      buffer.writeUInt16BE(data[i], 2 * i + 9);
     }
   }
 )(WRITE_REGISTERS);
