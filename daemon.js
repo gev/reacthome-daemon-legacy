@@ -92,5 +92,9 @@ db.createReadStream()
       console.log('read holding registers');
       send(modbus.readHoldingRegisters(1, 1, 0, 2), '172.16.0.14');
     }, 3000);
+    setTimeout(() => {
+      console.log('read input registers');
+      send(modbus.readInputRegisters(1, 1, 0, 2), '172.16.0.14');
+    }, 4000);
     i += 3;
   }, 5000);
