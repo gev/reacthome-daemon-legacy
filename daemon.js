@@ -12,6 +12,7 @@ const janus = require('./src/janus');
 const sip = require('./src/sip');
 const db = require('./src/db');
 const modbus = require('./src/modbus');
+const { send } = require('./src/sockets/device');
 
 const init = {};
 
@@ -74,5 +75,22 @@ db.createReadStream()
     sip.start();
     start(init.mac);
     set(init.mac, {token: []});
-    modbus.start();
   });
+
+  let i = 0;
+
+  setInterval(() => {
+    setTimeout(() => {
+      consloe.log('write register');
+      send(modbus.writeRegister(1, 1, 0, i), '172.16.0.14');
+    }, 1000);
+    setTimeout(() => {
+      consloe.log('write registers');
+      send(modbus.writeRegisters(1, 1, 0, [i + 1, i + 2]), '172.16.0.14');
+    }, 2000);
+    setTimeout(() => {
+      consloe.log('read holding registers');
+      send(modbus.readHoldingRegisters(1, 1, 0, 2), '172.16.0.14');
+    }, 3000);
+    i += 3;
+  }, 5000);

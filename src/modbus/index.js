@@ -1,52 +1,44 @@
 
 const { crc16modbus } = require('crc');
-const {get} = require('../actions');
 const { ACTION_RS485_TRANSMIT } = require('../constants');
-const { send } = require('../sockets/device');
+const { 
+  READ_INPUT_REGISTERS,
+  READ_HOLDING_REGISTERS, 
+  WRITE_REGISTER,
+  WRITE_REGISTERS 
+} = require('./constants');
 
-module.exports.readCoils = (id, address, length) => {
-};
+const rtu = (getSize, fill) => (code) => (index, address, register, data) => {
+  const size = getSize(data);
+  const buffer = Buffer.alloc(size + 2);
+  buffer.writeUInt8(ACTION_RS485_TRANSMIT, 0);
+  buffer.writeUInt8(index, 1);
+  buffer.writeUInt8(address, 2);
+  buffer.writeUInt8(code, 3);
+  buffer.writeUInt16BE(register, 4);
+  fill(buffer, data);
+  buffer.writeUInt16LE(crc16modbus(buffer.slice(2, size)), size);
+  console.log(buffer);
+  return buffer;
+}
 
-module.exports.readDiscreteInputs = (address, length) => {
-};
+const rtu8 = rtu(
+  () => 8, 
+  (buffer, data) => {
+    buffer.writeUInt16BE(data, 6);
+  }
+);
 
-module.exports.readHoldingRegisters = (id, address, length) => {
-};
-
-module.exports.readInputRegisters = (id, address, length) => {
-};
-
-module.exports.writeCoil = (id, address, state) => {
-};
-
-module.exports.writeCoils = (id, address, array) => {
-};
-
-module.exports.writeRegister = (id, address, value) => {
-  // const {ip} = get(id);
-  // const buffer = Buffer.alloc();
-  // buffer.writeUInt8(ACTION_RS485_TRANSMIT, 0);
-  // buffer.writeUInt8(1, 0);
-  // send(buffer, ip);
-};
-
-module.exports.writeRegisters = (id, address, array) => {
-};
-
-let i = 0;
-
-module.exports.start = () => {
-  setInterval(() => {
-    const buffer = Buffer.alloc(10);
-    buffer.writeUInt8(ACTION_RS485_TRANSMIT, 0);
-    buffer.writeUInt8(1, 1);
-    buffer.writeUInt8(1, 2);
-    buffer.writeUInt8(0x6, 3);
-    buffer.writeUInt16BE(1, 4);
-    buffer.writeUInt16BE(i++, 6);
-    buffer.writeUInt16LE(crc16modbus(buffer.slice(2, 8)), 8);
-    console.log(buffer);
-    send(buffer, '172.16.0.14');
-  }, 1000);
-};
-
+module.exports.readHoldingRegisters = rtu8(READ_HOLDING_REGISTERS);
+module.exports.readInputRegisters = rtu8(READ_INPUT_REGISTERS);
+module.exports.writeRegister = rtu8(WRITE_REGISTER);
+module.exports.writeRegisters = rtu(
+  (data) => 9 + 2 * data.length,
+  (buffer, data) => {
+    buffer.writeUInt16BE(data.length, 6);
+    buffer.writeUInt8(2 * data.length, 8);
+    for (let i = 0; i < data.length; i++) {
+      buffer.writeUInt16BE(value, 2 * i + 9);
+    }
+  }
+)(WRITE_REGISTERS);
