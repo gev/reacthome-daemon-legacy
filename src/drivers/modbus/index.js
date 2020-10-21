@@ -10,19 +10,26 @@ const {
   MODBUS,
 } = require('./constants');
 const driver = require('../driver');
+const { send } = require('../../sockets/device');
 
-const rtu = (getSize, fill) => (code) => (index, address, register, data) => {
-  const size = getSize(data);
-  const buffer = Buffer.alloc(size + 2);
-  buffer.writeUInt8(ACTION_RS485_TRANSMIT, 0);
-  buffer.writeUInt8(index, 1);
-  buffer.writeUInt8(address, 2);
-  buffer.writeUInt8(code, 3);
-  buffer.writeUInt16BE(register, 4);
-  fill(buffer, data);
-  buffer.writeUInt16LE(crc16modbus(buffer.slice(2, size)), size);
-  console.log(buffer);
-  return buffer;
+const rtu = (getSize, fill) => (code) => (id, register, data) => {
+  const [modbus,, address] = id.split('/');
+  const {bind} = get(modbus) || {};
+  const [dev,, index] = bind.split('/');
+  const {ip} = get(dev) || {};
+  if (ip && index && address) {
+    const size = getSize(data);
+    const buffer = Buffer.alloc(size + 2);
+    buffer.writeUInt8(ACTION_RS485_TRANSMIT, 0);
+    buffer.writeUInt8(index, 1);
+    buffer.writeUInt8(address, 2);
+    buffer.writeUInt8(code, 3);
+    buffer.writeUInt16BE(register, 4);
+    fill(buffer, data);
+    buffer.writeUInt16LE(crc16modbus(buffer.slice(2, size)), size);
+    console.log(buffer);
+    send(buffer, ip);
+  }
 }
 
 const rtu8 = rtu(
