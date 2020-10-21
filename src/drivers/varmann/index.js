@@ -1,6 +1,7 @@
 
 const { get } = require('../../actions/create');
 const { writeRegister, writeRegisters, readHoldingRegisters, readInputRegisters } = require('../modbus');
+const { BROADCAST_ADDRESS } = require('./constants');
 
 const instance = new Set();
 
@@ -16,28 +17,40 @@ module.exports.add = (id) => {
   instance.add(id);
 };
 
+module.exports.setAddress = (action) => {
+  const {id, address} = action;
+  const {bind} = get(id) || {};
+  const [modbus] = bind.split('/');
+  if (modbus) {
+    writeRegister(modbus, BROADCAST_ADDRESS, address);
+  }
+};
+
 let i = 0;
 
 setInterval(() => {
   for (const id of instance) {
     console.log(id);
     const {bind} = get(id) || {};
-    setTimeout(() => {
-      console.log('write register');
-      writeRegister(bind, 0, i);
-    }, 1000);
-    setTimeout(() => {
-      console.log('write registers');
-      writeRegisters(bind, 0, [i + 1, i + 2]);
-    }, 2000);
-    setTimeout(() => {
-      console.log('read holding registers');
-      readHoldingRegisters(bind, 0, 2);
-    }, 3000);
-    setTimeout(() => {
-      console.log('read input registers');
-      readInputRegisters(bind, 0, 2);
-    }, 4000);
-    i += 3;
+    const [modbus,, address] = bind.split('/');
+    if (modbus && address) {
+      setTimeout(() => {
+        console.log('write register');
+        writeRegister(modbus, address, 0, i);
+      }, 1000);
+      setTimeout(() => {
+        console.log('write registers');
+        writeRegisters(modbus, address, 0, [i + 1, i + 2]);
+      }, 2000);
+      setTimeout(() => {
+        console.log('read holding registers');
+        readHoldingRegisters(modbus, address, 0, 2);
+      }, 3000);
+      setTimeout(() => {
+        console.log('read input registers');
+        readInputRegisters(modbus, address, 0, 2);
+      }, 4000);
+      i += 3;
+    }
   }
 }, 5000);

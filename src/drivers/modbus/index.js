@@ -12,12 +12,11 @@ const {
 const driver = require('../driver');
 const { send } = require('../../sockets/device');
 
-const rtu = (getSize, fill) => (code) => (id, register, data) => {
-  const [modbus,, address] = id.split('/');
-  const {bind} = get(modbus) || {};
+const rtu = (getSize, fill) => (code) => (id, address, register, data) => {
+  const {bind} = get(id) || {};
   const [dev,, index] = bind.split('/');
   const {ip} = get(dev) || {};
-  if (ip && index && address) {
+  if (ip && index) {
     const size = getSize(data);
     const buffer = Buffer.alloc(size + 2);
     buffer.writeUInt8(ACTION_RS485_TRANSMIT, 0);
