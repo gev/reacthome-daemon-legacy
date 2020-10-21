@@ -29,6 +29,7 @@ module.exports.manage = () => {
     if (drv.stop) drv.stop();
   });
   run = {};
+  varmann.clear();
   if (!Array.isArray(driver)) return;
   driver.forEach(id => {
     const { type } = get(id) || {};
@@ -56,6 +57,7 @@ module.exports.manage = () => {
         break;
       case DRIVER_TYPE_VARMANN:
         run[id] = varmann;
+        varmann.add(id);
         break;
       }
   });
