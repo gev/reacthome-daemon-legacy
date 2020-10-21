@@ -15,6 +15,7 @@ const { Plc1, Plc2 } = require('./bb');
 const M230 = require('./M230');
 const M206 = require('./M206');
 const modbus = require('./modbus');
+const mac = require('../mac');
 
 let run = {};
 
