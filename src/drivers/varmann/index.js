@@ -11,7 +11,7 @@ const setAddress = (action) => {
   const {bind} = get(id) || {};
   const [modbus] = bind.split('/');
   if (modbus) {
-    writeRegister(modbus, BROADCAST_ADDRESS, address);
+    writeRegister(modbus, BROADCAST_ADDRESS, 0, address);
   }
 };
 
