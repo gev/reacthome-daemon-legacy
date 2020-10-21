@@ -25,7 +25,7 @@ setInterval(() => {
     const {bind: bind1} = get(id) || {};
     const [modbus,,address] = bind1.split('/') || '';
     const {bind: bind2} = get(modbus) || {};
-    const [dev,,index] = bind2split('/') || '';
+    const [dev,,index] = bind2.split('/') || '';
     const {ip} = get(dev) || {};
     if (ip && index && address) {
       setTimeout(() => {
