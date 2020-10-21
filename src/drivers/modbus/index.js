@@ -46,8 +46,9 @@ module.exports.writeRegisters = rtu(
 )(WRITE_REGISTERS);
 
 module.exports.handle = ({id, data}) => {
+  console.log(id, data);
   const address = data[1];
-  const {bind} = get(`${id}/${MODBUS}/${address}`);
+  const {bind} = get(`${id}/${MODBUS}/${address}`) || {};
   if (bind) {
     console.log(bind, get(bind));
   }

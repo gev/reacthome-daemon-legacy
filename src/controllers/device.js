@@ -194,7 +194,6 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_RS485_TRANSMIT: {
-          console.log(data);
           const index = data[7];
           const channel = `${id}/${RS485}/${index}`;
           const { bind } = get(channel) || {};
