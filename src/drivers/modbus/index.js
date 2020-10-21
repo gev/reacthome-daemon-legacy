@@ -1,5 +1,6 @@
 
 const { crc16modbus } = require('crc');
+const { get } = require('../../actions');
 const { ACTION_RS485_TRANSMIT } = require('../constants');
 const { 
   READ_INPUT_REGISTERS,
