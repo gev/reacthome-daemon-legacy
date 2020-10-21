@@ -5,7 +5,8 @@ const {
   READ_INPUT_REGISTERS,
   READ_HOLDING_REGISTERS, 
   WRITE_REGISTER,
-  WRITE_REGISTERS 
+  WRITE_REGISTERS,
+  MODBUS,
 } = require('./constants');
 
 const rtu = (getSize, fill) => (code) => (index, address, register, data) => {
@@ -42,3 +43,11 @@ module.exports.writeRegisters = rtu(
     }
   }
 )(WRITE_REGISTERS);
+
+module.exports.handle = ({id, data}) => {
+  const address = data[1];
+  const {bind} = get(`${id}/${MODBUS}/${address}`);
+  if (bind) {
+    console.log(bind, get(bind));
+  }
+}

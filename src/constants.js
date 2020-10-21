@@ -237,3 +237,4 @@ module.exports.DRIVER_TYPE_BB_PLC1 = 'BB_PLC1';
 module.exports.DRIVER_TYPE_BB_PLC2 = 'BB_PLC2';
 module.exports.DRIVER_TYPE_M206 = 'M206';
 module.exports.DRIVER_TYPE_M230 = 'M230';
+module.exports.DRIVER_TYPE_MODBUS = 'MODBUS';

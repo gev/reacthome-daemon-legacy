@@ -5,7 +5,8 @@ const {
   DRIVER_TYPE_BB_PLC1,
   DRIVER_TYPE_BB_PLC2,
   DRIVER_TYPE_M206,
-  DRIVER_TYPE_M230
+  DRIVER_TYPE_M230,
+  DRIVER_TYPE_MODBUS,
 } = require('../constants');
 const { get } = require('../actions');
 const RS21 = require('./RS21');
@@ -13,6 +14,7 @@ const Artnet = require('./artnet');
 const { Plc1, Plc2 } = require('./bb');
 const M230 = require('./M230');
 const M206 = require('./M206');
+const modbus = require('./modbus');
 const mac = require('../mac');
 
 let run = {};
@@ -47,7 +49,10 @@ module.exports.manage = () => {
       case DRIVER_TYPE_M230:
         run[id] = new M230(id);
         break;
-    }
+      case DRIVER_TYPE_MODBUS:
+        run[id] = modbus;
+        break;
+      }
   });
 };
 
