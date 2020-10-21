@@ -11,7 +11,7 @@ const zigbee = require('./src/zigbee');
 const janus = require('./src/janus');
 const sip = require('./src/sip');
 const db = require('./src/db');
-const modbus = require('./src/modbus');
+const modbus = require('./src/drivers/modbus');
 const { send } = require('./src/sockets/device');
 
 const init = {};
