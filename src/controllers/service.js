@@ -123,7 +123,7 @@ const {
   COLOR,
   MOVE_TO_LEVEL,
   MOVE_TO_HUE_SATURATION,
-  CLOSURE, CLOSE, OPEN, START, ACTION_OPEN, ACTION_STOP, ACTION_CLOSE, CLOSE_OPEN,
+  CLOSURE, CLOSE, OPEN, START, ACTION_OPEN, ACTION_STOP, ACTION_CLOSE, CLOSE_OPEN, ACTION_SET_ADDRESS,
 } = require('../constants');
 const {LIST } = require('../init/constants');
 const { NOTIFY } = require('../notification/constants');
@@ -1048,6 +1048,10 @@ const run = (action) => {
           zigbee.closure(id, index, value);
         }
         break; 
+      }
+      case ACTION_SET_ADDRESS: {
+        drivers.handle(action);
+        break;
       }
       case ACTION_SCRIPT_RUN: {
         const { id } = action;

@@ -1,12 +1,31 @@
 
 const { get } = require('../../actions/create');
+const { ACTION_SET_ADDRESS } = require('../../constants');
 const { writeRegister, writeRegisters, readHoldingRegisters, readInputRegisters } = require('../modbus');
 const { BROADCAST_ADDRESS } = require('./constants');
 
 const instance = new Set();
 
-module.exports.handle = ({id, data}) => {
-  console.log(id, data, get(id));
+const setAddress = (action) => {
+  const {id, address} = action;
+  const {bind} = get(id) || {};
+  const [modbus] = bind.split('/');
+  if (modbus) {
+    writeRegister(modbus, BROADCAST_ADDRESS, address);
+  }
+};
+
+module.exports.handle = (action) => {
+  switch (action.type) {
+    case ACTION_SET_ADDRESS: {
+      setAddress(action)
+      break;
+    }
+    default: {
+      const {id, data} = action;
+      console.log(id, data, get(id));
+    }
+  }
 };
 
 module.exports.clear = () => {
@@ -15,15 +34,6 @@ module.exports.clear = () => {
 
 module.exports.add = (id) => {
   instance.add(id);
-};
-
-module.exports.setAddress = (action) => {
-  const {id, address} = action;
-  const {bind} = get(id) || {};
-  const [modbus] = bind.split('/');
-  if (modbus) {
-    writeRegister(modbus, BROADCAST_ADDRESS, address);
-  }
 };
 
 let i = 0;
