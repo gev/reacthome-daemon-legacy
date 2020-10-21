@@ -9,6 +9,7 @@ const {
   WRITE_REGISTERS,
   MODBUS,
 } = require('./constants');
+const driver = require('../driver');
 
 const rtu = (getSize, fill) => (code) => (index, address, register, data) => {
   const size = getSize(data);
@@ -50,6 +51,6 @@ module.exports.handle = ({id, data}) => {
   const address = data[0];
   const {bind} = get(`${id}/${MODBUS}/${address}`) || {};
   if (bind) {
-    console.log(bind, get(bind));
+    driver.handle
   }
 }

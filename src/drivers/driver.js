@@ -7,6 +7,7 @@ const {
   DRIVER_TYPE_M206,
   DRIVER_TYPE_M230,
   DRIVER_TYPE_MODBUS,
+  DRIVER_TYPE_VARMANN,
 } = require('../constants');
 const { get } = require('../actions');
 const RS21 = require('./RS21');
@@ -15,6 +16,7 @@ const { Plc1, Plc2 } = require('./bb');
 const M230 = require('./M230');
 const M206 = require('./M206');
 const modbus = require('./modbus');
+const varmann = require('./varmann');
 const mac = require('../mac');
 
 let run = {};
@@ -51,6 +53,9 @@ module.exports.manage = () => {
         break;
       case DRIVER_TYPE_MODBUS:
         run[id] = modbus;
+        break;
+      case DRIVER_TYPE_VARMANN:
+        run[id] = varmann;
         break;
       }
   });
