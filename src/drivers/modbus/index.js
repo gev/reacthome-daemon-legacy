@@ -51,6 +51,6 @@ module.exports.handle = ({id, data}) => {
   const address = data[0];
   const {bind} = get(`${id}/${MODBUS}/${address}`) || {};
   if (bind) {
-    driver.handle
+    driver.handle({id: bind, data: data.slice(1)});
   }
 }
