@@ -20,7 +20,8 @@ module.exports.add = (id) => {
 let i = 0;
 
 setInterval(() => {
-  for (const id in instance) {
+  for (const id of instance) {
+    console.log(id);
     const {bind: bind1} = get(id) || {};
     const [modbus,,address] = bind1 || '';
     const {bind: bind2} = get(modbus) || {};
