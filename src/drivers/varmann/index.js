@@ -22,24 +22,22 @@ setInterval(() => {
   for (const id of instance) {
     console.log(id);
     const {bind} = get(id) || {};
-    if (ip && index && address) {
-      setTimeout(() => {
-        console.log('write register');
-        writeRegister(bind, 0, i);
-      }, 1000);
-      setTimeout(() => {
-        console.log('write registers');
-        writeRegisters(bind, 0, [i + 1, i + 2]);
-      }, 2000);
-      setTimeout(() => {
-        console.log('read holding registers');
-        readHoldingRegisters(bind, 0, 2);
-      }, 3000);
-      setTimeout(() => {
-        console.log('read input registers');
-        readInputRegisters(bind, 0, 2);
-      }, 4000);
-      i += 3;
-    }
+    setTimeout(() => {
+      console.log('write register');
+      writeRegister(bind, 0, i);
+    }, 1000);
+    setTimeout(() => {
+      console.log('write registers');
+      writeRegisters(bind, 0, [i + 1, i + 2]);
+    }, 2000);
+    setTimeout(() => {
+      console.log('read holding registers');
+      readHoldingRegisters(bind, 0, 2);
+    }, 3000);
+    setTimeout(() => {
+      console.log('read input registers');
+      readInputRegisters(bind, 0, 2);
+    }, 4000);
+    i += 3;
   }
 }, 5000);
