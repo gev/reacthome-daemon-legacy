@@ -20,7 +20,7 @@ const read = (id) => {
   const {bind} = get(id) || {};
   const [modbus,, address] = bind.split('/');
   if (modbus && address) {
-    readHoldingRegisters(modbus, address, 0x1, 24);
+    readHoldingRegisters(modbus, address, 0x0, 25);
   }
 };
 
@@ -45,7 +45,7 @@ module.exports.handle = (action) => {
           break;
         }
         case READ_HOLDING_REGISTERS: {
-          set(id, {fan_speed: data.readUInt16BE(12)})
+          set(id, {fan_speed: data.readUInt16BE(14)})
           break;
         }
       }
