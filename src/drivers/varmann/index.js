@@ -41,7 +41,7 @@ module.exports.handle = (action) => {
       const {id, data} = action;
       switch (data[0]) {
         case WRITE_REGISTER: {
-          read(id);
+          setTimeout(() => {read(id)}, 10);
           break;
         }
         case READ_HOLDING_REGISTERS: {
