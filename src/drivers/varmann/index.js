@@ -35,15 +35,12 @@ module.exports.handle = (action) => {
     }
     case ACTION_SET_FAN_SPEED: {
       setFanSpeed(action);
+      set(id, {fan_speed: action.value});
       break;
     }
     default: {
       const {id, data} = action;
       switch (data[0]) {
-        case WRITE_REGISTER: {
-          setTimeout(() => {read(id)}, 100);
-          break;
-        }
         case READ_HOLDING_REGISTERS: {
           set(id, {fan_speed: data.readUInt16BE(14)})
           break;
