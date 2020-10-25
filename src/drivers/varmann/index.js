@@ -45,7 +45,7 @@ module.exports.handle = (action) => {
           break;
         }
         case READ_HOLDING_REGISTERS: {
-          set(id, {fan_speed: data.readUInt16BE(13)})
+          set(id, {fan_speed: data.readUInt16BE(12)})
           break;
         }
       }
