@@ -41,7 +41,7 @@ module.exports.handle = (action) => {
       const {id, data} = action;
       switch (data[0]) {
         case WRITE_REGISTER: {
-          setTimeout(() => {read(id)}, 10);
+          // setTimeout(() => {read(id)}, 10);
           break;
         }
         case READ_HOLDING_REGISTERS: {
@@ -61,8 +61,8 @@ module.exports.add = (id) => {
   instance.add(id);
 };
 
-// setInterval(() => {
-//   for (const id of instance) {
-//     read(id);
-//   }
-// }, TIMEOUT);
+setInterval(() => {
+  for (const id of instance) {
+    read(id);
+  }
+}, TIMEOUT);
