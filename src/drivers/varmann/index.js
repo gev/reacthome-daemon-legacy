@@ -61,8 +61,8 @@ module.exports.add = (id) => {
   instance.add(id);
 };
 
-setInterval(() => {
-  for (const id of instance) {
-    read(id);
-  }
-}, TIMEOUT);
+// setInterval(() => {
+//   for (const id of instance) {
+//     read(id);
+//   }
+// }, TIMEOUT);
