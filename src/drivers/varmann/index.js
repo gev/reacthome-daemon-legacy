@@ -39,6 +39,7 @@ module.exports.handle = (action) => {
       switch (data[0]) {
         case WRITE_REGISTER: {
           set(id, {synced: true});
+          break;
         }
         case READ_HOLDING_REGISTERS: {
           set(id, {fan_speed: data.readUInt16BE(14), synced: true})
