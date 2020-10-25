@@ -2,47 +2,45 @@
 const { get, set } = require('../../actions');
 const { ACTION_SET_ADDRESS, ACTION_SET_FAN_SPEED } = require('../../constants');
 const { writeRegister, readHoldingRegisters } = require('../modbus');
-const { READ_HOLDING_REGISTERS, WRITE_REGISTER } = require('../modbus/constants');
+const { READ_HOLDING_REGISTERS } = require('../modbus/constants');
 const { BROADCAST_ADDRESS, TIMEOUT } = require('./constants');
 
 const instance = new Set();
 
-const write = (index, broadcast) => (action) => {
-  const {id, value} = action;
-  const {bind} = get(id) || {};
-  const [modbus,, address] = bind.split('/');
-  if (modbus) {
-    writeRegister(modbus, broadcast || address, index, value);
-  }
-}
-
-const read = (id) => {
-  const {bind} = get(id) || {};
+const sync = (id) => {
+  const dev = get(id) || {};
+  const {bind, synced} = dev;
   const [modbus,, address] = bind.split('/');
   if (modbus && address) {
-    readHoldingRegisters(modbus, address, 0x0, 25);
+    if (synced) {
+      readHoldingRegisters(modbus, address, 0x0, 25);
+    } else {
+      if (dev.broadcast) {
+        writeRegister(modbus, BROADCAST_ADDRESS, 0x0, dev.address);
+      } else {
+        writeRegister(modbus, address, 0x6, dev.fan_speed);
+      }
+    }
   }
 };
 
 const setAddress = write(0x0, BROADCAST_ADDRESS);
-const setFanSpeed = write(0x6);
 
 module.exports.handle = (action) => {
   switch (action.type) {
     case ACTION_SET_ADDRESS: {
-      setAddress(action);
+      set(id, {address: action.value, synced: false, broadcast: true})
       break;
     }
     case ACTION_SET_FAN_SPEED: {
-      setFanSpeed(action);
-      set(id, {fan_speed: action.value});
+      set(id, {fan_speed: action.value, synced: false});
       break;
     }
     default: {
       const {id, data} = action;
       switch (data[0]) {
         case READ_HOLDING_REGISTERS: {
-          set(id, {fan_speed: data.readUInt16BE(14)})
+          set(id, {fan_speed: data.readUInt16BE(14), synced: true})
           break;
         }
       }
@@ -60,6 +58,6 @@ module.exports.add = (id) => {
 
 setInterval(() => {
   for (const id of instance) {
-    read(id);
+    sync(id);
   }
 }, TIMEOUT);
