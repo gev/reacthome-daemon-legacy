@@ -25,7 +25,8 @@ const sync = (id) => {
 };
 
 module.exports.handle = (action) => {
-  switch (action.type) {
+  const {id, type} = action;
+  switch (type) {
     case ACTION_SET_ADDRESS: {
       set(id, {address: action.value, synced: false, broadcast: true})
       break;
@@ -35,7 +36,7 @@ module.exports.handle = (action) => {
       break;
     }
     default: {
-      const {id, data} = action;
+      const {data} = action;
       switch (data[0]) {
         case WRITE_REGISTER: {
           set(id, {synced: true});
