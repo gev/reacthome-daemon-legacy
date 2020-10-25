@@ -1050,8 +1050,8 @@ const run = (action) => {
         }
         break; 
       }
-      case ACTION_SET_ADDRESS: {
-      case ACTION_SET_ADDRESS: {
+      case ACTION_SET_ADDRESS:
+      case ACTION_SET_FAN_SPEED: {
         drivers.handle(action);
         break;
       }
