@@ -24,8 +24,6 @@ const sync = (id) => {
   }
 };
 
-const setAddress = write(0x0, BROADCAST_ADDRESS);
-
 module.exports.handle = (action) => {
   switch (action.type) {
     case ACTION_SET_ADDRESS: {
