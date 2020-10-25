@@ -123,7 +123,8 @@ const {
   COLOR,
   MOVE_TO_LEVEL,
   MOVE_TO_HUE_SATURATION,
-  CLOSURE, CLOSE, OPEN, START, ACTION_OPEN, ACTION_STOP, ACTION_CLOSE, CLOSE_OPEN, ACTION_SET_ADDRESS,
+  CLOSURE, CLOSE, OPEN, START, ACTION_OPEN, ACTION_STOP, ACTION_CLOSE, CLOSE_OPEN, 
+  ACTION_SET_ADDRESS, ACTION_SET_FAN_SPEED
 } = require('../constants');
 const {LIST } = require('../init/constants');
 const { NOTIFY } = require('../notification/constants');
@@ -1049,6 +1050,7 @@ const run = (action) => {
         }
         break; 
       }
+      case ACTION_SET_ADDRESS: {
       case ACTION_SET_ADDRESS: {
         drivers.handle(action);
         break;

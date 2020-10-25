@@ -132,6 +132,7 @@ module.exports.ACTION_MOVE_TO_HUE_SATURATION = 'ACTION_MOVE_TO_HUE_SATURATION';
 module.exports.ACTION_MOVE_TO_LEVEL = 'ACTION_MOVE_TO_LEVEL';
 
 module.exports.ACTION_SET_ADDRESS = 'ACTION_SET_ADDRESS';
+module.exports.ACTION_SET_FAN_SPEED = 'ACTION_SET_FAN_SPEED';
 
 module.exports.OFF = 0x0;
 module.exports.ON = 0x1;
