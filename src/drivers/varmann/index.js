@@ -44,7 +44,7 @@ module.exports.handle = (action) => {
         }
         case READ_HOLDING_REGISTERS: {
           const dev = get(id) || {};
-          if (!dev.synced) {
+          if (dev.synced) {
             set(id, {fan_speed: data.readUInt16BE(14), synced: true})
           } 
           break;
