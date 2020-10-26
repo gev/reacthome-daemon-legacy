@@ -33,6 +33,9 @@ const sync = (id) => {
         setTimeout(() => {
           writeRegister(modbus, address, 0x4, dev.setpoint);
         }, 500);
+        setTimeout(() => {
+          set(id, {synced: true});
+        }, 600);
       }
     }
   }
@@ -72,10 +75,6 @@ module.exports.handle = (action) => {
     default: {
       const {data} = action;
       switch (data[0]) {
-        case WRITE_REGISTER: {
-          set(id, {synced: true});
-          break;
-        }
         case READ_HOLDING_REGISTERS: {
           const dev = get(id) || {};
           if (dev.synced) {
