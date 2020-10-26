@@ -133,6 +133,8 @@ module.exports.ACTION_MOVE_TO_LEVEL = 'ACTION_MOVE_TO_LEVEL';
 
 module.exports.ACTION_SET_ADDRESS = 'ACTION_SET_ADDRESS';
 module.exports.ACTION_SET_FAN_SPEED = 'ACTION_SET_FAN_SPEED';
+module.exports.ACTION_SET_MODE = 'ACTION_SET_MODE';
+module.exports.ACTION_SET_DIRECTION = 'ACTION_SET_DIRECTION';
 
 module.exports.OFF = 0x0;
 module.exports.ON = 0x1;
@@ -242,3 +244,4 @@ module.exports.DRIVER_TYPE_M206 = 'M206';
 module.exports.DRIVER_TYPE_M230 = 'M230';
 module.exports.DRIVER_TYPE_MODBUS = 'MODBUS';
 module.exports.DRIVER_TYPE_VARMANN = 'VARMANN';
+module.exports.DRIVER_TYPE_INTESIS_BOX = 'INTESIS_BOX';

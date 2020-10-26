@@ -8,6 +8,7 @@ const {
   DRIVER_TYPE_M230,
   DRIVER_TYPE_MODBUS,
   DRIVER_TYPE_VARMANN,
+  DRIVER_TYPE_INTESIS_BOX,
 } = require('../constants');
 const { get } = require('../actions');
 const RS21 = require('./RS21');
@@ -17,6 +18,7 @@ const M230 = require('./M230');
 const M206 = require('./M206');
 const modbus = require('./modbus');
 const varmann = require('./varmann');
+const intesisbox = require('./intesisbox');
 const mac = require('../mac');
 
 let run = {};
@@ -30,6 +32,7 @@ module.exports.manage = () => {
   });
   run = {};
   varmann.clear();
+  intesisbox.clear();
   if (!Array.isArray(driver)) return;
   driver.forEach(id => {
     const { type } = get(id) || {};
@@ -58,6 +61,10 @@ module.exports.manage = () => {
       case DRIVER_TYPE_VARMANN:
         run[id] = varmann;
         varmann.add(id);
+        break;
+      case DRIVER_TYPE_INTESIS_BOX:
+        run[id] = intesisbox;
+        intesisbox.add(id);
         break;
       }
   });

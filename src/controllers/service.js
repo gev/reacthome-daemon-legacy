@@ -75,6 +75,7 @@ const {
   DRIVER_TYPE_ARTNET,
   DRIVER_TYPE_BB_PLC1,
   DRIVER_TYPE_BB_PLC2,
+  DRIVER_TYPE_INTESIS_BOX,
   DISCOVERY_INTERVAL,
   DAEMON,
   MOBILE,
@@ -124,7 +125,7 @@ const {
   MOVE_TO_LEVEL,
   MOVE_TO_HUE_SATURATION,
   CLOSURE, CLOSE, OPEN, START, ACTION_OPEN, ACTION_STOP, ACTION_CLOSE, CLOSE_OPEN, 
-  ACTION_SET_ADDRESS, ACTION_SET_FAN_SPEED
+  ACTION_SET_ADDRESS, ACTION_SET_FAN_SPEED, ACTION_SET_DIRECTION, ACTION_SET_MODE, DRIVER_TYPE_VARMANN
 } = require('../constants');
 const {LIST } = require('../init/constants');
 const { NOTIFY } = require('../notification/constants');
@@ -459,6 +460,10 @@ const run = (action) => {
         const { id } = action;
         const o = get(id) || {};
         if (o.disabled) return;
+        if (o.type === DRIVER_TYPE_INTESIS_BOX) {
+          drivers.handle(action);
+          return;
+        }
         set(id, { value: true });
         if (o.onOn) {
           run({ type: ACTION_SCRIPT_RUN, id: o.onOn });
@@ -545,6 +550,10 @@ const run = (action) => {
         const { id } = action;
         const o = get(id) || {};
         if (o.disabled) return;
+        if (o.type === DRIVER_TYPE_INTESIS_BOX) {
+          drivers.handle(action);
+          return;
+        }
         set(id, { value: false });
         if (o.onOff) {
           run({ type: ACTION_SCRIPT_RUN, id: o.onOff });
@@ -740,7 +749,12 @@ const run = (action) => {
       }
       case ACTION_SETPOINT: {
         const { id, value } = action;
-        set(id, { setpoint: value });
+        const {type} = get(id) || {};
+        if (type === DRIVER_TYPE_INTESIS_BOX) {
+          drivers.handle(action);
+        } else {
+          set(id, { setpoint: value });
+        }
         break;
       }
       case ACTION_TIMER_START: {
@@ -1051,6 +1065,8 @@ const run = (action) => {
         break; 
       }
       case ACTION_SET_ADDRESS:
+      case ACTION_SET_MODE:
+      case ACTION_SET_DIRECTION:                
       case ACTION_SET_FAN_SPEED: {
         drivers.handle(action);
         break;
