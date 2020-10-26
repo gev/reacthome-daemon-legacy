@@ -18,14 +18,11 @@ const sync = (id) => {
       if (dev.broadcast) {
         writeRegister(modbus, BROADCAST_ADDRESS, 0x0, dev.address);
       } else {
-          writeRegisters(modbus, address, 0x0, [
-            dev.value, dev.mode, dev.fan_speed, dev.direction, dev.setpoint,
-          ]);
-          // writeRegister(modbus, address, 0x0, dev.value);
-          // writeRegister(modbus, address, 0x1, dev.mode);
-          // writeRegister(modbus, address, 0x2, dev.fan_speed);
-          // writeRegister(modbus, address, 0x3, dev.direction);
-          // writeRegister(modbus, address, 0x4, dev.setpoint);
+          writeRegister(modbus, address, 0x0, dev.value);
+          writeRegister(modbus, address, 0x1, dev.mode);
+          writeRegister(modbus, address, 0x2, dev.fan_speed);
+          writeRegister(modbus, address, 0x3, dev.direction);
+          writeRegister(modbus, address, 0x4, dev.setpoint);
           set(id, {synced: true});
       }
     }
