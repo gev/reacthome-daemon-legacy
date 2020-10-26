@@ -39,8 +39,7 @@ module.exports.send = (token, message) => {
   provider
     .send(message, token)
     .then(({failed = []}) => {
-      console.log(failed);
-      failed.forEach(({error, device, failed}) => {
+      failed.forEach(({error, device}) => {
         if (!error) deleteToken(device);
       });
     })

@@ -5,7 +5,6 @@ const { deleteToken } = require('./token');
 const { get } = require('../actions');
 
 const send = (service, token, message) => {
-  console.log(token, message(service))
   service.send(token, message(service));
 }
 
