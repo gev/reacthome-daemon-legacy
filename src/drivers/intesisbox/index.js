@@ -84,6 +84,6 @@ module.exports.add = (id) => {
 
 setInterval(() => {
   for (const id of instance) {
-    sync(id);
+    // sync(id);
   }
 }, TIMEOUT);
