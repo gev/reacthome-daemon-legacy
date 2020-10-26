@@ -13,7 +13,7 @@ const sync = (id) => {
   const [modbus,, address] = bind.split('/');
   if (modbus && address) {
     if (synced) {
-      readHoldingRegisters(modbus, address, 0x0, 5);
+      readHoldingRegisters(modbus, address, 0x0, 12);
     } else {
       if (dev.broadcast) {
         writeRegister(modbus, BROADCAST_ADDRESS, 0x0, dev.address);
