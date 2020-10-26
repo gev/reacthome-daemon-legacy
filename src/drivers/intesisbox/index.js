@@ -13,7 +13,7 @@ const sync = (id) => {
   const [modbus,, address] = bind.split('/');
   if (modbus && address) {
     if (synced) {
-      readHoldingRegisters(modbus, address, 0x0, 25);
+      readHoldingRegisters(modbus, address, 0x0, 5);
     } else {
       if (dev.broadcast) {
         writeRegister(modbus, BROADCAST_ADDRESS, 0x0, dev.address);
@@ -69,7 +69,14 @@ module.exports.handle = (action) => {
         case READ_HOLDING_REGISTERS: {
           const dev = get(id) || {};
           if (dev.synced) {
-            set(id, {fan_speed: data.readUInt16BE(14), synced: true})
+            set(id, {
+              value: data.readUInt16BE(2),
+              mode: data.readUInt16BE(4),
+              fan_speed: data.readUInt16BE(6),
+              direction: data.readUInt16BE(8),
+              setpoint: data.readUInt16BE(10),
+              synced: true
+            })
           } 
           break;
         }
@@ -88,6 +95,6 @@ module.exports.add = (id) => {
 
 setInterval(() => {
   for (const id of instance) {
-    // sync(id);
+    sync(id);
   }
 }, TIMEOUT);
