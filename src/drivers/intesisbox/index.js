@@ -18,24 +18,24 @@ const sync = (id) => {
       if (dev.broadcast) {
         writeRegister(modbus, BROADCAST_ADDRESS, 0x0, dev.address);
       } else {
-        setTimeout(() => {
+        // setTimeout(() => {
           writeRegister(modbus, address, 0x0, dev.value);
-        }, 100);
-        setTimeout(() => {
+        // }, 100);
+        // setTimeout(() => {
           writeRegister(modbus, address, 0x1, dev.mode);
-        }, 200);
-        setTimeout(() => {
+        // }, 200);
+        // setTimeout(() => {
           writeRegister(modbus, address, 0x2, dev.fan_speed);
-        }, 300);
-        setTimeout(() => {
+        // }, 300);
+        // setTimeout(() => {
           writeRegister(modbus, address, 0x3, dev.direction);
-        }, 400);
-        setTimeout(() => {
+        // }, 400);
+        // setTimeout(() => {
           writeRegister(modbus, address, 0x4, dev.setpoint);
-        }, 500);
-        setTimeout(() => {
+        // }, 500);
+        // setTimeout(() => {
           set(id, {synced: true});
-        }, 600);
+        // }, 600);
       }
     }
   }
