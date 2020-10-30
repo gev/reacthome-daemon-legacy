@@ -17,8 +17,10 @@ const sync = (id) => {
     } else {
       if (dev.broadcast) {
         writeRegister(modbus, BROADCAST_ADDRESS, 0x0, dev.address);
+        set(id, {synced: true, broadcast: false});
       } else {
         writeRegister(modbus, address, 0x6, dev.fan_speed);
+        set(id, {synced: true});
       }
     }
   }
@@ -38,10 +40,10 @@ module.exports.handle = (action) => {
     default: {
       const {data} = action;
       switch (data[0]) {
-        case WRITE_REGISTER: {
-          set(id, {synced: true});
-          break;
-        }
+        // case WRITE_REGISTER: {
+        //   set(id, {synced: true});
+        //   break;
+        // }
         case READ_HOLDING_REGISTERS: {
           const dev = get(id) || {};
           if (dev.synced) {
