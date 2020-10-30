@@ -10,7 +10,7 @@ const instance = new Set();
 const sync = (id) => {
   const dev = get(id) || {};
   const {bind, synced} = dev;
-  const [modbus,, address] = bind.split('/');
+  const [modbus,, address] = (bind || '').split('/');
   if (modbus && address) {
     if (synced) {
       readHoldingRegisters(modbus, address, 0x0, 25);
