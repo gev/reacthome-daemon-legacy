@@ -26,7 +26,7 @@ const rtu = (getSize, fill) => (code) => (id, address, register, data) => {
     buffer.writeUInt16BE(register, 4);
     fill(buffer, data);
     buffer.writeUInt16LE(crc16modbus(buffer.slice(2, size)), size);
-    console.log(buffer);
+    // console.log(buffer);
     send(buffer, ip);
   }
 }
@@ -56,7 +56,7 @@ module.exports.handle = ({id, data}) => {
   const address = data[0];
   const {bind} = get(`${id}/${MODBUS}/${address}`) || {};
   if (bind) {
-    console.log(data);
+    // console.log(data);
     driver.handle({id: bind, data: data.slice(1)});
   }
 }
