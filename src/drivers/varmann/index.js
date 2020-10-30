@@ -65,7 +65,11 @@ module.exports.add = (id) => {
 };
 
 setInterval(() => {
+  let i = 0;
   for (const id of instance) {
-    sync(id);
+    setTimeOut(() => {
+      sync(id);
+    }, i * 100);
+    i += 1;
   }
 }, TIMEOUT);
