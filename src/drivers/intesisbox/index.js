@@ -15,16 +15,12 @@ const sync = (id) => {
     if (synced) {
       readHoldingRegisters(modbus, address, 0x0, 12);
     } else {
-      if (dev.broadcast) {
-        writeRegister(modbus, BROADCAST_ADDRESS, 0x0, dev.address);
-      } else {
-          writeRegister(modbus, address, 0x0, dev.value);
-          writeRegister(modbus, address, 0x1, dev.mode);
-          writeRegister(modbus, address, 0x2, dev.fan_speed);
-          writeRegister(modbus, address, 0x3, dev.direction);
-          writeRegister(modbus, address, 0x4, dev.setpoint);
-          set(id, {synced: true});
-      }
+      writeRegister(modbus, address, 0x0, dev.value);
+      writeRegister(modbus, address, 0x1, dev.mode);
+      writeRegister(modbus, address, 0x2, dev.fan_speed);
+      writeRegister(modbus, address, 0x3, dev.direction);
+      writeRegister(modbus, address, 0x4, dev.setpoint);
+      set(id, {synced: true});
     }
   }
 };
@@ -32,10 +28,6 @@ const sync = (id) => {
 module.exports.handle = (action) => {
   const {id, type} = action;
   switch (type) {
-    case ACTION_SET_ADDRESS: {
-      set(id, {address: action.value, synced: false, broadcast: true})
-      break;
-    }
     case ACTION_ON: {
       set(id, {value: true, synced: false});
       break;
