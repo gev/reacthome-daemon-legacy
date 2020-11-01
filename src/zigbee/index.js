@@ -52,7 +52,7 @@ module.exports.start = (id) => {
   controller
   .start()
   .then(() => {
-    controller.permitJoin(true);
+    controller.permitJoin(false);
     controller.setTransmitPower(22);
     // controller.getNetworkParameters().then(param => {
     //   console.log(JSON.stringify(param, null, 2));
