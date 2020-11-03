@@ -41,6 +41,7 @@ module.exports.start = (id) => {
   });
 
   controller.on('deviceAnnounce', ({ device }) => {
+    console.log('anonce', device);
     online(device.ieeeAddr, device.networkAddress);
   });
 
@@ -52,7 +53,7 @@ module.exports.start = (id) => {
   controller
   .start()
   .then(() => {
-    controller.permitJoin(false);
+    controller.permitJoin(true);
     controller.setTransmitPower(22);
     // controller.getNetworkParameters().then(param => {
     //   console.log(JSON.stringify(param, null, 2));
