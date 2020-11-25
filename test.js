@@ -10,3 +10,4 @@ ffmpeg.on('error', console.error);
 ffmpeg.stdout.on('data', (data) => {
   console.log(data.length);
 })
+while(true);
