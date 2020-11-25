@@ -8,6 +8,6 @@ const ffmpeg = spawn('ffmpeg', [
 ]);
 ffmpeg.on('error', console.error);
 ffmpeg.stdout.on('data', (data) => {
-  console.log(data.length);
-})
+  console.log(data);
+});
 setInterval(() => {}, 1000);
