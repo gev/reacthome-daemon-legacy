@@ -12,7 +12,7 @@ const TIMEOUT = 1000;
 
 module.exports.start = (id) => {
   const socket = createSocket('udp4');
-  socket.on('error', console.error);
+  // socket.on('error', console.error);
   socket.bind(() => {
     // socket.setMulticastInterface(networkInterfaces().eth1[0].address)
     setInterval(() => {

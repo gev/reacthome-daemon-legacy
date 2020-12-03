@@ -48,9 +48,9 @@ const start = (id) => {
 };
 
 db.createReadStream()
-  .on('error', (err) => {
-    console.error(err)
-  })
+  // .on('error', (err) => {
+  //   console.error(err)
+  // })
   .on('data', ({ key, value }) => {
     init[key] = value;
   })

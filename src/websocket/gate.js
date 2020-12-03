@@ -51,7 +51,7 @@ const connect = (id) => {
       socket.ping();
     }, TIMEOUT);
   });
-  socket.on('error', console.error);
+  // socket.on('error', console.error);
 };
 
 module.exports = connect;
