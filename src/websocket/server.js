@@ -14,7 +14,7 @@ module.exports = () => {
     socket.on('message', message => {
       handle(session, message);
     });
-    // socket.on('error', console.error);
+    socket.on('error', console.error);
     peers.set(session, {
       session,
       online: true,
