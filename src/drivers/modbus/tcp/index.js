@@ -1,6 +1,6 @@
 
 const net = require('net');
-const { get } = require('../../actions');
+const { get } = require('../../../actions');
 const { 
   READ_INPUT_REGISTERS,
   READ_HOLDING_REGISTERS, 
@@ -8,8 +8,7 @@ const {
   WRITE_REGISTERS,
   MODBUS,
 } = require('../constants');
-const driver = require('../driver');
-const { send } = require('../../sockets/device');
+const driver = require('../../driver');
 
 const sockets = new Map();
 

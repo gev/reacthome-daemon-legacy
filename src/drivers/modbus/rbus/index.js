@@ -1,7 +1,7 @@
 
 const { crc16modbus } = require('crc');
-const { get } = require('../../actions');
-const { ACTION_RS485_TRANSMIT } = require('../../constants');
+const { get } = require('../../../actions');
+const { ACTION_RS485_TRANSMIT } = require('../../../constants');
 const { 
   READ_INPUT_REGISTERS,
   READ_HOLDING_REGISTERS, 
@@ -9,8 +9,8 @@ const {
   WRITE_REGISTERS,
   MODBUS,
 } = require('../constants');
-const driver = require('../driver');
-const { send } = require('../../sockets/device');
+const driver = require('../../driver');
+const { send } = require('../../../sockets/device');
 
 const request = (getSize, fill) => (code) => (id, address, register, data) => {
   const {bind} = get(id) || {};
