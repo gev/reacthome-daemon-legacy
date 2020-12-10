@@ -22,9 +22,9 @@ const connect = (host, port) => new Promise((resolve, reject) => {
   });
   socket.on('data', (data) => {
     console.log(data);
-    for (let i = 0; i < 19; i++) {
-      console.log(data.readFloatLE(9 + i * 4));
-    }
+    // for (let i = 0; i < 19; i++) {
+    //   console.log(data.readFloatLE(9 + i * 4));
+    // }
   });
 });
 
