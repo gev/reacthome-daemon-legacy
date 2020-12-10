@@ -20,7 +20,7 @@ const connect = (host, port) => new Promise((resolve, reject) => {
     socket.destroy();
     reject(err);
   });
-  sockets.on('data', console.log);
+  socket.on('data', console.log);
 });
 
 const send = async (data, port, host) => {
