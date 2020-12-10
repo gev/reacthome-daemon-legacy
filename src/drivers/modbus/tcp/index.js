@@ -13,14 +13,14 @@ const driver = require('../../driver');
 const sockets = new Map();
 
 const connect = (host, port) => new Promise((resolve, reject) => {
-  net.connect({host, port}, (socket) => {
+  const socket = net.connect({host, port}, () => {
     resolve(socket);
-  })
-  .on('error', err => {
+  });
+  socket.on('error', err => {
     socket.destroy();
     reject(err);
-  })
-  .on('data', console.log);
+  });
+  sockets.on('data', console.log);
 });
 
 const send = async (data, port, host) => {
@@ -33,7 +33,7 @@ const send = async (data, port, host) => {
       socket = await connect(host, port);
       sockets.set(id, socket);
     }
-    socket.write(data);
+    await socket.write(data);
   } catch (e) {
     console.error(e);
   }
