@@ -2,7 +2,7 @@ const { readHoldingRegisters } = require("../modbus/tcp");
 
 
 
-modules.exports.add = (id) => {
+module.exports.add = (id) => {
 
 }
 
