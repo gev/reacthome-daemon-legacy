@@ -1,7 +1,7 @@
 
 const { get, set } = require('../../actions');
 const { ACTION_SET_ADDRESS, ACTION_SET_FAN_SPEED } = require('../../constants');
-const { writeRegister, readHoldingRegisters } = require('../modbus');
+const { writeRegister, readHoldingRegisters } = require('../modbus/rbus');
 const { READ_HOLDING_REGISTERS, WRITE_REGISTER } = require('../modbus/constants');
 const { BROADCAST_ADDRESS, TIMEOUT } = require('./constants');
 
