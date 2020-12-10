@@ -62,7 +62,7 @@ const request = (getSize, fill) => (code) => (ip, port, address, register, data)
 const request12 = request(
   () => 12, 
   (buffer, data) => {
-    buffer.writeUInt16BE(data, 6);
+    buffer.writeUInt16BE(data, 10);
   }
 );
 
