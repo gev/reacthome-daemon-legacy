@@ -20,7 +20,11 @@ const connect = (host, port) => new Promise((resolve, reject) => {
     socket.destroy();
     reject(err);
   });
-  socket.on('data', console.log);
+  socket.on('data', (data) => {
+    for (let i = 0; i < 19; i++) {
+      console.log(data.readFloatLE(9 + i * 4));
+    }
+  });
 });
 
 const send = async (data, port, host) => {
