@@ -9,6 +9,7 @@ const {
   DRIVER_TYPE_MODBUS,
   DRIVER_TYPE_VARMANN,
   DRIVER_TYPE_INTESIS_BOX,
+  DRIVER_TYPE_ME210_701,
 } = require('../constants');
 const { get } = require('../actions');
 const RS21 = require('./RS21');
@@ -16,9 +17,10 @@ const Artnet = require('./artnet');
 const { Plc1, Plc2 } = require('./bb');
 const M230 = require('./M230');
 const M206 = require('./M206');
-const modbus = require('./modbus');
+const modbus = require('./modbus/rbus');
 const varmann = require('./varmann');
 const intesisbox = require('./intesisbox');
+const me210_701 = require('./owen/me210_701');
 const mac = require('../mac');
 
 let run = {};
@@ -27,7 +29,7 @@ module.exports.manage = () => {
   const { project } = get(mac()) || {};
   if (project === undefined) return;
   const { driver } = get(project);
-  Object.entries(run).forEach(([id, drv]) => {
+  Object.entries(run).forEach(([_, drv]) => {
     if (drv.stop) drv.stop();
   });
   run = {};
@@ -65,6 +67,10 @@ module.exports.manage = () => {
       case DRIVER_TYPE_INTESIS_BOX:
         run[id] = intesisbox;
         intesisbox.add(id);
+        break;
+      case DRIVER_TYPE_ME210_701:
+        run[id] = me210_701;
+        me210_701.add(id);
         break;
       }
   });

@@ -245,3 +245,4 @@ module.exports.DRIVER_TYPE_M230 = 'M230';
 module.exports.DRIVER_TYPE_MODBUS = 'MODBUS';
 module.exports.DRIVER_TYPE_VARMANN = 'VARMANN';
 module.exports.DRIVER_TYPE_INTESIS_BOX = 'INTESIS_BOX';
+module.exports.DRIVER_TYPE_ME210_701 = 'ME210_710';

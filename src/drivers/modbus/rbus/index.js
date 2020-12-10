@@ -8,11 +8,11 @@ const {
   WRITE_REGISTER,
   WRITE_REGISTERS,
   MODBUS,
-} = require('./constants');
+} = require('../constants');
 const driver = require('../driver');
 const { send } = require('../../sockets/device');
 
-const rtu = (getSize, fill) => (code) => (id, address, register, data) => {
+const request = (getSize, fill) => (code) => (id, address, register, data) => {
   const {bind} = get(id) || {};
   const [dev,, index] = bind.split('/');
   const {ip} = get(dev) || {};
@@ -31,17 +31,17 @@ const rtu = (getSize, fill) => (code) => (id, address, register, data) => {
   }
 }
 
-const rtu8 = rtu(
+const request8 = request(
   () => 8, 
   (buffer, data) => {
     buffer.writeUInt16BE(data, 6);
   }
 );
 
-module.exports.readHoldingRegisters = rtu8(READ_HOLDING_REGISTERS);
-module.exports.readInputRegisters = rtu8(READ_INPUT_REGISTERS);
-module.exports.writeRegister = rtu8(WRITE_REGISTER);
-module.exports.writeRegisters = rtu(
+module.exports.readHoldingRegisters = request8(READ_HOLDING_REGISTERS);
+module.exports.readInputRegisters = request8(READ_INPUT_REGISTERS);
+module.exports.writeRegister = request8(WRITE_REGISTER);
+module.exports.writeRegisters = request(
   (data) => 9 + 2 * data.length,
   (buffer, data) => {
     buffer.writeUInt16BE(data.length, 6);
@@ -56,7 +56,6 @@ module.exports.handle = ({id, data}) => {
   const address = data[0];
   const {bind} = get(`${id}/${MODBUS}/${address}`) || {};
   if (bind) {
-    // console.log(data);
     driver.handle({id: bind, data: data.slice(1)});
   }
 }
