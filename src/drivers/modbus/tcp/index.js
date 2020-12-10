@@ -17,9 +17,8 @@ const connect = (host, port) => new Promise((resolve, reject) => {
     resolve(socket);
   })
   .on('error', err => {
-    this.emit('error', err);
     socket.destroy();
-    reject();
+    reject(err);
   })
   .on('data', console.log);
 });
@@ -32,6 +31,7 @@ const send = async (data, port, host) => {
       socket = sockets.get(id)
     } else {
       socket = await connect(host, port);
+      sockets.set(id, socket);
     }
     await socket.write(data);
   } catch (e) {
