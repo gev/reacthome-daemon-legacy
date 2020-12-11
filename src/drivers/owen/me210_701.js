@@ -13,6 +13,6 @@ for (let i = 0; i < 3; i++) {
     setTimeout(() => {
       readHoldingRegisters('172.16.1.1', 502, 1, 5240 + i * 2 + j * 12, 2);
     }, k);
-    k += 100;
+    k += 1000;
   }
 }
