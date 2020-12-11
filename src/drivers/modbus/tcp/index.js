@@ -21,7 +21,7 @@ const connect = (host, port) => new Promise((resolve, reject) => {
     reject(err);
   });
   socket.on('data', (data) => {
-    console.log(data, data.readFloatLE(9));
+    console.log(data, data.readFloatLE(9), data.readFloatBE(9));
   });
 });
 
