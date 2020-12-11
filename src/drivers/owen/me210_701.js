@@ -6,4 +6,9 @@ module.exports.add = (id) => {
 
 }
 
-readHoldingRegisters('172.16.1.1', 502, 1, 0x14D8, 38);
+readHoldingRegisters('172.16.1.1', 502, 1, 5336, 2);
+for (let i = 0; i < 3; i++) {
+  for (let i = 0; j < 6; i++) {
+    readHoldingRegisters('172.16.1.1', 502, 1, 5240 + i * 2 + j * 12, 2);
+  }
+}
