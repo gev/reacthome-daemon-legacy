@@ -1,3 +1,6 @@
+process.on('uncaughtException', function(err) { 
+  console.log(err) 
+});
 
 const { v4 } = require('uuid');
 const { DAEMON, ACTION_SCRIPT_RUN, ACTION_SCHEDULE_START, ACTION_TIMER_START } = require('./src/constants');
