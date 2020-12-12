@@ -11,6 +11,7 @@ const CLIENT_GROUP = '224.0.0.2';
 const TIMEOUT = 1000;
 
 const {address} = networkInterfaces().eth1[0];
+console.log(address);
 const socket = createSocket('udp4');
 socket.on('error', console.error);
 socket.bind({address}, () => {
