@@ -27,4 +27,3 @@ module.exports.start = (id) => {
   });
   socket.bind({address, port});
 };
-s
