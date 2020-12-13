@@ -4,9 +4,9 @@ const { createSocket } = require('dgram');
 const { get } = require('./actions');
 
 const DISCOVERY = 'discovery';
-
-const {address} = networkInterfaces().eth1[0];
-const port = 2021;
+const CLIENT_GROUP = '224.0.0.2';
+const CLIENT_PORT = 2021;
+const ADDRESS = networkInterfaces().eth1[0].address;
 
 module.exports.start = (id) => {
   const socket = createSocket('udp4');
@@ -25,5 +25,7 @@ module.exports.start = (id) => {
       console.error(e);
     }
   });
-  socket.bind({address, port});
+  socket.bind({address: ADDRESS, port: CLIENT_PORT}, () => {
+    socket.addMembership(CLIENT_GROUP);
+  });
 };
