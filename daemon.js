@@ -63,8 +63,10 @@ db.createReadStream()
       db.put('mac', init.mac);
     }
     const d = init[init.mac];
-    delete d.ip;
-    set(init.mac, d);
+    if (d) {
+      delete d.ip;
+      set(init.mac, d);
+    }
     console.log(init.mac);
     await assets.init();
     state.init(init);
