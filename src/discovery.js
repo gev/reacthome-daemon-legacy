@@ -1,29 +1,30 @@
 
 const { networkInterfaces } = require('os');
 const { createSocket } = require('dgram');
-const { DAEMON, VERSION} = require('./constants');
 const { get } = require('./actions');
 
 const DISCOVERY = 'discovery';
 
-const CLIENT_PORT = 2021;
-const CLIENT_GROUP = '224.0.0.2';
-const TIMEOUT = 1000;
-
 const {address} = networkInterfaces().eth1[0];
-console.log(address);
-const socket = createSocket('udp4');
-socket.on('error', console.error);
-socket.bind({address}, () => {
-  socket.setMulticastInterface(address);
-});
+const port = 2021;
 
 module.exports.start = (id) => {
-  setInterval(() => {
-    socket.send(JSON.stringify({
-      id,
-      type: DISCOVERY,
-      payload: get(id)
-    }), CLIENT_PORT, CLIENT_GROUP);
-  }, TIMEOUT);
+  const socket = createSocket('udp4');
+  socket.on('error', console.error);
+  socket.on('message', (message, {port, address}) => {
+    try {
+      const { type } = JSON.parse(Buffer.from(message));
+      if (type === DISCOVERY) {
+        socket.send(JSON.stringify({
+          id,
+          type: DISCOVERY,
+          payload: get(id)
+        }), port, address);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  });
+  socket.bind({address, port});
 };
+s
