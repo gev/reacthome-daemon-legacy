@@ -25,7 +25,8 @@ module.exports.start = (id) => {
       console.error(e);
     }
   });
-  socket.bind({address: ADDRESS, port: CLIENT_PORT}, () => {
+  socket.on('listening', () => {
     socket.addMembership(CLIENT_GROUP);
   });
+  socket.bind({address: ADDRESS, port: CLIENT_PORT});
 };
