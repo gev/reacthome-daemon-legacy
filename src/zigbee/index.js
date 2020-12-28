@@ -45,7 +45,7 @@ module.exports.start = (id) => {
   controller.on('deviceAnnounce', ({ device }) => {
     // console.log('anonce', device);
     online(device.ieeeAddr, device.networkAddress);
-    // addDevice(id, device);
+    addDevice(id, device);
   });
 
   controller.on('message', ({ device, endpoint, data }) => {
@@ -66,7 +66,7 @@ module.exports.start = (id) => {
     controller.getDevices().forEach(device => {
       // console.log('-----------------------------------------------------------------');
       // console.log(JSON.stringify(device, null, 2));
-      addDevice(id, device);
+      // addDevice(id, device);
       // device.endpoints.forEach(endpoint => {
       //   handle(device.ieeeAddr, endpoint);
       // });
