@@ -8,7 +8,7 @@ const clusters = require('./clusters');
 const handle = require('./in');
 
 const addDevice = (id, device) => {
-  const { ieeeAddr, manufacturerName, modelID, powerSource, interviewCompleted, endpoints } = device;
+  const { ieeeAddr, manufacturerName, modelID, powerSource, interviewCompleted } = device;
   add(id, DEVICE, ieeeAddr);
   set(ieeeAddr, {
     protocol: ZIGBEE,
@@ -45,7 +45,6 @@ module.exports.start = (id) => {
   controller.on('deviceAnnounce', ({ device }) => {
     // console.log('anonce', device);
     online(device.ieeeAddr, device.networkAddress);
-    addDevice(id, device);
   });
 
   controller.on('message', ({ device, endpoint, data }) => {
