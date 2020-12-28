@@ -64,7 +64,9 @@ const setpoint = async (id, index, value) => {
   const device = controller.getDeviceByIeeeAddr(id);
   const endpoint = device.getEndpoint(Number.parseInt(index));
   const data = convertDecimalValueTo4BytesArray(value * 10); 
-  await endpoint.command('manuSpecificTuya', 'setData', {
+  transid += 1;
+  transid %= 255;
+  await device.command('manuSpecificTuya', 'setData', {
     status: 0,
     transid,
     dp: 103,
@@ -73,8 +75,6 @@ const setpoint = async (id, index, value) => {
     length_lo: 4,
     data,
   });
-  transid += 1;
-  transid %= 255;
 };
 
 module.exports = {
