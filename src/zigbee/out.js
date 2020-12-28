@@ -1,13 +1,34 @@
+const { get } = require('../actions');
 const { ON, OFF, ACTION_OPEN, ACTION_CLOSE, ACTION_STOP } = require('../constants');
 const controller = require('./controller');
 
 let transid = 0;
 
+const convertDecimalValueTo4BytesArray = v =>
+  [v >> 24 & 0xff, v >> 16 & 0xff, v >> 8 & 0xff, v & 0xff];
+
 const on_off = async (id, index, value) => {
   try {
     const device = controller.getDeviceByIeeeAddr(id);
     const endpoint = device.getEndpoint(Number.parseInt(index));
-    await endpoint.command('genOnOff', value ? 'on' : 'off', {});
+    if (device.modelID === '88teujp\u0000') {
+      await endpoint.command(
+        'manuSpecificTuya',
+        'setData',
+        {
+          status: 0,
+          transid,
+          dp: 101,
+          datatype: 1,
+          length_hi: 0,
+          length_lo: 1,
+          data: [value ? 1 : 0],
+        },
+        {disableDefaultResponse: true}
+      );
+    } else {
+      await endpoint.command('genOnOff', value ? 'on' : 'off', {});
+    }
   } catch (e) {
     console.error(id, index, value, e);
   }
@@ -56,9 +77,6 @@ const closure = async (id, index, action) => {
   const endpoint = device.getEndpoint(Number.parseInt(index));
   await endpoint.command('closuresWindowCovering', zclCmdLookup[action], {});
 };
-
-const convertDecimalValueTo4BytesArray = v =>
-  [v >> 24 & 0xff, v >> 16 & 0xff, v >> 8 & 0xff, v & 0xff];
 
 const setpoint = async (id, index, value) => {
   const device = controller.getDeviceByIeeeAddr(id);
