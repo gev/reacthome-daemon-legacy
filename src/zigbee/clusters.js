@@ -11,8 +11,8 @@ const type = (res) => () => {
 const bind = async (endpoint, cluster, config) => {
   // if (endpoint.binds.length > 0) return;
   try {
-    await endpoint.bind(cluster, controller.getDevicesByType('Coordinator')[0].getEndpoint(1));
-    await endpoint.configureReporting(cluster, config);
+    // await endpoint.bind(cluster, controller.getDevicesByType('Coordinator')[0].getEndpoint(1));
+    // await endpoint.configureReporting(cluster, config);
   } catch (e) {
     console.error(e);
   }
@@ -84,7 +84,7 @@ clusters.set(0x0102, configure(CLOSURE, 'closuresWindowCovering', [{
 
 module.exports = (device) => {
   switch (device.modelId) {
-    case '88teujp\u0000':
+    case '88teujp\u0000node':
       return [{id: 1, cluster: [THERMOSTAT]}];
     default: 
       return device.endpoints.reduce((config, endpoint) => {

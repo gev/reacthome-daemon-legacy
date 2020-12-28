@@ -7,7 +7,7 @@ const onDI = [onOff, onOn, onHold, onClick];
 const onDO = [onOff, onOn];
 const count = [count_off, count_on];
 
-module.exports = (id, { ID, clusters, inputClusters }, data) => {
+module.exports = (id, { ID, clusters }, data) => {
   Object
     .entries(clusters)
     .forEach(([key, { attributes }]) => {
@@ -66,12 +66,14 @@ module.exports = (id, { ID, clusters, inputClusters }, data) => {
           break;
         }
         default: {
-          const value = data.zonestatus & 0x1;
-          set(id, { value });
-          const device = get(id);
-          const script = device[onDO[value]];
-          if (script) {
-            run({type: ACTION_SCRIPT_RUN, id: script });
+          if (data.zonestatus !== undefined) {
+            const value = data.zonestatus & 0x1;
+            set(id, { value });
+            const device = get(id);
+            const script = device[onDO[value]];
+            if (script) {
+              run({type: ACTION_SCRIPT_RUN, id: script });
+            }
           }
         }
       }
