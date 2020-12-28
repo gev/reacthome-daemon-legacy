@@ -74,7 +74,7 @@ module.exports = (id, { ID, clusters }, data) => {
             if (script) {
               run({type: ACTION_SCRIPT_RUN, id: script });
             }
-          } else {
+          } else if (data.dp && data.datatype && data.data) {
             console.log(ID, clusters, data);
           }
         }
