@@ -749,6 +749,11 @@ const run = (action) => {
       }
       case ACTION_SETPOINT: {
         const { id, value } = action;
+        const dev = get(id);
+        if (dev.protocol === ZIGBEE) {
+          zigbee.setpoint(action.id, action.index, action.value);
+          return;
+        }
         const {type} = get(id) || {};
         if (type === DRIVER_TYPE_INTESIS_BOX) {
           drivers.handle(action);

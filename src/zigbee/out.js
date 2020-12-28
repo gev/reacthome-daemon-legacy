@@ -55,6 +55,10 @@ const closure = async (id, index, action) => {
   await endpoint.command('closuresWindowCovering', zclCmdLookup[action], {});
 };
 
+const setpoint = async (id, index, action) => {
+  console.log(id, index, action);
+};
+
 module.exports = {
   on_off, 
   on, 
@@ -64,4 +68,5 @@ module.exports = {
   move_to_hue_saturation,
   move_to_level,
   closure,
+  setpoint,
 };
