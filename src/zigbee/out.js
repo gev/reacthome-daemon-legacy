@@ -66,15 +66,20 @@ const setpoint = async (id, index, value) => {
   const data = convertDecimalValueTo4BytesArray(value * 10); 
   transid += 1;
   transid %= 255;
-  await device.command('manuSpecificTuya', 'setData', {
-    status: 0,
-    transid,
-    dp: 103,
-    datatype: 2,
-    length_hi: 0,
-    length_lo: 4,
-    data,
-  });
+  await endpoint.command(
+    'manuSpecificTuya',
+    'setData',
+    {
+      status: 0,
+      transid,
+      dp: 103,
+      datatype: 2,
+      length_hi: 0,
+      length_lo: 4,
+      data,
+    },
+    {disableDefaultResponse: true}
+  );
 };
 
 module.exports = {
