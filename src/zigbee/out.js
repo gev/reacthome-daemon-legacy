@@ -1,6 +1,8 @@
 const { ON, OFF, ACTION_OPEN, ACTION_CLOSE, ACTION_STOP } = require('../constants');
 const controller = require('./controller');
 
+let transid = 0;
+
 const on_off = async (id, index, value) => {
   try {
     const device = controller.getDeviceByIeeeAddr(id);
@@ -55,8 +57,24 @@ const closure = async (id, index, action) => {
   await endpoint.command('closuresWindowCovering', zclCmdLookup[action], {});
 };
 
-const setpoint = async (id, index, action) => {
-  console.log(id, index, action);
+const convertDecimalValueTo4BytesArray = v =>
+  [v >> 24 & 0xff, v >> 16 & 0xff, v >> 8 & 0xff, v & 0xff];
+
+const setpoint = async (id, index, value) => {
+  const device = controller.getDeviceByIeeeAddr(id);
+  const endpoint = device.getEndpoint(Number.parseInt(index));
+  const data = convertDecimalValueTo4ByteArray(value * 10); 
+  await endpoint.command('manuSpecificTuya', 'setData', {
+    status: 0,
+    transid,
+    dp: 103,
+    datatype: 2,
+    length_hi: 0,
+    length_lo: 4,
+    data,
+  });
+  transid += 1;
+  transid %= 255;
 };
 
 module.exports = {
