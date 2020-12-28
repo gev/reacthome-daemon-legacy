@@ -63,7 +63,7 @@ const convertDecimalValueTo4BytesArray = v =>
 const setpoint = async (id, index, value) => {
   const device = controller.getDeviceByIeeeAddr(id);
   const endpoint = device.getEndpoint(Number.parseInt(index));
-  const data = convertDecimalValueTo4ByteArray(value * 10); 
+  const data = convertDecimalValueTo4BytesArray(value * 10); 
   await endpoint.command('manuSpecificTuya', 'setData', {
     status: 0,
     transid,
