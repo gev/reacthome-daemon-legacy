@@ -86,14 +86,15 @@ module.exports = (device) => {
   switch (device.modelId) {
     case '88teujp\u0000':
       return [{id: 1, cluster: [THERMOSTAT]}];
-    default: return device.endpoints.reduce((config, endpoint) => {
-      const cluster = endpoint.inputClusters
-        .filter(id => clusters.has(id))
-        .map(id => clusters.get(id)(endpoint));
-      if (cluster.length > 0) {
-        config.push({id: endpoint.ID, cluster});
-      }
-      return config;
-    }, []);
+    default: 
+      return device.endpoints.reduce((config, endpoint) => {
+        const cluster = endpoint.inputClusters
+          .filter(id => clusters.has(id))
+          .map(id => clusters.get(id)(endpoint));
+        if (cluster.length > 0) {
+          config.push({id: endpoint.ID, cluster});
+        }
+        return config;
+      }, []);
   }
 }
