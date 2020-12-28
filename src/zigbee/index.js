@@ -34,7 +34,7 @@ module.exports.start = (id) => {
   });
 
   controller.on('deviceInterview', ({ device }) => {
-    console.log(device);
+    // console.log(device);
     online(device.ieeeAddr, device.networkAddress);
     addDevice(id, device);
     device.endpoints.forEach(endpoint => {
@@ -48,7 +48,7 @@ module.exports.start = (id) => {
   });
 
   controller.on('message', ({ device, endpoint, data }) => {
-    console.log(endpoint, data);
+    // console.log(endpoint, data);
     online(device.ieeeAddr, device.networkAddress);
     handle(device.ieeeAddr, endpoint, data);
   });
