@@ -83,7 +83,7 @@ clusters.set(0x0102, configure(CLOSURE, 'closuresWindowCovering', [{
 }]));
 
 module.exports = (device) => {
-  console.log(device.modelId);
+  console.log(device);
   switch (device.modelId) {
     case '88teujp\u0000node':
       console.log([{id: 1, cluster: [THERMOSTAT]}]);
