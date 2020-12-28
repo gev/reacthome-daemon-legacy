@@ -75,7 +75,26 @@ module.exports = (id, { ID, clusters }, data) => {
               run({type: ACTION_SCRIPT_RUN, id: script });
             }
           } else if (data.dp && data.datatype && data.data) {
-            console.log(ID, clusters, data);
+            let value;
+            switch (data.datatype) {
+              case 1: 
+                value = Boolean(data.data[0]);
+                break;
+              case 2:
+                  value = (data.data[0] << 24 | data.data[1] << 16 | data.data[2] << 8 | data.data[3]) / 10
+                break;
+            }
+            switch (data.dp) {
+              case 101:
+                set(id, {value});
+                break;
+              case 102:
+                set(id, {temperature: value});
+                break;
+              case 103:
+                set(id, {setpoint: value});
+                break;
+            }
           }
         }
       }
