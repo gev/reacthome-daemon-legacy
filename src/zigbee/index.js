@@ -15,7 +15,7 @@ const addDevice = (id, device) => {
     vendor: manufacturerName,
     model: modelID,
     powerSource: powerSource,
-    endpoint: clusters(endpoints),
+    endpoint: clusters(device),
     interviewCompleted
   });
 };

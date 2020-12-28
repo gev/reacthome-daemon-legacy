@@ -232,6 +232,7 @@ module.exports.HEAT = 'heat';
 module.exports.COOL = 'cool';
 module.exports.STOP = 'stop';
 
+module.exports.THERMOSTAT = 'thermostat';
 module.exports.CLOSURE = 'closure';
 module.exports.OPEN = 'open';
 module.exports.CLOSE = 'close';
