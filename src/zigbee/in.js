@@ -94,6 +94,8 @@ module.exports = (id, { ID, clusters }, data) => {
               case 103:
                 set(id, {setpoint: value});
                 break;
+              default:
+                console.log(data);
             }
           }
         }
