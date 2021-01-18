@@ -2,7 +2,7 @@
 const url = require('url');
 const sip = require('sip');
 const SDP = require('sdp-transform');
-const uuid = require('uud').v4;
+const uuid = require('uuid').v4;
 const janus = require('../janus');
 const { fixSDP } = require('../sdp');
 const notification = require('../notification');
