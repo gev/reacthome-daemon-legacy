@@ -1,6 +1,6 @@
 
 const { Server } = require('ws');
-const uuid = require('uuid/v4');
+const uuid = require('uuid').v4;
 const { deleteSession } = require('../notification');
 const { peers } = require('./peer');
 const handle = require('./handle');

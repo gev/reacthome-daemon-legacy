@@ -1,6 +1,6 @@
 
 const WebSocket = require('ws');
-const uuid = require('uuid/v4');
+const uuid = require('uuid').v4;
 const peer = require('../websocket/peer');
 const { streams } = require('../camera/streams');
 const { CREATE, ATTACH, MESSAGE, TRICKLE, CANDIDATE, KEEPALIVE } =require('./constants');
