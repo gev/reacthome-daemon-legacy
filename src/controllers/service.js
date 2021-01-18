@@ -262,7 +262,7 @@ const run = (action) => {
                   a.push((action.timeout >> 24) & 0xff);
                 }
                 device.send(Buffer.from(a), dev.ip);
-            }
+              }
             }
             break;
           }
