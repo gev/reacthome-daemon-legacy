@@ -251,8 +251,18 @@ const run = (action) => {
                 break;
               }
               default: {
-                device.send(Buffer.from([ACTION_RBUS_TRANSMIT, ...action.id.split(':').map(i => parseInt(i, 16)), ACTION_DO, action.index, action.value]), dev.ip);
-              }
+                const a = [ACTION_RBUS_TRANSMIT, ...action.id.split(':').map(i => parseInt(i, 16)), ACTION_DO, action.index];
+                if (action.value !== undefined) {
+                  a.push(action.value);
+                }
+                if (action.timeout !== undefined) {
+                  a.push((action.timeout) & 0xff);
+                  a.push((action.timeout >>  8) & 0xff);
+                  a.push((action.timeout >> 16) & 0xff);
+                  a.push((action.timeout >> 24) & 0xff);
+                }
+                device.send(Buffer.from(a), dev.ip);
+            }
             }
             break;
           }
