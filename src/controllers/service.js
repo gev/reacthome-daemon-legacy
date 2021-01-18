@@ -326,7 +326,17 @@ const run = (action) => {
         buffer.writeUInt8(action.index, 1);
         buffer.writeUInt8(action.enabled === undefined ? enabled : action.enabled, 2);
         buffer.writeUInt32LE(action.delay === undefined ? delay : action.delay, 3);
-        device.send(buffer, dev.ip);
+        switch (dev.type) {
+          case DEVICE_TYPE_RELAY_2_DIN:
+          case DEVICE_TYPE_RELAY_2:
+            device.send(Buffer.concat([
+              Buffer.from([ACTION_RBUS_TRANSMIT, ...action.id.split(':').map(i => parseInt(i, 16))]),
+              buffer
+            ]), dev.ip);
+            break;
+          default:
+            device.send(buffer, dev.ip);
+        }
         break;
       }
       case ACTION_DOPPLER: {
