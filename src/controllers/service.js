@@ -351,7 +351,7 @@ const run = (action) => {
         break;
       }
       case ACTION_DI_RELAY_SYNC: {
-        console.log(action);
+        console.log(action);  
         const dev = get(action.id);
         switch (dev.type) {
           case DEVICE_TYPE_RELAY_2_DIN: {

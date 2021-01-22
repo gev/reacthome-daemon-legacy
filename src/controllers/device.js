@@ -52,7 +52,8 @@ const {
   onHumidity,
   onIllumination,
   onTemperature,
-  CLOSE_OPEN
+  CLOSE_OPEN,
+  ACTION_DI_RELAY_SYNC
 } = require('../constants');
 const {
   get,
@@ -183,6 +184,14 @@ module.exports.manage = () => {
           const channel = `${id}/${GROUP}/${index}`;
           set(channel, { enabled, delay });
           break;
+        }
+        case ACTION_DI_RELAY_SYNC: {
+          const index = data[7];
+          const value = data.slice(8);
+          const onOff = value.slice(0, value, value.length / 2);
+          const onOn = value.slice(value.length / 2);
+          const channel = `${id}/${DI}/${index}`;
+          set(channel, { sync: [onOff, onOn] });
         }
         case ACTION_RS485_MODE: {
           const index = data[7];
