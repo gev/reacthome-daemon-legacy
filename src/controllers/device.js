@@ -189,7 +189,7 @@ module.exports.manage = () => {
           console.log(data);
           const index = data[7];
           const value = data.slice(8);
-          const onOff = value.slice(0, value, value.length / 2);
+          const onOff = value.slice(0, value.length / 2);
           const onOn = value.slice(value.length / 2);
           const channel = `${id}/${DI}/${index}`;
           console.log(channel, { sync: [[...onOff], [...onOn]] });
