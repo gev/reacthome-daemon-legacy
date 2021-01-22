@@ -183,7 +183,7 @@ module.exports.manage = () => {
           const delay = data.readUInt32LE(9);
           const channel = `${id}/${GROUP}/${index}`;
           set(channel, { enabled, delay });
-          break;
+          break;;
         }
         case ACTION_DI_RELAY_SYNC: {
           const index = data[7];
