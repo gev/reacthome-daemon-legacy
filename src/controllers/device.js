@@ -192,7 +192,7 @@ module.exports.manage = () => {
           const onOff = value.slice(0, value, value.length / 2);
           const onOn = value.slice(value.length / 2);
           const channel = `${id}/${DI}/${index}`;
-          set(channel, { sync: [[...onOff], [...onOn]] });
+          console.log(channel, { sync: [[...onOff], [...onOn]] });
           break;
         }
         case ACTION_RS485_MODE: {
