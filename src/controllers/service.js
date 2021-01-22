@@ -361,8 +361,8 @@ const run = (action) => {
         //       ACTION_DI_RELAY_SYNC, action.index, ...action.value[0], ...action.value[1]
         //     ]), dev.ip);
         //     break;
-        //   }
-        }
+          // }
+        // }
         break;
       }
       case ACTION_DOPPLER: {
