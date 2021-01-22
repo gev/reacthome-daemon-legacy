@@ -16,6 +16,7 @@ const {
   ARTNET,
   ACTION_DO,
   ACTION_GROUP,
+  ACTION_DI_RELAY_SYNC,
   ACTION_DOPPLER,
   ACTION_DIMMER,
   ACTION_ARTNET,
@@ -346,6 +347,21 @@ const run = (action) => {
             break;
           default:
             device.send(buffer, dev.ip);
+        }
+        break;
+      }
+      case ACTION_DI_RELAY_SYNC: {
+        console.log(action);
+        const dev = get(action.id);
+        switch (dev.type) {
+          case DEVICE_TYPE_RELAY_2_DIN: {
+            device.send(Buffer.from([
+              ACTION_RBUS_TRANSMIT,
+              ...action.id.split(':').map(i => parseInt(i, 16)),
+              ACTION_DI_RELAY_SYNC, action.index, ...action.value[0], ...action.value[1]
+            ]), dev.ip);
+            break;
+          }
         }
         break;
       }
