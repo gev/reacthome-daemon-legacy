@@ -126,7 +126,7 @@ const {
   MOVE_TO_LEVEL,
   MOVE_TO_HUE_SATURATION,
   CLOSURE, CLOSE, OPEN, START, ACTION_OPEN, ACTION_STOP, ACTION_CLOSE, CLOSE_OPEN, 
-  ACTION_SET_ADDRESS, ACTION_SET_FAN_SPEED, ACTION_SET_DIRECTION, ACTION_SET_MODE, DRIVER_TYPE_VARMANN
+  ACTION_SET_ADDRESS, ACTION_SET_FAN_SPEED, ACTION_SET_DIRECTION, ACTION_SET_MODE, DRIVER_TYPE_VARMANN, DEVICE_TYPE_MIX_2
 } = require('../constants');
 const {LIST } = require('../init/constants');
 const { NOTIFY } = require('../notification/constants');
@@ -267,6 +267,7 @@ const run = (action) => {
             }
             break;
           }
+          case DEVICE_TYPE_MIX_2:
           case DEVICE_TYPE_RELAY_6:
           case DEVICE_TYPE_RELAY_12: {
             const {version = ''} = dev;
@@ -362,6 +363,8 @@ const run = (action) => {
             ]), dev.ip);
             break;
           }
+          default:
+            device.send(Buffer.from([ACTION_DI_RELAY_SYNC, action.index, ...action.value[0], ...action.value[1]]), dev.ip);
         }
         break;
       }

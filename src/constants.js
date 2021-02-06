@@ -200,6 +200,8 @@ module.exports.DEVICE_TYPE_RELAY_24 = 0xa2;
 module.exports.DEVICE_TYPE_DIM_4 = 0xa3;
 module.exports.DEVICE_TYPE_DIM_8 = 0xa4;
 module.exports.DEVICE_TYPE_RELAY_2_DIN = 0xa7;
+module.exports.DEVICE_TYPE_AO_4_DIN = 0xa9;
+module.exports.DEVICE_TYPE_MIX_2 = 0xaa;
 
 module.exports.DEVICE_TYPE_TEMPERATURE_EXT = 0xf0;
 
