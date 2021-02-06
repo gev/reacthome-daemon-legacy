@@ -25,7 +25,8 @@ const {
   DEVICE_TYPE_SMART_4,
   DEVICE_TYPE_SENSOR4,
   DEVICE_TYPE_PLC,
-  DISCOVERY_INTERVAL
+  DISCOVERY_INTERVAL,
+  DEVICE_TYPE_MIX_2
 } = require('../constants');
 const { get, set, add } = require('./create');
 const { device } = require('../sockets');
@@ -108,6 +109,7 @@ module.exports.initialize = (id) => {
       }
       break;
     }
+    case DEVICE_TYPE_MIX_2:
     case DEVICE_TYPE_RELAY_6: {
       const {version = ''} = get(id) || {};
       const [major, minor] = version.split('.');
