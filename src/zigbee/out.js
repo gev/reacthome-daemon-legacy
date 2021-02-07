@@ -26,6 +26,22 @@ const on_off = async (id, index, value) => {
         },
         {disableDefaultResponse: true}
       );
+      setTimeout(() => {
+        await endpoint.command(
+          'manuSpecificTuya',
+          'setData',
+          {
+            status: 0,
+            transid,
+            dp: 108,
+            datatype: 1,
+            length_hi: 0,
+            length_lo: 1,
+            data: [value ? 1 : 0],
+          },
+          {disableDefaultResponse: true}
+        );
+      }, 3000);
     } else {
       await endpoint.command('genOnOff', value ? 'on' : 'off', {});
     }
