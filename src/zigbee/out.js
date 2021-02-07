@@ -26,7 +26,7 @@ const on_off = async (id, index, value) => {
         },
         {disableDefaultResponse: true}
       );
-      setTimeout(() => {
+      setTimeout(async () => {
         await endpoint.command(
           'manuSpecificTuya',
           'setData',
@@ -114,7 +114,7 @@ const setpoint = async (id, index, value) => {
     },
     {disableDefaultResponse: true}
   );
-  setTimeout(() => {
+  setTimeout(async () => {
     await endpoint.command(
       'manuSpecificTuya',
       'setData',
