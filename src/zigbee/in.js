@@ -90,6 +90,10 @@ module.exports = (id, { ID, clusters }, data) => {
                 break;
               case 102:
                 set(id, {temperature: value});
+                const { onTemperature } = get(id);
+                if (onTemperature) {
+                  run({type: ACTION_SCRIPT_RUN, id: onTemperature });
+                }
                 break;
               case 103:
                 set(id, {setpoint: value});
