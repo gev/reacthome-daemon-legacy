@@ -8,7 +8,7 @@ let transid = 0;
 const convertDecimalValueTo4BytesArray = v =>
   [v >> 24 & 0xff, v >> 16 & 0xff, v >> 8 & 0xff, v & 0xff];
 
-const on_off = async (id, index, value) => {
+const on_off = async (id, index = 1, value) => {
   try {
     const device = controller.getDeviceByIeeeAddr(id);
     const endpoint = device.getEndpoint(Number.parseInt(index));
@@ -79,7 +79,7 @@ const closure = async (id, index, action) => {
   await endpoint.command('closuresWindowCovering', zclCmdLookup[action], {});
 };
 
-const setpoint = async (id, index, value) => {
+const setpoint = async (id, index = 1, value) => {
   const device = controller.getDeviceByIeeeAddr(id);
   const endpoint = device.getEndpoint(Number.parseInt(index));
   const data = convertDecimalValueTo4BytesArray(value * 10); 
