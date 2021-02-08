@@ -101,16 +101,16 @@ const setpoint = async (id, index, value) => {
   );
 };
 
-const DEBOUNCE = 1000;
+const DEBOUNCE = 200;
 
 module.exports = {
-  on_off: debounce(on_off, DEBOUNCE, true),
-  on: debounce(on, DEBOUNCE, true),
-  off: debounce(off, DEBOUNCE, true),
-  move_to_hue: debounce(move_to_hue, DEBOUNCE, true),
-  move_to_saturation: debounce(move_to_saturation, DEBOUNCE, true),
-  move_to_hue_saturation: debounce(move_to_hue_saturation, DEBOUNCE, true),
-  move_to_level: debounce(move_to_level, DEBOUNCE, true),
-  closure: debounce(closure, DEBOUNCE, true),
-  setpoint: debounce(setpoint, DEBOUNCE, true),
+  on_off: debounce(on_off, DEBOUNCE),
+  on: debounce(on, DEBOUNCE),
+  off: debounce(off, DEBOUNCE),
+  move_to_hue: debounce(move_to_hue, DEBOUNCE),
+  move_to_saturation: debounce(move_to_saturation, DEBOUNCE),
+  move_to_hue_saturation: debounce(move_to_hue_saturation, DEBOUNCE),
+  move_to_level: debounce(move_to_level, DEBOUNCE),
+  closure: debounce(closure, DEBOUNCE),
+  setpoint: debounce(setpoint, DEBOUNCE),
 };
