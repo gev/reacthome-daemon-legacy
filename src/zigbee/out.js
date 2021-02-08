@@ -1,3 +1,4 @@
+const { debounce } = require('debounce');
 const { get } = require('../actions');
 const { ON, OFF, ACTION_OPEN, ACTION_CLOSE, ACTION_STOP } = require('../constants');
 const controller = require('./controller');
@@ -26,22 +27,6 @@ const on_off = async (id, index, value) => {
         },
         {disableDefaultResponse: true}
       );
-      setTimeout(async () => {
-        await endpoint.command(
-          'manuSpecificTuya',
-          'setData',
-          {
-            status: 0,
-            transid,
-            dp: 108,
-            datatype: 1,
-            length_hi: 0,
-            length_lo: 1,
-            data: [0],
-          },
-          {disableDefaultResponse: true}
-        );
-      }, 3000);
     } else {
       await endpoint.command('genOnOff', value ? 'on' : 'off', {});
     }
@@ -114,32 +99,18 @@ const setpoint = async (id, index, value) => {
     },
     {disableDefaultResponse: true}
   );
-  setTimeout(async () => {
-    await endpoint.command(
-      'manuSpecificTuya',
-      'setData',
-      {
-        status: 0,
-        transid,
-        dp: 108,
-        datatype: 1,
-        length_hi: 0,
-        length_lo: 1,
-        data: [1],
-      },
-      {disableDefaultResponse: true}
-    );
-  }, 3000);
 };
 
+const DEBOUNCE = 1000;
+
 module.exports = {
-  on_off, 
-  on, 
-  off,
-  move_to_hue,
-  move_to_saturation,
-  move_to_hue_saturation,
-  move_to_level,
-  closure,
-  setpoint,
+  on_off: debounce(on_off, DEBOUNCE),
+  on: debounce(on, DEBOUNCE),
+  off: debounce(off, DEBOUNCE),
+  move_to_hue: debounce(move_to_hue, DEBOUNCE),
+  move_to_saturation: debounce(move_to_saturation, DEBOUNCE),
+  move_to_hue_saturation: debounce(move_to_hue_saturation, DEBOUNCE),
+  move_to_level: debounce(move_to_level, DEBOUNCE),
+  closure: debounce(closure, DEBOUNCE),
+  setpoint: debounce(setpoint, DEBOUNCE),
 };
