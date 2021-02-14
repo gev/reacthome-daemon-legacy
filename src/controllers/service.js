@@ -489,6 +489,7 @@ const run = (action, address) => {
         break;
       }
       case ACTION_DIM: {
+        console.log(action);
         const { id, value } = action;
         const o = get(id) || {};
         const { last } = o;
