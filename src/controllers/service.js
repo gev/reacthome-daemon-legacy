@@ -918,8 +918,6 @@ case ACTION_SCRIPT_RUN: {
         const { id } = action;
         const script = get(id);
         if (script && Array.isArray(script.action)) {
-          if (script.disabled === false) console.log(script);
-          if (script.disabled === true) console.log(script);
           if (script.disabled) return;
           script.action.forEach(i => {
             const { type, payload, delay } = get(i);
