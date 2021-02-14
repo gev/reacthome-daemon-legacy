@@ -489,7 +489,6 @@ const run = (action, address) => {
         break;
       }
       case ACTION_DIM: {
-        console.log(action);
         const { id, value } = action;
         const o = get(id) || {};
         const { last } = o;
@@ -520,6 +519,7 @@ const run = (action, address) => {
               break;
             }
             case DRIVER_TYPE_ARTNET: {
+              console.log(action);
               drivers.handle({ id: dev, index, action: ARTNET_FADE, v, velocity: ARTNET_VELOCITY });
               break;
             }
