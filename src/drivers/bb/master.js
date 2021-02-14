@@ -82,7 +82,7 @@ module.exports = class extends EventEmitter {
             buff.writeUInt8(device, 6);
             buff.writeUInt8(cmd, 7);
             buff.writeUInt16BE(address, 8);
-            buff.writeUInt16BE(data, 10);
+            buff.writeInt16BE(data, 10);
             pool[tid++] = address;
             return buff;
         };
