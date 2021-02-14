@@ -178,8 +178,6 @@ const init = (ip) => {
 
 const run = (action, address) => {
   try {
-    const {disabled} = get(action.id) || {};
-    if (disabled) return;
     switch (action.type) {
       case ACTION_INIT: {
         init(address);
@@ -920,6 +918,7 @@ case ACTION_SCRIPT_RUN: {
         const { id } = action;
         const script = get(id);
         if (script && Array.isArray(script.action)) {
+          if (script.disabled) return;
           script.action.forEach(i => {
             const { type, payload, delay } = get(i);
             const a = { action: i, type, ...payload };
