@@ -519,7 +519,7 @@ const run = (action, address) => {
               break;
             }
             case DRIVER_TYPE_ARTNET: {
-              console.log(action);
+              console.log({ id: dev, index, action: ARTNET_FADE, v, velocity: ARTNET_VELOCITY });
               drivers.handle({ id: dev, index, action: ARTNET_FADE, v, velocity: ARTNET_VELOCITY });
               break;
             }
