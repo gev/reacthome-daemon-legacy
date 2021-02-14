@@ -178,6 +178,8 @@ const init = (ip) => {
 
 const run = (action, address) => {
   try {
+    const {disabled} = get(action.id) || {};
+    if (disabled) return;
     switch (action.type) {
       case ACTION_INIT: {
         init(address);
