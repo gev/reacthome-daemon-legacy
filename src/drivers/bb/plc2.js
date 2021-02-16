@@ -142,9 +142,7 @@ module.exports = class {
       });
       const { project } = get(mac()) || {};
       const { weather: { main : { temp } = {} } = {} } = get(project) || {};
-      if (temp !== undefined) {
-        this.master.writeSingleOutputRegister(82, temp * 100);
-      }
+      this.master.writeSingleOutputRegister(82, temp > 0 ? temp * 100 : 0);
     }, 1000);
   }
 
