@@ -86,6 +86,7 @@ module.exports = (device) => {
   console.log(device.modelID);
   switch (device.modelID) {
     case '88teujp\u0000':
+    case 'TS0601':
       console.log([{id: 1, cluster: [THERMOSTAT]}]);
       return [{id: 1, cluster: [THERMOSTAT]}];
     default: 
