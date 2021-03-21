@@ -1059,7 +1059,7 @@ const run = (action) => {
         buff.writeUInt8(0, 2);
         buff.writeUInt16BE(codes.frequency, 3);
         for (let i = 0; i < data.length; i++) {
-          buff.writeUInt16BE(data[i + start], i * 2 + 5);
+          buff.writeUInt16BE(data[i], i * 2 + 5);
         }
         switch (type) {
           case DEVICE_TYPE_IR_4: {
