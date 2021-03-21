@@ -1051,8 +1051,8 @@ const run = (action) => {
         const [dev,,index] = bind.split('/');
         const { ip, type } = get(dev);
         const codes = ircodes.codes [TV][brand][model];
-        console.log(codes);
         const code = codes.command[command];
+        console.log(code);
         const data = ircodes.encode(codes.count, codes.header, codes.trail, code);
         const buff = Buffer.alloc(data.length * 2 + 5);
         buff.writeUInt8(ACTION_IR, 0);
