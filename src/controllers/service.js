@@ -1057,7 +1057,7 @@ const run = (action) => {
         buff.writeUInt8(ACTION_IR, 0);
         buff.writeUInt8(index, 1);
         buff.writeUInt8(0, 2);
-        buff.writeUInt16BE(frequency, 3);
+        buff.writeUInt16BE(codes.frequency, 3);
         for (let i = 0; i < data.length; i++) {
           buff.writeUInt16BE(data[i + start], i * 2 + 5);
         }
