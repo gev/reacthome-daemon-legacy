@@ -1050,39 +1050,31 @@ const run = (action) => {
         const { bind, brand, model } = get(id) || {};
         const [dev,,index] = bind.split('/');
         const { ip, type } = get(dev);
-        ircodes.getCode(TV, brand, model, command)
-          .then(({ frequency, offset, data }) => {
-            if (!data) return;
-            let length = offset > 1 ? offset : data.length;
-            let start = 0;
-            if (repeat) {
-              start = offset - 1;
-              length = data.length - offset + 1;
-            }
-            const buff = Buffer.alloc(length * 2 + 5);
-            buff.writeUInt8(ACTION_IR, 0);
-            buff.writeUInt8(index, 1);
-            buff.writeUInt8(0, 2);
-            buff.writeUInt16BE(frequency, 3);
-            for (let i = 0; i < length; i++) {
-              buff.writeUInt16BE(data[i + start], i * 2 + 5);
-            }
-            switch (type) {
-              case DEVICE_TYPE_IR_4: {
-                  const header = Buffer.alloc(7);
-                  header.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
-                  dev.split(':').forEach((v, i)=> {
-                    header.writeUInt8(parseInt(v, 16), i + 1);
-                  });
-                  device.send(Buffer.concat([header, buff]), ip);
-                break;
-              }
-              default:
-                device.send(buff, ip);
-              }
-          })
-          .catch(console.error);
-          break;
+        const codes = ircodes.codes [TV][brand][model];
+        const code = codes.command[command];
+        const data = encode(codes.coout, codes.header, codes.trail, code);
+        const buff = Buffer.alloc(data.length * 2 + 5);
+        buff.writeUInt8(ACTION_IR, 0);
+        buff.writeUInt8(index, 1);
+        buff.writeUInt8(0, 2);
+        buff.writeUInt16BE(frequency, 3);
+        for (let i = 0; i < data.length; i++) {
+          buff.writeUInt16BE(data[i + start], i * 2 + 5);
+        }
+        switch (type) {
+          case DEVICE_TYPE_IR_4: {
+            const header = Buffer.alloc(7);
+            header.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
+            dev.split(':').forEach((v, i)=> {
+              header.writeUInt8(parseInt(v, 16), i + 1);
+            });
+            device.send(Buffer.concat([header, buff]), ip);
+            break;
+          }
+          default:
+            device.send(buff, ip);
+        }
+        break;
       }
       case ACTION_LEAKAGE_RESET: {
         const {onLeakageReset} = get(action.id);
