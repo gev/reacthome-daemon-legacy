@@ -1054,7 +1054,7 @@ const run = (action) => {
         const code = codes.command[command];
         console.log(code);
         const data = ircodes.encode(codes.count, codes.header, codes.trail, code);
-        console.log(data);
+        console.log(data.join(','));
         const buff = Buffer.alloc(data.length * 2 + 5);
         buff.writeUInt8(ACTION_IR, 0);
         buff.writeUInt8(index, 1);
