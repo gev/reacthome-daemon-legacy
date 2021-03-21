@@ -1052,7 +1052,7 @@ const run = (action) => {
         const { ip, type } = get(dev);
         const codes = ircodes.codes [TV][brand][model];
         const code = codes.command[command];
-        const data = encode(codes.coout, codes.header, codes.trail, code);
+        const data = ircodes.encode(codes.coout, codes.header, codes.trail, code);
         const buff = Buffer.alloc(data.length * 2 + 5);
         buff.writeUInt8(ACTION_IR, 0);
         buff.writeUInt8(index, 1);
