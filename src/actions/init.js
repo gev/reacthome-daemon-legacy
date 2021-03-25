@@ -83,7 +83,6 @@ module.exports.initialize = (id) => {
     }
     case DEVICE_TYPE_IR_4: {
       const mac = id.split(':').map(i => parseInt(i, 16));
-      console.log(id, mac);
       a[0] = ACTION_RBUS_TRANSMIT;
       a[1] = mac[0];
       a[2] = mac[1];
@@ -97,18 +96,18 @@ module.exports.initialize = (id) => {
         const {bind} = channel;
         const {brand, model} = get(bind) || {};
         const {frequency, count = [], header = [], trail} = ((codes[TV] || {})[brand] || {})[model] || {};
-        a[12 * i - 19] = (frequency) & 0xff;
-        a[12 * i - 18] = (frequency >> 8) & 0xff;
-        a[12 * i - 17] = (count[0]) & 0xff;
-        a[12 * i - 16] = (count[0] >> 8) & 0xff;
-        a[12 * i - 15] = (count[1]) & 0xff;
-        a[12 * i - 14] = (count[1] >> 8) & 0xff;
-        a[12 * i - 13] = (header[0]) & 0xff;
-        a[12 * i - 12] = (header[0] >> 8) & 0xff;
-        a[12 * i - 11] = (header[1]) & 0xff;
-        a[12 * i - 10] = (header[1] >> 8) & 0xff;
-        a[12 * i -  9] = (trail) & 0xff;
-        a[12 * i -  8] = (trail >> 8) & 0xff;
+        a[12 * i - 3] = (frequency) & 0xff;
+        a[12 * i - 2] = (frequency >> 8) & 0xff;
+        a[12 * i - 1] = (count[0]) & 0xff;
+        a[12 * i + 0] = (count[0] >> 8) & 0xff;
+        a[12 * i + 1] = (count[1]) & 0xff;
+        a[12 * i + 2] = (count[1] >> 8) & 0xff;
+        a[12 * i + 3] = (header[0]) & 0xff;
+        a[12 * i + 4] = (header[0] >> 8) & 0xff;
+        a[12 * i + 5] = (header[1]) & 0xff;
+        a[12 * i + 6] = (header[1] >> 8) & 0xff;
+        a[12 * i + 7] = (trail) & 0xff;
+        a[12 * i + 8] = (trail >> 8) & 0xff;
       }
       break;
     }
