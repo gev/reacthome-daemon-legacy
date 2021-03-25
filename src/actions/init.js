@@ -30,6 +30,7 @@ const {
   DEVICE_TYPE_MIX_2,
   DEVICE_TYPE_IR_4,
   TV,
+  ACTION_RBUS_TRANSMIT,
 } = require('../constants');
 const { get, set, add } = require('./create');
 const { device } = require('../sockets');
@@ -83,23 +84,32 @@ module.exports.initialize = (id) => {
       break;
     }
     case DEVICE_TYPE_IR_4: {
+      const mac = id.split(':').map(i => parseInt(i, 16));
+      a[0] = ACTION_RBUS_TRANSMIT;
+      a[1] = mac[0];
+      a[2] = mac[1];
+      a[3] = mac[2];
+      a[4] = mac[3];
+      a[5] = mac[4];
+      a[6] = mac[5];
+      a[7] = ACTION_INITIALIZE;
       for (let i = 1; i <= 4; i++) {
         const channel = get(`${id}/${IR}/${i}`) || {};
         const {bind} = channel;
         const {brand, model} = get(bind) || {};
         const {frequency, count = [], header = []} = ((codes[TV] || {})[brand] || {})[model] || {};
-        a[12 * i - 11] = (frequency) & 0xff;
-        a[12 * i - 10] = (frequency >> 8) & 0xff;
-        a[12 * i -  9] = (count[0]) & 0xff;
-        a[12 * i -  8] = (count[0] >> 8) & 0xff;
-        a[12 * i -  7] = (count[1]) & 0xff;
-        a[12 * i -  6] = (count[1] >> 8) & 0xff;
-        a[12 * i -  5] = (header[0]) & 0xff;
-        a[12 * i -  4] = (header[0] >> 8) & 0xff;
-        a[12 * i -  3] = (header[1]) & 0xff;
-        a[12 * i -  2] = (header[1] >> 8) & 0xff;
-        a[12 * i -  1] = (trail) & 0xff;
-        a[12 * i -  0] = (trail >> 8) & 0xff;
+        a[12 * i - 19] = (frequency) & 0xff;
+        a[12 * i - 18] = (frequency >> 8) & 0xff;
+        a[12 * i - 17] = (count[0]) & 0xff;
+        a[12 * i - 16] = (count[0] >> 8) & 0xff;
+        a[12 * i - 15] = (count[1]) & 0xff;
+        a[12 * i - 14] = (count[1] >> 8) & 0xff;
+        a[12 * i - 13] = (header[0]) & 0xff;
+        a[12 * i - 12] = (header[0] >> 8) & 0xff;
+        a[12 * i - 11] = (header[1]) & 0xff;
+        a[12 * i - 10] = (header[1] >> 8) & 0xff;
+        a[12 * i -  9] = (trail) & 0xff;
+        a[12 * i -  8] = (trail >> 8) & 0xff;
       }
       break;
     }
@@ -280,7 +290,7 @@ module.exports.initialize = (id) => {
         Buffer.from(a),
         Buffer.from(JSON.stringify(config))
       ]))
-      break;
+      return;
     }
     default: {
       set(id, { initialized: true });
