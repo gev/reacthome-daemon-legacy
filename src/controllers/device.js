@@ -322,6 +322,7 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_INITIALIZED: {
+          console.log('init requested', id);
           initialized(id);
           break;
         }
