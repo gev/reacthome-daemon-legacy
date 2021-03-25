@@ -94,6 +94,7 @@ module.exports.initialize = (id) => {
       for (let i = 1; i <= 4; i++) {
         const channel = get(`${id}/${IR}/${i}`) || {};
         const {bind} = channel;
+        console.log(bind, get(bind));
         const {brand, model} = get(bind) || {};
         const {frequency, count = [], header = [], trail} = ((codes[TV] || {})[brand] || {})[model] || {};
         a[12 * i - 4] = (frequency) & 0xff;
