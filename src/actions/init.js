@@ -1,5 +1,6 @@
 
 const {
+  IR,
   DO,
   DI,
   DIM,
@@ -26,11 +27,14 @@ const {
   DEVICE_TYPE_SENSOR4,
   DEVICE_TYPE_PLC,
   DISCOVERY_INTERVAL,
-  DEVICE_TYPE_MIX_2
+  DEVICE_TYPE_MIX_2,
+  DEVICE_TYPE_IR_4,
+  TV,
 } = require('../constants');
 const { get, set, add } = require('./create');
 const { device } = require('../sockets');
 const mac = require('../mac');
+const { codes } = require('reacthome-ircodes');
 
 module.exports.initialized = (id) => {
   set(id, { initialized: true });
@@ -75,6 +79,27 @@ module.exports.initialize = (id) => {
       for (let i = 1; i <= 12; i++) {
         const channel = get(`${id}/${DO}/${i}`);
         a[i] = (channel && channel.value) || 0;
+      }
+      break;
+    }
+    case DEVICE_TYPE_IR_4: {
+      for (let i = 1; i <= 4; i++) {
+        const channel = get(`${id}/${IR}/${i}`) || {};
+        const {bind} = channel;
+        const {brand, model} = get(bind) || {};
+        const {frequency, count = [], header = []} = ((codes[TV] || {})[brand] || {})[model] || {};
+        a[12 * i - 11] = (frequency) & 0xff;
+        a[12 * i - 10] = (frequency >> 8) & 0xff;
+        a[12 * i -  9] = (count[0]) & 0xff;
+        a[12 * i -  8] = (count[0] >> 8) & 0xff;
+        a[12 * i -  7] = (count[1]) & 0xff;
+        a[12 * i -  6] = (count[1] >> 8) & 0xff;
+        a[12 * i -  5] = (header[0]) & 0xff;
+        a[12 * i -  4] = (header[0] >> 8) & 0xff;
+        a[12 * i -  3] = (header[1]) & 0xff;
+        a[12 * i -  2] = (header[1] >> 8) & 0xff;
+        a[12 * i -  1] = (trail) & 0xff;
+        a[12 * i -  0] = (trail >> 8) & 0xff;
       }
       break;
     }
@@ -255,7 +280,7 @@ module.exports.initialize = (id) => {
         Buffer.from(a),
         Buffer.from(JSON.stringify(config))
       ]))
-      return;
+      break;
     }
     default: {
       set(id, { initialized: true });

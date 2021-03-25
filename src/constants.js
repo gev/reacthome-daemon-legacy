@@ -49,6 +49,7 @@ module.exports.PUMP = 'pump';
 module.exports.FAN = 'fan';
 module.exports.TV = 'TV';
 module.exports.AC = 'AC';
+module.exportsIR = 'ir';
 
 module.exports.STATE = 'state';
 module.exports.FIRMWARE = './firmware';

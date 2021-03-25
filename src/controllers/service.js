@@ -1052,15 +1052,17 @@ const run = (action) => {
         const { ip, type } = get(dev);
         const codes = ircodes.codes [TV][brand][model];
         const code = codes.command[command];
-        const data = ircodes.encode(codes.count, codes.header, codes.trail, code);
-        console.log(data.join(','));
-        const buff = Buffer.alloc(data.length * 2 + 5);
-        buff.writeUInt8(ACTION_IR, 0);
-        buff.writeUInt8(index, 1);
-        buff.writeUInt8(0, 2);
-        buff.writeUInt16BE(codes.frequency, 3);
-        for (let i = 0; i < data.length; i++) {
-          buff.writeUInt16BE(data[i], i * 2 + 5);
+        const legacy = () => {
+          const data = ircodes.encode(codes.count, codes.header, codes.trail, code);
+          const buff = Buffer.alloc(data.length * 2 + 5);
+          buff.writeUInt8(ACTION_IR, 0);
+          buff.writeUInt8(index, 1);
+          buff.writeUInt8(0, 2);
+          buff.writeUInt16BE(codes.frequency, 3);
+          for (let i = 0; i < data.length; i++) {
+            buff.writeUInt16BE(data[i], i * 2 + 5);
+          }
+          return buff;
         }
         switch (type) {
           case DEVICE_TYPE_IR_4: {
@@ -1069,11 +1071,11 @@ const run = (action) => {
             dev.split(':').forEach((v, i)=> {
               header.writeUInt8(parseInt(v, 16), i + 1);
             });
-            device.send(Buffer.concat([header, buff]), ip);
+            device.send(Buffer.concat([header, legacy()]), ip);
             break;
           }
           default:
-            device.send(buff, ip);
+            device.send(legacy(), ip);
         }
         break;
       }
