@@ -1072,7 +1072,8 @@ const run = (action) => {
             dev.split(':').forEach((v, i)=> {
               header.writeUInt8(parseInt(v, 16), i + 1);
             });
-            device.send(Buffer.concat([header, major < 2 ? legacy() : Buffer.from(code)]), ip);
+            console.log(command, code)
+            device.send(Buffer.concat([header, major < 2 ? legacy() : Buffer.from([ACTION_IR, index, ...code])]), ip);
             break;
           }
           default:
