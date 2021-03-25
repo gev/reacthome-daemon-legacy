@@ -43,10 +43,8 @@ module.exports.initialized = (id) => {
 
 const confirm = (id, data) => {
   const { ip } = get(id);
-  device.sendConfirm(data, ip, () => {
-    const { initialized } = get(id);
-    return initialized;
-  }, 4 * DISCOVERY_INTERVAL);
+  console.log(ip, data)
+  device.send(data, ip);
 };
 
 module.exports.initialize = (id) => {
