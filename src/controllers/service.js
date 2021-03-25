@@ -1049,7 +1049,7 @@ const run = (action) => {
         const { id, command, repeat } = action;
         const { bind, brand, model } = get(id) || {};
         const [dev,,index] = bind.split('/');
-        const { ip, type } = get(dev);
+        const { ip, type, version = '' } = get(dev);
         const codes = ircodes.codes [TV][brand][model];
         const code = codes.command[command];
         const legacy = () => {
@@ -1066,12 +1066,13 @@ const run = (action) => {
         }
         switch (type) {
           case DEVICE_TYPE_IR_4: {
+            const [major] = version.split('.');
             const header = Buffer.alloc(7);
             header.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
             dev.split(':').forEach((v, i)=> {
               header.writeUInt8(parseInt(v, 16), i + 1);
             });
-            device.send(Buffer.concat([header, legacy()]), ip);
+            device.send(Buffer.concat([header, major < 2 ? legacy() : code]), ip);
             break;
           }
           default:
