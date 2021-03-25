@@ -83,6 +83,7 @@ module.exports.initialize = (id) => {
     }
     case DEVICE_TYPE_IR_4: {
       const mac = id.split(':').map(i => parseInt(i, 16));
+      console.log(id, mac);
       a[0] = ACTION_RBUS_TRANSMIT;
       a[1] = mac[0];
       a[2] = mac[1];
