@@ -88,7 +88,6 @@ module.exports.manage = () => {
   });
 
   device.handle((data, { address }) => {
-    console.log(data);
     try {
       const dev_mac = Array.from(data.slice(0, 6));
       const id = dev_mac.map(i => `0${i.toString(16)}`.slice(-2)).join(':');
@@ -323,7 +322,6 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_INITIALIZED: {
-          console.log('init requested', id);
           initialized(id);
           break;
         }

@@ -84,8 +84,6 @@ module.exports.initialize = (id) => {
       break;
     }
     case DEVICE_TYPE_IR_4: {
-      console.log('=============================================================')
-      console.log(id, get(id));
       const mac = id.split(':').map(i => parseInt(i, 16));
       a[0] = ACTION_RBUS_TRANSMIT;
       a[1] = mac[0];
@@ -99,7 +97,7 @@ module.exports.initialize = (id) => {
         const channel = get(`${id}/${IR}/${i}`) || {};
         const {bind} = channel;
         const {brand, model} = get(bind) || {};
-        const {frequency, count = [], header = []} = ((codes[TV] || {})[brand] || {})[model] || {};
+        const {frequency, count = [], header = [], trail} = ((codes[TV] || {})[brand] || {})[model] || {};
         a[12 * i - 19] = (frequency) & 0xff;
         a[12 * i - 18] = (frequency >> 8) & 0xff;
         a[12 * i - 17] = (count[0]) & 0xff;
