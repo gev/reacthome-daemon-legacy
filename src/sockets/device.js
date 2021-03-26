@@ -17,6 +17,6 @@ const device = socket((socket) => {
   return () => {
     device.send(data, DEVICE_GROUP);
   };
-}, DISCOVERY_INTERVAL, DEVICE_PORT, DEVICE_SERVER_PORT, '172.16.0.1', false);
+}, DISCOVERY_INTERVAL, DEVICE_PORT, DEVICE_SERVER_PORT, '172.16.0.1', true);
 
 module.exports = device;
