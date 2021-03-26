@@ -169,7 +169,7 @@ const run = (action) => {
         const [dev, type, index] = id.split('/');
         if (type === IR) {
           const {type, version, ip} = get(dev) || {};
-          if (type === DEVICE_TYPE_DIM4) {
+          if (type === DEVICE_TYPE_IR_4) {
             const [major] = parseInt(version.split('.'));
             if (major < 2) return;
             const {bind} = get(id) || {};
