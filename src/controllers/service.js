@@ -165,26 +165,31 @@ const run = (action) => {
     switch (action.type) {
       case ACTION_SET: {
         const { id, payload } = action;
+        set(id, payload);
         const [dev, type, index] = id.split('/');
         if (type === IR) {
-          const {ip, bind} = get(dev) || {};
-          const {type, brand, model} = get(bind) || {};
-          console.log(type, brand, model);
-          const {frequency, count = [], header = [], trail} = ((ircodes.codes[type] || {})[brand] || {})[model] || {};
-          const buffer = Buffer.alloc(21);
-          buffer.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
-          dev.split(':').forEach((t, i) => buffer.writeUInt8(t, i + 1));
-          buffer.writeUInt8(ACTION_IR_CONFIG, 7);
-          buffer.writeUInt8(index, 8);
-          buffer.writeUInt16LE(frequency, 9);
-          buffer.writeUInt16LE(count[0], 11);
-          buffer.writeUInt16LE(count[1], 13);
-          buffer.writeUInt16LE(header[0], 15);
-          buffer.writeUInt16LE(header[1], 17);
-          buffer.writeUInt16LE(trail, 19);
-          device.send(buffer, ip);
+          const {type, version, ip} = get(dev) || {};
+          if (type === DEVICE_TYPE_DIM4) {
+            const [major] = parseInt(version.split('.'));
+            if (major < 2) return;
+            const {bind} = get(id) || {};
+            const {type, brand, model} = get(bind) || {};
+            console.log(type, brand, model);
+            const {frequency, count = [], header = [], trail} = ((ircodes.codes[type] || {})[brand] || {})[model] || {};
+            const buffer = Buffer.alloc(21);
+            buffer.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
+            dev.split(':').forEach((t, i) => buffer.writeUInt8(t, i + 1));
+            buffer.writeUInt8(ACTION_IR_CONFIG, 7);
+            buffer.writeUInt8(index, 8);
+            buffer.writeUInt16LE(frequency, 9);
+            buffer.writeUInt16LE(count[0], 11);
+            buffer.writeUInt16LE(count[1], 13);
+            buffer.writeUInt16LE(header[0], 15);
+            buffer.writeUInt16LE(header[1], 17);
+            buffer.writeUInt16LE(trail, 19);
+            device.send(buffer, ip);
+          }
         }
-        set(id, payload);
         break;
       }
       case ACTION_ASSET: {
