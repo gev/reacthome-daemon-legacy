@@ -169,6 +169,7 @@ const run = (action) => {
         if (type === IR) {
           const {ip, bind} = get(dev) || {};
           const {type, brand, model} = get(bind) || {};
+          console.log(type, brand, model);
           const {frequency, count = [], header = [], trail} = ((ircodes.codes[type] || {})[brand] || {})[model] || {};
           const buffer = Buffer.alloc(21);
           buffer.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
