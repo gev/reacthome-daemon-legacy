@@ -66,5 +66,5 @@ module.exports = (discovery, interval, port, listen, multicast, hasQueue, delay 
       socket.on('message', handler);
     };
 
-    return { handle, send, sendConfirm };
+    return { handle, send };
 };
