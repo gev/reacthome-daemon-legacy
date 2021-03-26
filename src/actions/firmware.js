@@ -20,16 +20,16 @@ module.exports.updateFirmware = (id) => {
   if (queue && queue.length > 0) {
     const length = queue.length
     set(id, { pending: false, updating: true, length });
-    device.sendConfirm(queue.shift(), dev.ip, () => {
-      const dev = get(id);
-      return !(dev && dev.length === length);
-    });
+    // device.sendConfirm(queue.shift(), dev.ip, () => {
+    //   const dev = get(id);
+    //   return !(dev && dev.length === length);
+    // });
   } else {
     set(id, { pending: false, updating: false });
-    device.sendConfirm(Buffer.from([ACTION_BOOTLOAD, BOOTLOAD_FINISH]), dev.ip, () => {
-      const dev = get(id);
-      return !(dev && dev.online);
-    });
+    // device.sendConfirm(Buffer.from([ACTION_BOOTLOAD, BOOTLOAD_FINISH]), dev.ip, () => {
+    //   const dev = get(id);
+    //   return !(dev && dev.online);
+    // });
   }
 };
 
