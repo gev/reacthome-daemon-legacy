@@ -53,7 +53,8 @@ const {
   onIllumination,
   onTemperature,
   CLOSE_OPEN,
-  ACTION_DI_RELAY_SYNC
+  ACTION_DI_RELAY_SYNC,
+  ACTION_IR_CONFIG
 } = require('../constants');
 const {
   get,
@@ -300,6 +301,10 @@ module.exports.manage = () => {
             value.push(x);
           }
           set(id, { value });
+          break;
+        }
+        case ACTION_IR_CONFIG: {
+          console.log(data);
           break;
         }
         case ACTION_PNP: {
