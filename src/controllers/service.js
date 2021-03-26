@@ -170,8 +170,8 @@ const run = (action) => {
         if (type === IR) {
           const {type, version, ip} = get(dev) || {};
           if (type === DEVICE_TYPE_IR_4) {
-            const [major] = parseInt(version.split('.'));
-            if (major < 2) return;
+            const [major] = version.split('.');
+            if (parseInt(major) < 2) return;
             const {bind} = get(id) || {};
             const {type, brand, model} = get(bind) || {};
             console.log(type, brand, model);
