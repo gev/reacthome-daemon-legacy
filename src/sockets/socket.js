@@ -27,7 +27,7 @@ module.exports = (discovery, interval, port, listen, multicast, hasQueue, delay 
           if (now - timestamp[ip] < delay) return;
           timestamp[ip] = now;
           _send(q.shift(), ip);
-        }, 20);
+        }, 1);
       } else {
         const q = queue[ip];
         if (q.length === 0) {

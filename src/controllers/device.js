@@ -304,7 +304,7 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_IR_CONFIG: {
-          console.log(data);
+          console.log(Date.now(), data);
           break;
         }
         case ACTION_PNP: {
