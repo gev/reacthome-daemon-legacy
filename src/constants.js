@@ -59,6 +59,7 @@ module.exports.ACTION_DI = 0x01;
 module.exports.ACTION_GROUP = 0x02;
 module.exports.ACTION_DI_RELAY_SYNC = 0x03;
 module.exports.ACTION_IR = 0x10;
+module.exports.ACTION_IR_CONFIG = 0x11;
 module.exports.ACTION_PNP = 0x11;
 module.exports.ACTION_RS485_MODE = 0xa0;
 module.exports.ACTION_RBUS_TRANSMIT = 0xa1;
