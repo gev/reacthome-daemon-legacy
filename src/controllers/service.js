@@ -168,11 +168,11 @@ const run = (action) => {
         set(id, payload);
         const [dev, type, index] = id.split('/');
         if (type === IR) {
-          console.log(id);
           const {type, version, ip} = get(dev) || {};
           if (type === DEVICE_TYPE_IR_4) {
             const [major] = version.split('.');
             if (parseInt(major) < 2) return;
+            console.log(id);
             const {bind} = get(id) || {};
             const {type, brand, model} = get(bind) || {};
             console.log(type, brand, model);
