@@ -179,7 +179,7 @@ const run = (action) => {
             const {frequency, count = [], header = [], trail} = ((ircodes.codes[type] || {})[brand] || {})[model] || {};
             const buffer = Buffer.alloc(21);
             buffer.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
-            dev.split(':').forEach((t, i) => buffer.writeUInt8(t, i + 1));
+            dev.split(':').forEach((t, i) => buffer.writeUInt8(parseInt(t, 16), i + 1));
             buffer.writeUInt8(ACTION_IR_CONFIG, 7);
             buffer.writeUInt8(index, 8);
             buffer.writeUInt16LE(frequency, 9);
