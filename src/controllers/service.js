@@ -1055,7 +1055,7 @@ const run = (action) => {
             hysteresis,
             onStartHeat, onStopHeat,
         } = action
-        const { min, max, sensor, code, disabled } = get(id);
+        const { min, max, sensor } = get(id);
         const { temperature } = get(sensor);
         const make = (script) => () => {
           if (script) {
@@ -1064,17 +1064,13 @@ const run = (action) => {
         };
         const stopHeat = make(onStopHeat);
         const startHeat = make(onStartHeat);
-        console.log(code, min, temperature, max, disabled, hysteresis);
         if (temperature > max - (- hysteresis)) {
-          console.log('stop');
           stopHeat();
           set(id, {disabled: true});
         } else if (temperature < min - hysteresis) {
-          console.log('start');
           startHeat();
           set(id, {disabled: true});
-        } else if ((temperature > min + hysteresis) && (temperature < max - hysteresis)) {
-          console.log('normal');
+        } else if ((temperature > min - (- hysteresis)) && (temperature < max - hysteresis)) {
           set(id, {disabled: false});
         }
         break;
