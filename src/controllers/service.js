@@ -53,6 +53,7 @@ const {
   ACTION_DAY_TEST,
   ACTION_DOPPLER_HANDLE,
   ACTION_THERMOSTAT_HANDLE,
+  ACTION_LIMIT_HEATING_HANDLE,
   ACTION_TOGGLE,
   ACTION_TV,
   ACTION_LEAKAGE_RESET,
@@ -1049,6 +1050,28 @@ const run = (action) => {
               }
             }
           }
+        }
+        break;
+      }
+      case ACTION_LIMIT_HEATING_HANDLE: {
+        const {
+            id,
+            hysteresis,
+            onStartHeat, onStopHeat
+        } = action
+        const { min, max, sensor } = get(id);
+        const { temperature } = get(sensor);
+        const make = (script) => () => {
+          if (script) {
+            run({ type: ACTION_SCRIPT_RUN, id: script });
+          }
+        };
+        const stopHeat = make(onStopHeat);
+        const startHeat = make(onStartHeat);
+        if (temperature > max - (- hysteresis)) {
+          stopHeat();
+        } else if (temperature < min - hysteresis) {
+          startHeat();
         }
         break;
       }
