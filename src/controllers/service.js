@@ -1066,12 +1066,8 @@ const run = (action) => {
         const startHeat = make(onStartHeat);
         if (temperature > max - (- hysteresis)) {
           stopHeat();
-          set(id, {disabled: true});
         } else if (temperature < min - hysteresis) {
           startHeat();
-          set(id, {disabled: true});
-        } else if ((temperature < max - hysteresis) && (temperature > min + hysteresis)) {
-          set(id, {disabled: false});
         }
         break;
       }
