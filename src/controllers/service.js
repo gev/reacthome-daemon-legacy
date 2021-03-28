@@ -1064,7 +1064,7 @@ const run = (action) => {
         };
         const stopHeat = make(onStopHeat);
         const startHeat = make(onStartHeat);
-        console.log(code, min, temperature, max, disabled);
+        console.log(code, min, temperature, max, disabled, hysteresis);
         if (temperature > max - (- hysteresis)) {
           console.log('stop');
           stopHeat();
