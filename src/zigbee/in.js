@@ -99,7 +99,7 @@ module.exports = (id, { ID, clusters }, data) => {
                 set(id, {setpoint: value});
                 break;
               default:
-                console.log(data);
+                // console.log(data);
             }
           }
         }

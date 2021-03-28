@@ -173,10 +173,8 @@ const run = (action) => {
           if (type === DEVICE_TYPE_IR_4) {
             const [major] = version.split('.');
             if (parseInt(major) < 2) return;
-            console.log(id);
             const {bind} = get(id) || {};
             const {type, brand, model} = get(bind) || {};
-            console.log(type, brand, model);
             const {frequency, count = [], header = [], trail} = ((ircodes.codes[type] || {})[brand] || {})[model] || {};
             const buffer = Buffer.alloc(21);
             buffer.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
@@ -189,7 +187,6 @@ const run = (action) => {
             buffer.writeUInt16LE(header[0], 15);
             buffer.writeUInt16LE(header[1], 17);
             buffer.writeUInt16LE(trail, 19);
-            console.log(buffer);
             device.send(buffer, ip);
           }
         }
@@ -380,7 +377,6 @@ const run = (action) => {
         break;
       }
       case ACTION_DI_RELAY_SYNC: {
-        console.log(action);  
         const dev = get(action.id);
         switch (dev.type) {
           case DEVICE_TYPE_RELAY_2_DIN: {
@@ -1122,7 +1118,6 @@ const run = (action) => {
             dev.split(':').forEach((v, i)=> {
               header.writeUInt8(parseInt(v, 16), i + 1);
             });
-            console.log(Date.now(), command, code)
             device.send(Buffer.concat([header, major < 2 ? legacy() : Buffer.from([ACTION_IR, index, ...code])]), ip);
             break;
           }

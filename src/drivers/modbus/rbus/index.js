@@ -26,7 +26,6 @@ const request = (getSize, fill) => (code) => (id, address, register, data) => {
     buffer.writeUInt16BE(register, 4);
     fill(buffer, data);
     buffer.writeUInt16LE(crc16modbus(buffer.slice(2, size)), size);
-    // console.log(buffer);
     send(buffer, ip);
   }
 }

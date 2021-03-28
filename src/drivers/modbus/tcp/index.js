@@ -24,7 +24,6 @@ const connect = (host, port) => new Promise((resolve, reject) => {
     const b = Buffer.alloc(4);
     b.writeUInt16BE(data.readUInt16BE(9), 2);
     b.writeUInt16BE(data.readUInt16BE(11), 0);
-    console.log(data, b.readFloatBE());
   });
 });
 
@@ -38,7 +37,6 @@ const send = async (data, port, host) => {
       socket = await connect(host, port);
       sockets.set(id, socket);
     }
-    console.log(data);
     await socket.write(data);
   } catch (e) {
     console.error(e);

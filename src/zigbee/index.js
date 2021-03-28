@@ -23,7 +23,6 @@ const addDevice = (id, device) => {
 module.exports.start = (id) => {
 
   controller.on('deviceJoined', ({ device }) => {
-    console.log(device);
     online(device.ieeeAddr, device.networkAddress);
     addDevice(id, device);
   });
@@ -34,7 +33,6 @@ module.exports.start = (id) => {
   });
 
   controller.on('deviceInterview', ({ device }) => {
-    // console.log(device);
     online(device.ieeeAddr, device.networkAddress);
     addDevice(id, device);
     device.endpoints.forEach(endpoint => {
