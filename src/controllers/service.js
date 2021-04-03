@@ -1102,7 +1102,7 @@ const run = (action) => {
         const { bind, brand, model } = get(id) || {};
         const [dev,,index] = bind.split('/');
         const { ip, type, version = '' } = get(dev);
-        const codes = ircodes.codes [TV][brand][model];
+        const codes = ircodes.codes.TV[brand][model];
         const code = codes.command[command];
         const legacy = () => {
           const data = ircodes.encode(codes.count, codes.header, codes.trail, code);

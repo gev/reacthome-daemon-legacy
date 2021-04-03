@@ -1,47 +1,40 @@
-
+const ircodes = require('reacthome-ircodes');
 const { get, set } = require('../../actions');
 const { device } = require('../../sockets');
 const { ACTION_IR, ON, OFF, ACTION_ON, ACTION_OFF, ACTION_ENABLE, ACTION_DISABLE } = require('../../constants');
 
-const code = (a, b, data) => {
-  const code = [a, b];
-  data.forEach((x, i) => {
-    for (let m = 0b10000000; m > 0; m >>= 1) {
-      if (x & m) {
-        code.push(20, 60);
-      } else {
-        code.push(20, 20);
-      }
+const manage = (power, setpoint, ac) => {
+  if (!ac.bind) return;
+  const [dev,,index] = ac.bind.split('/');
+  const {ip, type, version = ''} = get(dev) || {};
+  const codes = (ircodes.codes.AC[ac.brand] || {})[ac.model] || {};
+  const code = codes.command(power, setpoint);
+  const legacy = () => {
+    const data = ircodes.encode(codes.count, codes.header, codes.trail, code);
+    const buff = Buffer.alloc(data.length * 2 + 5);
+    buff.writeUInt8(ACTION_IR, 0);
+    buff.writeUInt8(index, 1);
+    buff.writeUInt8(0, 2);
+    buff.writeUInt16BE(codes.frequency, 3);
+    for (let i = 0; i < data.length; i++) {
+      buff.writeUInt16BE(data[i], i * 2 + 5);
     }
-  });
-  return code;
-}
-
-const frequency = 38000;
-
-const manage = (power, mode = 0, fan = 0, setpoint = 24, bind) => {
-  if (!bind) return;
-  const [dev,,index] = bind.split('/');
-  const { ip } = get(dev) || {};
-  if (!ip) return;
-  const buff = Buffer.alloc(597);
-  buff.writeUInt8(ACTION_IR, 0);
-  buff.writeUInt8(index, 1);
-  buff.writeUInt8(0, 2);
-  buff.writeUInt16BE(frequency, 3);
-  const data = [0xf2, 0x0d, 0x03, 0xfc, 0x01];
-  let t = setpoint < 17 ? 0 : (setpoint - 17);
-  data[5] = (t & 0xf) << 4;
-  data[6] = ((fan ? ((fan + 1) & 0x7) : 0 ) << 5) | (power ? (mode & 0x3) : 0x7);
-  data[7] = 0;
-  data[8] = data.reduce((a, b) => a ^ b);
-  const ir = code(167, 164, data);
-  ir.push(20, 282);
-  for (let i = 0; i < ir.length; i++) {
-    buff.writeUInt16BE(ir[i], i * 2 + 5);
-    buff.writeUInt16BE(ir[i], (i + ir.length) * 2 + 5);
+    return buff;
   }
-  device.send(buff, ip);
+  switch (type) {
+    case DEVICE_TYPE_IR_4: {
+      const [major] = version.split('.');
+      const header = Buffer.alloc(7);
+      header.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
+      dev.split(':').forEach((v, i)=> {
+        header.writeUInt8(parseInt(v, 16), i + 1);
+      });
+      device.send(Buffer.concat([header, major < 2 ? legacy() : Buffer.from([ACTION_IR, index, ...code])]), ip);
+      break;
+    }
+    default:
+      device.send(legacy(), ip);
+  }
 };
 
 module.exports.handle = ({ type, id }) => {
@@ -56,7 +49,7 @@ module.exports.handle = ({ type, id }) => {
     case ACTION_ON: {
       if (!enabled) return;
       if (value === ON && ac.setpoint === setpoint) return;
-      manage(ON, ac.mode, ac.fan, setpoint, ac.bind);
+      manage(ON, setpoint, ac);
       set(id, { setpoint, enabled });
       break;
     }
@@ -65,7 +58,7 @@ module.exports.handle = ({ type, id }) => {
       set(ac.bind, { value: OFF });
     case ACTION_OFF: {
       if (value === OFF && ac.setpoint === setpoint) return;
-      manage(OFF, ac.mode, ac.fan, setpoint, ac.bind);
+      manage(OFF, setpoint, ac);
       set(id, { setpoint, enabled });
       break;
     }
