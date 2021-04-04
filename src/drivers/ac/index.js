@@ -4,6 +4,7 @@ const { device } = require('../../sockets');
 const { ACTION_IR, ON, OFF, ACTION_ON, ACTION_OFF, ACTION_ENABLE, ACTION_DISABLE, ACTION_RBUS_TRANSMIT, DEVICE_TYPE_IR_4 } = require('../../constants');
 
 const manage = (power, setpoint, ac) => {
+  console.log(ac);
   if (!ac.bind) return;
   const [dev,,index] = ac.bind.split('/');
   const {ip, type, version = ''} = get(dev) || {};
