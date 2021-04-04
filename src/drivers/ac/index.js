@@ -7,6 +7,7 @@ const manage = (power, setpoint, ac) => {
   if (!ac.bind) return;
   const [dev,,index] = ac.bind.split('/');
   const {ip, type, version = ''} = get(dev) || {};
+  console.log(dev, ip, type, version);
   const codes = (ircodes.codes.AC[ac.brand] || {})[ac.model] || {};
   const code = codes.command(power, setpoint);
   const legacy = () => {
