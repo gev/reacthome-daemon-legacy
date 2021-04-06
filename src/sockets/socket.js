@@ -10,7 +10,6 @@ module.exports = (discovery, interval, port, listen, multicast, hasQueue, delay 
   const socket = createSocket('udp4');
 
   const send = (packet, ip) => {
-    console.log(ip, packet);
     socket.send(packet, port, ip, (err) => {
       if (err) console.error(err);
     });
