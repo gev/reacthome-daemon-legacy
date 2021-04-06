@@ -89,6 +89,7 @@ module.exports.manage = () => {
   });
 
   device.handle((data, { address }) => {
+    console.log(address, data);
     try {
       const dev_mac = Array.from(data.slice(0, 6));
       const id = dev_mac.map(i => `0${i.toString(16)}`.slice(-2)).join(':');
