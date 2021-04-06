@@ -29,7 +29,6 @@ const manage = (power, setpoint, ac) => {
       dev.split(':').forEach((v, i)=> {
         header.writeUInt8(parseInt(v, 16), i + 1);
       });
-      console.log(major, ip, header, code);
       device.send(Buffer.concat([header, major < 2 ? legacy() : Buffer.from([ACTION_IR, index, ...code])]), ip);
       break;
     }

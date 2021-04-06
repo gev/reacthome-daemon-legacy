@@ -18,7 +18,6 @@ const janus = require('../janus');
 const { CANDIDATE, KEEPALIVE } = require('../janus/constants');
 
 module.exports = (session, message) => {
-  console.log(session, message);
   try {
     const peer = peers.get(session);
     peer.timestamp = Date.now();
