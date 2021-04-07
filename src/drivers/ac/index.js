@@ -20,13 +20,12 @@ const manage = (power, setpoint, ac) => {
       });
       header[7] = ACTION_IR;
       header[8] = index;
-      // command.forEach((code, i) => {
-        // console.log(code);
-        // setTimeout(() => {
-          console.log(Buffer.from([...header, ...command[1]]), ip);
+      command.forEach((code, i) => {
+        console.log(code);
+        setTimeout(() => {
           device.send(Buffer.from([...header, ...command[1]]), ip);
-        // }, i * 500);
-      // });
+        }, i * 100);
+      });
       break;
     }
     default:
@@ -40,7 +39,7 @@ const manage = (power, setpoint, ac) => {
         for (let i = 0; i < data.length; i++) {
           buff.writeUInt16BE(data[i], i * 2 + 5);
         }
-        setTimeout(device.send, i * 200, buff, ip);
+        setTimeout(device.send, i * 100, buff, ip);
       });
   }
 };
