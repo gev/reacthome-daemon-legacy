@@ -24,7 +24,7 @@ const manage = (power, setpoint, ac) => {
         console.log(code);
         setTimeout(() => {
           device.send(Buffer.from([...header, ...command[1]]), ip);
-        }, i * 100);
+        }, i * 200);
       });
       break;
     }
@@ -39,7 +39,7 @@ const manage = (power, setpoint, ac) => {
         for (let i = 0; i < data.length; i++) {
           buff.writeUInt16BE(data[i], i * 2 + 5);
         }
-        setTimeout(device.send, i * 100, buff, ip);
+        setTimeout(device.send, i * 200, buff, ip);
       });
   }
 };
