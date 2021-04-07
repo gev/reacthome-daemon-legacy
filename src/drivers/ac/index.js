@@ -21,7 +21,7 @@ const manage = (power, setpoint, ac) => {
       header[7] = ACTION_IR;
       header[8] = index;
       command.forEach((code, i) => {
-        setTimeout(device.send, i * 500, Buffer.from([...header, ...code]), ip);
+        setTimeout(device.send, i * 100, Buffer.from([...header, ...code]), ip);
       });
       break;
     }
