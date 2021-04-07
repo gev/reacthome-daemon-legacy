@@ -13,14 +13,17 @@ const manage = (power, setpoint, ac) => {
     case DEVICE_TYPE_IR_4: {
       const [major] = version.split('.');
       if (major < 2) return;
-      const header = [];
-      header[0] = ACTION_RBUS_TRANSMIT;
+      const header = Buffer.alloc(7);
+      header.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
       dev.split(':').forEach((v, i)=> {
-        header[i + 1] = parseInt(v, 16);
+        header.writeUInt8(parseInt(v, 16), i + 1);
       });
-      header[7] = ACTION_IR;
-      header[8] = index;
-      device.send(Buffer.concat(command.map(code => Buffer.from([...header, ...code]))), ip);
+      device.send(Buffer.concat([
+        header, 
+        ...command.map(code =>
+          Buffer.from([ACTION_IR, index, ...code])
+        ),
+      ]), ip);
       break;
     }
     default:
