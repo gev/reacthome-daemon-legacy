@@ -19,7 +19,7 @@ const manage = (power, setpoint, ac) => {
         header[i + 1] = parseInt(v, 16);
       });
       header[7] = ACTION_IR;
-      header[8] index, 8;
+      header[8] index;
       command.forEach((code) => {
         device.send(Buffer.from(header.concat(code)), ip);
       })
