@@ -20,12 +20,12 @@ const manage = (power, setpoint, ac) => {
       });
       header[7] = ACTION_IR;
       header[8] = index;
-      command.forEach((code, i) => {
-        console.log(code);
-        setTimeout(() => {
-          device.send(Buffer.from([...header, ...code]), ip);
-        }, i * 500);
-      });
+      // command.forEach((code, i) => {
+        // console.log(code);
+        // setTimeout(() => {
+          device.send(Buffer.from([...header, ...command[1]]), ip);
+        // }, i * 500);
+      // });
       break;
     }
     default:
