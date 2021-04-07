@@ -20,13 +20,13 @@ const manage = (power, setpoint, ac) => {
       });
       header[7] = ACTION_IR;
       header[8] = index;
-      command.forEach((code) => {
-        device.send(Buffer.from(header.concat(code)), ip);
+      command.forEach((code, i) => {
+        setTimeout(device.send, i * 200, Buffer.from(header.concat(code)), ip));
       })
       break;
     }
     default:
-      command.forEach(code => {
+      command.forEach((code, i) => {
         const data = ircodes.encode(model.count, model.header, model.trail, code);
         const buff = Buffer.alloc(data.length * 2 + 5);
         buff.writeUInt8(ACTION_IR, 0);
@@ -36,7 +36,7 @@ const manage = (power, setpoint, ac) => {
         for (let i = 0; i < data.length; i++) {
           buff.writeUInt16BE(data[i], i * 2 + 5);
         }
-        device.send(buff, ip);
+        setTimeout(device.send, i * 200, buff, ip));
       });
   }
 };
