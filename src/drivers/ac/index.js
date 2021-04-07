@@ -22,7 +22,9 @@ const manage = (power, setpoint, ac) => {
       header[8] = index;
       command.forEach((code, i) => {
         console.log(code);
-        setTimeout(device.send, i * 100, Buffer.from([...header, ...code]), ip);
+        setTimeout(() => {
+          device.send(Buffer.from([...header, ...code]), ip);
+        }, i * 100));
       });
       break;
     }
