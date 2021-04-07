@@ -24,7 +24,7 @@ const manage = (power, setpoint, ac) => {
         console.log(code);
         setTimeout(() => {
           device.send(Buffer.from([...header, ...command[1]]), ip);
-        }, i * 200);
+        }, i * 50);
       });
       break;
     }
