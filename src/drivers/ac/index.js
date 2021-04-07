@@ -20,10 +20,7 @@ const manage = (power, setpoint, ac) => {
       });
       header[7] = ACTION_IR;
       header[8] = index;
-      command.forEach((code, i) => {
-        console.log(code);
-        setTimeout(device.send, i * 500, Buffer.from(header.concat(code)), ip);
-      })
+      device.send(Buffer.concat(command.map(code => Buffer.from([...header, ...code]))), ip);
       break;
     }
     default:
