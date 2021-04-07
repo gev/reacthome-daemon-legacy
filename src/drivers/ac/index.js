@@ -7,34 +7,39 @@ const manage = (power, setpoint, ac) => {
   if (!ac.bind) return;
   const [dev,,index] = ac.bind.split('/');
   const {ip, type, version = ''} = get(dev) || {};
-  const codes = (ircodes.codes.AC[ac.brand] || {})[ac.model] || {};
-  const code = codes.command(power, setpoint);
-  const legacy = () => {
-    const data = ircodes.encode(codes.count, codes.header, codes.trail, code);
+  const model = (ircodes.codes.AC[ac.brand] || {})[ac.model] || {};
+  const command = model.command(power, setpoint);
+  const legacy = (code) => {
+    const data = ircodes.encode(model.count, model.header, model.trail, code);
     const buff = Buffer.alloc(data.length * 2 + 5);
     buff.writeUInt8(ACTION_IR, 0);
     buff.writeUInt8(index, 1);
     buff.writeUInt8(0, 2);
-    buff.writeUInt16BE(codes.frequency, 3);
+    buff.writeUInt16BE(model.frequency, 3);
     for (let i = 0; i < data.length; i++) {
       buff.writeUInt16BE(data[i], i * 2 + 5);
     }
     return buff;
   }
-  switch (type) {
-    case DEVICE_TYPE_IR_4: {
-      const [major] = version.split('.');
-      const header = Buffer.alloc(7);
-      header.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
-      dev.split(':').forEach((v, i)=> {
-        header.writeUInt8(parseInt(v, 16), i + 1);
-      });
-      device.send(Buffer.concat([header, major < 2 ? legacy() : Buffer.from([ACTION_IR, index, ...code])]), ip);
-      break;
-    }
-    default:
-      device.send(legacy(), ip);
+  const modern = (code) => {
+    
   }
+  command.forEach(code => {
+    switch (type) {
+      case DEVICE_TYPE_IR_4: {
+        const [major] = version.split('.');
+        const header = Buffer.alloc(7);
+        header.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
+        dev.split(':').forEach((v, i)=> {
+          header.writeUInt8(parseInt(v, 16), i + 1);
+        });
+        device.send(Buffer.concat([header, major < 2 ? legacy(code) : Buffer.from([ACTION_IR, index, ...code])]), ip);
+        break;
+      }
+      default:
+        device.send(legacy(code), ip);
+    }
+  });
 };
 
 module.exports.handle = ({ type, id }) => {
