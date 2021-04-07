@@ -39,7 +39,7 @@ const manage = (power, setpoint, ac) => {
         for (let i = 0; i < data.length; i++) {
           buff.writeUInt16BE(data[i], i * 2 + 5);
         }
-        setTimeout(device.send, i * 200, buff, ip);
+        setTimeout(device.send, i * 50, buff, ip);
       });
   }
 };
