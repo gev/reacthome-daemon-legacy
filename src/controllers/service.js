@@ -1013,10 +1013,7 @@ const run = (action) => {
           const { velocity } = get(o[i]) || {};
           const [dev, , index] = o[i].split("/");
           const { ip, type: deviceType } = get(dev);
-          let v;
-          if (i === "bind") {
-            v = value;
-          } else {
+          if (i !== "bind") {
             v = rgb[c];
           }
           switch (deviceType) {
