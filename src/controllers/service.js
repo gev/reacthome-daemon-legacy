@@ -936,7 +936,7 @@ const run = (action) => {
         const [h, s] = color.rgb.hsv(R, G, B);
         const rgb = color.hsv.rgb(h, s, value / 2.55);
         const [r, g, b] = rgb;
-        set(id, { last: o.bind ? { value } : { r, g, b } });
+        set(id, { last: o.bind ? { value } : { r, g, b }, value: !!value });
         bind.forEach((i, c) => {
           if (!o[i]) return;
           const { velocity } = get(o[i]) || {};
@@ -1005,6 +1005,7 @@ const run = (action) => {
         } else {
           if (v > 100) v = 100;
         }
+        set(id, { value: !!v });
         const rgb = color.hsv.rgb(h, s, v);
         bind.forEach((i, c) => {
           if (!o[i]) return;
