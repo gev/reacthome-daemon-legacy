@@ -1006,7 +1006,6 @@ const run = (action) => {
           if (v > 100) v = 100;
         }
         const rgb = color.hsv.rgb(h, s, v);
-        const [r, g, b] = rgb;
         bind.forEach((i, c) => {
           if (!o[i]) return;
           const { velocity } = get(o[i]) || {};
