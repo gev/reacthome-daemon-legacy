@@ -1,19 +1,24 @@
-process.on('uncaughtException', function(err) { 
-  console.log(err) 
+process.on("uncaughtException", function (err) {
+  console.log(err);
 });
 
-const { v4 } = require('uuid');
-const { DAEMON, ACTION_SCRIPT_RUN, ACTION_SCHEDULE_START, ACTION_TIMER_START } = require('./src/constants');
-const { state, device, service, cpu, weather } = require('./src/controllers');
-const { get, set, count } = require('./src/actions');
-const discovery = require('./src/discovery');
-const drivers = require('./src/drivers');
-const assets = require('./src/assets');
-const websocket = require('./src/websocket');
-const zigbee = require('./src/zigbee');
-const janus = require('./src/janus');
-const sip = require('./src/sip');
-const db = require('./src/db');
+const { v4 } = require("uuid");
+const {
+  DAEMON,
+  ACTION_SCRIPT_RUN,
+  ACTION_SCHEDULE_START,
+  ACTION_TIMER_START,
+} = require("./src/constants");
+const { state, device, service, cpu, weather } = require("./src/controllers");
+const { get, set, count } = require("./src/actions");
+const discovery = require("./src/discovery");
+const drivers = require("./src/drivers");
+const assets = require("./src/assets");
+const websocket = require("./src/websocket");
+const zigbee = require("./src/zigbee");
+const janus = require("./src/janus");
+const sip = require("./src/sip");
+const db = require("./src/db");
 
 const init = {};
 
@@ -23,13 +28,13 @@ const start = (id) => {
   if (project) {
     count(project);
     const { timer = [], schedule = [] } = get(project) || {};
-    schedule.forEach(id => {
+    schedule.forEach((id) => {
       const { script, state, schedule } = get(id) || {};
       if (state && schedule && script) {
         service.run({ id, type: ACTION_SCHEDULE_START, schedule, script });
       }
     });
-    timer.forEach(id => {
+    timer.forEach((id) => {
       const { script, state, time = 0, timestamp = 0 } = get(id) || {};
       if (state && script) {
         let dt = Date.now() - timestamp;
@@ -51,16 +56,16 @@ const start = (id) => {
 };
 
 db.createReadStream()
-  .on('error', (err) => {
+  .on("error", (err) => {
     // console.error(err)
   })
-  .on('data', ({ key, value }) => {
+  .on("data", ({ key, value }) => {
     init[key] = value;
   })
-  .on('end', async () => {
+  .on("end", async () => {
     if (!init.mac) {
       init.mac = v4();
-      db.put('mac', init.mac);
+      db.put("mac", init.mac);
     }
     const d = init[init.mac];
     if (d) {
@@ -76,9 +81,9 @@ db.createReadStream()
     cpu.manage();
     discovery.start(init.mac);
     websocket.start(init.mac);
-    zigbee.start(init.mac);
-    janus.start();
+    // zigbee.start(init.mac);
+    // janus.start();
     sip.start();
     start(init.mac);
-    set(init.mac, {token: []});
+    set(init.mac, { token: [] });
   });
