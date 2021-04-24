@@ -1005,7 +1005,6 @@ const run = (action) => {
         } else {
           if (v > 100) v = 100;
         }
-        if (v === value) return;
         const rgb = color.hsv.rgb(h, s, v);
         const [r, g, b] = rgb;
         bind.forEach((i, c) => {
