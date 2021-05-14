@@ -1455,14 +1455,14 @@ const run = (action) => {
         const { id, index, mode = 0, volume = [], source = [[], []] } = action;
         const { ip } = get(id);
         const buffer = Buffer.alloc(25);
-        buffer.write(ACTION_LANAMP, 0);
-        buffer.write(index, 1);
-        buffer.write(mode, 2);
+        buffer.writeUInt8(ACTION_LANAMP, 0);
+        buffer.writeUInt8(index, 1);
+        buffer.writeUInt8(mode, 2);
         for (let i = 0; i < 2; i++) {
-          buffer.wite(volume[i] || 0, i + 3);
+          buffer.writeUInt8(volume[i] || 0, i + 3);
           for (let j = 0; j < 5; j++) {
-            buffer.write(source[i][j].active || 0, i * 5 + j + 4);
-            buffer.write(source[i][j].volume || 0, i * 5 + j + 14);
+            buffer.writeUInt8(source[i][j].active || 0, i * 5 + j + 4);
+            buffer.writeUInt8(source[i][j].volume || 0, i * 5 + j + 14);
           }
         }
         device.send(buffer, ip);
