@@ -333,7 +333,7 @@ module.exports.manage = () => {
               };
             }
           }
-          console.log(`${id}/lanamp/${index}`, { mode, volume, source });
+          console.log(`${id}/lanamp/${index}`, mode, volume, source);
           set(`${id}/lanamp/${index}`, { mode, volume, source });
           break;
         }
