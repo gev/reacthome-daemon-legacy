@@ -141,6 +141,7 @@ const {
   DRIVER_TYPE_VARMANN,
   DEVICE_TYPE_MIX_2,
   IR,
+  ACTION_LANAMP,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -187,8 +188,12 @@ const run = (action) => {
             if (parseInt(major) < 2) return;
             const { bind } = get(id) || {};
             const { type, brand, model } = get(bind) || {};
-            const { frequency, count = [], header = [], trail } =
-              ((ircodes.codes[type] || {})[brand] || {})[model] || {};
+            const {
+              frequency,
+              count = [],
+              header = [],
+              trail,
+            } = ((ircodes.codes[type] || {})[brand] || {})[model] || {};
             const buffer = Buffer.alloc(21);
             buffer.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
             dev
@@ -1226,14 +1231,8 @@ const run = (action) => {
         break;
       }
       case ACTION_DOPPLER_HANDLE: {
-        const {
-          id,
-          low,
-          high,
-          onQuiet,
-          onLowThreshold,
-          onHighThreshold,
-        } = action;
+        const { id, low, high, onQuiet, onLowThreshold, onHighThreshold } =
+          action;
         const { active } = get(action.action);
         const { value } = get(id);
         if (value >= high) {
@@ -1450,6 +1449,23 @@ const run = (action) => {
       case ACTION_SET_DIRECTION:
       case ACTION_SET_FAN_SPEED: {
         drivers.handle(action);
+        break;
+      }
+      case ACTION_LANAMP: {
+        const { id, index, mode = 0, volume = [], source = [[], []] } = action;
+        const { ip } = get(id);
+        const buffer = Buffer.alloc(25);
+        buffer.write(ACTION_LANAMP, 0);
+        buffer.write(index, 1);
+        buffer.write(mode, 2);
+        for (let i = 0; i < 2; i++) {
+          buffer.wite(volume[i] || 0, i + 3);
+          for (let j = 0; j < 5; j++) {
+            buffer.write(source[i][j].active || 0, i * 5 + j + 4);
+            buffer.write(source[i][j].volume || 0, i * 5 + j + 14);
+          }
+        }
+        device.send(buffer, ip);
         break;
       }
       case ACTION_SCRIPT_RUN: {
