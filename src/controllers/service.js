@@ -1466,6 +1466,7 @@ const run = (action) => {
             buffer.writeUInt8(volume || 0, i * 5 + j + 14);
           }
         }
+        console.log(buffer, ip);
         device.send(buffer, ip);
         break;
       }

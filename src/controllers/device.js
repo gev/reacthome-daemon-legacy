@@ -335,7 +335,7 @@ module.exports.manage = () => {
           }
           console.log(
             `${id}/lanamp/${index}`,
-            JSON.stringify({ mode, volume, source })
+            JSON.stringify({ mode, volume, source }, null, 2)
           );
           set(`${id}/lanamp/${index}`, { mode, volume, source });
           break;
