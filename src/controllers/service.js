@@ -1461,8 +1461,8 @@ const run = (action) => {
         for (let i = 0; i < 2; i++) {
           buffer.writeUInt8(volume[i] || 0, i + 3);
           for (let j = 0; j < 5; j++) {
-            buffer.writeUInt8(source[i][j].active || 0, i * 5 + j + 4);
-            buffer.writeUInt8(source[i][j].volume || 0, i * 5 + j + 14);
+            buffer.writeUInt8(source[i][j]?.active || 0, i * 5 + j + 4);
+            buffer.writeUInt8(source[i][j]?.volume || 0, i * 5 + j + 14);
           }
         }
         device.send(buffer, ip);
