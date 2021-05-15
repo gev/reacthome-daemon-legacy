@@ -290,13 +290,13 @@ module.exports.initialize = (id) => {
     case DEVICE_TYPE_LANAMP: {
       for (let i = 0; i < 2; i++) {
         const { mode, volume = [], source = [] } = get(`${id}/lanamp/${i + 1}`);
-        a[23 * i] = mode;
+        a[23 * i + 1] = mode;
         for (let j = 0; j < 2; j++) {
-          a[23 * i + j + 1] = volume[j];
+          a[23 * i + j + 2] = volume[j];
           for (let k = 0; k < 5; k++) {
             const { active = 0, value = 0 } = source[j][k] || {};
-            a[23 * i + j * 5 + k + 3] = active;
-            a[23 * i + j * 5 + k + 13] = value;
+            a[23 * i + j * 5 + k + 4] = active;
+            a[23 * i + j * 5 + k + 14] = value;
           }
         }
       }
