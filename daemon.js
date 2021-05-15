@@ -82,7 +82,7 @@ db.createReadStream()
     discovery.start(init.mac);
     websocket.start(init.mac);
     // zigbee.start(init.mac);
-    // janus.start();
+    janus.start();
     sip.start();
     start(init.mac);
     set(init.mac, { token: [] });
