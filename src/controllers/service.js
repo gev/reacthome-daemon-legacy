@@ -142,6 +142,7 @@ const {
   DEVICE_TYPE_MIX_2,
   IR,
   ACTION_LANAMP,
+  ACTION_MULTIROOM_ZONE,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -1452,8 +1453,25 @@ const run = (action) => {
         break;
       }
       case ACTION_LANAMP: {
-        const { id, index, mode = 0, volume = [], source = [[], []] } = action;
+        const { id, index, mode = 0, volume = [] } = action;
         const { ip } = get(id);
+        const zero = [0, 0, 0, 0, 0];
+        let source = [zero, zero];
+        switch (mode) {
+          case 0b01:
+          case 0b10: {
+            const zone = get(`${dev}/stereo/${index}`);
+            source[0] = zone.source;
+            break;
+          }
+          case 0b11: {
+            const zone0 = get(`${dev}/mono/${2 * index - 1}`);
+            source[0] = zone0.source;
+            const zone1 = get(`${dev}/mono/${2 * index}`);
+            source[1] = zone0.source;
+            break;
+          }
+        }
         const buffer = Buffer.alloc(25);
         buffer.writeUInt8(ACTION_LANAMP, 0);
         buffer.writeUInt8(index, 1);
@@ -1468,6 +1486,24 @@ const run = (action) => {
         }
         console.log(buffer, ip);
         device.send(buffer, ip);
+        break;
+      }
+      case ACTION_MULTIROOM_ZONE: {
+        const { id, source } = action;
+        const [dev, type, index] = id.split("/");
+        const { mode, volume } = get(dev);
+        set(id, { source });
+        if (type === "stereo" && (mode === 0b01 || mode === ob10)) {
+          run({ type: ACTION_LANAMP, id: dev, index, mode, volume });
+        } else if (type === "mono" && mode === 0b11) {
+          run({
+            type: ACTION_LANAMP,
+            id: dev,
+            index: index > 2 ? 2 : 1,
+            mode,
+            volume,
+          });
+        }
         break;
       }
       case ACTION_SCRIPT_RUN: {

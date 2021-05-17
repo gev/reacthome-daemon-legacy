@@ -91,6 +91,8 @@ module.exports.BOOTLOAD_WRITE = 0x00;
 module.exports.BOOTLOAD_SUCCESS = 0x01;
 module.exports.BOOTLOAD_FINISH = 0x0f;
 
+module.exports.ACTION_MULTIROOM_ZONE = "ACTION_MULTIROOM_ZONE";
+
 module.exports.ACTION_STOP = "ACTION_STOP";
 module.exports.ACTION_OPEN = "ACTION_OPEN";
 module.exports.ACTION_CLOSE = "ACTION_CLOSE";

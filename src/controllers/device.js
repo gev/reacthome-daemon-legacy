@@ -333,11 +333,19 @@ module.exports.manage = () => {
               };
             }
           }
-          console.log(
-            `${id}/lanamp/${index}`,
-            JSON.stringify({ mode, volume, source }, null, 2)
-          );
-          set(`${id}/lanamp/${index}`, { mode, volume, source });
+          set(`${id}/lanamp/${index}`, { mode, volume });
+          switch (mode) {
+            case 0b01:
+            case 0b10: {
+              set(`${id}/stereo/${index}`, { source: source[0] });
+              break;
+            }
+            case 0b11: {
+              set(`${id}/mono/${2 * index - 1}`, { source: source[0] });
+              set(`${id}/mono/${2 * index}`, { source: source[1] });
+              break;
+            }
+          }
           break;
         }
         case ACTION_PNP: {

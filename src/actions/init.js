@@ -289,7 +289,25 @@ module.exports.initialize = (id) => {
     }
     case DEVICE_TYPE_LANAMP: {
       for (let i = 0; i < 2; i++) {
-        const { mode, volume = [], source = [] } = get(`${id}/lanamp/${i + 1}`);
+        const index = i + 1;
+        const { mode, volume = [] } = get(`${id}/lanamp/${index}`);
+        const zero = [0, 0, 0, 0, 0];
+        let source = [zero, zero];
+        switch (mode) {
+          case 0b01:
+          case 0b10: {
+            const zone = get(`${dev}/stereo/${index}`);
+            source[0] = zone.source;
+            break;
+          }
+          case 0b11: {
+            const zone0 = get(`${dev}/mono/${2 * index - 1}`);
+            source[0] = zone0.source;
+            const zone1 = get(`${dev}/mono/${2 * index}`);
+            source[1] = zone0.source;
+            break;
+          }
+        }
         a[23 * i + 1] = mode;
         for (let j = 0; j < 2; j++) {
           a[23 * i + j + 2] = volume[j];
