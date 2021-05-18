@@ -1455,20 +1455,19 @@ const run = (action) => {
       case ACTION_LANAMP: {
         const { id, index, mode = 0, volume = [] } = action;
         const { ip } = get(id);
-        const zero = [0, 0, 0, 0, 0];
-        let source = [zero, zero];
+        let source = [[], []];
         switch (mode) {
           case 0b01:
           case 0b10: {
             const zone = get(`${id}/stereo/${index}`);
-            source[0] = zone.source;
+            source[0] = zone.source || [];
             break;
           }
           case 0b11: {
             const zone0 = get(`${id}/mono/${2 * index - 1}`);
-            source[0] = zone0.source;
+            source[0] = zone0.source || [];
             const zone1 = get(`${id}/mono/${2 * index}`);
-            source[1] = zone0.source;
+            source[1] = zone0.source || [];
             break;
           }
         }
