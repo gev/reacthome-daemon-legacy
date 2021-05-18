@@ -1489,18 +1489,23 @@ const run = (action) => {
       case ACTION_MULTIROOM_ZONE: {
         const { id, source } = action;
         const [dev, type, index] = id.split("/");
-        const { mode, volume } = get(dev);
         set(id, { source });
-        if (type === "stereo" && (mode === 0b01 || mode === 0b10)) {
-          run({ type: ACTION_LANAMP, id: dev, index, mode, volume });
-        } else if (type === "mono" && mode === 0b11) {
-          run({
-            type: ACTION_LANAMP,
-            id: dev,
-            index: index > 2 ? 2 : 1,
-            mode,
-            volume,
-          });
+        switch (type) {
+          case "stereo": {
+            const { mode, volume } = get(`${dev}/lanamp/${index}`);
+            if (mode === 0b01 || mode === 0b10) {
+              run({ type: ACTION_LANAMP, id: dev, index, mode, volume });
+            }
+            break;
+          }
+          case "mono": {
+            const i = index > 2 ? 2 : 1;
+            const { mode, volume } = get(`${dev}/lanamp/${i}`);
+            if (mode === 0b11) {
+              run({ type: ACTION_LANAMP, id: dev, index: i, mode, volume });
+            }
+            break;
+          }
         }
         break;
       }
