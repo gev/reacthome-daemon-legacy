@@ -303,7 +303,7 @@ module.exports.initialize = (id) => {
             const zone0 = get(`${id}/mono/${2 * index - 1}`);
             source[0] = zone0.source || [];
             const zone1 = get(`${id}/mono/${2 * index}`);
-            source[1] = zone0.source || [];
+            source[1] = zone1.source || [];
             break;
           }
         }
