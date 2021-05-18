@@ -1492,7 +1492,7 @@ const run = (action) => {
         const [dev, type, index] = id.split("/");
         const { mode, volume } = get(dev);
         set(id, { source });
-        if (type === "stereo" && (mode === 0b01 || mode === ob10)) {
+        if (type === "stereo" && (mode === 0b01 || mode === 0b10)) {
           run({ type: ACTION_LANAMP, id: dev, index, mode, volume });
         } else if (type === "mono" && mode === 0b11) {
           run({
