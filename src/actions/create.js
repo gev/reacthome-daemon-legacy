@@ -42,7 +42,7 @@ module.exports.del = (id, field, subject) => {
   });
 };
 
-module.exports.makeBind = (id, payload, bind = BIND, ref) => {
+module.exports.makeBind = (id, payload, bind = "bind", ref) => {
   const back = ref || bind;
   const subj = get(id);
   const obj = get(payload);
