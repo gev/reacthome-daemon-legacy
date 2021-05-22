@@ -105,9 +105,6 @@ const {
   ARTNET_TYPE_DIMMER,
   ARTNET_TYPE_RELAY,
   ARTNET_TYPE_PWM,
-  ACTION_PNP,
-  PNP_ENABLE,
-  PNP_STEP,
   OPERATOR_PLUS,
   OPERATOR_MINUS,
   OPERATOR_MUL,
@@ -577,27 +574,6 @@ const run = (action) => {
       }
       case ACTION_ARTNET: {
         drivers.handle(action);
-        break;
-      }
-      case ACTION_PNP: {
-        const dev = get(action.id);
-        set(action.id, { t0: Date.now() });
-        switch (action.action) {
-          case PNP_ENABLE:
-            device.send(
-              Buffer.from([ACTION_PNP, PNP_ENABLE, action.enabled]),
-              dev.ip
-            );
-            break;
-          case PNP_STEP:
-            const buff = Buffer.alloc(5);
-            buff.writeUInt8(ACTION_PNP, 0);
-            buff.writeUInt8(PNP_STEP, 1);
-            buff.writeUInt8(action.direction, 2);
-            buff.writeUInt16BE(action.step, 3);
-            device.send(buff, dev.ip);
-            break;
-        }
         break;
       }
       case ACTION_RGB_DIM: {
