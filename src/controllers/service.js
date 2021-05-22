@@ -1323,8 +1323,7 @@ const run = (action) => {
         break;
       }
       case ACTION_IR_CONFIG: {
-        console.log(action);
-        const { id, dev, index, payload, brand, model } = action;
+        const { id, dev, index, brand, model } = action;
         const bind = `${dev}/${IR}/${index}`;
         set(id, { brand, model });
         makeBind(id, bind);
@@ -1332,12 +1331,15 @@ const run = (action) => {
         if (type === DEVICE_TYPE_IR_4) {
           const [major] = version.split(".");
           if (parseInt(major) < 2) return;
+          const { type } = get(id);
           const {
             frequency,
             count = [],
             header = [],
             trail,
-          } = ((ircodes.codes[payload] || {})[brand] || {})[model] || {};
+          } = ((ircodes.codes[type] || {})[brand] || {})[model] || {};
+          console.log(type, brand, model);
+          console.log(frequency, (count = []), (header = []), trail);
           const buffer = Buffer.alloc(21);
           buffer.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
           dev
