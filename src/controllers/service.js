@@ -1391,6 +1391,7 @@ const run = (action) => {
             dev.split(":").forEach((v, i) => {
               header.writeUInt8(parseInt(v, 16), i + 1);
             });
+            console.log(brand, model, command, code);
             console.log(
               Buffer.concat([
                 header,
