@@ -181,36 +181,6 @@ const run = (action) => {
       case ACTION_SET: {
         const { id, payload } = action;
         set(id, payload);
-        const [dev, type, index] = id.split("/");
-        if (type === IR) {
-          const { type, version, ip } = get(dev) || {};
-          if (type === DEVICE_TYPE_IR_4) {
-            const [major] = version.split(".");
-            if (parseInt(major) < 2) return;
-            const { bind } = get(id) || {};
-            const { type, brand, model } = get(bind) || {};
-            const {
-              frequency,
-              count = [],
-              header = [],
-              trail,
-            } = ((ircodes.codes[type] || {})[brand] || {})[model] || {};
-            const buffer = Buffer.alloc(21);
-            buffer.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
-            dev
-              .split(":")
-              .forEach((t, i) => buffer.writeUInt8(parseInt(t, 16), i + 1));
-            buffer.writeUInt8(ACTION_IR_CONFIG, 7);
-            buffer.writeUInt8(index, 8);
-            buffer.writeUInt16LE(frequency, 9);
-            buffer.writeUInt16LE(count[0], 11);
-            buffer.writeUInt16LE(count[1], 13);
-            buffer.writeUInt16LE(header[0], 15);
-            buffer.writeUInt16LE(header[1], 17);
-            buffer.writeUInt16LE(trail, 19);
-            device.send(buffer, ip);
-          }
-        }
         break;
       }
       case ACTION_ASSET: {
