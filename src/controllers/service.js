@@ -1339,7 +1339,7 @@ const run = (action) => {
             trail,
           } = ((ircodes.codes[type] || {})[brand] || {})[model] || {};
           console.log(type, brand, model);
-          console.log(frequency, (count = []), (header = []), trail);
+          console.log(frequency, count, header, trail);
           const buffer = Buffer.alloc(21);
           buffer.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
           dev
