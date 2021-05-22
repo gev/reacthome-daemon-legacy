@@ -1350,7 +1350,7 @@ const run = (action) => {
         console.log(action);
         const { id, dev, index, payload, brand, model } = action;
         const bind = `${dev}/${IR}/${index}`;
-        set(id, { brand, model, type: payload });
+        set(id, { brand, model });
         makeBind(id, bind);
         const { type, version, ip } = get(dev) || {};
         if (type === DEVICE_TYPE_IR_4) {
