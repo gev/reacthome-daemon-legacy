@@ -316,6 +316,7 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_IR_CONFIG: {
+          console.log(data.slice(7));
           break;
         }
         case ACTION_LANAMP: {
