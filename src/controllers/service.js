@@ -1323,6 +1323,7 @@ const run = (action) => {
         break;
       }
       case ACTION_IR_CONFIG: {
+        console.log(action);
         const { id, dev, index, brand, model } = action;
         const bind = `${dev}/${IR}/${index}`;
         set(id, { brand, model });
