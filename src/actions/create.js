@@ -1,9 +1,8 @@
-
-const { contains } = require('fast-deep-equal');
-const { ACTION_SET, CLIENT_PORT, CLIENT_GROUP } = require('../constants');
-const { broadcast } = require('../websocket/peer');
-const state = require('../controllers/state');
-const db = require('../db');
+const { contains } = require("fast-deep-equal");
+const { ACTION_SET, CLIENT_PORT, CLIENT_GROUP } = require("../constants");
+const { broadcast } = require("../websocket/peer");
+const state = require("../controllers/state");
+const db = require("../db");
 
 module.exports.get = state.get;
 
@@ -31,7 +30,7 @@ module.exports.add = (id, field, subject) => {
   const prev = state.get(id);
   if (prev && prev[field] && prev[field].includes(subject)) return;
   apply(id, {
-    [field]: prev && prev[field] ? [...prev[field], subject] : [subject]
+    [field]: prev && prev[field] ? [...prev[field], subject] : [subject],
   });
 };
 
@@ -39,8 +38,18 @@ module.exports.del = (id, field, subject) => {
   const prev = state.get(id);
   if (prev && prev[field] && !prev[field].includes(subject)) return;
   apply(id, {
-    [field]: prev[field].filter(i => i !== subject)
+    [field]: prev[field].filter((i) => i !== subject),
   });
+};
+
+module.exports.makeBind = (id, payload, bind = BIND, ref) => {
+  const back = ref || bind;
+  const subj = get(id);
+  const obj = get(payload);
+  if (subj) set(subj[bind], { [bind]: null });
+  if (obj) set(obj[back], { [back]: null });
+  set(id, { [bind]: payload });
+  set(payload, { [back]: id });
 };
 
 module.exports.apply = (id, action) => {
@@ -54,7 +63,7 @@ const applySite = (id, action) => {
   if (!o) return;
   action(o);
   if (!o.site || o.site.length === 0) return;
-  o.site.forEach(i => applySite(i, action));
+  o.site.forEach((i) => applySite(i, action));
 };
 
 module.exports.applySite = applySite;
