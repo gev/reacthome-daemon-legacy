@@ -44,12 +44,12 @@ module.exports.del = (id, field, subject) => {
 
 module.exports.makeBind = (id, payload, bind = "bind", ref) => {
   const back = ref || bind;
-  const subj = get(id);
-  const obj = get(payload);
-  if (subj) set(subj[bind], { [bind]: null });
-  if (obj) set(obj[back], { [back]: null });
-  set(id, { [bind]: payload });
-  set(payload, { [back]: id });
+  const subj = state.get(id);
+  const obj = state.get(payload);
+  if (subj) apply(subj[bind], { [bind]: null });
+  if (obj) apply(obj[back], { [back]: null });
+  apply(id, { [bind]: payload });
+  apply(payload, { [back]: id });
 };
 
 module.exports.apply = (id, action) => {
