@@ -79,7 +79,7 @@ module.exports = (id, { ID, clusters }, data) => {
         break;
       }
       default: {
-        if (data?.zonestatus !== undefined) {
+        if (data && data.zonestatus !== undefined) {
           const value = data.zonestatus & 0x1;
           set(id, { value });
           const device = get(id);
