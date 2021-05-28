@@ -81,7 +81,7 @@ db.createReadStream()
     cpu.manage();
     discovery.start(init.mac);
     websocket.start(init.mac);
-    // zigbee.start(init.mac);
+    zigbee.start(init.mac);
     janus.start();
     sip.start();
     start(init.mac);
