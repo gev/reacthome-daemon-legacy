@@ -1323,7 +1323,6 @@ const run = (action) => {
         break;
       }
       case ACTION_IR_CONFIG: {
-        console.log(action);
         const { id, dev, index, brand, model } = action;
         const bind = `${dev}/${IR}/${index}`;
         set(id, { brand, model });
@@ -1339,8 +1338,6 @@ const run = (action) => {
             header = [],
             trail,
           } = ((ircodes.codes[type] || {})[brand] || {})[model] || {};
-          console.log(type, brand, model);
-          console.log(frequency, count, header, trail);
           const buffer = Buffer.alloc(21);
           buffer.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
           dev
