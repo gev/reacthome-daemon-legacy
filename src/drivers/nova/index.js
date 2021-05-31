@@ -14,7 +14,7 @@ const {
   READ_HOLDING_REGISTERS,
   WRITE_REGISTER,
 } = require("../modbus/constants");
-const { ADDRESS: BROADCAST_ADDRESS, TIMEOUT } = require("./constants");
+const { ADDRESS, TIMEOUT } = require("./constants");
 
 const instance = new Set();
 
@@ -26,7 +26,7 @@ const sync = (id) => {
   if (modbus) {
     if (synced) {
       console.log("read");
-      readHoldingRegisters(modbus, address, 0x0, 2);
+      readHoldingRegisters(modbus, address, 0x0, 1);
     } else {
       console.log("write", dev);
       writeRegister(modbus, address, 0x0, dev.value ? dev.fan_speed : 0);
@@ -48,7 +48,11 @@ module.exports.handle = (action) => {
       break;
     }
     case ACTION_SET_FAN_SPEED: {
-      set(id, { fan_speed: action.value, synced: false });
+      set(id, {
+        fan_speed: action.value,
+        value: !!action.value,
+        synced: false,
+      });
       break;
     }
     case ACTION_SETPOINT: {
@@ -62,12 +66,12 @@ module.exports.handle = (action) => {
         case READ_HOLDING_REGISTERS: {
           const dev = get(id) || {};
           const fan_speed = data.readUInt16BE(2);
-          const setpoint = data.readUInt16BE(4) / 10;
+          // const setpoint = data.readUInt16BE(4) / 10;
           if (dev.synced) {
             set(id, {
               value: !!fan_speed,
-              fan_speed,
-              setpoint,
+              fan_speed: fan_speed ? fan_speed : dev.fan_speed,
+              // setpoint,
               synced: true,
             });
           }
