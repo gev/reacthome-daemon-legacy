@@ -1,21 +1,20 @@
-
-const { crc16modbus } = require('crc');
-const { get } = require('../../../actions');
-const { ACTION_RS485_TRANSMIT } = require('../../../constants');
-const { 
+const { crc16modbus } = require("crc");
+const { get } = require("../../../actions");
+const { ACTION_RS485_TRANSMIT } = require("../../../constants");
+const {
   READ_INPUT_REGISTERS,
-  READ_HOLDING_REGISTERS, 
+  READ_HOLDING_REGISTERS,
   WRITE_REGISTER,
   WRITE_REGISTERS,
   MODBUS,
-} = require('../constants');
-const driver = require('../../driver');
-const { send } = require('../../../sockets/device');
+} = require("../constants");
+const driver = require("../../driver");
+const { send } = require("../../../sockets/device");
 
 const request = (getSize, fill) => (code) => (id, address, register, data) => {
-  const {bind} = get(id) || {};
-  const [dev,, index] = bind.split('/');
-  const {ip} = get(dev) || {};
+  const { bind } = get(id) || {};
+  const [dev, , index] = bind.split("/");
+  const { ip } = get(dev) || {};
   if (ip && index) {
     const size = getSize(data);
     const buffer = Buffer.alloc(size + 2);
@@ -26,12 +25,13 @@ const request = (getSize, fill) => (code) => (id, address, register, data) => {
     buffer.writeUInt16BE(register, 4);
     fill(buffer, data);
     buffer.writeUInt16LE(crc16modbus(buffer.slice(2, size)), size);
+    console.log(biffer, ip);
     send(buffer, ip);
   }
-}
+};
 
 const request8 = request(
-  () => 8, 
+  () => 8,
   (buffer, data) => {
     buffer.writeUInt16BE(data, 6);
   }
@@ -51,10 +51,11 @@ module.exports.writeRegisters = request(
   }
 )(WRITE_REGISTERS);
 
-module.exports.handle = ({id, data}) => {
+module.exports.handle = ({ id, data }) => {
+  console.log(data, id);
   const address = data[0];
-  const {bind} = get(`${id}/${MODBUS}/${address}`) || {};
+  const { bind } = get(`${id}/${MODBUS}/${address}`) || {};
   if (bind) {
-    driver.handle({id: bind, data: data.slice(1)});
+    driver.handle({ id: bind, data: data.slice(1) });
   }
-}
+};
