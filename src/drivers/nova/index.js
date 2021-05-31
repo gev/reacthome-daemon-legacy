@@ -17,7 +17,7 @@ const {
 const { ADDRESS, TIMEOUT } = require("./constants");
 
 const instance = new Set();
-let i = 0;
+
 const sync = (id) => {
   const dev = get(id) || {};
   console.log(id, dev);
@@ -26,9 +26,7 @@ const sync = (id) => {
   if (modbus) {
     if (synced) {
       console.log("read");
-      readHoldingRegisters(modbus, i, 1, 1);
-      i += 1;
-      i %= 256;
+      readHoldingRegisters(modbus, 254, 1, 1);
     } else {
       console.log("write", dev);
       writeRegister(modbus, address, 0x0, dev.value ? dev.fan_speed : 0);
