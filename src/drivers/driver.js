@@ -1,4 +1,3 @@
-
 const {
   DRIVER_TYPE_RS21,
   DRIVER_TYPE_ARTNET,
@@ -10,18 +9,20 @@ const {
   DRIVER_TYPE_VARMANN,
   DRIVER_TYPE_INTESIS_BOX,
   DRIVER_TYPE_ME210_701,
-} = require('../constants');
-const { get } = require('../actions');
-const RS21 = require('./RS21');
-const Artnet = require('./artnet');
-const { Plc1, Plc2 } = require('./bb');
-const M230 = require('./M230');
-const M206 = require('./M206');
-const modbus = require('./modbus/rbus');
-const varmann = require('./varmann');
-const intesisbox = require('./intesisbox');
-const me210_701 = require('./owen/me210_701');
-const mac = require('../mac');
+  DRIVER_TYPE_NOVA,
+} = require("../constants");
+const { get } = require("../actions");
+const RS21 = require("./RS21");
+const Artnet = require("./artnet");
+const { Plc1, Plc2 } = require("./bb");
+const M230 = require("./M230");
+const M206 = require("./M206");
+const modbus = require("./modbus/rbus");
+const nova = require("./nova");
+const varmann = require("./varmann");
+const intesisbox = require("./intesisbox");
+const me210_701 = require("./owen/me210_701");
+const mac = require("../mac");
 
 let run = {};
 
@@ -33,12 +34,13 @@ module.exports.manage = () => {
     if (drv.stop) drv.stop();
   });
   run = {};
+  nova.clear();
   varmann.clear();
   intesisbox.clear();
   if (!Array.isArray(driver)) return;
-  driver.forEach(id => {
+  driver.forEach((id) => {
     const { type } = get(id) || {};
-    switch(type) {
+    switch (type) {
       case DRIVER_TYPE_RS21:
         run[id] = new RS21(id);
         break;
@@ -60,6 +62,10 @@ module.exports.manage = () => {
       case DRIVER_TYPE_MODBUS:
         run[id] = modbus;
         break;
+      case DRIVER_TYPE_NOVA:
+        run[id] = nova;
+        nova.add(id);
+        break;
       case DRIVER_TYPE_VARMANN:
         run[id] = varmann;
         varmann.add(id);
@@ -72,7 +78,7 @@ module.exports.manage = () => {
         run[id] = me210_701;
         me210_701.add(id);
         break;
-      }
+    }
   });
 };
 
@@ -80,4 +86,4 @@ module.exports.handle = (action) => {
   if (run[action.id] && run[action.id].handle) {
     run[action.id].handle(action);
   }
-}
+};
