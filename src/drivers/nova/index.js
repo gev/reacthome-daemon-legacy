@@ -26,7 +26,7 @@ const sync = (id) => {
   if (modbus) {
     if (synced) {
       console.log("read");
-      readHoldingRegisters(modbus, 254, 1, 1);
+      readHoldingRegisters(modbus, address, 1, 1);
     } else {
       console.log("write", dev);
       writeRegister(modbus, address, 0x0, dev.value ? dev.fan_speed : 0);
