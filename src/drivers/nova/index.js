@@ -20,6 +20,7 @@ const instance = new Set();
 
 const sync = (id) => {
   const dev = get(id) || {};
+  console.log(id, dev);
   const { bind, synced } = dev;
   const [modbus, , address] = bind.split("/");
   if (modbus) {
