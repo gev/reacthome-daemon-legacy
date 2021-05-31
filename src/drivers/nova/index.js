@@ -9,6 +9,7 @@ const {
   writeRegister,
   readHoldingRegisters,
   writeRegisters,
+  readInputRegisters,
 } = require("../modbus/rbus");
 const {
   READ_HOLDING_REGISTERS,
@@ -26,7 +27,8 @@ const sync = (id) => {
   if (modbus) {
     if (synced) {
       console.log("read");
-      readHoldingRegisters(modbus, address, 1, 1);
+      readInputRegisters(modbus, address, 1, 1);
+      // readHoldingRegisters(modbus, address, 1, 1);
     } else {
       console.log("write", dev);
       writeRegister(modbus, address, 0x0, dev.value ? dev.fan_speed : 0);
