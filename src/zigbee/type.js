@@ -1,4 +1,4 @@
-const { THERMOSTAT, MOTION_SENSOR, CLIMATE_SENSOR } = require("../constants");
+const { THERMOSTAT, CLIMATE_SENSOR } = require("../constants");
 
 module.exports = (device) => {
   switch (device.modelID) {
