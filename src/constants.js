@@ -39,6 +39,7 @@ module.exports.BUTTON = "button";
 module.exports.SMOCK_SENSOR = "smock_sensor";
 module.exports.MOTION_SENSOR = "motion_sensor";
 module.exports.LEAKAGE_SENSOR = "leakage_sensor";
+module.exports.CLIMATE_SENSOR = "climate_sensor";
 module.exports.VALVE_HEATING = "valve_heating";
 module.exports.VALVE_WATER = "valve_water";
 module.exports.LIGHT_RGB = "light_RGB";

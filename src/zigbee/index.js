@@ -4,6 +4,7 @@ const { ZIGBEE } = require("./constants");
 const { online, offline } = require("./online");
 const controller = require("./controller");
 const clusters = require("./clusters");
+const type = require("./type");
 const handle = require("./in");
 
 const addDevice = (id, device) => {
@@ -21,6 +22,7 @@ const addDevice = (id, device) => {
     model: modelID,
     powerSource: powerSource,
     endpoint: clusters(device),
+    type: type(device),
     interviewCompleted,
   });
 };
