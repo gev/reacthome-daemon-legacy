@@ -1,5 +1,4 @@
-
-const crypto = require('crypto');
+const crypto = require("crypto");
 const {
   DO,
   DI,
@@ -48,8 +47,11 @@ const {
   onDoppler,
   onHumidity,
   onIllumination,
-  onTemperature
-} = require('../constants');
+  onTemperature,
+  ACTION_GROUP,
+  ACTION_DI_RELAY_SYNC,
+  GROUP,
+} = require("../constants");
 const {
   get,
   set,
@@ -60,15 +62,17 @@ const {
   online,
   updateFirmware,
   initialize,
-  initialized
-} = require('../actions');
-const { device } = require('../sockets');
-const { run } = require('./service');
-const drivers = require('../drivers');
-const mac = require('../mac');
+  initialized,
+} = require("../actions");
+const { device } = require("../sockets");
+const { run } = require("./service");
+const drivers = require("../drivers");
+const mac = require("../mac");
 
-const ip2int = ip => ip.split('.').reduce((a, b) => (a << 8) | (parseInt(b)), 0) >>> 0;
-const int2ip = ip => `${ip >> 24 & 0xff}.${ip >> 16 & 0xff}.${ip >> 8 & 0xff}.${ip & 0xff}`;
+const ip2int = (ip) =>
+  ip.split(".").reduce((a, b) => (a << 8) | parseInt(b), 0) >>> 0;
+const int2ip = (ip) =>
+  `${(ip >> 24) & 0xff}.${(ip >> 16) & 0xff}.${(ip >> 8) & 0xff}.${ip & 0xff}`;
 
 const onDI = [onOff, onOn, onHold, onClick];
 const onDO = [onOff, onOn];
@@ -77,23 +81,22 @@ const count = [count_off, count_on];
 let last_ip = IP_ADDRESS_POOL_START;
 
 module.exports.manage = () => {
-
-  ((get(mac()) || {}).device || []).forEach(id => {
+  ((get(mac()) || {}).device || []).forEach((id) => {
     offline(id);
   });
 
   device.handle((data, { address }) => {
     try {
       const dev_mac = Array.from(data.slice(0, 6));
-      const id = dev_mac.map(i => `0${i.toString(16)}`.slice(-2)).join(':');
+      const id = dev_mac.map((i) => `0${i.toString(16)}`.slice(-2)).join(":");
       const action = data[6];
       switch (action) {
         case DEVICE_TYPE_PLC: {
-          for (let i = 1; i <= 36; i++ ) {
+          for (let i = 1; i <= 36; i++) {
             const channel = `${id}/${DI}/${i}`;
             const chan = get(channel);
             const value = data[i + 6];
-            if (chan && (chan.value !== value)) {
+            if (chan && chan.value !== value) {
               set(channel, { value });
               const script = chan[onDI[value]];
               if (script) {
@@ -101,7 +104,7 @@ module.exports.manage = () => {
               }
             }
           }
-          for (let i = 1; i <= 24; i++ ) {
+          for (let i = 1; i <= 24; i++) {
             const channel = `${id}/${DO}/${i}`;
             const chan = get(channel);
             const value = data[i + 42];
@@ -126,7 +129,7 @@ module.exports.manage = () => {
           const value = data[8];
           const channel = `${id}/${DI}/${index}`;
           const chan = get(channel);
-          if (chan && (chan.value !== value)) {
+          if (chan && chan.value !== value) {
             set(channel, { value });
             const script = chan[onDI[value]];
             if (script) {
@@ -158,6 +161,23 @@ module.exports.manage = () => {
           }
           break;
         }
+        case ACTION_GROUP: {
+          const index = data[7];
+          const enabled = data[8];
+          const delay = data.readUInt32LE(9);
+          const channel = `${id}/${GROUP}/${index}`;
+          set(channel, { enabled, delay });
+          break;
+        }
+        case ACTION_DI_RELAY_SYNC: {
+          const index = data[7];
+          const value = data.slice(8);
+          const onOff = value.slice(0, value.length / 2);
+          const onOn = value.slice(value.length / 2);
+          const channel = `${id}/${DI}/${index}`;
+          set(channel, { sync: [[...onOff], [...onOn]] });
+          break;
+        }
         case ACTION_RS485_MODE: {
           const index = data[7];
           const is_rbus = data[8];
@@ -171,18 +191,21 @@ module.exports.manage = () => {
           const index = data[7];
           const channel = `${id}/${RS485}/${index}`;
           const { bind } = get(channel) || {};
-          drivers.handle({ id: bind, data: data.slice(8) })
+          drivers.handle({ id: bind, data: data.slice(8) });
           break;
         }
         case ACTION_DIMMER: {
-          const [,,,,,,, index, type, value, velocity] = data;
+          const [, , , , , , , index, type, value, velocity] = data;
           const channel = `${id}/${DIM}/${index}`;
           const chan = get(channel);
           set(channel, {
-            type, value, velocity,
-            dimmable: type ===  DIM_TYPE_FALLING_EDGE
-                   || type === DIM_TYPE_RISING_EDGE
-                   || type === DIM_TYPE_PWM
+            type,
+            value,
+            velocity,
+            dimmable:
+              type === DIM_TYPE_FALLING_EDGE ||
+              type === DIM_TYPE_RISING_EDGE ||
+              type === DIM_TYPE_PWM,
           });
           if (chan) {
             const { bind } = chan;
@@ -206,14 +229,23 @@ module.exports.manage = () => {
           if (site) set(site, { temperature });
           set(id, { temperature });
           if (onTemperature) {
-            run({type: ACTION_SCRIPT_RUN, id: onTemperature});
+            run({ type: ACTION_SCRIPT_RUN, id: onTemperature });
           }
           break;
         }
         case ACTION_TEMPERATURE_EXT: {
-          const dev_id = data.slice(7, 15).map(i => `0${i.toString(16)}`.slice(-2)).join(':');
+          const dev_id = data
+            .slice(7, 15)
+            .map((i) => `0${i.toString(16)}`.slice(-2))
+            .join(":");
           const temperature = data.readInt16LE(15) / 100;
-          set(dev_id, { ip: address, online: true, temperature, type: DEVICE_TYPE_TEMPERATURE_EXT, version: '1.0' });
+          set(dev_id, {
+            ip: address,
+            online: true,
+            temperature,
+            type: DEVICE_TYPE_TEMPERATURE_EXT,
+            version: "1.0",
+          });
           add(mac(), DEVICE, dev_id);
           const { onTemperature: onTemperature, site } = get(dev_id);
           if (site) set(site, { temperature });
@@ -228,7 +260,7 @@ module.exports.manage = () => {
           if (site) set(site, { humidity });
           set(id, { humidity });
           if (onHumidity) {
-            run({type: ACTION_SCRIPT_RUN, id: onHumidity});
+            run({ type: ACTION_SCRIPT_RUN, id: onHumidity });
           }
           break;
         }
@@ -238,16 +270,16 @@ module.exports.manage = () => {
           if (site) set(site, { illumination });
           set(id, { illumination });
           if (onIllumination) {
-            run({type: ACTION_SCRIPT_RUN, id: onIllumination});
+            run({ type: ACTION_SCRIPT_RUN, id: onIllumination });
           }
           break;
         }
         case ACTION_DOPPLER: {
-          const [,,,,,,, value, gain ] = data;
+          const [, , , , , , , value, gain] = data;
           const { onDoppler, threshold } = get(id);
           set(id, { value, gain });
           if (onDoppler) {
-            run({type: ACTION_SCRIPT_RUN, id: onDoppler});
+            run({ type: ACTION_SCRIPT_RUN, id: onDoppler });
           }
           break;
         }
@@ -262,17 +294,17 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_PNP: {
-          const [,,,,,,, type] = data;
+          const [, , , , , , , type] = data;
           switch (type) {
             case PNP_ENABLE:
               const enabled = Boolean(data[8]);
               set(id, { enabled, t1: Date.now() });
               break;
             case PNP_STEP:
-              const [,,,,,,,, direction] = data;
+              const [, , , , , , , , direction] = data;
               const step = data.readUInt16LE(9);
               set(id, { direction, step, t1: Date.now() });
-              break
+              break;
           }
           break;
         }
@@ -297,11 +329,11 @@ module.exports.manage = () => {
             const buff = Buffer.alloc(15);
             buff.writeUInt8(ACTION_IP_ADDRESS, 0);
             Buffer.from(dev_mac).copy(buff, 1, 0, 6);
-            const pool =  Object.values(get(POOL) || {});
+            const pool = Object.values(get(POOL) || {});
             while (last_ip < IP_ADDRESS_POOL_END) {
               if (!pool.includes(last_ip)) break;
               last_ip++;
-            };
+            }
             set(POOL, { [id]: last_ip });
             buff.writeUInt32BE(last_ip, 7);
             buff.writeUInt32BE(SUB_NET_MASK, 11);
@@ -353,7 +385,7 @@ module.exports.manage = () => {
         }
       }
     } catch (e) {
-      console.error(e)
+      console.error(e);
     }
   });
-}
+};
