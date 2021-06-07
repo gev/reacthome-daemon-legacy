@@ -472,6 +472,7 @@ const run = (action, address) => {
       case ACTION_DI_RELAY_SYNC: {
         const dev = get(action.id);
         switch (dev.type) {
+          case DEVICE_TYPE_RELAY_2:
           case DEVICE_TYPE_RELAY_2_DIN: {
             device.send(
               Buffer.from([
