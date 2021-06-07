@@ -451,8 +451,8 @@ const run = (action, address) => {
           3
         );
         switch (dev.type) {
-          case DEVICE_TYPE_RELAY_2_DIN:
           case DEVICE_TYPE_RELAY_2:
+          case DEVICE_TYPE_RELAY_2_DIN: {
             device.send(
               Buffer.concat([
                 Buffer.from([
@@ -464,6 +464,7 @@ const run = (action, address) => {
               dev.ip
             );
             break;
+          }
           default:
             device.send(buffer, dev.ip);
         }
