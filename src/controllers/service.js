@@ -672,10 +672,6 @@ const run = (action, address) => {
         const { id } = action;
         const o = get(id) || {};
         if (o.disabled) return;
-        if (o.type === DRIVER_TYPE_INTESIS_BOX) {
-          drivers.handle(action);
-          return;
-        }
         set(id, { value: true });
         if (o.onOn) {
           run({ type: ACTION_SCRIPT_RUN, id: o.onOn });
@@ -788,10 +784,6 @@ const run = (action, address) => {
         const { id } = action;
         const o = get(id) || {};
         if (o.disabled) return;
-        if (o.type === DRIVER_TYPE_INTESIS_BOX) {
-          drivers.handle(action);
-          return;
-        }
         set(id, { value: false });
         if (o.onOff) {
           run({ type: ACTION_SCRIPT_RUN, id: o.onOff });
