@@ -101,6 +101,10 @@ module.exports.OPEN_CLOSE = "open_close";
 module.exports.CLOSE_OPEN = "close_open";
 
 module.exports.ACTION_SET = "ACTION_SET";
+module.exports.ACTION_ADD = "ACTION_ADD";
+module.exports.ACTION_ADD_BIND = "ACTION_ADD_BIND";
+module.exports.ACTION_MAKE_BIND = "ACTION_MAKE_BIND";
+module.exports.ACTION_DEL = "ACTION_DEL";
 module.exports.ACTION_ASSET = "ACTION_ASSET";
 module.exports.ACTION_INIT = "ACTION_INIT";
 module.exports.ACTION_DOWNLOAD = "ACTION_DOWNLOAD";
@@ -246,6 +250,8 @@ module.exports.THERMOSTAT = "thermostat";
 module.exports.CLOSURE = "closure";
 module.exports.OPEN = "open";
 module.exports.CLOSE = "close";
+
+module.exports.BIND = "BIND";
 
 module.exports.DRIVER_TYPE_RS21 = "RS21";
 module.exports.DRIVER_TYPE_ARTNET = "ARTNET";

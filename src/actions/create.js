@@ -26,30 +26,41 @@ module.exports.set = (id, payload) => {
   apply(id, payload);
 };
 
-module.exports.add = (id, field, subject) => {
+module.exports.add = (id, ref, value) => {
   const prev = state.get(id);
-  if (prev && prev[field] && prev[field].includes(subject)) return;
+  if (prev && prev[ref] && prev[ref].includes(value)) return;
   apply(id, {
-    [field]: prev && prev[field] ? [...prev[field], subject] : [subject],
+    [ref]: prev && prev[ref] ? [...prev[ref], value] : [value],
+  });
+  const v = state.get(value);
+  if (v && v[prev.type || BIND]) {
+    dispatch(modify(value, { [prev.type || BIND]: null }));
+  }
+};
+
+module.exports.del = (id, ref, value) => {
+  const prev = state.get(id);
+  if (prev && prev[ref] && !prev[ref].includes(value)) return;
+  apply(id, {
+    [ref]: prev[ref].filter((i) => i !== value),
   });
 };
 
-module.exports.del = (id, field, subject) => {
-  const prev = state.get(id);
-  if (prev && prev[field] && !prev[field].includes(subject)) return;
-  apply(id, {
-    [field]: prev[field].filter((i) => i !== subject),
-  });
-};
-
-module.exports.makeBind = (id, payload, bind = "bind", ref) => {
+module.exports.makeBind = (id, value, bind = BIND, ref) => {
   const back = ref || bind;
-  const subj = state.get(id);
-  const obj = state.get(payload);
-  if (subj) apply(subj[bind], { [bind]: null });
-  if (obj) apply(obj[back], { [back]: null });
-  apply(id, { [bind]: payload });
-  apply(payload, { [back]: id });
+  const o = state.get(id);
+  const v = state.get(value);
+  if (o) apply(o[bind], { [bind]: null });
+  if (v) apply(v[back], { [back]: null });
+  apply(id, { [bind]: value });
+  apply(value, { [back]: id });
+};
+
+module.exports.addBind = (id, ref, value, bind = BIND) => {
+  const v = state.get(value);
+  if (v) del(v[bind], ref, bind);
+  add(id, ref, value);
+  apply(value, { [bind]: id });
 };
 
 module.exports.apply = (id, action) => {
