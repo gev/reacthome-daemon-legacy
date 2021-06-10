@@ -33,7 +33,7 @@ const add = (id, ref, value) => {
     [ref]: prev && prev[ref] ? [...prev[ref], value] : [value],
   });
   const v = state.get(value);
-  if (v && v[prev.type || BIND]) {
+  if (v && v[prev.type || BIND] !== id) {
     apply(value, { [prev.type || BIND]: null });
   }
 };
