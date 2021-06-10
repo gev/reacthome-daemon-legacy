@@ -40,10 +40,11 @@ module.exports.add = (id, value, ref) => {
 
 const del = (id, value, ref) => {
   const prev = state.get(id);
-  if (prev && prev[ref] && !prev[ref].includes(value)) return;
-  apply(id, {
-    [ref]: prev[ref].filter((i) => i !== value),
-  });
+  if (prev && prev[ref] && prev[ref].includes(value)) {
+    apply(id, {
+      [ref]: prev[ref].filter((i) => i !== value),
+    });
+  }
 };
 module.exports.del = del;
 
