@@ -188,23 +188,23 @@ const run = (action) => {
         break;
       }
       case ACTION_ADD: {
-        const { id, value, ref } = action;
-        add(id, value, ref);
+        const { id, ref, value } = action;
+        add(id, ref, value);
         break;
       }
       case ACTION_DEL: {
-        const { id, value, ref } = action;
-        del(id, value, ref);
+        const { id, ref, value } = action;
+        del(id, ref, value);
         break;
       }
       case ACTION_MAKE_BIND: {
-        const { id, value, bind, ref } = action;
-        makeBind(id, value, bind, ref);
+        const { id, ref, value, bind } = action;
+        makeBind(id, ref, value, bind);
         break;
       }
       case ACTION_ADD_BIND: {
-        const { id, value, bind, ref } = action;
-        addBind(id, value, bind, ref);
+        const { id, ref, value, bind } = action;
+        addBind(id, ref, value, bind);
         break;
       }
       case ACTION_ASSET: {
