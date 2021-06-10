@@ -26,17 +26,19 @@ module.exports.set = (id, payload) => {
   apply(id, payload);
 };
 
-module.exports.add = (id, value, ref) => {
+const add = (id, value, ref) => {
   const prev = state.get(id);
-  if (prev && prev[ref] && prev[ref].includes(value)) return;
-  apply(id, {
-    [ref]: prev && prev[ref] ? [...prev[ref], value] : [value],
-  });
-  const v = state.get(value);
-  if (v && v[prev.type || BIND]) {
-    dispatch(modify(value, { [prev.type || BIND]: null }));
+  if (prev && prev[ref] && !prev[ref].includes(value)) {
+    apply(id, {
+      [ref]: prev && prev[ref] ? [...prev[ref], value] : [value],
+    });
+    const v = state.get(value);
+    if (v && v[prev.type || BIND]) {
+      dispatch(modify(value, { [prev.type || BIND]: null }));
+    }
   }
 };
+module.exports.add = add;
 
 const del = (id, value, ref) => {
   const prev = state.get(id);
