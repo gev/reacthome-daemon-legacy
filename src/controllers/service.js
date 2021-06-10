@@ -140,6 +140,10 @@ const {
   IR,
   ACTION_LANAMP,
   ACTION_MULTIROOM_ZONE,
+  ACTION_ADD,
+  ACTION_DEL,
+  ACTION_MAKE_BIND,
+  ACTION_ADD_BIND,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -148,6 +152,9 @@ const {
   get,
   set,
   add,
+  del,
+  makeBind,
+  addBind,
   offline,
   online,
   applySite,
@@ -162,7 +169,6 @@ const { ZIGBEE } = require("../zigbee/constants");
 const zigbee = require("../zigbee/out");
 const { asset, writeFile } = require("../fs");
 const { RING } = require("../ring/constants");
-const { makeBind } = require("../actions/create");
 
 const timers = {};
 const schedules = {};
@@ -179,6 +185,26 @@ const run = (action) => {
       case ACTION_SET: {
         const { id, payload } = action;
         set(id, payload);
+        break;
+      }
+      case ACTION_ADD: {
+        const { id, value, ref } = action;
+        add(id, value, ref);
+        break;
+      }
+      case ACTION_DEL: {
+        const { id, value, ref } = action;
+        del(id, value, ref);
+        break;
+      }
+      case ACTION_MAKE_BIND: {
+        const { id, value, bind, ref } = action;
+        makeBind(id, value, bind, ref);
+        break;
+      }
+      case ACTION_ADD_BIND: {
+        const { id, value, bind, ref } = action;
+        addBind(id, value, bind, ref);
         break;
       }
       case ACTION_ASSET: {

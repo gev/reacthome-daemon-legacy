@@ -26,7 +26,7 @@ module.exports.set = (id, payload) => {
   apply(id, payload);
 };
 
-module.exports.add = (id, ref, value) => {
+module.exports.add = (id, value, ref) => {
   const prev = state.get(id);
   if (prev && prev[ref] && prev[ref].includes(value)) return;
   apply(id, {
@@ -38,7 +38,7 @@ module.exports.add = (id, ref, value) => {
   }
 };
 
-module.exports.del = (id, ref, value) => {
+module.exports.del = (id, value, ref) => {
   const prev = state.get(id);
   if (prev && prev[ref] && !prev[ref].includes(value)) return;
   apply(id, {
@@ -56,7 +56,7 @@ module.exports.makeBind = (id, value, bind = BIND, ref) => {
   apply(value, { [back]: id });
 };
 
-module.exports.addBind = (id, ref, value, bind = BIND) => {
+module.exports.addBind = (id, value, bind = BIND, ref) => {
   const v = state.get(value);
   if (v) del(v[bind], ref, bind);
   add(id, ref, value);

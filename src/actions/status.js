@@ -1,9 +1,8 @@
-
-const { get, set, add } = require('./create');
-const { initialize } = require('./init');
-const { updateFirmware } = require('./firmware');
-const { DEVICE, DISCOVERY_INTERVAL } = require('../constants');
-const mac = require('../mac');
+const { get, set, add } = require("./create");
+const { initialize } = require("./init");
+const { updateFirmware } = require("./firmware");
+const { DEVICE, DISCOVERY_INTERVAL } = require("../constants");
+const mac = require("../mac");
 
 const timeout = {};
 
@@ -14,7 +13,11 @@ const offline = (id) => {
 const online = (id, type, version, ip, ready) => {
   clearTimeout(timeout[id]);
   set(id, {
-    type, version, ip, online: true, ready
+    type,
+    version,
+    ip,
+    online: true,
+    ready,
   });
   add(mac(), DEVICE, id);
   const device = get(id);
