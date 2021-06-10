@@ -34,7 +34,7 @@ const add = (id, ref, value) => {
   });
   const v = state.get(value);
   if (v && v[prev.type || BIND]) {
-    dispatch(modify(value, { [prev.type || BIND]: null }));
+    apply(value, { [prev.type || BIND]: null });
   }
 };
 module.exports.add = add;
@@ -61,7 +61,7 @@ module.exports.makeBind = (id, ref = BIND, value, bind) => {
 
 module.exports.addBind = (id, ref, value, bind = BIND) => {
   const v = state.get(value);
-  if (v) del(v[bind], ref, bind);
+  if (v) del(v[bind], ref, value);
   add(id, ref, value);
   apply(value, { [bind]: id });
 };
