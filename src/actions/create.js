@@ -38,13 +38,14 @@ module.exports.add = (id, value, ref) => {
   }
 };
 
-module.exports.del = (id, value, ref) => {
+const del = (id, value, ref) => {
   const prev = state.get(id);
   if (prev && prev[ref] && !prev[ref].includes(value)) return;
   apply(id, {
     [ref]: prev[ref].filter((i) => i !== value),
   });
 };
+module.exports.del = del;
 
 module.exports.makeBind = (id, value, bind = BIND, ref) => {
   const back = ref || bind;
