@@ -1531,8 +1531,8 @@ const run = (action) => {
         const script = get(id);
         if (script && Array.isArray(script.action)) {
           script.action.forEach((i) => {
-            const { type, payload, delay } = get(i);
-            const a = { action: i, type, ...payload };
+            const { target, type, payload, delay } = get(i);
+            const a = { action: i, id: target, type, ...payload };
             if (delay > 0) {
               setTimeout(run, delay, a);
             } else {
