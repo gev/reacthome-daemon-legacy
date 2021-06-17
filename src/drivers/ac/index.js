@@ -31,7 +31,12 @@ const manage = (power, setpoint, ac) => {
       header[7] = ACTION_IR;
       header[8] = index;
       command.forEach((code, i) => {
-        setTimeout(device.send, i * 100, Buffer.from([...header, ...code]), ip);
+        setTimeout(
+          device.send,
+          i * model.delay,
+          Buffer.from([...header, ...code]),
+          ip
+        );
       });
       break;
     }
@@ -51,7 +56,7 @@ const manage = (power, setpoint, ac) => {
         for (let i = 0; i < data.length; i++) {
           buff.writeUInt16BE(data[i], i * 2 + 5);
         }
-        setTimeout(device.send, i * 100, buff, ip);
+        setTimeout(device.send, i * model.delay, buff, ip);
       });
   }
 };
