@@ -1685,7 +1685,7 @@ rc@^1.2.7:
 
 reacthome-ircodes@gev/reacthome-ircodes:
   version "2.0.0"
-  resolved "git+ssh://git@github.com/gev/reacthome-ircodes.git#7780d9b7f1b477d2a1ba89f23e3887e31964a5b9"
+  resolved "git+ssh://git@github.com/gev/reacthome-ircodes.git#723b1aab9150b3455f264116510b1a7c737dcb06"
   dependencies:
     csv-parse "^3.1.3"
     polycrc "^1.0.1"
