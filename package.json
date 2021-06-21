@@ -7,11 +7,10 @@
   "license": "MIT",
   "pkg": {
     "assets": [
-      "node_modules/@serialport/bindings/build/Release/bindings.node",
-      "node_modules/leveldown/prebuilds/darwin-x64/node.napi.node"
+      "node_modules/@serialport/bindings/build/Release"
     ],
     "targets": [
-      "node14-macos-x64"
+      "node14-linux-armv7"
     ],
     "outputPath": "dist"
   },
