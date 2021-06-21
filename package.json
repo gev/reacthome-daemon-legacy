@@ -10,7 +10,7 @@
       "node_modules/@serialport/bindings/build/Release"
     ],
     "targets": [
-      "node14-linux-armv7"
+      "node14-linuxstatic-armv7"
     ],
     "outputPath": "dist"
   },
