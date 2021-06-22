@@ -2,18 +2,8 @@
   "name": "reacthome-daemon",
   "version": "1.0.0",
   "main": "daemon.js",
-  "bin": "daemon.js",
   "author": "Evgeny <gazdovsky@gmail.com>",
   "license": "MIT",
-  "pkg": {
-    "assets": [
-      "node_modules/@serialport/bindings/build/Release"
-    ],
-    "targets": [
-      "node14-linuxstatic-armv7"
-    ],
-    "outputPath": "dist"
-  },
   "dependencies": {
     "apn": "^2.2.0",
     "color-convert": "^2.0.1",
@@ -37,5 +27,5 @@
     "uuid": "^3.3.3",
     "ws": "^7.2.5",
     "zigbee-herdsman": "^0.13.41"
-  }
+  }s
 }
