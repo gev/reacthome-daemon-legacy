@@ -25,7 +25,6 @@ const request = (getSize, fill) => (code) => (id, address, register, data) => {
     buffer.writeUInt16BE(register, 4);
     fill(buffer, data);
     buffer.writeUInt16LE(crc16modbus(buffer.slice(2, size)), size);
-    console.log(buffer, ip);
     send(buffer, ip);
   }
 };
@@ -52,7 +51,6 @@ module.exports.writeRegisters = request(
 )(WRITE_REGISTERS);
 
 module.exports.handle = ({ id, data }) => {
-  console.log(data, id);
   const address = data[0];
   const { bind } = get(`${id}/${MODBUS}/${address}`) || {};
   if (bind) {

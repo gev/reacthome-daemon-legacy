@@ -1379,7 +1379,6 @@ const run = (action) => {
           buffer.writeUInt16LE(header[0], 15);
           buffer.writeUInt16LE(header[1], 17);
           buffer.writeUInt16LE(trail, 19);
-          console.log(ip, buffer);
           device.send(buffer, ip);
         }
         break;
@@ -1416,14 +1415,6 @@ const run = (action) => {
             dev.split(":").forEach((v, i) => {
               header.writeUInt8(parseInt(v, 16), i + 1);
             });
-            console.log(brand, model, command, code);
-            console.log(
-              Buffer.concat([
-                header,
-                major < 2 ? legacy() : Buffer.from([ACTION_IR, index, ...code]),
-              ]),
-              ip
-            );
             device.send(
               Buffer.concat([
                 header,

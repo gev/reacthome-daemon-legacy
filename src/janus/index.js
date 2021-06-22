@@ -5,7 +5,7 @@ const peer = require('../websocket/peer');
 const { streams } = require('../camera/streams');
 const { CREATE, ATTACH, MESSAGE, TRICKLE, CANDIDATE, KEEPALIVE } =require('./constants');
 
-const TIMEOUT_RECONNECT = 1000;
+const TIMEOUT_RECONNECT = 10000;
 const TIMEOUT_TRANSACTION = 30000;
 const TIMEOUT_TRICKLE = 60000;
 
