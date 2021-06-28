@@ -76,14 +76,14 @@ db.createReadStream()
     await assets.init();
     state.init(init);
     weather.manage();
-    //device.manage();
-    //drivers.manage();
+    device.manage();
+    drivers.manage();
     cpu.manage();
     discovery.start(init.mac);
     websocket.start(init.mac);
     zigbee.start(init.mac);
-    //janus.start();
-    //sip.start();
+    janus.start();
+    sip.start();
     start(init.mac);
     set(init.mac, { token: [] });
   });
