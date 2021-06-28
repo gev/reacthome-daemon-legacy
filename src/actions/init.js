@@ -290,7 +290,7 @@ module.exports.initialize = (id) => {
     case DEVICE_TYPE_LANAMP: {
       for (let i = 0; i < 2; i++) {
         const index = i + 1;
-        const { mode, volume = [] } = get(`${id}/lanamp/${index}`);
+        const { mode, volume = [] } = get(`${id}/lanamp/${index}`) || {};
         let source = [[], []];
         switch (mode) {
           case 0b01:
