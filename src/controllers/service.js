@@ -136,6 +136,7 @@ const {
   ACTION_SET_DIRECTION,
   ACTION_SET_MODE,
   DRIVER_TYPE_VARMANN,
+  DEVICE_TYPE_MIX_1,
   DEVICE_TYPE_MIX_2,
   IR,
   ACTION_LANAMP,
@@ -366,6 +367,7 @@ const run = (action) => {
             }
             break;
           }
+          case DEVICE_TYPE_MIX_1:
           case DEVICE_TYPE_MIX_2:
           case DEVICE_TYPE_RELAY_6:
           case DEVICE_TYPE_RELAY_12: {

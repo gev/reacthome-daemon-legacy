@@ -26,6 +26,7 @@ const {
   DEVICE_TYPE_SENSOR4,
   DEVICE_TYPE_PLC,
   DISCOVERY_INTERVAL,
+  DEVICE_TYPE_MIX_1,
   DEVICE_TYPE_MIX_2,
   DEVICE_TYPE_IR_4,
   TV,
@@ -146,6 +147,7 @@ module.exports.initialize = (id) => {
       }
       break;
     }
+    case DEVICE_TYPE_MIX_1:
     case DEVICE_TYPE_MIX_2:
     case DEVICE_TYPE_RELAY_6: {
       const { version = "" } = get(id) || {};
