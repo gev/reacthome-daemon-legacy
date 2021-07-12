@@ -29,7 +29,7 @@ let run = {};
 module.exports.manage = () => {
   const { project } = get(mac()) || {};
   if (project === undefined) return;
-  const { driver } = get(project);
+  const { driver } = get(project) || {};
   Object.entries(run).forEach(([_, drv]) => {
     if (drv.stop) drv.stop();
   });
