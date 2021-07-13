@@ -1398,6 +1398,7 @@ const run = (action) => {
             buffer.writeUInt16LE(header[1], 17);
             buffer.writeUInt16LE(trail, 19);
           }
+          console.log(buffer);
           device.send(buffer, ip);
         }
         break;
