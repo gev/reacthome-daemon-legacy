@@ -97,27 +97,27 @@ module.exports.initialize = (id) => {
         for (let i = 1; i <= 4; i++) {
           const channel = get(`${id}/${IR}/${i}`) || {};
           const { bind } = channel;
-          const { brand, model } = get(bind) || {};
+          const { type, brand, model } = get(bind) || {};
           const {
             frequency,
             count = [],
             header = [],
             trail,
-          } = ((codes[TV] || {})[brand] || {})[model] || {};
-          a[12 * i - 4] = frequency & 0xff;
-          a[12 * i - 3] = (frequency >> 8) & 0xff;
-          a[12 * i - 2] = count[0] & 0xff;
-          a[12 * i - 1] = (count[0] >> 8) & 0xff;
-          a[12 * i + 0] = count[1] & 0xff;
-          a[12 * i + 1] = (count[1] >> 8) & 0xff;
-          a[12 * i + 2] = count[2] & 0xff;
-          a[12 * i + 3] = (count[2] >> 8) & 0xff;
-          a[12 * i + 4] = header[0] & 0xff;
-          a[12 * i + 5] = (header[0] >> 8) & 0xff;
-          a[12 * i + 6] = header[1] & 0xff;
-          a[12 * i + 7] = (header[1] >> 8) & 0xff;
-          a[12 * i + 8] = trail & 0xff;
-          a[12 * i + 9] = (trail >> 8) & 0xff;
+          } = ((codes[type] || {})[brand] || {})[model] || {};
+          a[14 * i - 6] = frequency & 0xff;
+          a[14 * i - 5] = (frequency >> 8) & 0xff;
+          a[14 * i - 4] = count[0] & 0xff;
+          a[14 * i - 3] = (count[0] >> 8) & 0xff;
+          a[14 * i - 2] = count[1] & 0xff;
+          a[14 * i - 1] = (count[1] >> 8) & 0xff;
+          a[14 * i + 0] = count[2] & 0xff;
+          a[14 * i + 1] = (count[2] >> 8) & 0xff;
+          a[14 * i + 2] = header[0] & 0xff;
+          a[14 * i + 3] = (header[0] >> 8) & 0xff;
+          a[14 * i + 4] = header[1] & 0xff;
+          a[14 * i + 5] = (header[1] >> 8) & 0xff;
+          a[14 * i + 6] = trail & 0xff;
+          a[14 * i + 7] = (trail >> 8) & 0xff;
         }
       } else {
         for (let i = 1; i <= 4; i++) {
@@ -129,7 +129,7 @@ module.exports.initialize = (id) => {
             count = [],
             header = [],
             trail,
-          } = ((codes[TV] || {})[brand] || {})[model] || {};
+          } = ((codes[type] || {})[brand] || {})[model] || {};
           a[12 * i - 4] = frequency & 0xff;
           a[12 * i - 3] = (frequency >> 8) & 0xff;
           a[12 * i - 2] = count[0] & 0xff;

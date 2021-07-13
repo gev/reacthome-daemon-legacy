@@ -1368,7 +1368,7 @@ const run = (action) => {
             header = [],
             trail,
           } = ((ircodes.codes[type] || {})[brand] || {})[model] || {};
-          if (major >= 3) {
+          if (parseInt(major) >= 3) {
             const buffer = Buffer.alloc(23);
             buffer.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
             dev
