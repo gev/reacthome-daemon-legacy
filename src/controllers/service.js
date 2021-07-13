@@ -1383,6 +1383,7 @@ const run = (action) => {
             buffer.writeUInt16LE(header[0], 17);
             buffer.writeUInt16LE(header[1], 19);
             buffer.writeUInt16LE(trail, 21);
+            device.send(buffer, ip);
           } else {
             const buffer = Buffer.alloc(21);
             buffer.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
@@ -1397,9 +1398,8 @@ const run = (action) => {
             buffer.writeUInt16LE(header[0], 15);
             buffer.writeUInt16LE(header[1], 17);
             buffer.writeUInt16LE(trail, 19);
+            device.send(buffer, ip);
           }
-          console.log(buffer);
-          device.send(buffer, ip);
         }
         break;
       }
