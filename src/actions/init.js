@@ -91,28 +91,58 @@ module.exports.initialize = (id) => {
       a[5] = mac[4];
       a[6] = mac[5];
       a[7] = ACTION_INITIALIZE;
-      for (let i = 1; i <= 4; i++) {
-        const channel = get(`${id}/${IR}/${i}`) || {};
-        const { bind } = channel;
-        const { brand, model } = get(bind) || {};
-        const {
-          frequency,
-          count = [],
-          header = [],
-          trail,
-        } = ((codes[TV] || {})[brand] || {})[model] || {};
-        a[12 * i - 4] = frequency & 0xff;
-        a[12 * i - 3] = (frequency >> 8) & 0xff;
-        a[12 * i - 2] = count[0] & 0xff;
-        a[12 * i - 1] = (count[0] >> 8) & 0xff;
-        a[12 * i + 0] = count[1] & 0xff;
-        a[12 * i + 1] = (count[1] >> 8) & 0xff;
-        a[12 * i + 2] = header[0] & 0xff;
-        a[12 * i + 3] = (header[0] >> 8) & 0xff;
-        a[12 * i + 4] = header[1] & 0xff;
-        a[12 * i + 5] = (header[1] >> 8) & 0xff;
-        a[12 * i + 6] = trail & 0xff;
-        a[12 * i + 7] = (trail >> 8) & 0xff;
+      const { version = "" } = get(id) || {};
+      const [major, minor] = version.split(".");
+      if (major >= 3) {
+        for (let i = 1; i <= 4; i++) {
+          const channel = get(`${id}/${IR}/${i}`) || {};
+          const { bind } = channel;
+          const { brand, model } = get(bind) || {};
+          const {
+            frequency,
+            count = [],
+            header = [],
+            trail,
+          } = ((codes[TV] || {})[brand] || {})[model] || {};
+          a[12 * i - 4] = frequency & 0xff;
+          a[12 * i - 3] = (frequency >> 8) & 0xff;
+          a[12 * i - 2] = count[0] & 0xff;
+          a[12 * i - 1] = (count[0] >> 8) & 0xff;
+          a[12 * i + 0] = count[1] & 0xff;
+          a[12 * i + 1] = (count[1] >> 8) & 0xff;
+          a[12 * i + 2] = count[2] & 0xff;
+          a[12 * i + 3] = (count[2] >> 8) & 0xff;
+          a[12 * i + 4] = header[0] & 0xff;
+          a[12 * i + 5] = (header[0] >> 8) & 0xff;
+          a[12 * i + 6] = header[1] & 0xff;
+          a[12 * i + 7] = (header[1] >> 8) & 0xff;
+          a[12 * i + 8] = trail & 0xff;
+          a[12 * i + 9] = (trail >> 8) & 0xff;
+        }
+      } else {
+        for (let i = 1; i <= 4; i++) {
+          const channel = get(`${id}/${IR}/${i}`) || {};
+          const { bind } = channel;
+          const { brand, model } = get(bind) || {};
+          const {
+            frequency,
+            count = [],
+            header = [],
+            trail,
+          } = ((codes[TV] || {})[brand] || {})[model] || {};
+          a[12 * i - 4] = frequency & 0xff;
+          a[12 * i - 3] = (frequency >> 8) & 0xff;
+          a[12 * i - 2] = count[0] & 0xff;
+          a[12 * i - 1] = (count[0] >> 8) & 0xff;
+          a[12 * i + 0] = count[1] & 0xff;
+          a[12 * i + 1] = (count[1] >> 8) & 0xff;
+          a[12 * i + 2] = header[0] & 0xff;
+          a[12 * i + 3] = (header[0] >> 8) & 0xff;
+          a[12 * i + 4] = header[1] & 0xff;
+          a[12 * i + 5] = (header[1] >> 8) & 0xff;
+          a[12 * i + 6] = trail & 0xff;
+          a[12 * i + 7] = (trail >> 8) & 0xff;
+        }
       }
       break;
     }

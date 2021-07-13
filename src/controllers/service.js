@@ -1368,19 +1368,36 @@ const run = (action) => {
             header = [],
             trail,
           } = ((ircodes.codes[type] || {})[brand] || {})[model] || {};
-          const buffer = Buffer.alloc(21);
-          buffer.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
-          dev
-            .split(":")
-            .forEach((t, i) => buffer.writeUInt8(parseInt(t, 16), i + 1));
-          buffer.writeUInt8(ACTION_IR_CONFIG, 7);
-          buffer.writeUInt8(index, 8);
-          buffer.writeUInt16LE(frequency, 9);
-          buffer.writeUInt16LE(count[0], 11);
-          buffer.writeUInt16LE(count[1], 13);
-          buffer.writeUInt16LE(header[0], 15);
-          buffer.writeUInt16LE(header[1], 17);
-          buffer.writeUInt16LE(trail, 19);
+          if (major >= 3) {
+            const buffer = Buffer.alloc(23);
+            buffer.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
+            dev
+              .split(":")
+              .forEach((t, i) => buffer.writeUInt8(parseInt(t, 16), i + 1));
+            buffer.writeUInt8(ACTION_IR_CONFIG, 7);
+            buffer.writeUInt8(index, 8);
+            buffer.writeUInt16LE(frequency, 9);
+            buffer.writeUInt16LE(count[0], 11);
+            buffer.writeUInt16LE(count[1], 13);
+            buffer.writeUInt16LE(count[2], 15);
+            buffer.writeUInt16LE(header[0], 17);
+            buffer.writeUInt16LE(header[1], 19);
+            buffer.writeUInt16LE(trail, 21);
+          } else {
+            const buffer = Buffer.alloc(21);
+            buffer.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
+            dev
+              .split(":")
+              .forEach((t, i) => buffer.writeUInt8(parseInt(t, 16), i + 1));
+            buffer.writeUInt8(ACTION_IR_CONFIG, 7);
+            buffer.writeUInt8(index, 8);
+            buffer.writeUInt16LE(frequency, 9);
+            buffer.writeUInt16LE(count[0], 11);
+            buffer.writeUInt16LE(count[1], 13);
+            buffer.writeUInt16LE(header[0], 15);
+            buffer.writeUInt16LE(header[1], 17);
+            buffer.writeUInt16LE(trail, 19);
+          }
           device.send(buffer, ip);
         }
         break;
