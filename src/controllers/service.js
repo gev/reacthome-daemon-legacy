@@ -145,6 +145,7 @@ const {
   ACTION_DEL,
   ACTION_MAKE_BIND,
   ACTION_ADD_BIND,
+  BIND,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -1356,7 +1357,7 @@ const run = (action) => {
         const { id, dev, index, brand, model } = action;
         const bind = `${dev}/${IR}/${index}`;
         set(id, { brand, model });
-        makeBind(id, bind);
+        makeBind(id, BIND, bind);
         const { type, version, ip } = get(dev) || {};
         if (type === DEVICE_TYPE_IR_4) {
           const [major] = version.split(".");
