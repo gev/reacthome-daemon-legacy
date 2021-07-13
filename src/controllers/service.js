@@ -1357,7 +1357,7 @@ const run = (action) => {
         const { id, dev, index, brand, model } = action;
         const bind = `${dev}/${IR}/${index}`;
         set(id, { brand, model });
-        makeBind(id, BIND, bind);
+        makeBind(id, "bind", bind);
         const { type, version, ip } = get(dev) || {};
         if (type === DEVICE_TYPE_IR_4) {
           const [major] = version.split(".");
