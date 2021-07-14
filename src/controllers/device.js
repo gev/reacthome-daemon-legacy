@@ -209,6 +209,7 @@ module.exports.manage = () => {
           const index = data[7];
           const channel = `${id}/${RS485}/${index}`;
           const { bind } = get(channel) || {};
+          console.log(data.slice(8));
           drivers.handle({ id: bind, data: data.slice(8) });
           break;
         }
