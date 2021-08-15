@@ -55,6 +55,8 @@ const {
   ACTION_DI_RELAY_SYNC,
   ACTION_IR_CONFIG,
   ACTION_LANAMP,
+  AO,
+  DEVICE_TYPE_AO_4_DIN,
 } = require("../constants");
 const {
   get,
@@ -214,18 +216,36 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_DIMMER: {
-          const [, , , , , , , index, type, value, velocity] = data;
-          const channel = `${id}/${DIM}/${index}`;
-          const chan = get(channel);
-          set(channel, {
-            type,
-            value,
-            velocity,
-            dimmable:
-              type === DIM_TYPE_FALLING_EDGE ||
-              type === DIM_TYPE_RISING_EDGE ||
-              type === DIM_TYPE_PWM,
-          });
+          let chan;
+          const device = get(id) || {};
+          switch (device.type) {
+            case DEVICE_TYPE_AO_4_DIN: {
+              const [, , , , , , , index, value, velocity] = data;
+              const channel = `${id}/${AO}/${index}`;
+              chan = get(channel);
+              set(channel, {
+                type,
+                value,
+                velocity,
+                dimable: true,
+              });
+              break;
+            }
+            default: {
+              const [, , , , , , , index, type, value, velocity] = data;
+              const channel = `${id}/${DIM}/${index}`;
+              chan = get(channel);
+              set(channel, {
+                type,
+                value,
+                velocity,
+                dimmable:
+                  type === DIM_TYPE_FALLING_EDGE ||
+                  type === DIM_TYPE_RISING_EDGE ||
+                  type === DIM_TYPE_PWM,
+              });
+            }
+          }
           if (chan) {
             const { bind } = chan;
             if (bind) {

@@ -25,6 +25,7 @@ module.exports.MOBILE = "mobile";
 
 module.exports.DO = "do";
 module.exports.DI = "di";
+module.exports.AO = "ao";
 module.exports.DIM = "dim";
 module.exports.ENDPOINT = "endpoint";
 module.exports.ALARM = "alarm";

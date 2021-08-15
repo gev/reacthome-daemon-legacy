@@ -32,6 +32,8 @@ const {
   TV,
   ACTION_RBUS_TRANSMIT,
   DEVICE_TYPE_LANAMP,
+  AO,
+  DEVICE_TYPE_AO_4_DIN,
 } = require("../constants");
 const { get, set, add } = require("./create");
 const { device } = require("../sockets");
@@ -150,29 +152,38 @@ module.exports.initialize = (id) => {
     case DEVICE_TYPE_RELAY_2_DIN: {
       const { version = "" } = get(id) || {};
       const [major, minor] = version.split(".");
+      const mac = id.split(":").map((i) => parseInt(i, 16));
+      a[0] = ACTION_RBUS_TRANSMIT;
+      a[1] = mac[0];
+      a[2] = mac[1];
+      a[3] = mac[2];
+      a[4] = mac[3];
+      a[5] = mac[4];
+      a[6] = mac[5];
+      a[7] = ACTION_INITIALIZE;
       if (major >= 2) {
         for (let i = 1; i <= 1; i++) {
           const channel = get(`${id}/${GROUP}/${i}`) || {};
           const { value = 0, delay = 0 } = channel;
-          a[5 * i - 4] = value;
-          a[5 * i - 3] = delay & 0xff;
-          a[5 * i - 2] = (delay >> 8) & 0xff;
-          a[5 * i - 1] = (delay >> 16) & 0xff;
-          a[5 * i - 0] = (delay >> 24) & 0xff;
+          a[5 * i + 3] = value;
+          a[5 * i + 4] = delay & 0xff;
+          a[5 * i + 5] = (delay >> 8) & 0xff;
+          a[5 * i + 6] = (delay >> 16) & 0xff;
+          a[5 * i + 7] = (delay >> 24) & 0xff;
         }
         for (let i = 1; i <= 2; i++) {
           const channel = get(`${id}/${DO}/${i}`) || {};
           const { value = 0, timeout = 0 } = channel;
-          a[5 * i + 1] = value;
-          a[5 * i + 2] = timeout & 0xff;
-          a[5 * i + 3] = (timeout >> 8) & 0xff;
-          a[5 * i + 4] = (timeout >> 16) & 0xff;
-          a[5 * i + 5] = (timeout >> 24) & 0xff;
+          a[5 * i + 8] = value;
+          a[5 * i + 9] = timeout & 0xff;
+          a[5 * i + 10] = (timeout >> 8) & 0xff;
+          a[5 * i + 11] = (timeout >> 16) & 0xff;
+          a[5 * i + 12] = (timeout >> 24) & 0xff;
         }
       } else {
         for (let i = 1; i <= 2; i++) {
           const channel = get(`${id}/${DO}/${i}`);
-          a[i] = (channel && channel.value) || 0;
+          a[i + 7] = (channel && channel.value) || 0;
         }
       }
       break;
@@ -316,6 +327,22 @@ module.exports.initialize = (id) => {
         const channel = get(`${id}/${DIM}/${i}`);
         a[2 * i - 1] = (channel && channel.type) || 0;
         a[2 * i] = (channel && channel.value) || 0;
+      }
+      break;
+    }
+    case DEVICE_TYPE_AO_4_DIN: {
+      const mac = id.split(":").map((i) => parseInt(i, 16));
+      a[0] = ACTION_RBUS_TRANSMIT;
+      a[1] = mac[0];
+      a[2] = mac[1];
+      a[3] = mac[2];
+      a[4] = mac[3];
+      a[5] = mac[4];
+      a[6] = mac[5];
+      a[7] = ACTION_INITIALIZE;
+      for (let i = 1; i <= 4; i++) {
+        const channel = get(`${id}/${AO}/${i}`);
+        a[i + 7] = channel.value & 0xff;
       }
       break;
     }
