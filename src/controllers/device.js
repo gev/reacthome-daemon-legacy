@@ -265,7 +265,6 @@ module.exports.manage = () => {
         case ACTION_TEMPERATURE: {
           const temperature = data.readUInt16LE(7) / 100;
           const { onTemperature, site } = get(id);
-          if (site) set(site, { temperature });
           set(id, { temperature });
           if (onTemperature) {
             run({ type: ACTION_SCRIPT_RUN, id: onTemperature });

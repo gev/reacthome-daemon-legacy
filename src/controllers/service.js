@@ -546,14 +546,6 @@ const run = (action) => {
         switch (dev.type) {
           case DEVICE_TYPE_AO_4_DIN: {
             const velocity = AO_VELOCITY;
-            break;
-          }
-          default: {
-            let velocity = DIM_VELOCITY;
-            if (dev.type === DRIVER_TYPE_ARTNET) {
-              velocity = ARTNET_VELOCITY;
-            } else if (dev.type === DEVICE_TYPE_AO_4_DIN) {
-              velocity = AO_VELOCITY;
               switch (action.action) {
                 case DIM_SET:
                   device.send(
@@ -607,7 +599,12 @@ const run = (action) => {
                   );
                   break;
               }
-            }
+            break;
+          }
+          default: {
+            let velocity = DIM_VELOCITY;
+            if (dev.type === DRIVER_TYPE_ARTNET) {
+              velocity = ARTNET_VELOCITY;
             switch (action.action) {
               case DIM_SET:
                 device.send(
@@ -657,7 +654,6 @@ const run = (action) => {
                 break;
             }
           }
-        }
         break;
       }
       case ACTION_MOVE_TO_HUE: {
@@ -1142,13 +1138,18 @@ const run = (action) => {
       }
       case ACTION_SETPOINT: {
         const { id, value } = action;
-        const dev = get(id);
+        const dev = get(id) || {};
         if (dev.protocol === ZIGBEE) {
           zigbee.setpoint(action.id, action.index, action.value);
           return;
         }
         const { type } = get(id) || {};
-        if (type === DRIVER_TYPE_INTESIS_BOX) {
+        if (type === SITE) {
+          for (const t of dev.thermostat || []) {
+            run({ type: ACTION_SETPOINT, id: t, value });
+          }
+          set(id, { setpoint: value });
+        } else if (type === DRIVER_TYPE_INTESIS_BOX) {
           drivers.handle(action);
         } else {
           set(id, { setpoint: value });

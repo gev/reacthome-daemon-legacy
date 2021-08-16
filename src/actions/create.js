@@ -8,7 +8,7 @@ module.exports.get = state.get;
 
 const apply = (id, p) => {
   if (!id) return;
-  const payload = { ...p, timestamp: Date.now() };
+  p.timestamp = Date.now();
   state.set(id, payload);
   broadcast({ type: ACTION_SET, id, payload });
   try {
