@@ -216,25 +216,38 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_DIMMER: {
-          let chan;
           const device = get(id) || {};
           switch (device.type) {
             case DEVICE_TYPE_AO_4_DIN: {
               const [, , , , , , , index, value, velocity] = data;
               const channel = `${id}/${AO}/${index}`;
-              chan = get(channel);
+              const chan = get(channel);
               set(channel, {
                 type,
                 value,
                 velocity,
                 dimable: true,
               });
+              if (chan) {
+                const { bind } = chan;
+                if (bind) {
+                  const v = value ? 1 : 0;
+                  const v_ = chan.value ? 1 : 0;
+                  if (v !== v_) {
+                    const script = chan[onDO[v]];
+                    if (script) {
+                      run({ type: ACTION_SCRIPT_RUN, id: script });
+                    }
+                    count[v](bind);
+                  }
+                }
+              }
               break;
             }
             default: {
               const [, , , , , , , index, type, value, velocity] = data;
               const channel = `${id}/${DIM}/${index}`;
-              chan = get(channel);
+              const chan = get(channel);
               set(channel, {
                 type,
                 value,
@@ -244,19 +257,19 @@ module.exports.manage = () => {
                   type === DIM_TYPE_RISING_EDGE ||
                   type === DIM_TYPE_PWM,
               });
-            }
-          }
-          if (chan) {
-            const { bind } = chan;
-            if (bind) {
-              const v = value ? 1 : 0;
-              const v_ = chan.value ? 1 : 0;
-              if (v !== v_) {
-                const script = chan[onDO[v]];
-                if (script) {
-                  run({ type: ACTION_SCRIPT_RUN, id: script });
+              if (chan) {
+                const { bind } = chan;
+                if (bind) {
+                  const v = value ? 1 : 0;
+                  const v_ = chan.value ? 1 : 0;
+                  if (v !== v_) {
+                    const script = chan[onDO[v]];
+                    if (script) {
+                      run({ type: ACTION_SCRIPT_RUN, id: script });
+                    }
+                    count[v](bind);
+                  }
                 }
-                count[v](bind);
               }
             }
           }
