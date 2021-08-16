@@ -223,7 +223,6 @@ module.exports.manage = () => {
               const channel = `${id}/${AO}/${index}`;
               const chan = get(channel);
               set(channel, {
-                type,
                 value,
                 velocity,
                 dimable: true,

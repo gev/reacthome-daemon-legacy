@@ -545,7 +545,6 @@ const run = (action) => {
         const dev = get(action.id) || {};
         switch (dev.type) {
           case DEVICE_TYPE_AO_4_DIN: {
-            console.log(action);
             const velocity = AO_VELOCITY;
             switch (action.action) {
               case DIM_SET:
