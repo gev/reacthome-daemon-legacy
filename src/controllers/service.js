@@ -546,65 +546,66 @@ const run = (action) => {
         switch (dev.type) {
           case DEVICE_TYPE_AO_4_DIN: {
             const velocity = AO_VELOCITY;
-              switch (action.action) {
-                case DIM_SET:
-                  device.send(
-                    Buffer.from([
-                      ACTION_RBUS_TRANSMIT,
-                      ...action.id.split(":").map((i) => parseInt(i, 16)),
-                      ACTION_DIMMER,
-                      action.index,
-                      action.action,
-                      action.value,
-                    ]),
-                    dev.ip
-                  );
-                  break;
-                case DIM_FADE:
-                  device.send(
-                    Buffer.from([
-                      ACTION_RBUS_TRANSMIT,
-                      ...action.id.split(":").map((i) => parseInt(i, 16)),
-                      ACTION_DIMMER,
-                      action.index,
-                      action.action,
-                      action.value,
-                      velocity,
-                    ]),
-                    dev.ip
-                  );
-                  break;
-                case DIM_ON:
-                  device.send(
-                    Buffer.from([
-                      ACTION_RBUS_TRANSMIT,
-                      ...action.id.split(":").map((i) => parseInt(i, 16)),
-                      ACTION_DIMMER,
-                      action.index,
-                      action.action,
-                    ]),
-                    dev.ip
-                  );
-                  break;
-                case DIM_OFF:
-                  device.send(
-                    Buffer.from([
-                      ACTION_RBUS_TRANSMIT,
-                      ...action.id.split(":").map((i) => parseInt(i, 16)),
-                      ACTION_DIMMER,
-                      action.index,
-                      action.action,
-                    ]),
-                    dev.ip
-                  );
-                  break;
-              }
+            switch (action.action) {
+              case DIM_SET:
+                device.send(
+                  Buffer.from([
+                    ACTION_RBUS_TRANSMIT,
+                    ...action.id.split(":").map((i) => parseInt(i, 16)),
+                    ACTION_DIMMER,
+                    action.index,
+                    action.action,
+                    action.value,
+                  ]),
+                  dev.ip
+                );
+                break;
+              case DIM_FADE:
+                device.send(
+                  Buffer.from([
+                    ACTION_RBUS_TRANSMIT,
+                    ...action.id.split(":").map((i) => parseInt(i, 16)),
+                    ACTION_DIMMER,
+                    action.index,
+                    action.action,
+                    action.value,
+                    velocity,
+                  ]),
+                  dev.ip
+                );
+                break;
+              case DIM_ON:
+                device.send(
+                  Buffer.from([
+                    ACTION_RBUS_TRANSMIT,
+                    ...action.id.split(":").map((i) => parseInt(i, 16)),
+                    ACTION_DIMMER,
+                    action.index,
+                    action.action,
+                  ]),
+                  dev.ip
+                );
+                break;
+              case DIM_OFF:
+                device.send(
+                  Buffer.from([
+                    ACTION_RBUS_TRANSMIT,
+                    ...action.id.split(":").map((i) => parseInt(i, 16)),
+                    ACTION_DIMMER,
+                    action.index,
+                    action.action,
+                  ]),
+                  dev.ip
+                );
+                break;
+            }
             break;
           }
           default: {
             let velocity = DIM_VELOCITY;
             if (dev.type === DRIVER_TYPE_ARTNET) {
               velocity = ARTNET_VELOCITY;
+            }
             switch (action.action) {
               case DIM_SET:
                 device.send(
@@ -654,6 +655,7 @@ const run = (action) => {
                 break;
             }
           }
+        }
         break;
       }
       case ACTION_MOVE_TO_HUE: {
@@ -1015,6 +1017,21 @@ const run = (action) => {
             case DEVICE_TYPE_DIM_8: {
               device.send(
                 Buffer.from([ACTION_DIMMER, index, DIM_FADE, v, DIM_VELOCITY]),
+                ip
+              );
+              break;
+            }
+            case DEVICE_TYPE_AO_4_DIN: {
+              device.send(
+                Buffer.from([
+                  ACTION_RBUS_TRANSMIT,
+                  ...action.id.split(":").map((i) => parseInt(i, 16)),
+                  ACTION_DIMMER,
+                  index,
+                  DIM_FADE,
+                  v,
+                  AO_VELOCITY,
+                ]),
                 ip
               );
               break;
