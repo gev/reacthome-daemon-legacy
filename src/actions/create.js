@@ -6,9 +6,9 @@ const db = require("../db");
 
 module.exports.get = state.get;
 
-const apply = (id, p) => {
+const apply = (id, payload) => {
   if (!id) return;
-  p.timestamp = Date.now();
+  payload.timestamp = Date.now();
   state.set(id, payload);
   broadcast({ type: ACTION_SET, id, payload });
   try {
