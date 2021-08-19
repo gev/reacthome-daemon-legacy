@@ -46,8 +46,6 @@ module.exports.initialized = (id) => {
 
 const confirm = (id, data) => {
   const { ip } = get(id);
-  console.log(ip, data);
-
   device.send(data, ip);
 };
 
