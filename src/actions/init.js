@@ -186,6 +186,7 @@ module.exports.initialize = (id) => {
           a[i + 7] = (channel && channel.value) || 0;
         }
       }
+      console.log(a);
       break;
     }
     case DEVICE_TYPE_MIX_1:
