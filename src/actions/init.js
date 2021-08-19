@@ -46,6 +46,8 @@ module.exports.initialized = (id) => {
 
 const confirm = (id, data) => {
   const { ip } = get(id);
+  console.log(ip, data);
+
   device.send(data, ip);
 };
 
@@ -186,7 +188,6 @@ module.exports.initialize = (id) => {
           a[i + 7] = (channel && channel.value) || 0;
         }
       }
-      console.log(a);
       break;
     }
     case DEVICE_TYPE_MIX_1:
