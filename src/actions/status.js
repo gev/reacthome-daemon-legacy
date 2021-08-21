@@ -1,8 +1,15 @@
 const { get, set, add } = require("./create");
 const { initialize } = require("./init");
 const { updateFirmware } = require("./firmware");
-const { DEVICE, DISCOVERY_INTERVAL } = require("../constants");
+const {
+  DEVICE,
+  DISCOVERY_INTERVAL,
+  DEVICE_TYPE_RELAY_2,
+  DEVICE_TYPE_RELAY_2_DIN,
+  ACTION_GET_STATE,
+} = require("../constants");
 const mac = require("../mac");
+const { device } = require("../sockets");
 
 const timeout = {};
 
@@ -12,6 +19,23 @@ const offline = (id) => {
 
 const online = (id, type, version, ip, ready) => {
   clearTimeout(timeout[id]);
+  const dev = get(id);
+  if (!dev.online) {
+    switch (type) {
+      case DEVICE_TYPE_RELAY_2:
+      case DEVICE_TYPE_RELAY_2_DIN: {
+        device.send(
+          Buffer.from([
+            ACTION_RBUS_TRANSMIT,
+            ...id.split(":").map((i) => parseInt(i, 16)),
+            ACTION_GET_STATE,
+          ]),
+          dev.ip
+        );
+        break;
+      }
+    }
+  }
   set(id, {
     type,
     version,
@@ -20,9 +44,8 @@ const online = (id, type, version, ip, ready) => {
     ready,
   });
   add(mac(), DEVICE, id);
-  const device = get(id);
   // if (!device.initialized) initialize(id);
-  if (device.pending) updateFirmware(id);
+  if (dev.pending) updateFirmware(id);
   timeout[id] = setTimeout(() => {
     offline(id);
     delete timeout[id];

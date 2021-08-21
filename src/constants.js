@@ -78,6 +78,7 @@ module.exports.ACTION_DISCOVERY = 0xf0;
 module.exports.ACTION_READY = 0xf1;
 module.exports.ACTION_INITIALIZE = 0xf2;
 module.exports.ACTION_INITIALIZED = 0xf3;
+module.exports.ACTION_GET_STATE = 0xf4;
 module.exports.ACTION_FIND_ME = 0xfa;
 module.exports.ACTION_BOOTLOAD = 0xfb;
 module.exports.ACTION_MAC_ADDRESS = 0xfc;
