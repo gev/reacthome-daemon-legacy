@@ -7,6 +7,7 @@ const {
   DEVICE_TYPE_RELAY_2,
   DEVICE_TYPE_RELAY_2_DIN,
   ACTION_GET_STATE,
+  ACTION_RBUS_TRANSMIT,
 } = require("../constants");
 const mac = require("../mac");
 const { device } = require("../sockets");
