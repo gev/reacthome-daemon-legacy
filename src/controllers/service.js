@@ -1164,7 +1164,7 @@ const run = (action) => {
             run({ type: ACTION_SETPOINT, id: t, value });
           }
           set(id, { setpoint: value });
-        } else if (type === DRIVER_TYPE_INTESIS_BOX) {
+        } else if (dev.type === DRIVER_TYPE_INTESIS_BOX) {
           drivers.handle(action);
         } else {
           set(id, { setpoint: value });
