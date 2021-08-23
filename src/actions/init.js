@@ -125,7 +125,7 @@ module.exports.initialize = (id) => {
         for (let i = 1; i <= 4; i++) {
           const channel = get(`${id}/${IR}/${i}`) || {};
           const { bind } = channel;
-          const { brand, model } = get(bind) || {};
+          const { type, brand, model } = get(bind) || {};
           const {
             frequency,
             count = [],
