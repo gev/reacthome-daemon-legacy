@@ -147,6 +147,7 @@ const {
   ACTION_ADD_BIND,
   BIND,
   DEVICE_TYPE_AO_4_DIN,
+  SITE,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -1156,7 +1157,6 @@ const run = (action) => {
       case ACTION_SETPOINT: {
         const { id, value } = action;
         const dev = get(id) || {};
-        console.log(dev);
         if (dev.protocol === ZIGBEE) {
           zigbee.setpoint(action.id, action.index, action.value);
         } else if (dev.type === SITE) {
