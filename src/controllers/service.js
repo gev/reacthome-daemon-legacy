@@ -1158,10 +1158,7 @@ const run = (action) => {
         const dev = get(id) || {};
         if (dev.protocol === ZIGBEE) {
           zigbee.setpoint(action.id, action.index, action.value);
-          return;
-        }
-        const { type } = get(id) || {};
-        if (type === SITE) {
+        } else if (dev.type === SITE) {
           for (const t of dev.thermostat || []) {
             run({ type: ACTION_SETPOINT, id: t, value });
           }
