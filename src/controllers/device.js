@@ -211,7 +211,7 @@ module.exports.manage = () => {
           const index = data[7];
           const channel = `${id}/${RS485}/${index}`;
           const { bind } = get(channel) || {};
-          console.log(data.slice(8));
+          // console.log(data.slice(8));
           drivers.handle({ id: bind, data: data.slice(8) });
           break;
         }
@@ -348,7 +348,7 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_IR_CONFIG: {
-          console.log(data.slice(7));
+          // console.log(data.slice(7));
           break;
         }
         case ACTION_LANAMP: {
