@@ -254,6 +254,8 @@ module.exports.CLOSURE = "closure";
 module.exports.OPEN = "open";
 module.exports.CLOSE = "close";
 
+module.exports.SITE = "site";
+
 module.exports.BIND = "BIND";
 
 module.exports.DRIVER_TYPE_RS21 = "RS21";
