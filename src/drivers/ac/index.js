@@ -83,7 +83,7 @@ module.exports.handle = ({ type, id }) => {
     case ACTION_OFF: {
       if (ac.value == OFF) return;
       manage(OFF, setpoint, ac);
-      set(id, { value: ON, setpoint, enabled });
+      set(id, { value: OFF, setpoint, enabled });
       break;
     }
   }
