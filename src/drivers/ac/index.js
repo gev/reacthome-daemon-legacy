@@ -65,14 +65,13 @@ module.exports.handle = ({ type, id }) => {
   const ac = get(id) || {};
   let enabled = ac.enabled;
   const { setpoint } = get(ac.thermostat) || {};
-  const { value } = get(ac.bind) || {};
   switch (type) {
     case ACTION_ENABLE:
       enabled = true;
       set(ac.bind, { value: ON });
     case ACTION_ON: {
       if (!enabled) return;
-      if (ac.value == ON && ac.setpoint == setpoint) return;
+      if (ac.value === ON && ac.setpoint == setpoint) return;
       manage(ON, setpoint, ac);
       set(id, { value: ON, setpoint, enabled });
       break;
@@ -81,7 +80,7 @@ module.exports.handle = ({ type, id }) => {
       enabled = false;
       set(ac.bind, { value: OFF });
     case ACTION_OFF: {
-      if (ac.value == OFF) return;
+      if (ac.value === OFF) return;
       manage(OFF, setpoint, ac);
       set(id, { value: OFF, setpoint, enabled });
       break;
