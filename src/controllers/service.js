@@ -772,6 +772,10 @@ const run = (action) => {
           drivers.handle(action);
           return;
         }
+        if (o.type === AC) {
+          ac.handle(action);
+          return;
+        }
         set(id, { value: true });
         if (o.onOn) {
           run({ type: ACTION_SCRIPT_RUN, id: o.onOn });
@@ -858,15 +862,7 @@ const run = (action) => {
               break;
             }
             default: {
-              switch (payloadType) {
-                case AC: {
-                  ac.handle(action);
-                  break;
-                }
-                default: {
-                  device.send(Buffer.from([ACTION_DO, index, ON]), ip);
-                }
-              }
+              device.send(Buffer.from([ACTION_DO, index, ON]), ip);
             }
           }
         });
@@ -891,6 +887,10 @@ const run = (action) => {
         if (o.disabled) return;
         if (o.type === DRIVER_TYPE_INTESIS_BOX) {
           drivers.handle(action);
+          return;
+        }
+        if (o.type === AC) {
+          ac.handle(action);
           return;
         }
         set(id, { value: false });
@@ -975,15 +975,7 @@ const run = (action) => {
               break;
             }
             default: {
-              switch (payloadType) {
-                case AC: {
-                  ac.handle(action);
-                  break;
-                }
-                default: {
-                  device.send(Buffer.from([ACTION_DO, index, OFF]), ip);
-                }
-              }
+              device.send(Buffer.from([ACTION_DO, index, OFF]), ip);
             }
           }
         });
