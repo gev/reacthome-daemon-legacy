@@ -1154,8 +1154,11 @@ const run = (action) => {
         } else if (dev.type === SITE) {
           if (Array.isArray(dev.thermostat)) {
             dev.thermostat.forEach((t, i) => {
-              console.log(100 * i, { type: ACTION_SETPOINT, id: t, value });
-              setTimeout(run, 100 * i, { type: ACTION_SETPOINT, id: t, value });
+              setTimeout(run, 1000 * i, {
+                type: ACTION_SETPOINT,
+                id: t,
+                value,
+              });
             });
           }
           set(id, { setpoint: value });
