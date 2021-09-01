@@ -1152,8 +1152,10 @@ const run = (action) => {
         if (dev.protocol === ZIGBEE) {
           zigbee.setpoint(action.id, action.index, action.value);
         } else if (dev.type === SITE) {
-          for (const t of dev.thermostat || []) {
-            setTimeout(run, 100, { type: ACTION_SETPOINT, id: t, value });
+          if (Array.isArray(dev.thermostat)) {
+            dev.thermostat.forEach((t, i) => {
+              setTimeout(run, 100 * i, { type: ACTION_SETPOINT, id: t, value });
+            });
           }
           set(id, { setpoint: value });
         } else if (dev.type === DRIVER_TYPE_INTESIS_BOX) {
