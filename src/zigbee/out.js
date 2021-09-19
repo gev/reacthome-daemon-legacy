@@ -1,21 +1,33 @@
-const { debounce } = require('debounce');
-const { get } = require('../actions');
-const { ON, OFF, ACTION_OPEN, ACTION_CLOSE, ACTION_STOP } = require('../constants');
-const controller = require('./controller');
+const { debounce } = require("debounce");
+const { get } = require("../actions");
+const {
+  ON,
+  OFF,
+  ACTION_OPEN,
+  ACTION_CLOSE,
+  ACTION_STOP,
+} = require("../constants");
+const controller = require("./controller");
 
 let transid = 0;
 
-const convertDecimalValueTo4BytesArray = v =>
-  [v >> 24 & 0xff, v >> 16 & 0xff, v >> 8 & 0xff, v & 0xff];
+const convertDecimalValueTo4BytesArray = (v) => [
+  (v >> 24) & 0xff,
+  (v >> 16) & 0xff,
+  (v >> 8) & 0xff,
+  v & 0xff,
+];
 
 const on_off = async (id, index = 1, value) => {
   try {
     const device = controller.getDeviceByIeeeAddr(id);
+    if (!device) return;
     const endpoint = device.getEndpoint(Number.parseInt(index));
-    if (device.modelID === '88teujp\u0000') {
+    if (!endpoint) return;
+    if (device.modelID === "88teujp\u0000") {
       await endpoint.command(
-        'manuSpecificTuya',
-        'setData',
+        "manuSpecificTuya",
+        "setData",
         {
           status: 0,
           transid,
@@ -25,10 +37,10 @@ const on_off = async (id, index = 1, value) => {
           length_lo: 1,
           data: [value ? 1 : 0],
         },
-        {disableDefaultResponse: true}
+        { disableDefaultResponse: true }
       );
     } else {
-      await endpoint.command('genOnOff', value ? 'on' : 'off', {});
+      await endpoint.command("genOnOff", value ? "on" : "off", {});
     }
   } catch (e) {
     console.error(id, index, value, e);
@@ -40,54 +52,93 @@ const off = (id, index) => on_off(id, index, OFF);
 
 const move_to_level = async (id, index, level, transtime = 0) => {
   const device = controller.getDeviceByIeeeAddr(id);
+  if (!device) return;
   const endpoint = device.getEndpoint(Number.parseInt(index));
-  await endpoint.command('genLevelCtrl', 'moveToLevelWithOnOff', {level,  transtime}, {});
+  if (!endpoint) return;
+  await endpoint.command(
+    "genLevelCtrl",
+    "moveToLevelWithOnOff",
+    { level, transtime },
+    {}
+  );
 };
 
-const move_to_hue_saturation = async (id, index, enhancehue, saturation, direction = 0, transtime = 0) => {
+const move_to_hue_saturation = async (
+  id,
+  index,
+  enhancehue,
+  saturation,
+  direction = 0,
+  transtime = 0
+) => {
   const device = controller.getDeviceByIeeeAddr(id);
+  if (!device) return;
   const endpoint = device.getEndpoint(Number.parseInt(index));
-  await endpoint.command('lightingColorCtrl', 'enhancedMoveToHueAndSaturation',  {enhancehue, saturation, direction, transtime}, {});
+  if (!endpoint) return;
+  await endpoint.command(
+    "lightingColorCtrl",
+    "enhancedMoveToHueAndSaturation",
+    { enhancehue, saturation, direction, transtime },
+    {}
+  );
 };
 
 const move_to_hue = async (id, index, hue, direction = 0, transtime = 0) => {
   const device = controller.getDeviceByIeeeAddr(id);
+  if (!device) return;
   const endpoint = device.getEndpoint(Number.parseInt(index));
-  await endpoint.command('lightingColorCtrl', 'moveToHue',  {hue, direction, transtime}, {});
+  if (!endpoint) return;
+  await endpoint.command(
+    "lightingColorCtrl",
+    "moveToHue",
+    { hue, direction, transtime },
+    {}
+  );
 };
 
 const move_to_saturation = async (id, index, saturation, transtime = 0) => {
   const device = controller.getDeviceByIeeeAddr(id);
+  if (!device) return;
   const endpoint = device.getEndpoint(Number.parseInt(index));
-  await endpoint.command('lightingColorCtrl', 'moveToSaturation',  {saturation, transtime}, {});
+  if (!endpoint) return;
+  await endpoint.command(
+    "lightingColorCtrl",
+    "moveToSaturation",
+    { saturation, transtime },
+    {}
+  );
 };
 
 const zclCmdLookup = {
-  [ACTION_OPEN]: 'upOpen',
-  [ACTION_CLOSE]: 'downClose',
-  [ACTION_STOP]: 'stop',
-  'open': 'upOpen',
-  'close': 'downClose',
-  'stop': 'stop',
-  'on': 'upOpen',
-  'off': 'downClose',
+  [ACTION_OPEN]: "upOpen",
+  [ACTION_CLOSE]: "downClose",
+  [ACTION_STOP]: "stop",
+  open: "upOpen",
+  close: "downClose",
+  stop: "stop",
+  on: "upOpen",
+  off: "downClose",
 };
 
 const closure = async (id, index, action) => {
   const device = controller.getDeviceByIeeeAddr(id);
+  if (!device) return;
   const endpoint = device.getEndpoint(Number.parseInt(index));
-  await endpoint.command('closuresWindowCovering', zclCmdLookup[action], {});
+  if (!endpoint) return;
+  await endpoint.command("closuresWindowCovering", zclCmdLookup[action], {});
 };
 
 const setpoint = async (id, index = 1, value) => {
   const device = controller.getDeviceByIeeeAddr(id);
+  if (!device) return;
   const endpoint = device.getEndpoint(Number.parseInt(index));
-  const data = convertDecimalValueTo4BytesArray(value * 10); 
+  if (!endpoint) return;
+  const data = convertDecimalValueTo4BytesArray(value * 10);
   transid += 1;
   transid %= 255;
   await endpoint.command(
-    'manuSpecificTuya',
-    'setData',
+    "manuSpecificTuya",
+    "setData",
     {
       status: 0,
       transid,
@@ -97,7 +148,7 @@ const setpoint = async (id, index = 1, value) => {
       length_lo: 4,
       data,
     },
-    {disableDefaultResponse: true}
+    { disableDefaultResponse: true }
   );
 };
 
