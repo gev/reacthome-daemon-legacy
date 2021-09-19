@@ -24,7 +24,7 @@
     "sdp-transform": "^2.13.0",
     "serialport": "^9.0.3",
     "sip": "^0.0.5",
-    "uuid": "^3.3.3",
+    "uuid": "^8.3.2",
     "ws": "^7.2.5",
     "zigbee-herdsman": "^0.13.41"
   }
