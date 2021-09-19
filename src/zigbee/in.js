@@ -87,7 +87,7 @@ module.exports = (id, { ID, clusters }, data) => {
           if (script) {
             run({ type: ACTION_SCRIPT_RUN, id: script });
           }
-        } else if (data.dp && data.datatype && data.data) {
+        } else if (data && data.dp && data.datatype && data.data) {
           let value;
           switch (data.datatype) {
             case 1:
