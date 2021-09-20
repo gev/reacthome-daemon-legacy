@@ -1605,7 +1605,7 @@ const run = (action) => {
           for (let j = 0; j < 5; j++) {
             const { active, volume } = source[i][j] || {};
             buffer.writeUInt8(active || 0, i * 5 + j + 5);
-            buffer.writeUInt8(volume || 0, i * 5 + j + 15);
+            buffer.writeUInt8(volume || 0, i * 5 + j + 5 + 17 * 2);
           }
         }
         device.send(buffer, ip);

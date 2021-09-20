@@ -362,7 +362,7 @@ module.exports.manage = () => {
             for (let j = 0; j < 17; j++) {
               source[i][j] = {
                 active: Boolean(data[i * 5 + j + 11]),
-                volume: data[i * 5 + j + 21],
+                volume: data[i * 5 + j + 11 + 17 * 2],
               };
             }
           }
