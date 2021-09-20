@@ -371,8 +371,8 @@ module.exports.initialize = (id) => {
           a[23 * i + j + 2] = volume[j];
           for (let k = 0; k < 17; k++) {
             const { active = 0, volume = 0 } = source[j][k] || {};
-            a[23 * i + j * 5 + k + 4] = active;
-            a[23 * i + j * 5 + k + 4 + 17 * 2] = volume;
+            a[23 * i + j * 17 + k + 4] = active;
+            a[23 * i + j * 17 + k + 4 + 17 * 2] = volume;
           }
         }
       }
