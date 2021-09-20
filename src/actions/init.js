@@ -369,7 +369,7 @@ module.exports.initialize = (id) => {
         a[23 * i + 1] = mode;
         for (let j = 0; j < 2; j++) {
           a[23 * i + j + 2] = volume[j];
-          for (let k = 0; k < 5; k++) {
+          for (let k = 0; k < 17; k++) {
             const { active = 0, volume = 0 } = source[j][k] || {};
             a[23 * i + j * 5 + k + 4] = active;
             a[23 * i + j * 5 + k + 14] = volume;
