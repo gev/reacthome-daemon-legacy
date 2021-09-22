@@ -39,6 +39,7 @@ const { get, set, add } = require("./create");
 const { device } = require("../sockets");
 const mac = require("../mac");
 const { codes } = require("reacthome-ircodes");
+const { ip2int } = require("../util");
 
 module.exports.initialized = (id) => {
   set(id, { initialized: true });
@@ -375,6 +376,16 @@ module.exports.initialize = (id) => {
             a[23 * i + j * 5 + k + 4 + 5 * 2] = volume;
           }
         }
+      }
+      for (let i = 0; i < 4; i++) {
+        const index = i + 1;
+        const { active, index = [] } = get(`${id}/rtp/${index}`) || {};
+        const ip = ip2int(group);
+        a[46 + i * 5] = active;
+        a[47 + i * 5] = ip & 0xff;
+        a[48 + i * 5] = (ip >> 8) & 0xff;
+        a[49 + i * 5] = (ip >> 16) & 0xff;
+        a[50 + i * 5] = (ip >> 24) & 0xff;
       }
       break;
     }
