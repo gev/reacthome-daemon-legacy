@@ -1614,6 +1614,7 @@ const run = (action) => {
         break;
       }
       case ACTION_RTP: {
+        console.log(action);
         const { id, index, group, active } = action;
         const { ip } = get(id) || {};
         const buffer = Buffer.alloc(7);
