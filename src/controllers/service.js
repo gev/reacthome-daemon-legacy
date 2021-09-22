@@ -174,6 +174,7 @@ const { ZIGBEE } = require("../zigbee/constants");
 const zigbee = require("../zigbee/out");
 const { asset, writeFile } = require("../fs");
 const { RING } = require("../ring/constants");
+const { ip2int } = require("../util");
 
 const timers = {};
 const schedules = {};
