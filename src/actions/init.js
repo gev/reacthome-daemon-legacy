@@ -379,7 +379,7 @@ module.exports.initialize = (id) => {
       }
       for (let i = 0; i < 4; i++) {
         const index = i + 1;
-        const { active, index = [] } = get(`${id}/rtp/${index}`) || {};
+        const { active, group = "" } = get(`${id}/rtp/${index}`) || {};
         const ip = ip2int(group);
         a[46 + i * 5] = active;
         a[47 + i * 5] = ip & 0xff;
