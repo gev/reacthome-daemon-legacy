@@ -1614,13 +1614,14 @@ const run = (action) => {
         break;
       }
       case ACTION_RTP: {
-        const { id, index, group, active } = action;
+        const { id, index, group, port, active } = action;
         const { ip } = get(id) || {};
-        const buffer = Buffer.alloc(7);
+        const buffer = Buffer.alloc(9);
         buffer.writeUInt8(ACTION_RTP, 0);
         buffer.writeUInt8(index, 1);
         buffer.writeUInt8(active, 2);
         buffer.writeUInt32BE(ip2int(String(group)), 3);
+        buffer.writeUInt16BE(port, 7);
         device.send(buffer, ip);
         break;
       }

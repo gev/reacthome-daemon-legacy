@@ -382,8 +382,9 @@ module.exports.manage = () => {
           const index = data[7];
           const active = data[8];
           const group = int2ip(data.readUInt32BE(9));
+          const port = int2ip(data.readUInt16BE(13));
           const chan = `${id}/rtp/${index}`;
-          set(chan, { active, group });
+          set(chan, { active, group, port });
           break;
         }
         case ACTION_INITIALIZE: {
