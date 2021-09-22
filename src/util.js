@@ -10,8 +10,8 @@ module.exports.hashCode = (s) => {
   return h > 0 ? h : Number.MAX_SAFE_INTEGER + h;
 };
 
-export const ip2int = (ip) =>
+module.exports.ip2int = (ip) =>
   ip.split(".").reduce((a, b) => (a << 8) | parseInt(b), 0) >>> 0;
 
-export const int2ip = (ip) =>
+module.exports.int2ip = (ip) =>
   `${(ip >> 24) & 0xff}.${(ip >> 16) & 0xff}.${(ip >> 8) & 0xff}.${ip & 0xff}`;
