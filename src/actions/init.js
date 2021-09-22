@@ -382,10 +382,10 @@ module.exports.initialize = (id) => {
         const { active, group = "" } = get(`${id}/rtp/${index}`) || {};
         const ip = ip2int(group);
         a[47 + i * 5] = active;
-        a[48 + i * 5] = ip & 0xff;
-        a[49 + i * 5] = (ip >> 8) & 0xff;
-        a[50 + i * 5] = (ip >> 16) & 0xff;
-        a[51 + i * 5] = (ip >> 24) & 0xff;
+        a[58 + i * 5] = (ip >> 24) & 0xff;
+        a[49 + i * 5] = (ip >> 16) & 0xff;
+        a[50 + i * 5] = (ip >> 8) & 0xff;
+        a[51 + i * 5] = ip & 0xff;
       }
       break;
     }
