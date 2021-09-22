@@ -140,6 +140,7 @@ const {
   DEVICE_TYPE_MIX_2,
   IR,
   ACTION_LANAMP,
+  ACTION_RTP,
   ACTION_MULTIROOM_ZONE,
   ACTION_ADD,
   ACTION_DEL,
@@ -1608,6 +1609,17 @@ const run = (action) => {
             buffer.writeUInt8(volume || 0, i * 5 + j + 5 + 5 * 2);
           }
         }
+        device.send(buffer, ip);
+        break;
+      }
+      case ACTION_RTP: {
+        const { id, index, group, active } = action;
+        const { ip } = get(id) || {};
+        const buffer = Buffer.alloc(7);
+        buffer.writeUInt8(ACTION_RTP, 0);
+        buffer.writeUInt8(index, 1);
+        buffer.writeUInt8(active, 2);
+        buffer.writeUInt32BE(ip2int(group), 3);
         device.send(buffer, ip);
         break;
       }

@@ -57,6 +57,7 @@ const {
   ACTION_LANAMP,
   AO,
   DEVICE_TYPE_AO_4_DIN,
+  ACTION_RTP,
 } = require("../constants");
 const {
   get,
@@ -74,11 +75,7 @@ const { device } = require("../sockets");
 const { run } = require("./service");
 const drivers = require("../drivers");
 const mac = require("../mac");
-
-const ip2int = (ip) =>
-  ip.split(".").reduce((a, b) => (a << 8) | parseInt(b), 0) >>> 0;
-const int2ip = (ip) =>
-  `${(ip >> 24) & 0xff}.${(ip >> 16) & 0xff}.${(ip >> 8) & 0xff}.${ip & 0xff}`;
+const { int2ip } = require("../util");
 
 const onDI = [onOff, onOn, onHold, onClick];
 const onDO = [onOff, onOn];
@@ -381,19 +378,12 @@ module.exports.manage = () => {
           }
           break;
         }
-        case ACTION_PNP: {
-          const [, , , , , , , type] = data;
-          switch (type) {
-            case PNP_ENABLE:
-              const enabled = Boolean(data[8]);
-              set(id, { enabled, t1: Date.now() });
-              break;
-            case PNP_STEP:
-              const [, , , , , , , , direction] = data;
-              const step = data.readUInt16LE(9);
-              set(id, { direction, step, t1: Date.now() });
-              break;
-          }
+        case ACTION_RTP: {
+          const index = data[7];
+          const active = data[8];
+          const group = int2ip(data.readUInt32BE(9));
+          const chan = `${id}/rtp/${index}`;
+          set(chan, { active, group });
           break;
         }
         case ACTION_INITIALIZE: {
