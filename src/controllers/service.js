@@ -1652,6 +1652,7 @@ const run = (action) => {
         const { id } = action;
         const script = get(id);
         if (script && Array.isArray(script.action)) {
+          if (script.disabled) return;
           script.action.forEach((i) => {
             const { type, payload, delay } = get(i);
             const a = { action: i, type, ...payload };
