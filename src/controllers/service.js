@@ -1308,8 +1308,8 @@ const run = (action) => {
       case ACTION_DOPPLER_HANDLE: {
         const { id, low, high, onQuiet, onLowThreshold, onHighThreshold } =
           action;
-        const { active } = get(action.action);
-        const { value } = get(id);
+        const { active } = get(action.action) || {};
+        const { value } = get(id) || {};
         if (value >= high) {
           set(action.action, { active: true });
           if (onHighThreshold) {
