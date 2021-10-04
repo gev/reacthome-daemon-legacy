@@ -149,6 +149,8 @@ const {
   BIND,
   DEVICE_TYPE_AO_4_DIN,
   SITE,
+  DEVICE_TYPE_SMART_4T,
+  DEVICE_TYPE_SMART_4A,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -687,22 +689,24 @@ const run = (action) => {
         break;
       }
       case ACTION_RGB_DIM: {
-        const { id, value = {} } = action;
+        const { id, value = {}, index = 0 } = action;
         const { r, g, b } = value;
         const o = get(id) || {};
         const { ip, type } = o;
         switch (type) {
           case DEVICE_TYPE_SENSOR4: {
-            device.send(Buffer.from([ACTION_RGB, 0, r, g, b]), ip);
+            device.send(Buffer.from([ACTION_RGB, index, r, g, b]), ip);
             break;
           }
-          case DEVICE_TYPE_SMART_4: {
+          case DEVICE_TYPE_SMART_4:
+          case DEVICE_TYPE_SMART_4T:
+          case DEVICE_TYPE_SMART_4A: {
             device.send(
               Buffer.from([
                 ACTION_RBUS_TRANSMIT,
                 ...action.id.split(":").map((i) => parseInt(i, 16)),
                 ACTION_RGB,
-                0,
+                index,
                 r,
                 g,
                 b,
