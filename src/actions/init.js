@@ -22,7 +22,9 @@ const {
   DEVICE_TYPE_DIM8,
   DEVICE_TYPE_DIM_8,
   DEVICE_TYPE_ARTNET,
-  DEVICE_TYPE_SMART_4,
+  DEVICE_TYPE_SMART_4G,
+  DEVICE_TYPE_SMART_4GD,
+  DEVICE_TYPE_SMART_4A,
   DEVICE_TYPE_SENSOR4,
   DEVICE_TYPE_PLC,
   DISCOVERY_INTERVAL,
@@ -58,8 +60,62 @@ module.exports.initialize = (id) => {
   switch (dev.type) {
     case DEVICE_TYPE_SENSOR4: {
       for (let i = 1; i <= 4; i++) {
-        const channel = get(`${id}/${DI}/${i}`);
+        const channel = get(`${id}/di/${i}`);
         a[i] = (channel && channel.value) || 0;
+      }
+      break;
+    }
+    case DEVICE_TYPE_SMART_4G: {
+      const mac = id.split(":").map((i) => parseInt(i, 16));
+      a[0] = ACTION_RBUS_TRANSMIT;
+      a[1] = mac[0];
+      a[2] = mac[1];
+      a[3] = mac[2];
+      a[4] = mac[3];
+      a[5] = mac[4];
+      a[6] = mac[5];
+      a[7] = ACTION_INITIALIZE;
+      for (let i = 0; i < 4; i++) {
+        const channel = get(`${id}/rgb/${i + 1}`);
+        a[3 * i + 7] = (channel && channel.r) || 0;
+        a[3 * i + 8] = (channel && channel.g) || 0;
+        a[3 * i + 9] = (channel && channel.b) || 0;
+      }
+      break;
+    }
+    case DEVICE_TYPE_SMART_4GD: {
+      const mac = id.split(":").map((i) => parseInt(i, 16));
+      a[0] = ACTION_RBUS_TRANSMIT;
+      a[1] = mac[0];
+      a[2] = mac[1];
+      a[3] = mac[2];
+      a[4] = mac[3];
+      a[5] = mac[4];
+      a[6] = mac[5];
+      a[7] = ACTION_INITIALIZE;
+      for (let i = 0; i < 4; i++) {
+        const channel = get(`${id}/rgb/${i + 1}`);
+        a[3 * i + 7] = (channel && channel.r) || 0;
+        a[3 * i + 8] = (channel && channel.g) || 0;
+        a[3 * i + 9] = (channel && channel.b) || 0;
+      }
+      break;
+    }
+    case DEVICE_TYPE_SMART_4A: {
+      const mac = id.split(":").map((i) => parseInt(i, 16));
+      a[0] = ACTION_RBUS_TRANSMIT;
+      a[1] = mac[0];
+      a[2] = mac[1];
+      a[3] = mac[2];
+      a[4] = mac[3];
+      a[5] = mac[4];
+      a[6] = mac[5];
+      a[7] = ACTION_INITIALIZE;
+      for (let i = 0; i < 5; i++) {
+        const channel = get(`${id}/rgb/${i + 1}`);
+        a[3 * i + 7] = (channel && channel.r) || 0;
+        a[3 * i + 8] = (channel && channel.g) || 0;
+        a[3 * i + 9] = (channel && channel.b) || 0;
       }
       break;
     }

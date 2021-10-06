@@ -73,7 +73,6 @@ const {
   DEVICE_TYPE_RELAY_24,
   DEVICE_TYPE_IR_4,
   DEVICE_TYPE_SENSOR4,
-  DEVICE_TYPE_SMART_4,
   DRIVER_TYPE_ARTNET,
   DRIVER_TYPE_BB_PLC1,
   DRIVER_TYPE_BB_PLC2,
@@ -149,7 +148,8 @@ const {
   BIND,
   DEVICE_TYPE_AO_4_DIN,
   SITE,
-  DEVICE_TYPE_SMART_4T,
+  DEVICE_TYPE_SMART_4G,
+  DEVICE_TYPE_SMART_4GD,
   DEVICE_TYPE_SMART_4A,
 } = require("../constants");
 const { LIST } = require("../init/constants");
@@ -698,8 +698,8 @@ const run = (action) => {
             device.send(Buffer.from([ACTION_RGB, index, r, g, b]), ip);
             break;
           }
-          case DEVICE_TYPE_SMART_4:
-          case DEVICE_TYPE_SMART_4T:
+          case DEVICE_TYPE_SMART_4G:
+          case DEVICE_TYPE_SMART_4GD:
           case DEVICE_TYPE_SMART_4A: {
             device.send(
               Buffer.from([

@@ -271,6 +271,12 @@ module.exports.manage = () => {
           }
           break;
         }
+        case ACTION_RGB_DIM: {
+          const [, , , , , , , index, r, g, b] = data;
+          const chan = `${id}/rgb/${index}`;
+          set(chan, { r, g, b });
+          break;
+        }
         case ACTION_TEMPERATURE: {
           const temperature = data.readUInt16LE(7) / 100;
           const { onTemperature, site } = get(id);

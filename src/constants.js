@@ -205,8 +205,8 @@ module.exports.DEVICE_TYPE_IR_RECEIVER = 0x10;
 
 module.exports.DEVICE_TYPE_RELAY_2 = 0x23;
 module.exports.DEVICE_TYPE_IR_4 = 0x24;
-module.exports.DEVICE_TYPE_SMART_4 = 0x25;
-module.exports.DEVICE_TYPE_SMART_4T = 0x26;
+module.exports.DEVICE_TYPE_SMART_4G = 0x25;
+module.exports.DEVICE_TYPE_SMART_4GD = 0x26;
 module.exports.DEVICE_TYPE_SMART_4A = 0x27;
 
 module.exports.DEVICE_TYPE_RELAY_6 = 0xa0;
