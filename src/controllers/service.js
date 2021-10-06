@@ -701,6 +701,7 @@ const run = (action) => {
           case DEVICE_TYPE_SMART_4G:
           case DEVICE_TYPE_SMART_4GD:
           case DEVICE_TYPE_SMART_4A: {
+            console.log(action);
             device.send(
               Buffer.from([
                 ACTION_RBUS_TRANSMIT,
