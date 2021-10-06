@@ -59,6 +59,7 @@ const {
   DEVICE_TYPE_AO_4_DIN,
   ACTION_RTP,
   ACTION_RGB_DIM,
+  ACTION_RGB,
 } = require("../constants");
 const {
   get,
