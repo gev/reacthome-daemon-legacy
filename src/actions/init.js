@@ -75,8 +75,8 @@ module.exports.initialize = (id) => {
       a[5] = mac[4];
       a[6] = mac[5];
       a[7] = ACTION_INITIALIZE;
-      for (let i = 0; i < 4; i++) {
-        const channel = get(`${id}/rgb/${i + 1}`);
+      for (let i = 1; i <= 4; i++) {
+        const channel = get(`${id}/rgb/${i}`);
         a[3 * i + 7] = (channel && channel.r) || 0;
         a[3 * i + 8] = (channel && channel.g) || 0;
         a[3 * i + 9] = (channel && channel.b) || 0;
@@ -93,7 +93,7 @@ module.exports.initialize = (id) => {
       a[5] = mac[4];
       a[6] = mac[5];
       a[7] = ACTION_INITIALIZE;
-      for (let i = 0; i < 4; i++) {
+      for (let i = 1; i <= 4; i++) {
         const channel = get(`${id}/rgb/${i + 1}`);
         a[3 * i + 7] = (channel && channel.r) || 0;
         a[3 * i + 8] = (channel && channel.g) || 0;
@@ -111,8 +111,8 @@ module.exports.initialize = (id) => {
       a[5] = mac[4];
       a[6] = mac[5];
       a[7] = ACTION_INITIALIZE;
-      for (let i = 0; i < 5; i++) {
-        const channel = get(`${id}/rgb/${i + 1}`);
+      for (let i = 1; i <= 5; i++) {
+        const channel = get(`${id}/rgb/${i}`);
         a[3 * i + 7] = (channel && channel.r) || 0;
         a[3 * i + 8] = (channel && channel.g) || 0;
         a[3 * i + 9] = (channel && channel.b) || 0;
