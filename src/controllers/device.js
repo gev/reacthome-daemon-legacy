@@ -272,7 +272,7 @@ module.exports.manage = () => {
           }
           break;
         }
-        case ACTION_RGB_DIM: {
+        case ACTION_RGB: {
           const [, , , , , , , index, r, g, b] = data;
           const chan = `${id}/rgb/${index}`;
           set(chan, { r, g, b });
