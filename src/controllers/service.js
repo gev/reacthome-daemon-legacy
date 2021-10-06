@@ -701,11 +701,22 @@ const run = (action) => {
           case DEVICE_TYPE_SMART_4G:
           case DEVICE_TYPE_SMART_4GD:
           case DEVICE_TYPE_SMART_4A: {
-            console.log(action);
+            console.log(
+              Buffer.from([
+                ACTION_RBUS_TRANSMIT,
+                ...id.split(":").map((i) => parseInt(i, 16)),
+                ACTION_RGB,
+                index,
+                r,
+                g,
+                b,
+              ]),
+              ip
+            );
             device.send(
               Buffer.from([
                 ACTION_RBUS_TRANSMIT,
-                ...action.id.split(":").map((i) => parseInt(i, 16)),
+                ...id.split(":").map((i) => parseInt(i, 16)),
                 ACTION_RGB,
                 index,
                 r,
