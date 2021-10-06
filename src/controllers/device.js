@@ -274,6 +274,7 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_RGB: {
+          console.log(data);
           const [, , , , , , , index, r, g, b] = data;
           const chan = `${id}/rgb/${index}`;
           set(chan, { r, g, b });
