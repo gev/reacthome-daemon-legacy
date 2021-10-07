@@ -279,6 +279,11 @@ module.exports.manage = () => {
           set(chan, { r, g, b });
           break;
         }
+        case ACTION_TEXT: {
+          const [, , , , , , , light, c2, c1] = data;
+          set(id, { light, text: [c2, c1] });
+          break;
+        }
         case ACTION_TEMPERATURE: {
           const temperature = data.readUInt16LE(7) / 100;
           const { onTemperature, site } = get(id) || {};
