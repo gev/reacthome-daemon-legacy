@@ -60,6 +60,7 @@ const {
   ACTION_RTP,
   ACTION_RGB_DIM,
   ACTION_RGB,
+  ACTION_TEXT,
 } = require("../constants");
 const {
   get,
