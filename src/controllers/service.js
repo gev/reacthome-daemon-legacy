@@ -759,7 +759,6 @@ const run = (action) => {
         break;
       }
       case ACTION_IMAGE: {
-        console.log(action);
         const { id, level, image: [c2, c1] = [0, 0] } = action;
         const { ip } = get(id) || {};
         device.send(
