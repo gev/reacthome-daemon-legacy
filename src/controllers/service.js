@@ -773,8 +773,6 @@ const run = (action) => {
           ]),
           ip
         );
-
-        set(id, { light, text: [c2, c1] });
         break;
       }
       case ACTION_ENABLE: {
