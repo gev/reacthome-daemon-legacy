@@ -99,10 +99,10 @@ module.exports.initialize = (id) => {
         a[3 * i + 6] = (channel && channel.g) || 0;
         a[3 * i + 7] = (channel && channel.b) || 0;
       }
-      const { text = [], light } = get(id);
+      const { image = [], light } = get(id);
       a[20] = light || 0;
-      a[21] = text[0] || 0;
-      a[22] = text[1] || 0;
+      a[21] = image[0] || 0;
+      a[22] = image[1] || 0;
       break;
     }
     case DEVICE_TYPE_SMART_4A: {

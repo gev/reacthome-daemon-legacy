@@ -759,7 +759,7 @@ const run = (action) => {
         break;
       }
       case ACTION_IMAGE: {
-        const { id, light, text: [c2, c1] = [0, 0] } = action;
+        const { id, light, image: [c2, c1] = [0, 0] } = action;
         const { ip } = get(id) || {};
         device.send(
           Buffer.from([

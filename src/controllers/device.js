@@ -282,7 +282,7 @@ module.exports.manage = () => {
         }
         case ACTION_IMAGE: {
           const [, , , , , , , light, c2, c1] = data;
-          set(id, { light, text: [c2, c1] });
+          set(id, { light, image: [c2, c1] });
           break;
         }
         case ACTION_TEMPERATURE: {
