@@ -1,4 +1,4 @@
-export const char2image = {
+module.exports.char2image = {
   0: 0b1110111,
   1: 0b0100100,
   2: 0b1011101,
@@ -50,7 +50,7 @@ export const char2image = {
   "^": 0b0000101,
 };
 
-export const image2char = {
+module.exports.image2char = {
   0b1110111: "0",
   0b0100100: "1",
   0b1011101: "2",
