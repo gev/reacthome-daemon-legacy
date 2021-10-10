@@ -759,14 +759,15 @@ const run = (action) => {
         break;
       }
       case ACTION_IMAGE: {
-        const { id, light, image: [c2, c1] = [0, 0] } = action;
+        console.log(action);
+        const { id, level, image: [c2, c1] = [0, 0] } = action;
         const { ip } = get(id) || {};
         device.send(
           Buffer.from([
             ACTION_RBUS_TRANSMIT,
             ...id.split(":").map((i) => parseInt(i, 16)),
             ACTION_IMAGE,
-            light,
+            level,
             c2,
             c1,
           ]),
