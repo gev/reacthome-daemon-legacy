@@ -281,7 +281,6 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_IMAGE: {
-          s;
           const [, , , , , , , level, c2, c1] = data;
           set(id, { level, image: [c2, c1] });
           break;
