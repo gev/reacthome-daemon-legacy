@@ -281,8 +281,9 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_IMAGE: {
-          const [, , , , , , , light, c2, c1] = data;
-          set(id, { light, image: [c2, c1] });
+          s;
+          const [, , , , , , , level, c2, c1] = data;
+          set(id, { level, image: [c2, c1] });
           break;
         }
         case ACTION_TEMPERATURE: {
