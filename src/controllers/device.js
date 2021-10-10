@@ -283,8 +283,8 @@ module.exports.manage = () => {
         }
         case ACTION_IMAGE: {
           const [, , , , , , , level, i2, i1] = data;
-          const c2 = image2char(i2) || " ";
-          const c1 = image2char(i1) || " ";
+          const c2 = image2char[i2] || " ";
+          const c1 = image2char[i1] || " ";
           set(id, { level, image: [i2, i1], text: c2 + c1 });
           break;
         }
