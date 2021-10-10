@@ -79,6 +79,7 @@ const { run } = require("./service");
 const drivers = require("../drivers");
 const mac = require("../mac");
 const { int2ip } = require("../util");
+const { image2char } = require("../drivers/display");
 
 const onDI = [onOff, onOn, onHold, onClick];
 const onDO = [onOff, onOn];
@@ -281,8 +282,10 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_IMAGE: {
-          const [, , , , , , , level, c2, c1] = data;
-          set(id, { level, image: [c2, c1] });
+          const [, , , , , , , level, i2, i1] = data;
+          const c2 = image2char(i2) || " ";
+          const c1 = image2char(i1) || " ";
+          set(id, { level, image: [i2, i1], text: c2 + c1 });
           break;
         }
         case ACTION_TEMPERATURE: {
