@@ -60,7 +60,7 @@ const {
   ACTION_RTP,
   ACTION_RGB_DIM,
   ACTION_RGB,
-  ACTION_TEXT,
+  ACTION_IMAGE,
 } = require("../constants");
 const {
   get,
@@ -280,7 +280,7 @@ module.exports.manage = () => {
           set(chan, { r, g, b });
           break;
         }
-        case ACTION_TEXT: {
+        case ACTION_IMAGE: {
           const [, , , , , , , light, c2, c1] = data;
           set(id, { light, text: [c2, c1] });
           break;

@@ -151,7 +151,7 @@ const {
   DEVICE_TYPE_SMART_4G,
   DEVICE_TYPE_SMART_4GD,
   DEVICE_TYPE_SMART_4A,
-  ACTION_TEXT,
+  ACTION_IMAGE,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -758,14 +758,14 @@ const run = (action) => {
         }
         break;
       }
-      case ACTION_TEXT: {
+      case ACTION_IMAGE: {
         const { id, light, text: [c2, c1] = [0, 0] } = action;
         const { ip } = get(id) || {};
         device.send(
           Buffer.from([
             ACTION_RBUS_TRANSMIT,
             ...id.split(":").map((i) => parseInt(i, 16)),
-            ACTION_TEXT,
+            ACTION_IMAGE,
             light,
             c2,
             c1,
