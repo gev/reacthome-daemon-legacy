@@ -763,9 +763,7 @@ const run = (action) => {
         const { id, level, value } = action;
         const [i2, i1] = Array.isArray(value)
           ? value
-          : Array.from(
-              String(Number.isNaN(value) ? value : Math.round(value))
-            ).map((i) => char2image[i]);
+          : Array.from(String(value)).map((i) => char2image[i]);
         const { ip } = get(id) || {};
         device.send(
           Buffer.from([
