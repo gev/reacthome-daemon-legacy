@@ -766,15 +766,11 @@ const run = (action) => {
           : Array.from(String(value).padStart(2, " "))
               .slice(-2)
               .map((i) => char2image[i]);
-        console.log(action, i2, i1);
         const { ip } = get(id) || {};
         device.send(
           Buffer.from([
             ACTION_RBUS_TRANSMIT,
-            ...id
-              .split(":")
-              .slice(-1)
-              .map((i) => parseInt(i, 16)),
+            ...id.split(":").map((i) => parseInt(i, 16)),
             ACTION_IMAGE,
             level,
             i2,
