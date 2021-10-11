@@ -768,7 +768,10 @@ const run = (action) => {
         device.send(
           Buffer.from([
             ACTION_RBUS_TRANSMIT,
-            ...id.split(":").map((i) => parseInt(i, 16)),
+            ...id
+              .split(":")
+              .slice(-1)
+              .map((i) => parseInt(i, 16)),
             ACTION_IMAGE,
             level,
             i2,
