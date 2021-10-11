@@ -178,6 +178,7 @@ const zigbee = require("../zigbee/out");
 const { asset, writeFile } = require("../fs");
 const { RING } = require("../ring/constants");
 const { ip2int } = require("../util");
+const { char2image } = require("../drivers/display");
 
 const timers = {};
 const schedules = {};
@@ -759,7 +760,10 @@ const run = (action) => {
         break;
       }
       case ACTION_IMAGE: {
-        const { id, level, image: [c2, c1] = [0, 0] } = action;
+        const { id, level, value } = action;
+        const [i2, i1] = Array.isArray(value)
+          ? value
+          : Array.from(String(v)).map((i) => char2image[i]);
         const { ip } = get(id) || {};
         device.send(
           Buffer.from([
@@ -767,8 +771,8 @@ const run = (action) => {
             ...id.split(":").map((i) => parseInt(i, 16)),
             ACTION_IMAGE,
             level,
-            c2,
-            c1,
+            i2,
+            i1,
           ]),
           ip
         );
