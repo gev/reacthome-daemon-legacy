@@ -766,6 +766,7 @@ const run = (action) => {
           : Array.from(String(value))
               .slice(-2)
               .map((i) => char2image[i]);
+        console.log(action, i2, i1);
         const { ip } = get(id) || {};
         device.send(
           Buffer.from([
