@@ -48,6 +48,7 @@ module.exports.char2image = {
   _: 0b1000000,
   "-": 0b0001000,
   "^": 0b0000101,
+  " ": 0b0000000,
 };
 
 module.exports.image2char = {
@@ -86,4 +87,5 @@ module.exports.image2char = {
   0b1000000: "_",
   0b0001000: "-",
   0b0000101: "^",
+  0b0000000: " ",
 };

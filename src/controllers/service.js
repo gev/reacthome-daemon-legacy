@@ -763,7 +763,7 @@ const run = (action) => {
         const { id, level, value } = action;
         const [i2, i1] = Array.isArray(value)
           ? value
-          : Array.from(String(value))
+          : Array.from(String(value).padStart(2, " "))
               .slice(-2)
               .map((i) => char2image[i]);
         console.log(action, i2, i1);
