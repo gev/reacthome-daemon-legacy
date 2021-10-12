@@ -1,4 +1,3 @@
-const { networkInterfaces } = require("os");
 const { createSocket } = require("dgram");
 const { get } = require("./actions");
 

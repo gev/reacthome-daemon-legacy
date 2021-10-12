@@ -152,6 +152,7 @@ const {
   DEVICE_TYPE_SMART_4GD,
   DEVICE_TYPE_SMART_4A,
   ACTION_IMAGE,
+  DEVICE_TYPE_LANAMP,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -1481,51 +1482,63 @@ const run = (action) => {
         const bind = `${dev}/${IR}/${index}`;
         set(id, { brand, model });
         makeBind(id, "bind", bind);
-        const { type, version, ip } = get(dev) || {};
-        if (type === DEVICE_TYPE_IR_4) {
-          const [major] = version.split(".");
-          if (parseInt(major) < 2) return;
-          const { type } = get(id);
-          const {
-            frequency,
-            count = [],
-            header = [],
-            trail,
-          } = ((ircodes.codes[type] || {})[brand] || {})[model] || {};
-          if (parseInt(major) >= 3) {
-            const buffer = Buffer.alloc(23);
-            buffer.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
-            dev
-              .split(":")
-              .forEach((t, i) => buffer.writeUInt8(parseInt(t, 16), i + 1));
-            buffer.writeUInt8(ACTION_IR_CONFIG, 7);
-            buffer.writeUInt8(index, 8);
-            buffer.writeUInt16LE(frequency, 9);
-            buffer.writeUInt16LE(count[0], 11);
-            buffer.writeUInt16LE(count[1], 13);
-            buffer.writeUInt16LE(count[2], 15);
-            buffer.writeUInt16LE(header[0], 17);
-            buffer.writeUInt16LE(header[1], 19);
-            buffer.writeUInt16LE(trail, 21);
-            // console.log(buffer);
-            device.send(buffer, ip);
-          } else {
-            const buffer = Buffer.alloc(21);
-            buffer.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
-            dev
-              .split(":")
-              .forEach((t, i) => buffer.writeUInt8(parseInt(t, 16), i + 1));
-            buffer.writeUInt8(ACTION_IR_CONFIG, 7);
-            buffer.writeUInt8(index, 8);
-            buffer.writeUInt16LE(frequency, 9);
-            buffer.writeUInt16LE(count[0], 11);
-            buffer.writeUInt16LE(count[1], 13);
-            buffer.writeUInt16LE(header[0], 15);
-            buffer.writeUInt16LE(header[1], 17);
-            buffer.writeUInt16LE(trail, 19);
-            // console.log(buffer);
-            device.send(buffer, ip);
-          }
+        const { type: dev_type, version, ip } = get(dev) || {};
+        const { type } = get(id);
+        const {
+          frequency,
+          count = [],
+          header = [],
+          trail,
+        } = ((ircodes.codes[type] || {})[brand] || {})[model] || {};
+        const [major] = version.split(".");
+        if (dev_type === DEVICE_TYPE_IR_4 && parseInt(major) === 2) {
+          const buffer = Buffer.alloc(21);
+          buffer.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
+          dev
+            .split(":")
+            .forEach((t, i) => buffer.writeUInt8(parseInt(t, 16), i + 1));
+          buffer.writeUInt8(ACTION_IR_CONFIG, 7);
+          buffer.writeUInt8(index, 8);
+          buffer.writeUInt16LE(frequency, 9);
+          buffer.writeUInt16LE(count[0], 11);
+          buffer.writeUInt16LE(count[1], 13);
+          buffer.writeUInt16LE(header[0], 15);
+          buffer.writeUInt16LE(header[1], 17);
+          buffer.writeUInt16LE(trail, 19);
+          device.send(buffer, ip);
+        } else if (
+          (dev_type === DEVICE_TYPE_IR_4 && parseInt(major) >= 3) ||
+          dev_type === DEVICE_TYPE_SMART_4A ||
+          dev_type === DEVICE_TYPE_SMART_4G ||
+          dev_type === DEVICE_TYPE_SMART_4GD
+        ) {
+          const buffer = Buffer.alloc(23);
+          buffer.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
+          dev
+            .split(":")
+            .forEach((t, i) => buffer.writeUInt8(parseInt(t, 16), i + 1));
+          buffer.writeUInt8(ACTION_IR_CONFIG, 7);
+          buffer.writeUInt8(index, 8);
+          buffer.writeUInt16LE(frequency, 9);
+          buffer.writeUInt16LE(count[0], 11);
+          buffer.writeUInt16LE(count[1], 13);
+          buffer.writeUInt16LE(count[2], 15);
+          buffer.writeUInt16LE(header[0], 17);
+          buffer.writeUInt16LE(header[1], 19);
+          buffer.writeUInt16LE(trail, 21);
+          device.send(buffer, ip);
+        } else if (dev_type === DEVICE_TYPE_LANAMP) {
+          const buffer = Buffer.alloc(16);
+          buffer.writeUInt8(ACTION_IR_CONFIG, 0);
+          buffer.writeUInt8(index, 1);
+          buffer.writeUInt16LE(frequency, 2);
+          buffer.writeUInt16LE(count[0], 4);
+          buffer.writeUInt16LE(count[1], 6);
+          buffer.writeUInt16LE(count[2], 8);
+          buffer.writeUInt16LE(header[0], 10);
+          buffer.writeUInt16LE(header[1], 12);
+          buffer.writeUInt16LE(trail, 14);
+          device.send(buffer, ip);
         }
         break;
       }
@@ -1554,7 +1567,10 @@ const run = (action) => {
           return buff;
         };
         switch (type) {
-          case DEVICE_TYPE_IR_4: {
+          case DEVICE_TYPE_IR_4:
+          case DEVICE_TYPE_SMART_4A:
+          case DEVICE_TYPE_SMART_4G:
+          case DEVICE_TYPE_SMART_4GD: {
             const [major] = version.split(".");
             const header = Buffer.alloc(7);
             header.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
@@ -1568,6 +1584,10 @@ const run = (action) => {
               ]),
               ip
             );
+            break;
+          }
+          case DEVICE_TYPE_LANAMP: {
+            device.send(Buffer.from([ACTION_IR, index, ...code]), ip);
             break;
           }
           default:

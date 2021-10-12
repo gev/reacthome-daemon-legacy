@@ -453,6 +453,31 @@ module.exports.initialize = (id) => {
         a[52 + i * 7] = (port >> 8) & 0xff;
         a[53 + i * 7] = port & 0xff;
       }
+      for (let i = 0; i < 4; i++) {
+        const channel = get(`${id}/${IR}/${i + 1}`) || {};
+        const { bind } = channel;
+        const { type, brand, model } = get(bind) || {};
+        const {
+          frequency,
+          count = [],
+          header = [],
+          trail,
+        } = ((codes[type] || {})[brand] || {})[model] || {};
+        a[14 * i + 75] = frequency & 0xff;
+        a[14 * i + 76] = (frequency >> 8) & 0xff;
+        a[14 * i + 77] = count[0] & 0xff;
+        a[14 * i + 78] = (count[0] >> 8) & 0xff;
+        a[14 * i + 79] = count[1] & 0xff;
+        a[14 * i + 80] = (count[1] >> 8) & 0xff;
+        a[14 * i + 81] = count[2] & 0xff;
+        a[14 * i + 82] = (count[2] >> 8) & 0xff;
+        a[14 * i + 83] = header[0] & 0xff;
+        a[14 * i + 84] = (header[0] >> 8) & 0xff;
+        a[14 * i + 85] = header[1] & 0xff;
+        a[14 * i + 86] = (header[1] >> 8) & 0xff;
+        a[14 * i + 87] = trail & 0xff;
+        a[14 * i + 88] = (trail >> 8) & 0xff;
+      }
       break;
     }
     case DEVICE_TYPE_PLC: {
