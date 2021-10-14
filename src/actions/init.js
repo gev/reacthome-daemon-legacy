@@ -94,7 +94,7 @@ module.exports.initialize = (id) => {
       a[6] = mac[5];
       a[7] = ACTION_INITIALIZE;
       for (let i = 1; i <= 4; i++) {
-        const channel = get(`${id}/rgb/${i + 1}`);
+        const channel = get(`${id}/rgb/${i}`);
         a[3 * i + 5] = (channel && channel.r) || 0;
         a[3 * i + 6] = (channel && channel.g) || 0;
         a[3 * i + 7] = (channel && channel.b) || 0;
