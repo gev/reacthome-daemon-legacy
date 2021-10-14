@@ -99,8 +99,8 @@ module.exports.initialize = (id) => {
         a[3 * i + 6] = (channel && channel.g) || 0;
         a[3 * i + 7] = (channel && channel.b) || 0;
       }
-      const { image = [], light } = get(id);
-      a[20] = light || 0;
+      const { image = [], level } = get(id);
+      a[20] = level || 0;
       a[21] = image[0] || 0;
       a[22] = image[1] || 0;
       break;
