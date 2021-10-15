@@ -282,7 +282,8 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_IMAGE: {
-          const [, , , , , , , level, i2, i1] = data;
+          const dev = get(id) || {};
+          const [, , , , , , , level = dev.level, i2, i1] = data;
           const c2 = image2char[i2] || " ";
           const c1 = image2char[i1] || " ";
           set(id, { level, image: [i2, i1], text: c2 + c1 });
@@ -290,11 +291,14 @@ module.exports.manage = () => {
         }
         case ACTION_TEMPERATURE: {
           const temperature = data.readUInt16LE(7) / 100;
-          const { onTemperature, site } = get(id) || {};
+          const { onTemperature, site, display } = get(id) || {};
           if (site) set(site, { temperature });
           set(id, { temperature });
           if (onTemperature) {
             run({ type: ACTION_SCRIPT_RUN, id: onTemperature });
+          }
+          if (display) {
+            run({ type: ACTION_IMAGE, id: display, value: temperature });
           }
           break;
         }
@@ -312,10 +316,13 @@ module.exports.manage = () => {
             version: "1.0",
           });
           add(mac(), DEVICE, dev_id);
-          const { onTemperature: onTemperature, site } = get(dev_id);
+          const { onTemperature: onTemperature, display, site } = get(dev_id);
           if (site) set(site, { temperature });
           if (onTemperature) {
             run({ type: ACTION_SCRIPT_RUN, id: onTemperature });
+          }
+          if (display) {
+            run({ type: ACTION_IMAGE, id: display, value: temperature });
           }
           break;
         }
