@@ -1678,7 +1678,7 @@ const run = (action) => {
         set(id, { source });
         switch (type) {
           case "stereo": {
-            const { mode, volume } = get(`${dev}/lanamp/${index}`);
+            const { mode, volume } = get(`${dev}/lanamp/${index}`) || {};
             if (mode === 0b01 || mode === 0b10) {
               run({ type: ACTION_LANAMP, id: dev, index, mode, volume });
             }

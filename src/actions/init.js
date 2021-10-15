@@ -103,7 +103,6 @@ module.exports.initialize = (id) => {
       a[20] = level || 0;
       a[21] = image[0] || 0;
       a[22] = image[1] || 0;
-      console.log(a);
       break;
     }
     case DEVICE_TYPE_SMART_4A: {
