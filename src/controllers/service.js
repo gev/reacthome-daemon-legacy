@@ -153,6 +153,8 @@ const {
   DEVICE_TYPE_SMART_4A,
   ACTION_IMAGE,
   DEVICE_TYPE_LANAMP,
+  ACTION_INC_SETPOINT,
+  ACTION_DEC_SETPOINT,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -1196,6 +1198,32 @@ const run = (action) => {
           drivers.handle(action);
         } else {
           set(id, { setpoint: value });
+        }
+        break;
+      }
+      case ACTION_INC_SETPOINT: {
+        const { thermostat, display } = action;
+        if (thermostat) {
+          let { setpoint = 4 } = get(thermostat) || {};
+          setpoint++;
+          if (setpoint > 35) setpoint = 35;
+          run({ type: ACTION_SETPOINT, id: thermostat, value: setpoint });
+          if (display) {
+            run({ type: ACTION_IMAGE, id: display, value: setpoint });
+          }
+        }
+        break;
+      }
+      case ACTION_DEC_SETPOINT: {
+        const { thermostat, display } = action;
+        if (thermostat) {
+          let { setpoint = 34 } = get(thermostat) || {};
+          setpoint--;
+          if (setpoint < 5) setpoint = 5;
+          run({ type: ACTION_SETPOINT, id: thermostat, value: setpoint });
+          if (display) {
+            run({ type: ACTION_IMAGE, id: display, value: setpoint });
+          }
         }
         break;
       }
