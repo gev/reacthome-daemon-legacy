@@ -769,17 +769,17 @@ const run = (action) => {
           : Array.from(String(value).padStart(2, " "))
               .slice(-2)
               .map((i) => char2image[i]);
-        const { ip } = get(id) || {};
+        const dev = get(id) || {};
         device.send(
           Buffer.from([
             ACTION_RBUS_TRANSMIT,
             ...id.split(":").map((i) => parseInt(i, 16)),
             ACTION_IMAGE,
-            level,
+            level || dev.level,
             i2,
             i1,
           ]),
-          ip
+          dev.ip
         );
         break;
       }
