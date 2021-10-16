@@ -298,7 +298,11 @@ module.exports.manage = () => {
             run({ type: ACTION_SCRIPT_RUN, id: onTemperature });
           }
           if (display) {
-            run({ type: ACTION_IMAGE, id: display, value: temperature });
+            run({
+              type: ACTION_IMAGE,
+              id: display,
+              value: Math.round(temperature),
+            });
           }
           break;
         }
@@ -322,7 +326,11 @@ module.exports.manage = () => {
             run({ type: ACTION_SCRIPT_RUN, id: onTemperature });
           }
           if (display) {
-            run({ type: ACTION_IMAGE, id: display, value: temperature });
+            run({
+              type: ACTION_IMAGE,
+              id: display,
+              value: Math.round(temperature),
+            });
           }
           break;
         }
