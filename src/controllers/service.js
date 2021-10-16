@@ -1648,6 +1648,22 @@ const run = (action) => {
         const { protocol } = get(id) || {};
         if (protocol === ZIGBEE) {
           zigbee.closure(id, index, value);
+          return
+        }
+        let type;
+        switch (value) {
+          case OPEN:
+            type = ACTION_OPEN;
+            break;
+          case CLOSE:
+            type = ACTION_CLOSE;
+            break;
+          case STOP:
+            type = ACTION_STOP;
+            break;
+        }
+        if (type) {
+          run({ type: ACTION_DO, id, index, value: type });
         }
         break;
       }
