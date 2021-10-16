@@ -1209,7 +1209,9 @@ const run = (action) => {
           if (setpoint > 35) setpoint = 35;
           run({ type: ACTION_SETPOINT, id: thermostat, value: setpoint });
           if (display) {
+            set(display, { lock: true });
             run({ type: ACTION_IMAGE, id: display, value: setpoint });
+            setTimeout(set, 5000, { lock: false });
           }
         }
         break;
