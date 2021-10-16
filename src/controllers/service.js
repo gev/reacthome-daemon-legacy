@@ -1211,7 +1211,7 @@ const run = (action) => {
           if (display) {
             set(display, { lock: true });
             run({ type: ACTION_IMAGE, id: display, value: setpoint });
-            setTimeout(set, 5000, { lock: false });
+            setTimeout(set, 5000, display, { lock: false });
           }
         }
         break;
@@ -1224,7 +1224,9 @@ const run = (action) => {
           if (setpoint < 5) setpoint = 5;
           run({ type: ACTION_SETPOINT, id: thermostat, value: setpoint });
           if (display) {
+            set(display, { lock: true });
             run({ type: ACTION_IMAGE, id: display, value: setpoint });
+            setTimeout(set, 5000, display, { lock: false });
           }
         }
         break;
