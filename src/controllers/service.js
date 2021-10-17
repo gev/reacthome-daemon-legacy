@@ -182,6 +182,7 @@ const { asset, writeFile } = require("../fs");
 const { RING } = require("../ring/constants");
 const { ip2int } = require("../util");
 const { char2image } = require("../drivers/display");
+const childProcess = require("child_process");
 
 const timers = {};
 const schedules = {};
@@ -1641,6 +1642,7 @@ const run = (action) => {
       }
       case RING: {
         notification.broadcastAction(action);
+        childProcess.exec("ring.sh");
         break;
       }
       case CLOSURE: {
@@ -1648,7 +1650,7 @@ const run = (action) => {
         const { protocol } = get(id) || {};
         if (protocol === ZIGBEE) {
           zigbee.closure(id, index, value);
-          return
+          return;
         }
         let type;
         switch (value) {
