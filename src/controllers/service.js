@@ -1642,7 +1642,7 @@ const run = (action) => {
       }
       case RING: {
         notification.broadcastAction(action);
-        childProcess.exec("ring.sh");
+        childProcess.exec("./ring.sh");
         break;
       }
       case CLOSURE: {
