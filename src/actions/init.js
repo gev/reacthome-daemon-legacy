@@ -427,17 +427,17 @@ module.exports.initialize = (id) => {
             break;
           }
         }
-        a[23 * i + 1] = mode;
+        a[71 * i + 1] = mode;
         for (let j = 0; j < 2; j++) {
-          a[23 * i + j + 2] = volume[j];
-          for (let k = 0; k < 5; k++) {
+          a[71 * i + j + 2] = volume[j];
+          for (let k = 0; k < 17; k++) {
             const { active = 0, volume = 0 } = source[j][k] || {};
-            a[23 * i + j * 5 + k + 4] = active;
-            a[23 * i + j * 5 + k + 4 + 5 * 2] = volume;
+            a[71 * i + j * 17 + k + 4] = active;
+            a[71 * i + j * 17 + k + 4 + 17 * 2] = volume;
           }
         }
       }
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < 16; i++) {
         const index = i + 1;
         const {
           active,
@@ -445,13 +445,13 @@ module.exports.initialize = (id) => {
           port = 0,
         } = get(`${id}/rtp/${index}`) || {};
         const ip = ip2int(group);
-        a[47 + i * 7] = active;
-        a[48 + i * 7] = (ip >> 24) & 0xff;
-        a[49 + i * 7] = (ip >> 16) & 0xff;
-        a[50 + i * 7] = (ip >> 8) & 0xff;
-        a[51 + i * 7] = ip & 0xff;
-        a[52 + i * 7] = (port >> 8) & 0xff;
-        a[53 + i * 7] = port & 0xff;
+        a[143 + i * 7] = active;
+        a[144 + i * 7] = (ip >> 24) & 0xff;
+        a[145 + i * 7] = (ip >> 16) & 0xff;
+        a[146 + i * 7] = (ip >> 8) & 0xff;
+        a[147 + i * 7] = ip & 0xff;
+        a[148 + i * 7] = (port >> 8) & 0xff;
+        a[149 + i * 7] = port & 0xff;
       }
       for (let i = 0; i < 4; i++) {
         const channel = get(`${id}/${IR}/${i + 1}`) || {};
@@ -463,20 +463,20 @@ module.exports.initialize = (id) => {
           header = [],
           trail,
         } = ((codes[type] || {})[brand] || {})[model] || {};
-        a[14 * i + 75] = frequency & 0xff;
-        a[14 * i + 76] = (frequency >> 8) & 0xff;
-        a[14 * i + 77] = count[0] & 0xff;
-        a[14 * i + 78] = (count[0] >> 8) & 0xff;
-        a[14 * i + 79] = count[1] & 0xff;
-        a[14 * i + 80] = (count[1] >> 8) & 0xff;
-        a[14 * i + 81] = count[2] & 0xff;
-        a[14 * i + 82] = (count[2] >> 8) & 0xff;
-        a[14 * i + 83] = header[0] & 0xff;
-        a[14 * i + 84] = (header[0] >> 8) & 0xff;
-        a[14 * i + 85] = header[1] & 0xff;
-        a[14 * i + 86] = (header[1] >> 8) & 0xff;
-        a[14 * i + 87] = trail & 0xff;
-        a[14 * i + 88] = (trail >> 8) & 0xff;
+        a[14 * i + 255] = frequency & 0xff;
+        a[14 * i + 256] = (frequency >> 8) & 0xff;
+        a[14 * i + 257] = count[0] & 0xff;
+        a[14 * i + 258] = (count[0] >> 8) & 0xff;
+        a[14 * i + 259] = count[1] & 0xff;
+        a[14 * i + 260] = (count[1] >> 8) & 0xff;
+        a[14 * i + 261] = count[2] & 0xff;
+        a[14 * i + 262] = (count[2] >> 8) & 0xff;
+        a[14 * i + 263] = header[0] & 0xff;
+        a[14 * i + 264] = (header[0] >> 8) & 0xff;
+        a[14 * i + 265] = header[1] & 0xff;
+        a[14 * i + 266] = (header[1] >> 8) & 0xff;
+        a[14 * i + 267] = trail & 0xff;
+        a[14 * i + 268] = (trail >> 8) & 0xff;
       }
       break;
     }

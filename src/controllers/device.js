@@ -212,7 +212,7 @@ module.exports.manage = () => {
           const index = data[7];
           const channel = `${id}/${RS485}/${index}`;
           const { bind } = get(channel) || {};
-          // console.log(data.slice(8));
+          console.log(data.slice(8));
           drivers.handle({ id: bind, data: data.slice(8) });
           break;
         }
@@ -394,10 +394,10 @@ module.exports.manage = () => {
           for (let i = 0; i < 2; i++) {
             volume[i] = data[i + 9];
             source[i] = [];
-            for (let j = 0; j < 5; j++) {
+            for (let j = 0; j < 17; j++) {
               source[i][j] = {
-                active: Boolean(data[i * 5 + j + 11]),
-                volume: data[i * 5 + j + 11 + 5 * 2],
+                active: Boolean(data[i * 17 + j + 11]),
+                volume: data[i * 17 + j + 11 + 17 * 2],
               };
             }
           }
