@@ -1695,16 +1695,16 @@ const run = (action) => {
             break;
           }
         }
-        const buffer = Buffer.alloc(73);
+        const buffer = Buffer.alloc(41);
         buffer.writeUInt8(ACTION_LANAMP, 0);
         buffer.writeUInt8(index, 1);
         buffer.writeUInt8(mode, 2);
         for (let i = 0; i < 2; i++) {
           buffer.writeUInt8(volume[i] || 0, i + 3);
-          for (let j = 0; j < 17; j++) {
+          for (let j = 0; j < 9; j++) {
             const { active, volume } = source[i][j] || {};
-            buffer.writeUInt8(active || 0, i * 17 + j + 5);
-            buffer.writeUInt8(volume || 0, i * 17 + j + 5 + 17 * 2);
+            buffer.writeUInt8(active || 0, i * 9 + j + 5);
+            buffer.writeUInt8(volume || 0, i * 9 + j + 5 + 9 * 2);
           }
         }
         device.send(buffer, ip);
