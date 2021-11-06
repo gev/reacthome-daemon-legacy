@@ -225,8 +225,8 @@ module.exports.initialize = (id) => {
       if (major >= 2) {
         for (let i = 1; i <= 1; i++) {
           const channel = get(`${id}/${GROUP}/${i}`) || {};
-          const { value = 0, delay = 0 } = channel;
-          a[5 * i + 3] = value;
+          const { enabled = 0, delay = 0 } = channel;
+          a[5 * i + 3] = enabled;
           a[5 * i + 4] = delay & 0xff;
           a[5 * i + 5] = (delay >> 8) & 0xff;
           a[5 * i + 6] = (delay >> 16) & 0xff;
@@ -257,8 +257,8 @@ module.exports.initialize = (id) => {
       if (major >= 2) {
         for (let i = 1; i <= 3; i++) {
           const channel = get(`${id}/${GROUP}/${i}`) || {};
-          const { value = 0, delay = 0 } = channel;
-          a[5 * i - 4] = value;
+          const { enabled = 0, delay = 0 } = channel;
+          a[5 * i - 4] = enabled;
           a[5 * i - 3] = delay & 0xff;
           a[5 * i - 2] = (delay >> 8) & 0xff;
           a[5 * i - 1] = (delay >> 16) & 0xff;
@@ -309,8 +309,8 @@ module.exports.initialize = (id) => {
       if (major >= 2) {
         for (let i = 1; i <= 6; i++) {
           const channel = get(`${id}/${GROUP}/${i}`) || {};
-          const { value = 0, delay = 0 } = channel;
-          a[5 * i - 4] = value;
+          const { enabled = 0, delay = 0 } = channel;
+          a[5 * i - 4] = enabled;
           a[5 * i - 3] = delay & 0xff;
           a[5 * i - 2] = (delay >> 8) & 0xff;
           a[5 * i - 1] = (delay >> 16) & 0xff;
