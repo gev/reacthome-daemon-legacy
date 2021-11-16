@@ -9,15 +9,11 @@ const {
   ACTION_SCHEDULE_START,
   ACTION_TIMER_START,
 } = require("./src/constants");
-const { state, device, service, cpu, weather } = require("./src/controllers");
+const { state, service, cpu } = require("./src/controllers");
 const { get, set, count } = require("./src/actions");
 const discovery = require("./src/discovery");
-const drivers = require("./src/drivers");
 const assets = require("./src/assets");
 const websocket = require("./src/websocket");
-const zigbee = require("./src/zigbee");
-const janus = require("./src/janus");
-const sip = require("./src/sip");
 const db = require("./src/db");
 
 const init = {};
@@ -56,9 +52,7 @@ const start = (id) => {
 };
 
 db.createReadStream()
-  .on("error", (err) => {
-    // console.error(err)
-  })
+  .on("error", console.error)
   .on("data", ({ key, value }) => {
     init[key] = value;
   })
@@ -75,15 +69,9 @@ db.createReadStream()
     console.log(init.mac);
     await assets.init();
     state.init(init);
-    weather.manage();
-    device.manage();
-    drivers.manage();
     cpu.manage();
     discovery.start(init.mac);
     websocket.start(init.mac);
-    // zigbee.start(init.mac);
-    janus.start();
-    sip.start();
     start(init.mac);
     set(init.mac, { token: [] });
   });

@@ -1,13 +1,19 @@
+const { createSocket } = require("dgram");
 
-const { createSocket } = require('dgram');
-
-module.exports = (discovery, interval, port, listen, multicast, hasQueue, delay = 100) => {
-
+module.exports = (
+  discovery,
+  interval,
+  port,
+  listen,
+  multicast,
+  hasQueue,
+  delay = 100
+) => {
   const timer = {};
   const queue = {};
   const timestamp = {};
 
-  const socket = createSocket('udp4');
+  const socket = createSocket("udp4");
 
   const send = (packet, ip) => {
     socket.send(packet, port, ip, (err) => {
@@ -51,20 +57,20 @@ module.exports = (discovery, interval, port, listen, multicast, hasQueue, delay 
   //   setTimeout(sendConfirm, t, packet, ip, confirm, t);
   // };
 
-  socket
-    .on('error', console.error)
-    .bind(listen, () => {
-      try {
-        socket.setMulticastInterface(multicast);
-        setInterval(discovery(socket), interval);
-      } catch (e) {
-        console.error(e)
-      }
-    });
+  // socket
+  //   .on('error', console.error)
+  //   .bind(listen, () => {
+  //     try {
+  //       socket.setMulticastInterface(multicast);
+  //       setInterval(discovery(socket), interval);
+  //     } catch (e) {
+  //       console.error(e)
+  //     }
+  //   });
 
-    const handle = (handler) => {
-      socket.on('message', handler);
-    };
+  const handle = (handler) => {
+    socket.on("message", handler);
+  };
 
-    return { handle, send };
+  return { handle, send };
 };
