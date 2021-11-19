@@ -6,10 +6,10 @@ description: Hommyn smarthome daemon
 grade: stable
 confinement: strict
 apps:
-  my-part:
-    command: /opt/hommyn-daemon/hommyn-daemon
+  hommyn-daemon:
+    command: hommyn-daemon
 parts:
-  my-part:
+  hommyn-daemon:
     plugin: dump
     source: ./build
     organize:
