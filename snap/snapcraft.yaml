@@ -1,4 +1,4 @@
-name: hommyn-daemon
+name: core18
 version: "1.0"
 type: base
 summary: Hommyn smarthome daemon
