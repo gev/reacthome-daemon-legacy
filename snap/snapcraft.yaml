@@ -1,11 +1,17 @@
 name: hommyn-daemon
 version: "1.0"
-type: base
+type: core18
 summary: Hommyn smarthome daemon
 description: Hommyn smarthome daemon
 grade: stable
 confinement: strict
+apps:
+  my-part:
+    command: /opt/hommyn-daemon/hommyn-daemon
 parts:
-  hommyn-daemon:
-    source: https://reacthome.net/download/hommyn/daemon/hommyn-daemon-1.0.tar.gz
-    plugin: autotools
+  my-part:
+    plugin: dump
+    source: ./build
+    organize:
+      hommyn-daemon: /opt/hommyn-daemon/hommyn-daemon
+      leveldown: /opt/hommyn-daemon/prebuilds/linux-arm64/node.napi.armv8.node
