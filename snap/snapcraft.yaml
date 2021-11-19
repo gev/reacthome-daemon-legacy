@@ -3,7 +3,7 @@ base: bare
 version: "1.0"
 summary: Hommyn smarthome daemon
 description: Hommyn smarthome daemon
-grade: stable
+grade: devel
 confinement: strict
 parts:
   hommyn-daemon:
