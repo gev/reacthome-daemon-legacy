@@ -1,5 +1,5 @@
 name: hommyn-daemon # you probably want to 'snapcraft register <name>'
-base: 18.04
+base: "18.04"
 version: "1.0"
 summary: Hommyn smarthome daemon
 description: Hommyn smarthome daemon
