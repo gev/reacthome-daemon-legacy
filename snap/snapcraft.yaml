@@ -1,6 +1,6 @@
 name: hommyn-daemon
 version: "1.0"
-type: core18
+base: core18
 summary: Hommyn smarthome daemon
 description: Hommyn smarthome daemon
 grade: stable
