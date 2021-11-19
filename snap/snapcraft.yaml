@@ -1,6 +1,5 @@
 name: hommyn-daemon # you probably want to 'snapcraft register <name>'
-base: bare
-build-base: core18
+base: Image
 version: "1.0"
 summary: Hommyn smarthome daemon
 description: Hommyn smarthome daemon
