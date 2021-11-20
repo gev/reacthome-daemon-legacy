@@ -1,10 +1,10 @@
+const os = require("os");
+const path = require("path");
 
-const path = require('path');
+const p = (...s) => path.join(os.homedir(), ...s);
 
-const p = (...s) => path.join(process.cwd(), ...s);
-
-module.exports.VAR = p('var');
-module.exports.DB = p('var', 'db');
-module.exports.TMP = p('var', 'tmp');
-module.exports.ASSETS = p('var', 'assets');
-module.exports.ZIGBEE = p('var', 'zigbee');
+module.exports.VAR = p(".hommyn-daemon");
+module.exports.DB = p(".hommyn-daemon", "db");
+module.exports.TMP = p(".hommyn-daemon", "tmp");
+module.exports.ASSETS = p(".hommyn-daemon", "assets");
+module.exports.ZIGBEE = p(".hommyn-daemon", "zigbee");

@@ -10,9 +10,8 @@ const {
   ACTION_TIMER_START,
 } = require("./src/constants");
 const { state, service, cpu } = require("./src/controllers");
-const { get, set, count } = require("./src/actions");
+const { get, set, count, makeBind } = require("./src/actions");
 const discovery = require("./src/discovery");
-const assets = require("./src/assets");
 const websocket = require("./src/websocket");
 const db = require("./src/db");
 
@@ -67,7 +66,6 @@ db.createReadStream()
       set(init.mac, d);
     }
     console.log(init.mac);
-    await assets.init();
     state.init(init);
     cpu.manage();
     discovery.start(init.mac);
