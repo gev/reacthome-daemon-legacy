@@ -8,6 +8,7 @@ const {
   ACTION_SCRIPT_RUN,
   ACTION_SCHEDULE_START,
   ACTION_TIMER_START,
+  VERSION,
 } = require("./src/constants");
 const { state, service, cpu } = require("./src/controllers");
 const { get, set, count, makeBind } = require("./src/actions");
@@ -18,7 +19,7 @@ const db = require("./src/db");
 const init = {};
 
 const start = (id) => {
-  set(id, { type: DAEMON });
+  set(id, { type: DAEMON, version: VERSION });
   const { project } = get(id) || {};
   if (project) {
     count(project);
