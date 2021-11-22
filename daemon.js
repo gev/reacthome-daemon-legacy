@@ -15,6 +15,7 @@ const { get, set, count, makeBind } = require("./src/actions");
 const discovery = require("./src/discovery");
 const websocket = require("./src/websocket");
 const db = require("./src/db");
+const zigbee = require("./src/zigbee");
 
 const init = {};
 
@@ -71,6 +72,7 @@ db.createReadStream()
     cpu.manage();
     discovery.start(init.mac);
     websocket.start(init.mac);
+    zigbee.start(init.mac);
     start(init.mac);
     set(init.mac, { token: [] });
   });
