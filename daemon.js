@@ -70,9 +70,9 @@ db.createReadStream()
     console.log(init.mac);
     state.init(init);
     cpu.manage();
+    zigbee.start(init.mac);
     discovery.start(init.mac);
     websocket.start(init.mac);
-    zigbee.start(init.mac);
     start(init.mac);
     set(init.mac, { token: [] });
   });
