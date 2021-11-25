@@ -2,7 +2,7 @@ const { get, set, add, del } = require("../actions");
 const { DEVICE } = require("../constants");
 const { ZIGBEE } = require("./constants");
 const { online, offline } = require("./online");
-const { controller } = require("./controller");
+const { getController } = require("./controller");
 const clusters = require("./clusters");
 const type = require("./type");
 const handle = require("./in");
@@ -28,17 +28,18 @@ const addDevice = (id, device) => {
 };
 
 module.exports.start = (id) => {
-  controller?.on("deviceJoined", ({ device }) => {
+  const controller = getController(id);
+  controller.on("deviceJoined", ({ device }) => {
     online(device.ieeeAddr, device.networkAddress);
     addDevice(id, device);
   });
 
-  controller?.on("deviceLeave", ({ device }) => {
+  controller.on("deviceLeave", ({ device }) => {
     offline(device.ieeeAddr);
     del(id, DEVICE, device.ieeeAddr);
   });
 
-  controller?.on("deviceInterview", ({ device }) => {
+  controller.on("deviceInterview", ({ device }) => {
     online(device.ieeeAddr, device.networkAddress);
     addDevice(id, device);
     device.endpoints.forEach((endpoint) => {
@@ -46,24 +47,24 @@ module.exports.start = (id) => {
     });
   });
 
-  controller?.on("deviceAnnounce", ({ device }) => {
+  controller.on("deviceAnnounce", ({ device }) => {
     // console.log('anonce', device);
     online(device.ieeeAddr, device.networkAddress);
   });
 
-  controller?.on("message", ({ device, endpoint, data }) => {
+  controller.on("message", ({ device, endpoint, data }) => {
     online(device.ieeeAddr, device.networkAddress);
     handle(device.ieeeAddr, endpoint, data);
   });
 
-  controller?.start().then(() => {
-    controller?.permitJoin(true);
-    controller?.setTransmitPower(22);
-    // controller?.getNetworkParameters().then(param => {
+  controller.start().then(() => {
+    controller.permitJoin(true);
+    controller.setTransmitPower(22);
+    // controller.getNetworkParameters().then(param => {
     //   console.log(JSON.stringify(param, null, 2));
     // });
-    // console.log(controller?.getDevices().length);
-    controller?.getDevices().forEach((device) => {
+    // console.log(controller.getDevices().length);
+    controller.getDevices().forEach((device) => {
       // console.log('-----------------------------------------------------------------');
       // console.log(JSON.stringify(device, null, 2));
       // addDevice(id, device);
@@ -73,7 +74,7 @@ module.exports.start = (id) => {
     });
     //  setInterval(() => {
     //    console.log('-----------------------------------------------------------------');
-    //    controller?.getDevices().forEach(async device => {
+    //    controller.getDevices().forEach(async device => {
     //      const {code} = get(device.ieeeAddr) || {};
     //      console.log(code || device.ieeeAddr);
     //      try {
