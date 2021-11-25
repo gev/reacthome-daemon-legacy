@@ -7,7 +7,7 @@ const {
   ACTION_CLOSE,
   ACTION_STOP,
 } = require("../constants");
-const { controller } = require("./controller");
+const { getController } = require("./controller");
 
 let transid = 0;
 
@@ -20,6 +20,7 @@ const convertDecimalValueTo4BytesArray = (v) => [
 
 const on_off = async (id, index = 1, value) => {
   try {
+    const controller = getController();
     const device = controller?.getDeviceByIeeeAddr(id);
     if (!device) return;
     const endpoint = device.getEndpoint(Number.parseInt(index));
@@ -51,6 +52,7 @@ const on = (id, index) => on_off(id, index, ON);
 const off = (id, index) => on_off(id, index, OFF);
 
 const move_to_level = async (id, index, level, transtime = 0) => {
+  const controller = getController();
   const device = controller?.getDeviceByIeeeAddr(id);
   if (!device) return;
   const endpoint = device.getEndpoint(Number.parseInt(index));
@@ -71,6 +73,7 @@ const move_to_hue_saturation = async (
   direction = 0,
   transtime = 0
 ) => {
+  const controller = getController();
   const device = controller?.getDeviceByIeeeAddr(id);
   if (!device) return;
   const endpoint = device.getEndpoint(Number.parseInt(index));
@@ -84,6 +87,7 @@ const move_to_hue_saturation = async (
 };
 
 const move_to_hue = async (id, index, hue, direction = 0, transtime = 0) => {
+  const controller = getController();
   const device = controller?.getDeviceByIeeeAddr(id);
   if (!device) return;
   const endpoint = device.getEndpoint(Number.parseInt(index));
@@ -97,6 +101,7 @@ const move_to_hue = async (id, index, hue, direction = 0, transtime = 0) => {
 };
 
 const move_to_saturation = async (id, index, saturation, transtime = 0) => {
+  const controller = getController();
   const device = controller?.getDeviceByIeeeAddr(id);
   if (!device) return;
   const endpoint = device.getEndpoint(Number.parseInt(index));
@@ -121,6 +126,7 @@ const zclCmdLookup = {
 };
 
 const closure = async (id, index, action) => {
+  const controller = getController();
   const device = controller?.getDeviceByIeeeAddr(id);
   if (!device) return;
   const endpoint = device.getEndpoint(Number.parseInt(index));
@@ -129,6 +135,7 @@ const closure = async (id, index, action) => {
 };
 
 const setpoint = async (id, index = 1, value) => {
+  const controller = getController();
   const device = controller?.getDeviceByIeeeAddr(id);
   if (!device) return;
   const endpoint = device.getEndpoint(Number.parseInt(index));

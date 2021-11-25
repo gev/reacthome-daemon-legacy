@@ -2,7 +2,7 @@ const { get, set, add, del } = require("../actions");
 const { DEVICE } = require("../constants");
 const { ZIGBEE } = require("./constants");
 const { online, offline } = require("./online");
-const { getController } = require("./controller");
+const { createController } = require("./controller");
 const clusters = require("./clusters");
 const type = require("./type");
 const handle = require("./in");
@@ -28,7 +28,7 @@ const addDevice = (id, device) => {
 };
 
 module.exports.start = (id) => {
-  const controller = getController(id);
+  const controller = createController(id);
   controller.on("deviceJoined", ({ device }) => {
     online(device.ieeeAddr, device.networkAddress);
     addDevice(id, device);
