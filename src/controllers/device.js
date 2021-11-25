@@ -288,6 +288,11 @@ module.exports.manage = () => {
           set(id, { level, image: [i2, i1], text: c2 + c1 });
           break;
         }
+        case ACTION_TEMPERATURE_CORRECT: {
+          const correct = data.readInt8LE(7) / 10;
+          set(id, { correct });
+          break;
+        }
         case ACTION_TEMPERATURE: {
           const temperature = data.readUInt16LE(7) / 100;
           const { onTemperature, site, display } = get(id) || {};

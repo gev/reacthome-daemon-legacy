@@ -155,6 +155,7 @@ const {
   DEVICE_TYPE_LANAMP,
   ACTION_INC_SETPOINT,
   ACTION_DEC_SETPOINT,
+  ACTION_TEMPERATURE_CORRECT,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -1667,6 +1668,17 @@ const run = (action) => {
         if (type) {
           run({ type: ACTION_DO, id, index, value: type });
         }
+        break;
+      }
+      case ACTION_TEMPERATURE_CORRECT: {
+        const buffer = Buffer.alloc(9);
+        header.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
+        dev.split(":").forEach((v, i) => {
+          buffer.writeUInt8(parseInt(v, 16), i + 1);
+        });
+        buffer.writeUInt8(ACTION_TEMPERATURE_CORRECT, 7);
+        buffer.writeInt8(action.value * 10, 8);
+        device.send(buffer, ip);
         break;
       }
       case ACTION_SET_ADDRESS:

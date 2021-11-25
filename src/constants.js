@@ -72,6 +72,7 @@ module.exports.ACTION_TEMPERATURE = 0xc0;
 module.exports.ACTION_TEMPERATURE_EXT = 0xc1;
 module.exports.ACTION_HUMIDITY = 0xc2;
 module.exports.ACTION_ILLUMINATION = 0xc3;
+module.exports.ACTION_TEMPERATURE_CORRECT = 0xcf;
 module.exports.ACTION_DIMMER = 0xd0;
 module.exports.ACTION_ARTNET = 0xd1;
 module.exports.ACTION_RGB = 0xe0;
