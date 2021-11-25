@@ -15,8 +15,8 @@ const {
   ACTION_RS485_MODE,
   ACTION_RS485_TRANSMIT,
   ACTION_TEMPERATURE,
-	ACTION_TEMPERATURE_EXT,
-	ACTION_TEMPERATURE_CORRECT,
+  ACTION_TEMPERATURE_EXT,
+  ACTION_TEMPERATURE_CORRECT,
   ACTION_HUMIDITY,
   ACTION_ILLUMINATION,
   ACTION_DIMMER,
@@ -290,7 +290,7 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_TEMPERATURE_CORRECT: {
-          const correct = data.readInt8LE(7) / 10;
+          const correct = data.readInt8(7) / 10;
           set(id, { correct });
           break;
         }
