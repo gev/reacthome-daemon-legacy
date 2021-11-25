@@ -59,6 +59,7 @@ module.exports.ACTION_DO = 0x00;
 module.exports.ACTION_DI = 0x01;
 module.exports.ACTION_GROUP = 0x02;
 module.exports.ACTION_DI_RELAY_SYNC = 0x03;
+module.exports.ACTION_VIBRO = 0x0a;
 module.exports.ACTION_IR = 0x10;
 module.exports.ACTION_IR_CONFIG = 0x11;
 module.exports.ACTION_LANAMP = 0x20;

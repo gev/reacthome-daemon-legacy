@@ -156,6 +156,7 @@ const {
   ACTION_INC_SETPOINT,
   ACTION_DEC_SETPOINT,
   ACTION_TEMPERATURE_CORRECT,
+  ACTION_VIBRO,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -1679,6 +1680,18 @@ const run = (action) => {
         });
         buffer.writeUInt8(ACTION_TEMPERATURE_CORRECT, 7);
         buffer.writeInt8(action.value * 10, 8);
+        device.send(buffer, ip);
+        break;
+      }
+      case ACTION_VIBRO: {
+        const buffer = Buffer.alloc(9);
+        buffer.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
+        const { ip } = get(action.id) || {};
+        action.id.split(":").forEach((v, i) => {
+          buffer.writeUInt8(parseInt(v, 16), i + 1);
+        });
+        buffer.writeUInt8(ACTION_VIBRO, 7);
+        buffer.writeUInt8(action.vibro, 8);
         device.send(buffer, ip);
         break;
       }

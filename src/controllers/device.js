@@ -62,6 +62,7 @@ const {
   ACTION_RGB_DIM,
   ACTION_RGB,
   ACTION_IMAGE,
+  ACTION_VIBRO,
 } = require("../constants");
 const {
   get,
@@ -292,6 +293,11 @@ module.exports.manage = () => {
         case ACTION_TEMPERATURE_CORRECT: {
           const correct = data.readInt8(7) / 10;
           set(id, { correct });
+          break;
+        }
+        case ACTION_VIBRO: {
+          const vibro = data.readUInt8(7);
+          set(id, { vibro });
           break;
         }
         case ACTION_TEMPERATURE: {
