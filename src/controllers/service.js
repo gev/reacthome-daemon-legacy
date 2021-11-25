@@ -1672,8 +1672,8 @@ const run = (action) => {
       }
       case ACTION_TEMPERATURE_CORRECT: {
         const buffer = Buffer.alloc(9);
-				buffer.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
-				const { ip } = get(actionn.id) || {};
+        buffer.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
+        const { ip } = get(action.id) || {};
         action.id.split(":").forEach((v, i) => {
           buffer.writeUInt8(parseInt(v, 16), i + 1);
         });
