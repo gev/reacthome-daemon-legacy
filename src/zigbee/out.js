@@ -7,7 +7,7 @@ const {
   ACTION_CLOSE,
   ACTION_STOP,
 } = require("../constants");
-const controller = require("./controller");
+const { controller } = require("./controller");
 
 let transid = 0;
 
@@ -20,7 +20,7 @@ const convertDecimalValueTo4BytesArray = (v) => [
 
 const on_off = async (id, index = 1, value) => {
   try {
-    const device = controller.getDeviceByIeeeAddr(id);
+    const device = controller?.getDeviceByIeeeAddr(id);
     if (!device) return;
     const endpoint = device.getEndpoint(Number.parseInt(index));
     if (!endpoint) return;
@@ -51,7 +51,7 @@ const on = (id, index) => on_off(id, index, ON);
 const off = (id, index) => on_off(id, index, OFF);
 
 const move_to_level = async (id, index, level, transtime = 0) => {
-  const device = controller.getDeviceByIeeeAddr(id);
+  const device = controller?.getDeviceByIeeeAddr(id);
   if (!device) return;
   const endpoint = device.getEndpoint(Number.parseInt(index));
   if (!endpoint) return;
@@ -71,7 +71,7 @@ const move_to_hue_saturation = async (
   direction = 0,
   transtime = 0
 ) => {
-  const device = controller.getDeviceByIeeeAddr(id);
+  const device = controller?.getDeviceByIeeeAddr(id);
   if (!device) return;
   const endpoint = device.getEndpoint(Number.parseInt(index));
   if (!endpoint) return;
@@ -84,7 +84,7 @@ const move_to_hue_saturation = async (
 };
 
 const move_to_hue = async (id, index, hue, direction = 0, transtime = 0) => {
-  const device = controller.getDeviceByIeeeAddr(id);
+  const device = controller?.getDeviceByIeeeAddr(id);
   if (!device) return;
   const endpoint = device.getEndpoint(Number.parseInt(index));
   if (!endpoint) return;
@@ -97,7 +97,7 @@ const move_to_hue = async (id, index, hue, direction = 0, transtime = 0) => {
 };
 
 const move_to_saturation = async (id, index, saturation, transtime = 0) => {
-  const device = controller.getDeviceByIeeeAddr(id);
+  const device = controller?.getDeviceByIeeeAddr(id);
   if (!device) return;
   const endpoint = device.getEndpoint(Number.parseInt(index));
   if (!endpoint) return;
@@ -121,7 +121,7 @@ const zclCmdLookup = {
 };
 
 const closure = async (id, index, action) => {
-  const device = controller.getDeviceByIeeeAddr(id);
+  const device = controller?.getDeviceByIeeeAddr(id);
   if (!device) return;
   const endpoint = device.getEndpoint(Number.parseInt(index));
   if (!endpoint) return;
@@ -129,7 +129,7 @@ const closure = async (id, index, action) => {
 };
 
 const setpoint = async (id, index = 1, value) => {
-  const device = controller.getDeviceByIeeeAddr(id);
+  const device = controller?.getDeviceByIeeeAddr(id);
   if (!device) return;
   const endpoint = device.getEndpoint(Number.parseInt(index));
   if (!endpoint) return;
