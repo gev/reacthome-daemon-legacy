@@ -75,11 +75,14 @@ module.exports.initialize = (id) => {
       a[5] = mac[4];
       a[6] = mac[5];
       a[7] = ACTION_INITIALIZE;
+      const { correct, vibro } = get(id);
+      a[8] = correct * 10;
+      a[9] = vibro;
       for (let i = 1; i <= 4; i++) {
         const channel = get(`${id}/rgb/${i}`);
-        a[3 * i + 5] = (channel && channel.r) || 0;
-        a[3 * i + 6] = (channel && channel.g) || 0;
-        a[3 * i + 7] = (channel && channel.b) || 0;
+        a[3 * i + 7] = (channel && channel.r) || 0;
+        a[3 * i + 8] = (channel && channel.g) || 0;
+        a[3 * i + 9] = (channel && channel.b) || 0;
       }
       break;
     }
@@ -93,16 +96,19 @@ module.exports.initialize = (id) => {
       a[5] = mac[4];
       a[6] = mac[5];
       a[7] = ACTION_INITIALIZE;
+      const { correct, vibro } = get(id);
+      a[8] = correct * 10;
+      a[9] = vibro;
       for (let i = 1; i <= 4; i++) {
         const channel = get(`${id}/rgb/${i}`);
-        a[3 * i + 5] = (channel && channel.r) || 0;
-        a[3 * i + 6] = (channel && channel.g) || 0;
-        a[3 * i + 7] = (channel && channel.b) || 0;
+        a[3 * i + 7] = (channel && channel.r) || 0;
+        a[3 * i + 8] = (channel && channel.g) || 0;
+        a[3 * i + 9] = (channel && channel.b) || 0;
       }
       const { image = [], level } = get(id);
-      a[20] = level || 0;
-      a[21] = image[0] || 0;
-      a[22] = image[1] || 0;
+      a[22] = level || 0;
+      a[23] = image[0] || 0;
+      a[24] = image[1] || 0;
       break;
     }
     case DEVICE_TYPE_SMART_4A: {
@@ -115,11 +121,14 @@ module.exports.initialize = (id) => {
       a[5] = mac[4];
       a[6] = mac[5];
       a[7] = ACTION_INITIALIZE;
+      const { correct, vibro } = get(id);
+      a[8] = correct * 10;
+      a[9] = vibro;
       for (let i = 1; i <= 5; i++) {
         const channel = get(`${id}/rgb/${i}`);
-        a[3 * i + 5] = (channel && channel.r) || 0;
-        a[3 * i + 6] = (channel && channel.g) || 0;
-        a[3 * i + 7] = (channel && channel.b) || 0;
+        a[3 * i + 7] = (channel && channel.r) || 0;
+        a[3 * i + 8] = (channel && channel.g) || 0;
+        a[3 * i + 9] = (channel && channel.b) || 0;
       }
       break;
     }
