@@ -6,7 +6,7 @@ let controller;
 
 module.exports.createController = (id) => {
   const data = Array.from(parse(id));
-  controller = Controller({
+  controller = new Controller({
     databasePath: zigbee("devices.json"),
     serialPort: {
       path: "/dev/ttyAMA0",
