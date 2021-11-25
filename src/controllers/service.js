@@ -1691,7 +1691,7 @@ const run = (action) => {
           buffer.writeUInt8(parseInt(v, 16), i + 1);
         });
         buffer.writeUInt8(ACTION_VIBRO, 7);
-        buffer.writeUInt8(action.vibro, 8);
+        buffer.writeUInt8(action.value, 8);
         device.send(buffer, ip);
         break;
       }
