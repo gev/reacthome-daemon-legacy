@@ -1,6 +1,6 @@
 const path = require("path");
 
-module.exports.VERSION = "6.6.3";
+module.exports.VERSION = "6.6.4";
 
 module.exports.DEVICE_PORT = 2017;
 module.exports.DEVICE_SERVER_PORT = 2016;
