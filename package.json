@@ -4,7 +4,7 @@
   "main": "daemon.js",
   "author": "Evgeny <gazdovsky@gmail.com>",
   "license": "MIT",
-	"bin": "daemon.js",
+  "bin": "daemon.js",
   "dependencies": {
     "apn": "^2.2.0",
     "color-convert": "^2.0.1",
@@ -27,6 +27,6 @@
     "sip": "^0.0.5",
     "uuid": "^8.3.2",
     "ws": "^7.2.5",
-    "zigbee-herdsman": "^0.13.41"
+    "zigbee-herdsman": "^0.13.175"
   }
 }
