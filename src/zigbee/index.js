@@ -27,7 +27,7 @@ const addDevice = (id, device) => {
   });
 };
 
-module.exports.start = async (id) => {
+module.exports.start = (id) => {
   const controller = createController(id);
   controller.on("deviceJoined", ({ device }) => {
     online(device.ieeeAddr, device.networkAddress);
@@ -51,12 +51,14 @@ module.exports.start = async (id) => {
     online(device.ieeeAddr, device.networkAddress);
     handle(device.ieeeAddr, endpoint, data);
   });
-  try {
-    await controller.start();
-    // await controller.reset("soft");
-    await controller.setTransmitPower(22);
-    await controller.permitJoin(true);
-  } catch (e) {
-    console.error(e);
-  }
+  setTimeout(async () => {
+    try {
+      await controller.start();
+      // await controller.reset("soft");
+      await controller.setTransmitPower(22);
+      await controller.permitJoin(true);
+    } catch (e) {
+      console.error(e);
+    }
+  }, 10000);
 };
