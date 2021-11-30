@@ -53,7 +53,7 @@ module.exports.start = async (id) => {
   });
   try {
     await controller.start();
-    // await controller.reset("soft");
+    await controller.reset("soft");
     await controller.permitJoin(true);
     await controller.setTransmitPower(22);
   } catch (e) {
