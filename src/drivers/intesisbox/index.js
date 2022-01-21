@@ -16,10 +16,10 @@ const sync = (id) => {
       readHoldingRegisters(modbus, address, 0x0, 12);
     } else {
       writeRegister(modbus, address, 0x0, dev.value);
-      writeRegister(modbus, address, 0x1, dev.mode);
-      writeRegister(modbus, address, 0x2, dev.fan_speed);
-      writeRegister(modbus, address, 0x3, dev.direction);
-      writeRegister(modbus, address, 0x4, dev.setpoint);
+      // writeRegister(modbus, address, 0x1, dev.mode);
+      // writeRegister(modbus, address, 0x2, dev.fan_speed);
+      // writeRegister(modbus, address, 0x3, dev.direction);
+      // writeRegister(modbus, address, 0x4, dev.setpoint);
       set(id, {synced: true});
     }
   }
