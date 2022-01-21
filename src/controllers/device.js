@@ -214,12 +214,12 @@ module.exports.manage = () => {
           const index = data[7];
           const channel = `${id}/${RS485}/${index}`;
           const { bind } = get(channel) || {};
-          console.log(
-            "RS485",
-            data
-              .map((i) => i.toString(16).padStart(2, "0"))
-              .join(" ")
-          );
+          // console.log(
+          //   "RS485",
+          //   data
+          //     .map((i) => i.toString(16).padStart(2, "0"))
+          //     .join(" ")
+          // );
           drivers.handle({ id: bind, data: data.slice(8) });
           break;
         }
