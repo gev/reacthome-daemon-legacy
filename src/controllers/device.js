@@ -217,7 +217,6 @@ module.exports.manage = () => {
           console.log(
             "RS485",
             data
-              .slice(8)
               .map((i) => i.toString(16).padStart(2, "0"))
               .join(" ")
           );
