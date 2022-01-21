@@ -221,7 +221,7 @@ module.exports.manage = () => {
               .map((i) => i.toString(16).padStart(2, "0"))
               .join(" ")
           );
-          // drivers.handle({ id: bind, data: data.slice(8) });
+          drivers.handle({ id: bind, data: data.slice(8) });
           break;
         }
         case ACTION_DIMMER: {
