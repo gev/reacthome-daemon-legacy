@@ -1406,8 +1406,8 @@ const run = (action) => {
           onStopHeat,
           onStopCool,
         } = action;
-        const { setpoint, sensor, state, mode, site } = get(id);
-        const { temperature } = get(sensor);
+        const { setpoint, sensor, state, mode, site } = get(id) || {};
+        const { temperature } = get(sensor) || {};
         const make = (state, script, mode) => () => {
           set(id, { state, mode });
           if (script) {
