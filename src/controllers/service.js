@@ -1467,7 +1467,7 @@ const run = (action) => {
       }
       case ACTION_LIMIT_HEATING_HANDLE: {
         const { id, hysteresis, onStartHeat, onStopHeat } = action;
-        const { min, max, sensor } = get(id);
+        const { min, max, sensor } = get(id) || {};
         const { temperature } = get(sensor);
         const make = (script) => () => {
           if (script) {

@@ -13,6 +13,7 @@ const { send } = require("../../../sockets/device");
 
 const request = (getSize, fill) => (code) => (id, address, register, data) => {
   const { bind } = get(id) || {};
+  if (!bind) return;
   const [dev, , index] = bind.split("/");
   const { ip } = get(dev) || {};
   if (ip && index) {
