@@ -4,10 +4,15 @@ const { ACTION_SET_ADDRESS, ACTION_SET_FAN_SPEED, ACTION_ON, ACTION_OFF, ACTION_
 const { writeRegister, readHoldingRegisters, writeRegisters } = require('../modbus/rbus');
 const { READ_HOLDING_REGISTERS, WRITE_REGISTER } = require('../modbus/constants');
 const { BROADCAST_ADDRESS, TIMEOUT } = require('./constants');
+const { del } = require('../../db');
 
 const instance = new Set();
 
-const sync = (id) => {
+const delay = time => new Promise((resolve) => {
+  setTimeout(resolve, time);
+})
+
+const sync = async (id) => {
   const dev = get(id) || {};
   const {bind, synced} = dev;
   const [modbus,, address] = bind.split('/');
@@ -16,10 +21,14 @@ const sync = (id) => {
       readHoldingRegisters(modbus, address, 0x0, 12);
     } else {
       writeRegister(modbus, address, 0x0, dev.value);
-      // writeRegister(modbus, address, 0x1, dev.mode);
-      // writeRegister(modbus, address, 0x2, dev.fan_speed);
-      // writeRegister(modbus, address, 0x3, dev.direction);
-      // writeRegister(modbus, address, 0x4, dev.setpoint);
+      await delay(100);
+      writeRegister(modbus, address, 0x1, dev.mode);
+      await delay(100);
+      writeRegister(modbus, address, 0x2, dev.fan_speed);
+      await delay(100);
+      writeRegister(modbus, address, 0x3, dev.direction);
+      await delay(100);
+      writeRegister(modbus, address, 0x4, dev.setpoint);
       set(id, {synced: true});
     }
   }
