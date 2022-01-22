@@ -10,6 +10,7 @@ module.exports = ({ state = [], assets = [] }, session) => {
   });
   assets.forEach(async name => {
     try {
+      if (typeof name !== 'string') return;
       const file = asset(name);
       if (await exists(file)) {
         const data = await readFile(file);
