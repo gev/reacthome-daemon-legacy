@@ -147,16 +147,16 @@ module.exports.manage = () => {
             clearTimeout(timeout)
             if (value) {
               if (chan.onOn) {
-                const { onOnCount } = chan;
-                set(channel, { onOnCount: onOnCount + 1 });
+                const { onOnCount = 0} = chan;
+                set(channel, { onOnCount: (onOnCount || 0) + 1 });
                 const script = Array.isArray(chan.onOn)
                   ? chan.onOn[onOnCount % chan.onOn.length]
                   : chan.onOn;
                 run({ type: ACTION_SCRIPT_RUN, id: script });
               }
               if (chan.onHold) {
-                const { onHoldCount } = chan;
-                set(channel, { oHoldCount: onHoldCount + 1 });
+                const { onHoldCount = 0 } = chan;
+                set(channel, { oHoldCount: (onHoldCount || 0)+ 1 });
                 const { timeout = 1000, repeat = false, interval = 100 } = chan;
                 const script = Array.isArray(chan.onHold)
                   ? chan.onHold[onHoldCount % chan.onHold.length]
@@ -174,8 +174,8 @@ module.exports.manage = () => {
               }
             } else {
               if (chan.onClick) {
-                const { timeout = 1000, onClickCount } = chan;
-                set(channel, { onClickCount: onClickCount + 1 });
+                const { timeout = 1000, onClickCount = 0 } = chan;
+                set(channel, { onClickCount: (onClickCount || 0)+ 1 });
                 const script = Array.isArray(chan.onClick)
                   ? chan.onClick[onClickCount % chan.onClick.length]
                   : chan.onClick;
@@ -184,8 +184,8 @@ module.exports.manage = () => {
                 }
               }
               if (chan.onOff) {
-                const { onOffCount } = chan;
-                set(channel, { onOffCount: onOffCount + 1 });
+                const { onOffCount = 0} = chan;
+                set(channel, { onOffCount: (onOffCount || 0) + 1 });
                 const script = Array.isArray(chan.onOff)
                   ? chan.onOff[onOffCount % chan.onOff.length]
                   : chan.onOff;
