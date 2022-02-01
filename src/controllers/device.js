@@ -162,23 +162,23 @@ module.exports.manage = () => {
                   : chan.onHold;
                 const handler = () => {
                   if (repeat) {
-                    hold[channel].timeout = setTimeout(handler, interval);
+                    hold[channel].timeout = setTimeout(handler, parseInt(interval));
                   }
                   run({ type: ACTION_SCRIPT_RUN, id: script });
                 };
                 hold[channel] = {
                   timestame: Date.now(),
-                  timeout: setTimeout(handler, timeout)
+                  timeout: setTimeout(handler, parseInt(timeout))
                 };
               }
             } else {
               if (chan.onClick) {
-                const { onClickCount } = chan;
+                const { timeout = 1000, onClickCount } = chan;
                 set(channel, { onClickCount: onClickCount + 1 });
                 const script = Array.isArray(chan.onClick)
                   ? chan.onClick[onClickCount % chan.onClick.length]
                   : chan.onClick;
-                if (Date.now() - timestamp < 1000) {
+                if (Date.now() - timestamp < parseInt(timeout)) {
                   run({ type: ACTION_SCRIPT_RUN, id: script }); 
                 }
               }
