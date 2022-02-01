@@ -142,6 +142,7 @@ module.exports.manage = () => {
           const chan = get(channel);
           if (chan && chan.value !== value) {
             set(channel, { value });
+            console.log(chan);
             const { timeout, timestamp = Date.now() } = hold[channel] || {};
             clearTimeout(timeout)
             if (value) {
@@ -167,7 +168,7 @@ module.exports.manage = () => {
                   run({ type: ACTION_SCRIPT_RUN, id: script });
                 };
                 hold[channel] = {
-                  timestame: Date.now(),
+                  timestamp: Date.now(),
                   timeout: setTimeout(handler, parseInt(timeout))
                 };
               }
