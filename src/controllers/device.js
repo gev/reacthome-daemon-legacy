@@ -156,7 +156,7 @@ module.exports.manage = () => {
               }
               if (chan.onHold) {
                 const { onHoldCount = 0 } = chan;
-                set(channel, { oHoldCount: (onHoldCount || 0)+ 1 });
+                set(channel, { onHoldCount: (onHoldCount || 0)+ 1 });
                 const { timeout = 1000, repeat = false, interval = 100 } = chan;
                 const script = Array.isArray(chan.onHold)
                   ? chan.onHold[onHoldCount % chan.onHold.length]
