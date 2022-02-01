@@ -82,12 +82,15 @@ const drivers = require("../drivers");
 const mac = require("../mac");
 const { int2ip } = require("../util");
 const { image2char } = require("../drivers/display");
+const { setTimeout } = require("timers/promises");
 
 const onDI = [onOff, onOn, onHold, onClick];
 const onDO = [onOff, onOn];
 const count = [count_off, count_on];
 
 let last_ip = IP_ADDRESS_POOL_START;
+
+const hold = {};
 
 module.exports.manage = () => {
   ((get(mac()) || {}).device || []).forEach((id) => {
@@ -140,9 +143,54 @@ module.exports.manage = () => {
           const chan = get(channel);
           if (chan && chan.value !== value) {
             set(channel, { value });
-            const script = chan[onDI[value]];
-            if (script) {
-              run({ type: ACTION_SCRIPT_RUN, id: script });
+            const { timeout, timestamp = Date.now() } = hold[channel];
+            clearTimeout(timeout)
+            if (value) {
+              if (chan.onOn) {
+                const { onOnCount } = chan;
+                set(channel, { onOnCount: onOnCount + 1 });
+                const script = Array.isArray(chan.onOn)
+                  ? chan.onOn[onOnCount % chan.onOn.length]
+                  : chan.onOn;
+                run({ type: ACTION_SCRIPT_RUN, id: script });
+              }
+              if (chan.onHold) {
+                const { onHoldCount } = chan;
+                set(channel, { oHoldCount: onHoldCount + 1 });
+                const { timeout = 1000, repeat = false, interval = 100 } = chan;
+                const script = Array.isArray(chan.onHold)
+                  ? chan.onHold[onHoldCount % chan.onHold.length]
+                  : chan.onHold;
+                const handler = () => {
+                  if (repeat) {
+                    hold[channel].timeout = setTimeout(handler, interval);
+                  }
+                  run({ type: ACTION_SCRIPT_RUN, id: script });
+                };
+                hold[channel] = {
+                  timestame: Date.now(),
+                  timeout: setTimeout(handler, timeout)
+                };
+              }
+            } else {
+              if (chan.onClick) {
+                const { onClickCount } = chan;
+                set(channel, { onClickCount: onClickCount + 1 });
+                const script = Array.isArray(chan.onClick)
+                  ? chan.onClick[onClickCount % chan.onClick.length]
+                  : chan.onClick;
+                if (Date.now() - timestamp < 1000) {
+                  run({ type: ACTION_SCRIPT_RUN, id: script }); 
+                }
+              }
+              if (chan.onOff) {
+                const { onOffCount } = chan;
+                set(channel, { onOffCount: onOffCount + 1 });
+                const script = Array.isArray(chan.onOff)
+                  ? chan.onOff[onOffCount % chan.onOff.length]
+                  : chan.onOff;
+                run({ type: ACTION_SCRIPT_RUN, id: script });
+              }
             }
           } else {
             set(channel, { value });
