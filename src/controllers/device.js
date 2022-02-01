@@ -82,7 +82,6 @@ const drivers = require("../drivers");
 const mac = require("../mac");
 const { int2ip } = require("../util");
 const { image2char } = require("../drivers/display");
-const { setTimeout } = require("timers/promises");
 
 const onDI = [onOff, onOn, onHold, onClick];
 const onDO = [onOff, onOn];
