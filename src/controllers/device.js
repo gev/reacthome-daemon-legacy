@@ -373,6 +373,7 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_TEMPERATURE_EXT: {
+          console.log(data);
           const dev_id = data
             .slice(7, 15)
             .map((i) => `0${i.toString(16)}`.slice(-2))
