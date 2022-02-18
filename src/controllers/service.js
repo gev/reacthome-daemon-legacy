@@ -1792,6 +1792,7 @@ const run = (action) => {
       }
     }
   } catch (e) {
+    console.error(action);
     console.error(e);
   }
 };

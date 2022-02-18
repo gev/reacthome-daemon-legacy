@@ -372,10 +372,14 @@ module.exports.manage = () => {
           }
           break;
         }
-        case ACTION_TEMPERATURE_EXT: {
-          const dev_id = Array.from(data)
+        case ACTION_TEMPERATURE_EXT: {  
+          // const dev_id = Array.from(data)
+          //   .slice(7, 15)
+          //   .map((i) => i.toString(16).padStart(2,'0'))
+          //   .join(":");
+          const dev_id = data
             .slice(7, 15)
-            .map((i) => i.toString(16).padStart(2,'0'))
+            .map((i) => `0${i.toString(16)}`.slice(-2))
             .join(":");
           const temperature = data.readInt16LE(15) / 100;
           set(dev_id, {
