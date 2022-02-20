@@ -299,11 +299,20 @@ module.exports.manage = () => {
               break;
             }
             default: {
-              const [, , , , , , , index, type, value, velocity] = data;
+              const { version } = get(id);
+              const major = parseInt(version.split('.')[0], 10);
+              let index, group, type, value, velocity;
+              if (major < 2) {
+                [, , , , , , , index, type, value, velocity] = data;
+                group = index;
+              } else {
+                [, , , , , , , index, group, type, value, velocity] = data;
+              }
               const channel = `${id}/${DIM}/${index}`;
               const chan = get(channel);
               set(channel, {
                 type,
+                group,
                 value,
                 velocity,
                 dimmable:

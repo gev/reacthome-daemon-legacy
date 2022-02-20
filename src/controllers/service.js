@@ -157,6 +157,7 @@ const {
   ACTION_DEC_SETPOINT,
   ACTION_TEMPERATURE_CORRECT,
   ACTION_VIBRO,
+  DIM_GROUP,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -620,18 +621,20 @@ const run = (action) => {
               velocity = ARTNET_VELOCITY;
             }
             switch (action.action) {
-              case DIM_SET:
+              case DIM_ON:
+              case DIM_OFF:
                 device.send(
                   Buffer.from([
                     ACTION_DIMMER,
                     action.index,
-                    action.action,
-                    action.value,
+                    action.action
                   ]),
                   dev.ip
                 );
                 break;
+              case DIM_SET:
               case DIM_TYPE:
+              case DIM_GROUP:
                 device.send(
                   Buffer.from([
                     ACTION_DIMMER,
@@ -651,18 +654,6 @@ const run = (action) => {
                     action.value,
                     velocity,
                   ]),
-                  dev.ip
-                );
-                break;
-              case DIM_ON:
-                device.send(
-                  Buffer.from([ACTION_DIMMER, action.index, action.action]),
-                  dev.ip
-                );
-                break;
-              case DIM_OFF:
-                device.send(
-                  Buffer.from([ACTION_DIMMER, action.index, action.action]),
                   dev.ip
                 );
                 break;
