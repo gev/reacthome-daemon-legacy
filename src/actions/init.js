@@ -314,7 +314,7 @@ module.exports.initialize = (id) => {
     }
     case DEVICE_TYPE_RELAY_12: {
       const { version = "" } = get(id) || {};
-      const [major, minor] = version.split(".");
+      const [major] = version.split(".");
       if (major >= 2) {
         for (let i = 1; i <= 6; i++) {
           const channel = get(`${id}/${GROUP}/${i}`) || {};
@@ -382,8 +382,7 @@ module.exports.initialize = (id) => {
       a[30] = line_control;
       break;
     }
-    case DEVICE_TYPE_DIM4:
-    case DEVICE_TYPE_DIM_4: {
+    case DEVICE_TYPE_DIM4: {
       for (let i = 1; i <= 4; i++) {
         const channel = get(`${id}/${DIM}/${i}`);
         a[2 * i - 1] = (channel && channel.type) || 0;
@@ -391,12 +390,43 @@ module.exports.initialize = (id) => {
       }
       break;
     }
-    case DEVICE_TYPE_DIM8:
-    case DEVICE_TYPE_DIM_8: {
+    case DEVICE_TYPE_DIM_4: {
+      const { version = "" } = get(id) || {};
+      const major = parseInt(version.split(".")[0], 10);
+      for (let i = 1; i <= 4; i++) {
+        const channel = get(`${id}/${DIM}/${i}`);
+        if (major < 2) {
+          a[2 * i - 1] = (channel && channel.type) || 0;
+          a[2 * i] = (channel && channel.value) || 0;
+        } else {
+          a[3 * i - 2] = (channel && channel.group) || i;
+          a[3 * i - 1] = (channel && channel.type) || 0;
+          a[3 * i] = (channel && channel.value) || 0;
+        }
+      }
+      break;
+    }
+    case DEVICE_TYPE_DIM8: {
       for (let i = 1; i <= 8; i++) {
         const channel = get(`${id}/${DIM}/${i}`);
         a[2 * i - 1] = (channel && channel.type) || 0;
         a[2 * i] = (channel && channel.value) || 0;
+      }
+      break;
+    }
+    case DEVICE_TYPE_DIM_8: {
+      const { version = "" } = get(id) || {};
+      const major = parseInt(version.split(".")[0], 10);
+      for (let i = 1; i <= 8; i++) {
+        const channel = get(`${id}/${DIM}/${i}`);
+        if (major < 2) {
+          a[2 * i - 1] = (channel && channel.type) || 0;
+          a[2 * i] = (channel && channel.value) || 0;
+        } else {
+          a[3 * i - 2] = (channel && channel.group) || i;
+          a[3 * i - 1] = (channel && channel.type) || 0;
+          a[3 * i] = (channel && channel.value) || 0;
+        }
       }
       break;
     }

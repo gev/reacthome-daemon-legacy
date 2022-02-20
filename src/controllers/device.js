@@ -299,7 +299,7 @@ module.exports.manage = () => {
               break;
             }
             default: {
-              const { version } = get(id);
+              const { version = ""} = get(id) || {};
               const major = parseInt(version.split('.')[0], 10);
               let index, group, type, value, velocity;
               if (major < 2) {
