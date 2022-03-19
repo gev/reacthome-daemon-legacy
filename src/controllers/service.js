@@ -136,6 +136,7 @@ const {
   ACTION_SET_MODE,
   DRIVER_TYPE_VARMANN,
   DEVICE_TYPE_MIX_1,
+  DEVICE_TYPE_MIX_1_RS,
   DEVICE_TYPE_MIX_2,
   IR,
   ACTION_LANAMP,
@@ -277,6 +278,7 @@ const run = (action) => {
             break;
           }
           case DEVICE_TYPE_RELAY_2:
+          case DEVICE_TYPE_MIX_1_RS:
           case DEVICE_TYPE_RELAY_2_DIN: {
             switch (action.value) {
               case ACTION_OPEN:
@@ -501,6 +503,7 @@ const run = (action) => {
         );
         switch (dev.type) {
           case DEVICE_TYPE_RELAY_2:
+          case DEVICE_TYPE_MIX_1_RS:
           case DEVICE_TYPE_RELAY_2_DIN: {
             device.send(
               Buffer.concat([
@@ -523,6 +526,7 @@ const run = (action) => {
         const dev = get(action.id);
         switch (dev.type) {
           case DEVICE_TYPE_RELAY_2:
+          case DEVICE_TYPE_MIX_1_RS:
           case DEVICE_TYPE_RELAY_2_DIN: {
             device.send(
               Buffer.from([
@@ -624,11 +628,7 @@ const run = (action) => {
               case DIM_ON:
               case DIM_OFF:
                 device.send(
-                  Buffer.from([
-                    ACTION_DIMMER,
-                    action.index,
-                    action.action
-                  ]),
+                  Buffer.from([ACTION_DIMMER, action.index, action.action]),
                   dev.ip
                 );
                 break;
@@ -847,6 +847,7 @@ const run = (action) => {
             }
             case DEVICE_TYPE_AO_4_DIN:
             case DEVICE_TYPE_RELAY_2:
+            case DEVICE_TYPE_MIX_1_RS:
             case DEVICE_TYPE_RELAY_2_DIN: {
               device.send(
                 Buffer.from([
@@ -960,6 +961,7 @@ const run = (action) => {
             }
             case DEVICE_TYPE_AO_4_DIN:
             case DEVICE_TYPE_RELAY_2:
+            case DEVICE_TYPE_MIX_1_RS:
             case DEVICE_TYPE_RELAY_2_DIN: {
               device.send(
                 Buffer.from([

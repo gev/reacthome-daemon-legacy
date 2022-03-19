@@ -29,6 +29,7 @@ const {
   DEVICE_TYPE_PLC,
   DISCOVERY_INTERVAL,
   DEVICE_TYPE_MIX_1,
+  DEVICE_TYPE_MIX_1_RS,
   DEVICE_TYPE_MIX_2,
   DEVICE_TYPE_IR_4,
   TV,
@@ -258,6 +259,37 @@ module.exports.initialize = (id) => {
       }
       break;
     }
+
+    case DEVICE_TYPE_MIX_1_RS: {
+      const mac = id.split(":").map((i) => parseInt(i, 16));
+      a[0] = ACTION_RBUS_TRANSMIT;
+      a[1] = mac[0];
+      a[2] = mac[1];
+      a[3] = mac[2];
+      a[4] = mac[3];
+      a[5] = mac[4];
+      a[6] = mac[5];
+      a[7] = ACTION_INITIALIZE;
+      for (let i = 1; i <= 3; i++) {
+        const channel = get(`${id}/${GROUP}/${i}`) || {};
+        const { enabled = 0, delay = 0 } = channel;
+        a[5 * i + 3] = enabled;
+        a[5 * i + 4] = delay & 0xff;
+        a[5 * i + 5] = (delay >> 8) & 0xff;
+        a[5 * i + 6] = (delay >> 16) & 0xff;
+        a[5 * i + 7] = (delay >> 24) & 0xff;
+      }
+      for (let i = 1; i <= 6; i++) {
+        const channel = get(`${id}/${DO}/${i}`) || {};
+        const { value = 0, timeout = 0 } = channel;
+        a[5 * i + 18] = value;
+        a[5 * i + 19] = timeout & 0xff;
+        a[5 * i + 20] = (timeout >> 8) & 0xff;
+        a[5 * i + 21] = (timeout >> 16) & 0xff;
+        a[5 * i + 22] = (timeout >> 24) & 0xff;
+      }
+      break;
+    }
     case DEVICE_TYPE_MIX_1:
     case DEVICE_TYPE_MIX_2:
     case DEVICE_TYPE_RELAY_6: {
@@ -312,6 +344,7 @@ module.exports.initialize = (id) => {
       }
       break;
     }
+
     case DEVICE_TYPE_RELAY_12: {
       const { version = "" } = get(id) || {};
       const [major] = version.split(".");
