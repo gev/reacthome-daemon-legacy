@@ -244,7 +244,6 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_DI_RELAY_SYNC: {
-          console.log(data);
           const index = data[7];
           const value = data.slice(8);
           const onOff = value.slice(0, value.length / 2);
