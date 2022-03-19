@@ -144,10 +144,10 @@ module.exports.manage = () => {
           if (chan && chan.value !== value) {
             set(channel, { value });
             const { timeout, timestamp = Date.now() } = hold[channel] || {};
-            clearTimeout(timeout)
+            clearTimeout(timeout);
             if (value) {
               if (chan.onOn) {
-                const { onOnCount = 0} = chan;
+                const { onOnCount = 0 } = chan;
                 set(channel, { onOnCount: (onOnCount || 0) + 1 });
                 const script = Array.isArray(chan.onOn)
                   ? chan.onOn[onOnCount % chan.onOn.length]
@@ -156,35 +156,38 @@ module.exports.manage = () => {
               }
               if (chan.onHold) {
                 const { onHoldCount = 0 } = chan;
-                set(channel, { onHoldCount: (onHoldCount || 0)+ 1 });
+                set(channel, { onHoldCount: (onHoldCount || 0) + 1 });
                 const { timeout = 1000, repeat = false, interval = 100 } = chan;
                 const script = Array.isArray(chan.onHold)
                   ? chan.onHold[onHoldCount % chan.onHold.length]
                   : chan.onHold;
                 const handler = () => {
                   if (repeat) {
-                    hold[channel].timeout = setTimeout(handler, parseInt(interval));
+                    hold[channel].timeout = setTimeout(
+                      handler,
+                      parseInt(interval)
+                    );
                   }
                   run({ type: ACTION_SCRIPT_RUN, id: script });
                 };
                 hold[channel] = {
                   timestamp: Date.now(),
-                  timeout: setTimeout(handler, parseInt(timeout))
+                  timeout: setTimeout(handler, parseInt(timeout)),
                 };
               }
             } else {
               if (chan.onClick) {
                 const { timeout = 1000, onClickCount = 0 } = chan;
-                set(channel, { onClickCount: (onClickCount || 0)+ 1 });
+                set(channel, { onClickCount: (onClickCount || 0) + 1 });
                 const script = Array.isArray(chan.onClick)
                   ? chan.onClick[onClickCount % chan.onClick.length]
                   : chan.onClick;
                 if (Date.now() - timestamp < parseInt(timeout)) {
-                  run({ type: ACTION_SCRIPT_RUN, id: script }); 
+                  run({ type: ACTION_SCRIPT_RUN, id: script });
                 }
               }
               if (chan.onOff) {
-                const { onOffCount = 0} = chan;
+                const { onOffCount = 0 } = chan;
                 set(channel, { onOffCount: (onOffCount || 0) + 1 });
                 const script = Array.isArray(chan.onOff)
                   ? chan.onOff[onOffCount % chan.onOff.length]
@@ -241,6 +244,7 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_DI_RELAY_SYNC: {
+          console.log(action);
           const index = data[7];
           const value = data.slice(8);
           const onOff = value.slice(0, value.length / 2);
@@ -300,8 +304,8 @@ module.exports.manage = () => {
               break;
             }
             default: {
-              const { version = ""} = get(id) || {};
-              const major = parseInt(version.split('.')[0], 10);
+              const { version = "" } = get(id) || {};
+              const major = parseInt(version.split(".")[0], 10);
               let index, group, type, value, velocity;
               if (major < 2) {
                 [, , , , , , , index, type, value, velocity] = data;
@@ -382,17 +386,18 @@ module.exports.manage = () => {
           }
           break;
         }
-        case ACTION_TEMPERATURE_EXT_DEP:   
-        case ACTION_TEMPERATURE_EXT: {  
-          const dev_id = action.type === ACTION_TEMPERATURE_EXT
-            ? Array.from(data)
-              .slice(7, 15)
-              .map((i) => i.toString(16).padStart(2,'0'))
-              .join(":")
-            : data
-              .slice(7, 15)
-              .map((i) => `0${i.toString(16)}`.slice(-2))
-              .join(":");
+        case ACTION_TEMPERATURE_EXT_DEP:
+        case ACTION_TEMPERATURE_EXT: {
+          const dev_id =
+            action.type === ACTION_TEMPERATURE_EXT
+              ? Array.from(data)
+                  .slice(7, 15)
+                  .map((i) => i.toString(16).padStart(2, "0"))
+                  .join(":")
+              : data
+                  .slice(7, 15)
+                  .map((i) => `0${i.toString(16)}`.slice(-2))
+                  .join(":");
           const temperature = data.readInt16LE(15) / 100;
           set(dev_id, {
             ip: address,
