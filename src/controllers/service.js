@@ -159,6 +159,7 @@ const {
   ACTION_TEMPERATURE_CORRECT,
   ACTION_VIBRO,
   DIM_GROUP,
+  ACTION_RGB_BUTTON_SET,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -751,6 +752,36 @@ const run = (action) => {
                 }
               }
             });
+            break;
+          }
+        }
+        break;
+      }
+      case ACTION_RGB_BUTTON_SET: {
+        const { id, value = {}, index = 0 } = action;
+        const { r, g, b } = value;
+        const o = get(id) || {};
+        const { ip, type } = o;
+        switch (type) {
+          case DEVICE_TYPE_SENSOR4: {
+            device.send(Buffer.from([ACTION_RGB, index, r, g, b]), ip);
+            break;
+          }
+          case DEVICE_TYPE_SMART_4G:
+          case DEVICE_TYPE_SMART_4GD:
+          case DEVICE_TYPE_SMART_4A: {
+            device.send(
+              Buffer.from([
+                ACTION_RBUS_TRANSMIT,
+                ...id.split(":").map((i) => parseInt(i, 16)),
+                ACTION_RGB,
+                index,
+                r,
+                g,
+                b,
+              ]),
+              ip
+            );
             break;
           }
         }

@@ -117,6 +117,7 @@ module.exports.ACTION_INIT = "ACTION_INIT";
 module.exports.ACTION_DOWNLOAD = "ACTION_DOWNLOAD";
 
 module.exports.ACTION_RGB_DIM = "ACTION_RGB_DIM";
+module.exports.ACTION_RGB_BUTTON_SET = "ACTION_RGB_BUTTON_SET";
 module.exports.ACTION_ON = "ACTION_ON";
 module.exports.ACTION_OFF = "ACTION_OFF";
 module.exports.ACTION_DIM = "ACTION_DIM";
