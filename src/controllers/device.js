@@ -143,9 +143,15 @@ module.exports.manage = () => {
           const chan = get(channel);
           if (chan && chan.value !== value) {
             set(channel, { value });
-            const { timeout, timestamp = Date.now() } = hold[channel] || {};
-            clearTimeout(timeout);
+            const { timeout, timestamp = Date.now(), count } = hold[channel] || {};
             if (value) {
+              if (!count) {
+                clearTimeout(timeout);
+                hold[channel] = {
+                  count: 0,
+                  timestamp: Date.now(),
+                }
+              }
               if (chan.onOn) {
                 const { onOnCount = 0 } = chan;
                 set(channel, { onOnCount: (onOnCount || 0) + 1 });
@@ -154,36 +160,58 @@ module.exports.manage = () => {
                   : chan.onOn;
                 run({ type: ACTION_SCRIPT_RUN, id: script });
               }
+              if (chan.onClick2 || chan.onClick3) {
+                setTimeout(() => { 
+                  if (chan.onClick3 && hold[channel].count === 3) {
+                    const { onCkick3Count = 0 } = chan;
+                    set(channel, { onCkick3Count: (onCkick3Count || 0) + 1 });
+                    const script = Array.isArray(chan.onClick3)
+                      ? chan.onClick3[onCkick3Count % chan.onClick3.length]
+                      : chan.onClick3;
+                    run({ type: ACTION_SCRIPT_RUN, id: script });
+                  } else  if (chan.onClick2 && hold[channel].count === 2) {
+                    const { onCkick2Count = 0 } = chan;
+                    set(channel, { onCkick2Count: (onCkick2Count || 0) + 1 });
+                    const script = Array.isArray(chan.onClick2)
+                      ? chan.onClick2[onCkick3Count % chan.onClick2.length]
+                      : chan.onClick2;
+                    run({ type: ACTION_SCRIPT_RUN, id: script });
+                  }
+                }, parseInt(chan.timeout || 1000) / 3);
+              }
               if (chan.onHold) {
                 const { onHoldCount = 0 } = chan;
                 set(channel, { onHoldCount: (onHoldCount || 0) + 1 });
-                const { timeout = 1000, repeat = false, interval = 100 } = chan;
                 const script = Array.isArray(chan.onHold)
                   ? chan.onHold[onHoldCount % chan.onHold.length]
                   : chan.onHold;
-                const handler = () => {
-                  if (repeat) {
+                const handleHold = () => {
+                  if (!chan.value) return;
+                  if (chan.repeat) {
                     hold[channel].timeout = setTimeout(
-                      handler,
-                      parseInt(interval)
+                      handleHold,
+                      parseInt(chan.interval || 100)
                     );
                   }
                   run({ type: ACTION_SCRIPT_RUN, id: script });
                 };
-                hold[channel] = {
-                  timestamp: Date.now(),
-                  timeout: setTimeout(handler, parseInt(timeout)),
-                };
+                hold[channel].timeout = setTimeout(handleHold, parseInt(chan.timeout || 1000))
               }
+              hold[channel].count++;
             } else {
-              if (chan.onClick) {
-                const { timeout = 1000, onClickCount = 0 } = chan;
-                set(channel, { onClickCount: (onClickCount || 0) + 1 });
-                const script = Array.isArray(chan.onClick)
-                  ? chan.onClick[onClickCount % chan.onClick.length]
-                  : chan.onClick;
-                if (Date.now() - timestamp < parseInt(timeout)) {
+              clearTimeout(timeout);
+              const dt = Date.now() - timestamp;
+              if (dt < parseInt(chan.timeout || 1000)) {
+                if (chan.onClick && count === 1) {
+                  set(channel, { onClickCount: (chan.onClickCount || 0) + 1 });
+                  const script = Array.isArray(chan.onClick)
+                    ? chan.onClick[(chan.onClickCount || 0) % chan.onClick.length]
+                    : chan.onClick;
                   run({ type: ACTION_SCRIPT_RUN, id: script });
+                }
+              } else if (dt > parseInt(chan.timeout || 1000) / 3) {
+                hold[chan] = {
+                  count: 0
                 }
               }
               if (chan.onOff) {
