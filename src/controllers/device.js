@@ -158,23 +158,35 @@ module.exports.manage = () => {
                 const script = Array.isArray(chan.onOn)
                   ? chan.onOn[onOnCount % chan.onOn.length]
                   : chan.onOn;
+                console.log('on');
                 run({ type: ACTION_SCRIPT_RUN, id: script });
               }
               if (chan.onClick2 || chan.onClick3) {
                 setTimeout(() => { 
                   if (chan.onClick3 && hold[channel].count === 3) {
-                    const { onCkick3Count = 0 } = chan;
-                    set(channel, { onCkick3Count: (onCkick3Count || 0) + 1 });
+                    const { onClick3Count = 0 } = chan;
+                    set(channel, { onClick3Count: (onClick3Count || 0) + 1 });
                     const script = Array.isArray(chan.onClick3)
-                      ? chan.onClick3[onCkick3Count % chan.onClick3.length]
+                      ? chan.onClick3[onClick3Count % chan.onClick3.length]
                       : chan.onClick3;
+                    console.log('click3');
                     run({ type: ACTION_SCRIPT_RUN, id: script });
                   } else  if (chan.onClick2 && hold[channel].count === 2) {
-                    const { onCkick2Count = 0 } = chan;
-                    set(channel, { onCkick2Count: (onCkick2Count || 0) + 1 });
+                    const { onClick2Count = 0 } = chan;
+                    set(channel, { onClick2Count: (onClick2Count || 0) + 1 });
                     const script = Array.isArray(chan.onClick2)
-                      ? chan.onClick2[onCkick3Count % chan.onClick2.length]
+                      ? chan.onClick2[onClick2Count % chan.onClick2.length]
                       : chan.onClick2;
+                    console.log('click2');
+                    run({ type: ACTION_SCRIPT_RUN, id: script });
+                  } else if (chan.onClick && hold[channel].count === 1) {
+                    if (chan.value) return;
+                    const { onClickCount = 0 } = chan;
+                    set(channel, { onClickCount: (onClickCount || 0) + 1 });
+                    const script = Array.isArray(chan.onClick)
+                      ? chan.onClick[onClickCount % chan.onClick.length]
+                      : chan.onClick;
+                    console.log('click1');
                     run({ type: ACTION_SCRIPT_RUN, id: script });
                   }
                 }, parseInt(chan.timeout || 1000) / 3);
@@ -188,11 +200,13 @@ module.exports.manage = () => {
                 const handleHold = () => {
                   if (!chan.value) return;
                   if (chan.repeat) {
+                    console.log('repeat');
                     hold[channel].timeout = setTimeout(
                       handleHold,
                       parseInt(chan.interval || 100)
                     );
                   }
+                  console.log('hold');
                   run({ type: ACTION_SCRIPT_RUN, id: script });
                 };
                 hold[channel].timeout = setTimeout(handleHold, parseInt(chan.timeout || 1000))
@@ -201,12 +215,13 @@ module.exports.manage = () => {
             } else {
               clearTimeout(timeout);
               const dt = Date.now() - timestamp;
-              if (dt < parseInt(chan.timeout || 1000)) {
-                if (chan.onClick && count === 1) {
+              if (dt < parseInt(chan.timeout || 1000) / 3) {
+                if (chan.onClick && !chan.onClick2 && !chan.onClick3) {
                   set(channel, { onClickCount: (chan.onClickCount || 0) + 1 });
                   const script = Array.isArray(chan.onClick)
                     ? chan.onClick[(chan.onClickCount || 0) % chan.onClick.length]
                     : chan.onClick;
+                  console.log('click1');
                   run({ type: ACTION_SCRIPT_RUN, id: script });
                 }
               } else if (dt > parseInt(chan.timeout || 1000) / 3) {
@@ -220,6 +235,7 @@ module.exports.manage = () => {
                 const script = Array.isArray(chan.onOff)
                   ? chan.onOff[onOffCount % chan.onOff.length]
                   : chan.onOff;
+                console.log('off');
                 run({ type: ACTION_SCRIPT_RUN, id: script });
               }
             }
