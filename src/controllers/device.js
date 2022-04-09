@@ -152,7 +152,7 @@ module.exports.manage = () => {
                 hold[channel] = {
                   count: 0,
                   timestamp: Date.now(),
-                }
+                } 
               }
               const onOn = toArr(chan.onOn);
               if (onOn.length > 0) {
@@ -165,10 +165,8 @@ module.exports.manage = () => {
               const onClick3 = toArr(chan.onClick3);
               if (onClick1.length > 0 || onClick2.length > 0 || onClick3.length > 0) {
                 hold[channel].count++;
-                setTimeout(() => { 
-                  const onClick2 = toArr(chan.onClick2);
-                  const onClick3 = toArr(chan.onClick3);
-                  if (onClick2.length > 0 || onClick3.length > 0) {
+                if (onClick2.length > 0 || onClick3.length > 0) {
+                  setTimeout(() => { 
                     switch (hold[channel].count) {
                       case 1: {
                         if (!chan.value) {
@@ -200,9 +198,9 @@ module.exports.manage = () => {
                         break;
                       } 
                     }
-                  }
-                  hold[channel] = { count: 0 };
-                }, parseInt(chan.timeout || 1000) / 2);
+                    hold[channel] = { count: 0 };
+                  }, parseInt(chan.timeout || 1000) / 2);
+                }
               }
               const onHold = toArr(chan.onHold);
               if (onHold.length > 0) {
@@ -237,6 +235,7 @@ module.exports.manage = () => {
                     const { onClick1Count = 0 } = chan;
                     set(channel, { onClick1Count: onClick1Count + 1 });
                     run({ type: ACTION_SCRIPT_RUN, id: onClick1[onClick1Count % onClick1.length] });
+                    hold[channel] = { count: 0 };
                   }
                 }
               }
