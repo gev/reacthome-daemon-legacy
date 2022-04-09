@@ -83,6 +83,7 @@ const drivers = require("../drivers");
 const mac = require("../mac");
 const { int2ip } = require("../util");
 const { image2char } = require("../drivers/display");
+const { on } = require("events");
 
 const onDI = [onOff, onOn, onHold, onClick];
 const onDO = [onOff, onOn];
@@ -141,6 +142,7 @@ module.exports.manage = () => {
           const value = data[8];
           const channel = `${id}/${DI}/${index}`;
           const chan = get(channel);
+          const toArr = a => Array.isArray(a) ? a : a ? [a] : [];
           if (chan && chan.value !== value) {
             set(channel, { value });
             const { timeout, timestamp = Date.now(), count } = hold[channel] || {};
@@ -152,39 +154,58 @@ module.exports.manage = () => {
                   timestamp: Date.now(),
                 }
               }
-              if (chan.onOn) {
+              const onOn = toArr(chan.onOn);
+              if (onOn.length > 0) {
                 const { onOnCount = 0 } = chan;
-                set(channel, { onOnCount: (onOnCount || 0) + 1 });
-                const script = Array.isArray(chan.onOn)
-                  ? chan.onOn[onOnCount % chan.onOn.length]
-                  : chan.onOn;
-                run({ type: ACTION_SCRIPT_RUN, id: script });
+                set(channel, { onOnCount: onOnCount + 1 });
+                run({ type: ACTION_SCRIPT_RUN, id: onOn[onOnCount % onOn.length] });
               }
-              if (chan.onClick2 || chan.onClick3) {
+              const onClick1 = toArr(chan.onClick1 || chan.onClick);
+              const onClick2 = toArr(chan.onClick2);
+              const onClick3 = toArr(chan.onClick3);
+              if (onClick1.length > 0 || onClick2.length > 0 || onClick3.length > 0) {
+                hold[channel].count++;
                 setTimeout(() => { 
-                  if (chan.onClick3 && hold[channel].count === 3) {
-                    const { onCkick3Count = 0 } = chan;
-                    set(channel, { onCkick3Count: (onCkick3Count || 0) + 1 });
-                    const script = Array.isArray(chan.onClick3)
-                      ? chan.onClick3[onCkick3Count % chan.onClick3.length]
-                      : chan.onClick3;
-                    run({ type: ACTION_SCRIPT_RUN, id: script });
-                  } else  if (chan.onClick2 && hold[channel].count === 2) {
-                    const { onCkick2Count = 0 } = chan;
-                    set(channel, { onCkick2Count: (onCkick2Count || 0) + 1 });
-                    const script = Array.isArray(chan.onClick2)
-                      ? chan.onClick2[onCkick3Count % chan.onClick2.length]
-                      : chan.onClick2;
-                    run({ type: ACTION_SCRIPT_RUN, id: script });
+                  const onClick2 = toArr(chan.onClick2);
+                  const onClick3 = toArr(chan.onClick3);
+                  if (onClick2.length > 0 || onClick3.length > 0) {
+                    switch (hold[channel].count) {
+                      case 1: {
+                        if (!chan.value) {
+                          const onClick1 = toArr(chan.onClick1 || chan.onClick);
+                          if (onClick1.length > 0) {
+                            const { onClick1Count = 0 } = chan;
+                            set(channel, { onClick1Count: onClick1Count + 1 });
+                            run({ type: ACTION_SCRIPT_RUN, id: onClick1[onClick1Count % onClick1.length] });
+                          }
+                        }
+                        break;
+                      }
+                      case 2: {
+                        const onClick2 = toArr(chan.onClick2);
+                        if (onClick2.length > 0) {
+                          const { onClick2Count = 0 } = chan;
+                          set(channel, { onClick2Count: onClick2Count + 1 });
+                          run({ type: ACTION_SCRIPT_RUN, id: onClick2[onClick2Count % onClick2.length] });
+                        }
+                        break;
+                      }
+                      case 3: {
+                        const onClick3 = toArr(chan.onClick3);
+                        if (onClick3.length > 0) {
+                          const { onClick3Count = 0 } = chan;
+                          set(channel, { onClick3Count: onClick3Count + 1 });
+                          run({ type: ACTION_SCRIPT_RUN, id: onClick3[onClick3Count % onClick3.length] });
+                        }
+                        break;
+                      } 
+                    }
                   }
-                }, parseInt(chan.timeout || 1000) / 3);
+                  hold[channel] = { count: 0 };
+                }, parseInt(chan.timeout || 1000) / 2);
               }
-              if (chan.onHold) {
-                const { onHoldCount = 0 } = chan;
-                set(channel, { onHoldCount: (onHoldCount || 0) + 1 });
-                const script = Array.isArray(chan.onHold)
-                  ? chan.onHold[onHoldCount % chan.onHold.length]
-                  : chan.onHold;
+              const onHold = toArr(chan.onHold);
+              if (onHold.length > 0) {
                 const handleHold = () => {
                   if (!chan.value) return;
                   if (chan.repeat) {
@@ -193,34 +214,36 @@ module.exports.manage = () => {
                       parseInt(chan.interval || 100)
                     );
                   }
-                  run({ type: ACTION_SCRIPT_RUN, id: script });
+                  const onHold = toArr(chan.onHold);
+                  if (onHold.length > 0) {
+                    const { onHoldCount = 0 } = chan;
+                    set(channel, { onHoldCount: onHoldCount + 1 });
+                    run({ type: ACTION_SCRIPT_RUN, id: onHold[onHoldCount % onHold.length] });
+                  }
                 };
-                hold[channel].timeout = setTimeout(handleHold, parseInt(chan.timeout || 1000))
+                hold[channel].timeout = setTimeout(handleHold, parseInt(chan.timeout || 1000));
               }
-              hold[channel].count++;
             } else {
               clearTimeout(timeout);
-              const dt = Date.now() - timestamp;
-              if (dt < parseInt(chan.timeout || 1000)) {
-                if (chan.onClick && count === 1) {
-                  set(channel, { onClickCount: (chan.onClickCount || 0) + 1 });
-                  const script = Array.isArray(chan.onClick)
-                    ? chan.onClick[(chan.onClickCount || 0) % chan.onClick.length]
-                    : chan.onClick;
-                  run({ type: ACTION_SCRIPT_RUN, id: script });
-                }
-              } else if (dt > parseInt(chan.timeout || 1000) / 3) {
-                hold[chan] = {
-                  count: 0
+              if (count === 1) {
+                const onClick1 = toArr(chan.onClick1 || chan.onClick);
+                if (onClick1.length > 0) {
+                  const onClick2 = toArr(chan.onClick2);
+                  const onClick3 = toArr(chan.onClick3);
+                  const dt = Date.now() - timestamp;
+                  if (onClick2.length === 0 && onClick3.length === 0
+                    && dt < parseInt(chan.timeout || 1000) / 2) {
+                    const { onClick1Count = 0 } = chan;
+                    set(channel, { onClick1Count: onClick1Count + 1 });
+                    run({ type: ACTION_SCRIPT_RUN, id: onClick1[onClick1Count % onClick1.length] });
+                  }
                 }
               }
-              if (chan.onOff) {
+              const onOff = toArr(chan.onOff);
+              if (onOff.length > 0) {
                 const { onOffCount = 0 } = chan;
                 set(channel, { onOffCount: (onOffCount || 0) + 1 });
-                const script = Array.isArray(chan.onOff)
-                  ? chan.onOff[onOffCount % chan.onOff.length]
-                  : chan.onOff;
-                run({ type: ACTION_SCRIPT_RUN, id: script });
+                run({ type: ACTION_SCRIPT_RUN, id: onOff[onOffCount % onOff.length] });
               }
             }
           } else {
