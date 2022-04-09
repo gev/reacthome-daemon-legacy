@@ -145,7 +145,7 @@ module.exports.manage = () => {
           const toArr = a => Array.isArray(a) ? a : a ? [a] : [];
           if (chan && chan.value !== value) {
             set(channel, { value });
-            const { timeout, timestamp = Date.now(), count } = hold[channel] || {};
+            const { timeout, timestamp = Date.now(), count = 0 } = hold[channel] || {};
             if (value) {
               if (!count) {
                 clearTimeout(timeout);
@@ -209,6 +209,7 @@ module.exports.manage = () => {
                 const handleHold = () => {
                   if (!chan.value) return;
                   if (chan.repeat) {
+                    console.log('repeat');
                     hold[channel].timeout = setTimeout(
                       handleHold,
                       parseInt(chan.interval || 100)
