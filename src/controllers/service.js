@@ -568,6 +568,12 @@ const run = (action) => {
           case DEVICE_TYPE_AO_4_DIN: {
             const velocity = dev.type === DEVICE_TYPE_DIM_12_LED_RS ? DIM_VELOCITY : AO_VELOCITY;
             switch (action.action) {
+              case DIM_TYPE:
+              case DIM_GROUP: {
+                if (dev.type === DEVICE_TYPE_AO_4_DIN) {
+                  break;
+                }
+              }
               case DIM_SET:
                 device.send(
                   Buffer.from([
