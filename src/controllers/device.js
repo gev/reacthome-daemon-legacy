@@ -238,13 +238,14 @@ module.exports.manage = () => {
                   const onClick3 = toArr(chan.onClick3);
                   const dt = Date.now() - timestamp;
                   console.log(dt);
-                  if (onClick2.length === 0 && onClick3.length === 0
-                    && dt < parseInt(chan.timeout || 1000) / 2) {
-                    const { onClick1Count = 0 } = chan;
-                    set(channel, { onClick1Count: onClick1Count + 1 });
-                    run({ type: ACTION_SCRIPT_RUN, id: onClick1[onClick1Count % onClick1.length] });
+                  if (onClick2.length === 0 && onClick3.length === 0) {
+                      if (dt < parseInt(chan.timeout || 1000) / 2) {
+                      const { onClick1Count = 0 } = chan;
+                      set(channel, { onClick1Count: onClick1Count + 1 });
+                      run({ type: ACTION_SCRIPT_RUN, id: onClick1[onClick1Count % onClick1.length] });
+                      console.log('click');
+                    }
                     hold[channel] = { count: 0 };
-                    console.log('click');
                   }
                 }
               }
