@@ -56,7 +56,7 @@ const build = (id, pool, state, assets) => {
   });
 };
 
-mmodule.exports.cleanup = (pool) => {
+module.exports.cleanup = (pool) => {
   const state = {};
   const assets = [];
   build(pool.mac, pool, state, assets);
