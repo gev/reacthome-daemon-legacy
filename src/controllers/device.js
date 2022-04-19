@@ -213,6 +213,7 @@ module.exports.manage = () => {
                   if (!chan.value) return;
                   if (chan.repeat) {
                     console.log('repeat');
+                    hold[channel].count = 0;
                     hold[channel].timeout = setTimeout(
                       handleHold,
                       parseInt(chan.interval || 100)
@@ -238,7 +239,7 @@ module.exports.manage = () => {
                   const onClick3 = toArr(chan.onClick3);
                   const dt = Date.now() - timestamp;
                   console.log(dt);
-                  if (onClick2.length === 0 && onClick3.length === 0) {
+                  if  (onClick2.length === 0 && onClick3.length === 0) {
                       if (dt < parseInt(chan.timeout || 1000) / 2) {
                       const { onClick1Count = 0 } = chan;
                       set(channel, { onClick1Count: onClick1Count + 1 });
