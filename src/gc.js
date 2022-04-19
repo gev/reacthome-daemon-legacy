@@ -1,6 +1,6 @@
 const { existsSync, unlinkSync, readdirSync } = require("fs");
 const { ASSETS } = require("./assets/constants");
-const { PROJECT, DEVICE, IMAGE, SCRIPT, SITE, CLOCK, SCHEDULE, TIMER, ACTION, DRIVER } = require("./constants");
+const { PROJECT, DEVICE, IMAGE, SCRIPT, SITE, CLOCK, SCHEDULE, TIMER, ACTION, DRIVER, DAEMON } = require("./constants");
 const db = require("./db");
 const { asset } = require("./fs");
 
@@ -39,21 +39,32 @@ const build = (id, pool, state, assets) => {
             });
             break;
           }
-          case TIMER:
-          case CLOCK:
-          case SCHEDULE: 
-          case DEVICE:
-          case DRIVER:
-          case ACTION: {
+          case DEVICE: {
             v.forEach(d => { 
-              Object
-                .keys(pool)
-                .filter(i => i.startsWith(`${d}/`))
-                .forEach(i => {
-                  state[i] = pool[i];
-                });
-              state[d] = pool[d];
+              if (typeof v === 'string') {
+                Object
+                  .keys(pool)
+                  .filter(i => i.startsWith(`${d}/`))
+                  .forEach(i => {
+                    state[i] = pool[i];
+                  });
+                state[d] = pool[d];
+              }
             });
+            break;
+          }
+          default: {
+            switch (subject.type) {
+              case DAEMON:
+              case PROJECT: {
+                v.forEach(i => { 
+                  if (typeof v === 'string') {
+                    state[i] = pool[i];
+                  }
+                });
+                break;
+              }
+            }
             break;
           }
         }
