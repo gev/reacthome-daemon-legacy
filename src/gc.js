@@ -1,4 +1,5 @@
-const { existsSync, unlinkSync } = require("fs");
+const { existsSync, unlinkSync, readdirSync } = require("fs");
+const { ASSETS } = require("./assets/constants");
 const { PROJECT, DEVICE, IMAGE, SCRIPT, SITE } = require("./constants");
 const db = require("./db");
 const { asset } = require("./fs");
@@ -72,11 +73,13 @@ module.exports.cleanup = (pool) => {
       db.del(k);
     }
   });
-  assets.forEach(i => { 
-    const a = asset(i);
-    if (!existsSync(a)) {
-      unlinkSync(a)
+  readdirSync(ASSETS).forEach(i => {
+    if (!assets.includes(i)) {
+      const a = asset(i);
+      if (existsSync(a)) {
+        unlinkSync(a);
+      }
     }
-  })
+  });
 };
 
