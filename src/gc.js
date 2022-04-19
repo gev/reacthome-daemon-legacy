@@ -41,7 +41,7 @@ const build = (id, pool, state, assets) => {
           }
           case DEVICE: {
             v.forEach(d => { 
-              if (typeof v === 'string') {
+              if (typeof d === 'string') {
                 Object
                   .keys(pool)
                   .filter(i => i.startsWith(`${d}/`))
@@ -58,7 +58,7 @@ const build = (id, pool, state, assets) => {
               case DAEMON:
               case PROJECT: {
                 v.forEach(i => { 
-                  if (typeof v === 'string') {
+                  if (typeof i === 'string') {
                     state[i] = pool[i];
                   }
                 });
