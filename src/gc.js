@@ -1,6 +1,6 @@
 const { existsSync, unlinkSync, readdirSync } = require("fs");
 const { ASSETS } = require("./assets/constants");
-const { PROJECT, DEVICE, IMAGE, SCRIPT, SITE, DAEMON } = require("./constants");
+const { PROJECT, DEVICE, IMAGE, SCRIPT, SITE, DAEMON, POOL } = require("./constants");
 const db = require("./db");
 const { asset } = require("./fs");
 
@@ -9,7 +9,7 @@ function isNumber(str) {
 }
 
 const build = (id, pool, state, assets) => {
-  if (state[id]) return;
+  // if (state[id]) return;
   const subject = pool[id];
   if (!subject) return;
   state[id] = subject;
@@ -83,6 +83,7 @@ module.exports.cleanup = (pool) => {
   console.log('assets', Object.keys(assets).length);
   Object.keys(pool).forEach(k => { 
     if (k === 'mac') return;
+    if (k === POOL) return;
     if (state[k] === undefined) { 
       delete pool[k];
       db.del(k);
