@@ -217,8 +217,8 @@ module.exports.manage = () => {
                   }
                   const onHold = toArr(chan.onHold);
                   if (onHold.length > 0) {
+                    const { onHoldCount = 0 } = chan;
                     if (start) { 
-                      const { onHoldCount = 0 } = chan;
                       set(channel, { onHoldCount: onHoldCount + 1 });
                     }
                     run({ type: ACTION_SCRIPT_RUN, id: onHold[onHoldCount % onHold.length] });
