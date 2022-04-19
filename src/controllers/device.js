@@ -142,6 +142,7 @@ module.exports.manage = () => {
           const value = data[8];
           const channel = `${id}/${DI}/${index}`;
           const chan = get(channel);
+          console.log(chan);
           const toArr = a => Array.isArray(a) ? a : a ? [a] : [];
           if (chan && chan.value !== value) {
             set(channel, { value });
