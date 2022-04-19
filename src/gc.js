@@ -43,6 +43,7 @@ const build = (id, pool, state, assets) => {
           case CLOCK:
           case SCHEDULE: 
           case DEVICE:
+          case DRIVER:
           case ACTION: {
             v.forEach(d => { 
               Object

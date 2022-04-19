@@ -18,6 +18,7 @@ module.exports.STATE = "state";
 module.exports.DAEMON = "daemon";
 module.exports.PROJECT = "project";
 module.exports.DEVICE = "device";
+module.exports.DRIVER = "driver";
 module.exports.CHANNEL = "channel";
 module.exports.SERVICE = "service";
 module.exports.IMAGE = "image";
