@@ -161,6 +161,7 @@ const {
   DIM_GROUP,
   ACTION_RGB_BUTTON_SET,
   DEVICE_TYPE_DIM_12_LED_RS,
+  POOL,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -205,7 +206,9 @@ const run = (action) => {
     switch (action.type) {
       case ACTION_SET: {
         const { id, payload } = action;
-        set(id, payload);
+        if (id !== POOL) {
+          set(id, payload);
+        }
         break;
       }
       case ACTION_ADD: {
