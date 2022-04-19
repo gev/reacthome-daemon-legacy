@@ -1,6 +1,6 @@
 const { existsSync, unlinkSync, readdirSync } = require("fs");
 const { ASSETS } = require("./assets/constants");
-const { PROJECT, DEVICE, IMAGE, SCRIPT, SITE, CLOCK, SCHEDULE, WEATHER } = require("./constants");
+const { PROJECT, DEVICE, IMAGE, SCRIPT, SITE, CLOCK, SCHEDULE } = require("./constants");
 const db = require("./db");
 const { asset } = require("./fs");
 
@@ -42,7 +42,6 @@ const build = (id, pool, state, assets) => {
           case TIMER:
           case CLOCK:
           case SCHEDULE: 
-          case WEATHER:
           case DEVICE:
           case ACTION: {
             v.forEach(d => { 
