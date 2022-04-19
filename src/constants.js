@@ -16,6 +16,7 @@ module.exports.DISCOVERY_INTERVAL = 1000;
 module.exports.POOL = "pool";
 module.exports.STATE = "state";
 module.exports.DAEMON = "daemon";
+module.exports.PROJECT = "project";
 module.exports.DEVICE = "device";
 module.exports.CHANNEL = "channel";
 module.exports.SERVICE = "service";
