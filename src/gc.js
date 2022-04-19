@@ -46,8 +46,10 @@ const build = (id, pool, state, assets) => {
                 .filter(i => i.startsWith(`${d}/`))
                 .forEach(i => {
                   state[i] = pool[i];
+                  console.log(state[i]);
                 });
               state[d] = pool[d];
+              console.log(state[d]);
             });
             break;
           }
