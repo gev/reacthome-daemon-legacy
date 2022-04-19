@@ -57,7 +57,8 @@ const build = (id, pool, state, assets) => {
             switch (subject.type) {
               case DAEMON:
               case PROJECT:
-              case SITE: {
+              case SITE:
+              case SCRIPT: {
                 v.forEach(i => { 
                   if (typeof i === 'string') {
                     state[i] = pool[i];
