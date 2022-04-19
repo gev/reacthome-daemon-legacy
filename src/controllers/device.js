@@ -139,7 +139,7 @@ module.exports.manage = () => {
         }
         case ACTION_DI: {
           const index = data[7];
-          const value = data[8];
+          const value = data[8] ? 1 : 0;
           const channel = `${id}/${DI}/${index}`;
           const chan = get(channel);
           console.log(id, index, value)
