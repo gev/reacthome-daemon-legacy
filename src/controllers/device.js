@@ -159,6 +159,7 @@ module.exports.manage = () => {
                 const { onOnCount = 0 } = chan;
                 set(channel, { onOnCount: onOnCount + 1 });
                 run({ type: ACTION_SCRIPT_RUN, id: onOn[onOnCount % onOn.length] });
+                console.log('on');
               }
               const onClick1 = toArr(chan.onClick1 || chan.onClick);
               const onClick2 = toArr(chan.onClick2);
@@ -175,6 +176,7 @@ module.exports.manage = () => {
                             const { onClick1Count = 0 } = chan;
                             set(channel, { onClick1Count: onClick1Count + 1 });
                             run({ type: ACTION_SCRIPT_RUN, id: onClick1[onClick1Count % onClick1.length] });
+                            console.log('click1');
                           }
                         }
                         break;
@@ -185,6 +187,7 @@ module.exports.manage = () => {
                           const { onClick2Count = 0 } = chan;
                           set(channel, { onClick2Count: onClick2Count + 1 });
                           run({ type: ACTION_SCRIPT_RUN, id: onClick2[onClick2Count % onClick2.length] });
+                          console.log('click2');
                         }
                         break;
                       }
@@ -194,6 +197,7 @@ module.exports.manage = () => {
                           const { onClick3Count = 0 } = chan;
                           set(channel, { onClick3Count: onClick3Count + 1 });
                           run({ type: ACTION_SCRIPT_RUN, id: onClick3[onClick3Count % onClick3.length] });
+                          console.log('click3');
                         }
                         break;
                       } 
@@ -207,6 +211,7 @@ module.exports.manage = () => {
                 const handleHold = () => {
                   if (!chan.value) return;
                   if (chan.repeat) {
+                    console.log('repeat');
                     hold[channel].timeout = setTimeout(
                       handleHold,
                       parseInt(chan.interval || 100)
@@ -217,6 +222,7 @@ module.exports.manage = () => {
                     const { onHoldCount = 0 } = chan;
                     set(channel, { onHoldCount: onHoldCount + 1 });
                     run({ type: ACTION_SCRIPT_RUN, id: onHold[onHoldCount % onHold.length] });
+                    console.log('hold');
                   }
                 };
                 hold[channel].timeout = setTimeout(handleHold, parseInt(chan.timeout || 1000));
@@ -235,6 +241,7 @@ module.exports.manage = () => {
                     set(channel, { onClick1Count: onClick1Count + 1 });
                     run({ type: ACTION_SCRIPT_RUN, id: onClick1[onClick1Count % onClick1.length] });
                     hold[channel] = { count: 0 };
+                    console.log('click');
                   }
                 }
               }
@@ -243,6 +250,7 @@ module.exports.manage = () => {
                 const { onOffCount = 0 } = chan;
                 set(channel, { onOffCount: (onOffCount || 0) + 1 });
                 run({ type: ACTION_SCRIPT_RUN, id: onOff[onOffCount % onOff.length] });
+                console.log('off');
               }
             }
           } else {
