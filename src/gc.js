@@ -1,6 +1,6 @@
 const { existsSync, unlinkSync, readdirSync } = require("fs");
 const { ASSETS } = require("./assets/constants");
-const { PROJECT, DEVICE, IMAGE, SCRIPT, SITE, CLOCK, SCHEDULE } = require("./constants");
+const { PROJECT, DEVICE, IMAGE, SCRIPT, SITE, CLOCK, SCHEDULE, TIMER, ACTION } = require("./constants");
 const db = require("./db");
 const { asset } = require("./fs");
 
