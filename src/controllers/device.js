@@ -204,7 +204,7 @@ module.exports.manage = () => {
               }
               const onHold = toArr(chan.onHold);
               if (onHold.length > 0) {
-                const handleHold = () => {
+                const handleHold = (start = false) => {
                   if (!chan.value) return;
                   if (chan.repeat) {
                     hold[channel] = {
@@ -217,12 +217,14 @@ module.exports.manage = () => {
                   }
                   const onHold = toArr(chan.onHold);
                   if (onHold.length > 0) {
-                    const { onHoldCount = 0 } = chan;
-                    set(channel, { onHoldCount: onHoldCount + 1 });
+                    if (start) { 
+                      const { onHoldCount = 0 } = chan;
+                      set(channel, { onHoldCount: onHoldCount + 1 });
+                    }
                     run({ type: ACTION_SCRIPT_RUN, id: onHold[onHoldCount % onHold.length] });
                   }
                 };
-                hold[channel].timeout = setTimeout(handleHold, parseInt(chan.timeout || 1000));
+                hold[channel].timeout = setTimeout(handleHold, parseInt(chan.timeout || 1000), true);
               }
             } else {
               clearTimeout(timeout);
