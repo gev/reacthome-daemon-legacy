@@ -2,21 +2,27 @@ const { Controller } = require("zigbee-herdsman");
 const { zigbee } = require("../fs");
 const { parse } = require("uuid");
 
-module.exports = (id) => {
+let controller;
+
+module.exports.createController = (id) => {
   const data = Array.from(parse(id));
-  return new Controller({
+  controller = new Controller({
     databasePath: zigbee("devices.json"),
     serialPort: {
       path: "/dev/ttyAMA0",
       adapter: "zstack",
     },
     network: {
-      panID: data.slice(0, 2),
-      extendedPanID: data.slice(2, 10),
+      // panID: data.slice(0, 2),
+      // extendedPanID: data.slice(2, 10),
       channelList: [
-        11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26,
+        // 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26,
+        15,
       ],
     },
     concurrent: 16,
   });
+  return controller;
 };
+
+module.exports.getController = () => controller;

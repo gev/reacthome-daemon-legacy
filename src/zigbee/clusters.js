@@ -8,7 +8,7 @@ const {
   CLOSURE,
   THERMOSTAT,
 } = require("../constants");
-const controller = require("./controller");
+const { getController } = require("./controller");
 
 const clusters = new Map();
 
@@ -18,10 +18,11 @@ const type = (res) => () => {
 
 const bind = async (endpoint, cluster, config) => {
   // if (endpoint.binds.length > 0) return;
+  const controller = getController();
   try {
     await endpoint.bind(
       cluster,
-      controller.getDevicesByType("Coordinator")[0].getEndpoint(1)
+      controller?.getDevicesByType("Coordinator")[0].getEndpoint(1)
     );
     await endpoint.configureReporting(cluster, config);
   } catch (e) {
