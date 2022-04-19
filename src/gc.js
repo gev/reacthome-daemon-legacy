@@ -74,7 +74,7 @@ module.exports.cleanup = (pool) => {
   });
   assets.forEach(i => { 
     const a = asset(i);
-    if (existsSync(a)) {
+    if (!existsSync(a)) {
       unlinkSync(a)
     }
   })
