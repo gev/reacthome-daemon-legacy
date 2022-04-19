@@ -22,8 +22,13 @@ module.exports.CHANNEL = "channel";
 module.exports.SERVICE = "service";
 module.exports.IMAGE = "image";
 module.exports.SCRIPT = "script";
+module.exports.ACTION = "action";
 module.exports.TOUCH = "touch";
 module.exports.MOBILE = "mobile";
+module.exports.TIMER = "timer";
+module.exports.CLOCK = "clock";
+module.exports.SCHEDULE = "schedule";
+module.exports.WEATHER = "weather";
 
 module.exports.DO = "do";
 module.exports.DI = "di";
