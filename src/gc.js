@@ -13,7 +13,6 @@ const build = (id, pool, state, assets) => {
   const subject = pool[id];
   if (!subject) return;
   state[id] = subject;
-  console.log(subject);
   Object.entries(subject).forEach(([k, v]) => {
     if (isNumber(k)) {
       delete subject[k];
@@ -47,10 +46,8 @@ const build = (id, pool, state, assets) => {
                 .filter(i => i.startsWith(`${d}/`))
                 .forEach(i => {
                   state[i] = pool[i];
-                  console.log(state[i]);
                 });
               state[d] = pool[d];
-              console.log(state[d]);
             });
             break;
           }
