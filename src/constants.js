@@ -21,6 +21,7 @@ module.exports.DEVICE = "device";
 module.exports.CHANNEL = "channel";
 module.exports.SERVICE = "service";
 module.exports.IMAGE = "image";
+module.exports.SCRIPT = "script";
 module.exports.TOUCH = "touch";
 module.exports.MOBILE = "mobile";
 
