@@ -19,6 +19,7 @@ const zigbee = require("./src/zigbee");
 const janus = require("./src/janus");
 const sip = require("./src/sip");
 const db = require("./src/db");
+const { cleanup } = require("./src/gc");
 
 const init = {};
 
@@ -72,6 +73,7 @@ db.createReadStream()
       delete d.ip;
       set(init.mac, d);
     }
+    cleanup(init);
     console.log(init.mac);
     await assets.init();
     state.init(init);
