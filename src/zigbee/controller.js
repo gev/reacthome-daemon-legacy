@@ -17,7 +17,7 @@ module.exports.createController = (id) => {
       // extendedPanID: data.slice(2, 10),
       channelList: [
         // 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26,
-        // 14,
+        14,
       ],
     },
     concurrent: 16,
