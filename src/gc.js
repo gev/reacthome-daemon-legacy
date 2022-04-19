@@ -1,7 +1,7 @@
-import { existsSync, unlinkSync } from "fs";
-import { PROJECT, DEVICE, IMAGE, SCRIPT, SITE } from "./constants";
-import db from "./db";
-import { asset } from "./fs";
+const { existsSync, unlinkSync } = require("fs");
+const { PROJECT, DEVICE, IMAGE, SCRIPT, SITE } = require("./constants");
+const db = require("./db");
+const { asset } = require("./fs");
 
 function isNumber(str) {
   return /^[0-9]+$/.test(str);
