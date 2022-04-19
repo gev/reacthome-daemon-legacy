@@ -213,11 +213,13 @@ module.exports.manage = () => {
                   if (!chan.value) return;
                   if (chan.repeat) {
                     console.log('repeat');
-                    hold[channel].count = 0;
-                    hold[channel].timeout = setTimeout(
-                      handleHold,
-                      parseInt(chan.interval || 100)
-                    );
+                    hold[channel] = {
+                      count: 0,
+                      timeout: setTimeout(
+                        handleHold,
+                        parseInt(chan.interval || 100)
+                      )
+                    };
                   }
                   const onHold = toArr(chan.onHold);
                   if (onHold.length > 0) {
