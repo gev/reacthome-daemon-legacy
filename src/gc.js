@@ -12,6 +12,7 @@ const build = (id, pool, state, assets) => {
   const subject = pool[id];
   if (!subject) return;
   state[id] = subject;
+  console.log(subject);
   Object.entries(subject).forEach(([k, v]) => {
     if (isNumber(k)) {
       delete subject[k];
