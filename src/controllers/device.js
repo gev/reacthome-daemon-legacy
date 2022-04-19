@@ -141,7 +141,6 @@ module.exports.manage = () => {
           const index = data[7];
           const value = data[8];
           const channel = `${id}/${DI}/${index}`;
-          const chan = get(channel);
           console.log(chan);
           const toArr = a => Array.isArray(a) ? a : a ? [a] : [];
           if (chan && chan.value !== value) {
@@ -236,6 +235,7 @@ module.exports.manage = () => {
                   const onClick2 = toArr(chan.onClick2);
                   const onClick3 = toArr(chan.onClick3);
                   const dt = Date.now() - timestamp;
+                  console.log(dt);
                   if (onClick2.length === 0 && onClick3.length === 0
                     && dt < parseInt(chan.timeout || 1000) / 2) {
                     const { onClick1Count = 0 } = chan;
