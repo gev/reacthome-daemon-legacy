@@ -1,6 +1,6 @@
 const { existsSync, unlinkSync, readdirSync } = require("fs");
 const { ASSETS } = require("./assets/constants");
-const { PROJECT, DEVICE, IMAGE, SCRIPT, SITE, CLOCK, SCHEDULE, TIMER, ACTION, DRIVER, DAEMON } = require("./constants");
+const { PROJECT, DEVICE, IMAGE, SCRIPT, SITE, DAEMON } = require("./constants");
 const db = require("./db");
 const { asset } = require("./fs");
 
@@ -56,7 +56,8 @@ const build = (id, pool, state, assets) => {
           default: {
             switch (subject.type) {
               case DAEMON:
-              case PROJECT: {
+              case PROJECT:
+              case SITE: {
                 v.forEach(i => { 
                   if (typeof i === 'string') {
                     state[i] = pool[i];
