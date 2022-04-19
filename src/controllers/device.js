@@ -229,6 +229,7 @@ module.exports.manage = () => {
               }
             } else {
               clearTimeout(timeout);
+              console.log(count);
               if (count === 1) {
                 const onClick1 = toArr(chan.onClick1 || chan.onClick);
                 if (onClick1.length > 0) {
