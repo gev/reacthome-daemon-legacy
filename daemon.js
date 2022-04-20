@@ -73,7 +73,7 @@ db.createReadStream()
       delete d.ip;
       set(init.mac, d);
     }
-    // cleanup(init);
+    cleanup(init);
     console.log(init.mac);
     await assets.init();
     state.init(init);
