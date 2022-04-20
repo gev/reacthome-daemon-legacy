@@ -9,7 +9,7 @@ function isNumber(str) {
 }
 
 const build = (id, pool, state, assets) => {
-  // if (state[id]) return;
+  if (state[id]) return;
   const subject = pool[id];
   if (!subject) return;
   state[id] = subject;
@@ -61,7 +61,8 @@ const build = (id, pool, state, assets) => {
               case SCRIPT: {
                 v.forEach(i => { 
                   // if (typeof i === 'string') {
-                    state[i] = pool[i];
+                    build(i, pool, state, assets);
+                    //state[i] = pool[i];
                   // }
                 });
                 break;
