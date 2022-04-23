@@ -195,7 +195,7 @@ const timers = {};
 const schedules = {};
 
 const AO_VELOCITY = 0;
-const DIM_VELOCITY = 255;
+const DIM_VELOCITY = 180;
 const ARTNET_VELOCITY = 1;
 
 const bind = ["r", "g", "b", "bind"];
@@ -1228,8 +1228,8 @@ const run = (action) => {
         } else {
           if (v > 100) v = 100;
         }
-        set(id, { value: !!v });
         const rgb = color.hsv.rgb(h, s, v);
+        set(id, { last: o.bind ? { v } : { r, g, b }, value: !!v });
         bind.forEach((i, c) => {
           if (!o[i]) return;
           const { velocity } = get(o[i]) || {};
