@@ -162,6 +162,7 @@ const {
   ACTION_RGB_BUTTON_SET,
   DEVICE_TYPE_DIM_12_LED_RS,
   POOL,
+  ACTION_SITE_LIGHT_ON,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -1291,6 +1292,15 @@ const run = (action) => {
           light_RGB.map((i) =>
             run({ type: ACTION_DIM_RELATIVE, id: i, operator, value })
           );
+        });
+        break;
+      }
+      case ACTION_SITE_LIGHT_ON: {
+        const { id } = action;
+        applySite(id, ({ light_220 = [], light_LED = [], light_RGB = [] }) => {
+          light_220.map((i) => run({ type: ACTION_ON, id: i }));
+          light_LED.map((i) => run({ type: ACTION_ON, id: i }));
+          light_RGB.map((i) => run({ type: ACTION_ON, id: i }));
         });
         break;
       }
