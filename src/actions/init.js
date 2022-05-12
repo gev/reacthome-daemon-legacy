@@ -361,24 +361,25 @@ module.exports.initialize = (id) => {
         }
         for (let i = 1; i <= 12; i++) {
           const channel = get(`${id}/${DO}/${i}`) || {};
-          const { value = 0, timeout = 0 } = channel;
-          a[5 * i + 26] = value;
-          a[5 * i + 27] = timeout & 0xff;
-          a[5 * i + 28] = (timeout >> 8) & 0xff;
-          a[5 * i + 29] = (timeout >> 16) & 0xff;
-          a[5 * i + 30] = (timeout >> 24) & 0xff;
+          const { value = 0, timeout = 0, group = i } = channel;
+          a[6 * i + 55] = value;
+          a[6 * i + 56] = group;
+          a[6 * i + 57] = timeout & 0xff;
+          a[6 * i + 58] = (timeout >> 8) & 0xff;
+          a[6 * i + 59] = (timeout >> 16) & 0xff;
+          a[6 * i + 60] = (timeout >> 24) & 0xff;
         }
         const {
           is_rbus = true,
           baud,
           line_control,
         } = get(`${id}/${RS485}/1`) || {};
-        a[91] = is_rbus;
-        a[92] = baud & 0xff;
-        a[93] = (baud >> 8) & 0xff;
-        a[94] = (baud >> 16) & 0xff;
-        a[95] = (baud >> 24) & 0xff;
-        a[96] = line_control;
+        a[133] = is_rbus;
+        a[134] = baud & 0xff;
+        a[135] = (baud >> 8) & 0xff;
+        a[136] = (baud >> 16) & 0xff;
+        a[137] = (baud >> 24) & 0xff;
+        a[138] = line_control;
       }  else if (major >= 2) {
         for (let i = 1; i <= 6; i++) {
           const channel = get(`${id}/${GROUP}/${i}`) || {};
