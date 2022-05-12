@@ -452,8 +452,10 @@ const run = (action) => {
                   const a = [ACTION_DO, action.index];
                   if (action.value !== undefined) {
                     a.push(action.value);
-                  }
-                  if (action.timeout !== undefined) {
+                  } else if (action.timeout !== undefined) {
+                    if (major >= 3) {
+                      a.push(2);
+                    }
                     a.push(action.timeout & 0xff);
                     a.push((action.timeout >> 8) & 0xff);
                     a.push((action.timeout >> 16) & 0xff);
