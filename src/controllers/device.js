@@ -267,6 +267,10 @@ module.exports.manage = () => {
           if (data.length === 13) {
             const timeout = data.readUInt32LE(9);
             set(cid, { timeout });
+          } else if (data.length === 14) {
+            const group = data.readUInt8(9);
+            const timeout = data.readUInt32LE(10);
+            set(cid, { group, timeout });
           }
           if (group && group.enabled) {
             if (value) {
