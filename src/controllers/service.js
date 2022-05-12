@@ -460,6 +460,11 @@ const run = (action) => {
                     a.push((action.timeout >> 8) & 0xff);
                     a.push((action.timeout >> 16) & 0xff);
                     a.push((action.timeout >> 24) & 0xff);
+                  } else if (action.group !== undefined) {
+                    if (major >= 3) {
+                      a.push(3);
+                      a.push(action.group);
+                    }
                   }
                   device.send(Buffer.from(a), dev.ip);
                 }
