@@ -349,7 +349,37 @@ module.exports.initialize = (id) => {
     case DEVICE_TYPE_RELAY_12: {
       const { version = "" } = get(id) || {};
       const [major] = version.split(".");
-      if (major >= 2) {
+      if (major >= 3) {
+        for (let i = 1; i <= 12; i++) {
+          const channel = get(`${id}/${GROUP}/${i}`) || {};
+          const { enabled = 0, delay = 0 } = channel;
+          a[5 * i - 4] = enabled;
+          a[5 * i - 3] = delay & 0xff;
+          a[5 * i - 2] = (delay >> 8) & 0xff;
+          a[5 * i - 1] = (delay >> 16) & 0xff;
+          a[5 * i - 0] = (delay >> 24) & 0xff;
+        }
+        for (let i = 1; i <= 12; i++) {
+          const channel = get(`${id}/${DO}/${i}`) || {};
+          const { value = 0, timeout = 0 } = channel;
+          a[5 * i + 26] = value;
+          a[5 * i + 27] = timeout & 0xff;
+          a[5 * i + 28] = (timeout >> 8) & 0xff;
+          a[5 * i + 29] = (timeout >> 16) & 0xff;
+          a[5 * i + 30] = (timeout >> 24) & 0xff;
+        }
+        const {
+          is_rbus = true,
+          baud,
+          line_control,
+        } = get(`${id}/${RS485}/1`) || {};
+        a[91] = is_rbus;
+        a[92] = baud & 0xff;
+        a[93] = (baud >> 8) & 0xff;
+        a[94] = (baud >> 16) & 0xff;
+        a[95] = (baud >> 24) & 0xff;
+        a[96] = line_control;
+      }  else if (major >= 2) {
         for (let i = 1; i <= 6; i++) {
           const channel = get(`${id}/${GROUP}/${i}`) || {};
           const { enabled = 0, delay = 0 } = channel;
