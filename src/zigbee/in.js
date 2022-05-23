@@ -25,7 +25,6 @@ module.exports = (id, { ID, clusters }, data) => {
       case "genOnOff": {
         const channel = `${id}/${ENDPOINT}/${ID}`;
         const chan = get(channel);
-        set(channel, { value: attributes.onOff });
         if (chan && chan.bind) {
           if (chan.value !== attributes.onOff) {
             const script = chan[onDO[attributes.onOff]];
@@ -35,6 +34,7 @@ module.exports = (id, { ID, clusters }, data) => {
             count[attributes.onOff](chan.bind);
           }
         }
+        set(channel, { value: attributes.onOff });
         break;
       }
       case "genLevelCtrl": {
