@@ -518,7 +518,7 @@ module.exports.manage = () => {
         case ACTION_IR: {
           const now = Date.now();
           let { value = [], timestamp = 0 } = get(id);
-          if (timestamp - now > 1100) {
+          if (timestamp - now > 1000) {
             value = [];
           }
           const buff = data.slice(7);
