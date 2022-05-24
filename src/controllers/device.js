@@ -517,7 +517,7 @@ module.exports.manage = () => {
         }
         case ACTION_IR: {
           const now = Date.now();
-          let { value = {}, timestamp = 0 } = get(id);
+          let { value = [], timestamp = 0 } = get(id);
           if (timestamp - now > 1100) {
             value = [];
           }
