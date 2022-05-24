@@ -519,7 +519,7 @@ module.exports.manage = () => {
           const now = Date.now();
           const dev = get(id) || {};
           let value;
-          if (now - dev.timestamp < 1000) {
+          if (now - dev.timestamp > 1000) {
             value = [];
           } else {
             value = [...dev.value];
