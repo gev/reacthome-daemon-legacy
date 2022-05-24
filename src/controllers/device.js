@@ -517,9 +517,12 @@ module.exports.manage = () => {
         }
         case ACTION_IR: {
           const now = Date.now();
-          let { value = [], timestamp = 0} = get(id) || {};
-          if (now - timestamp < 1000) {
+          const dev = get(id) || {};
+          let value;
+          if (now - dev.timestamp < 1000) {
             value = [];
+          } else {
+            value = [...dev.value];
           }
           const buff = data.slice(7);
           for (let i = 0; i < buff.length; i += 2) {
