@@ -516,11 +516,7 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_IR: {
-          const now = Date.now();
-          let { value = [], timestamp = 0 } = get(id);
-          if (timestamp - now > 1000) {
-            value = [];
-          }
+          const value = [];
           const buff = data.slice(7);
           for (let i = 0; i < buff.length; i += 2) {
             const x = buff.readUInt16LE(i);
