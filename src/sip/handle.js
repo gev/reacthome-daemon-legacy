@@ -31,9 +31,9 @@ module.exports.onCancel = (request) => {
   rs.headers.to.params.tag = call_id;
   sip.send(rs);
   if (calls.has(call_id)) {
-    const { session_id, handle_id } = calls.get(call_id);
+    const { id, session_id, handle_id } = calls.get(call_id);
     janus.send(session_id, handle_id, { request: HANGUP })
-    broadcast({ type: CANCEL, session_id, handle_id, call_id });
+    broadcast({ id, type: CANCEL, session_id, handle_id, call_id });
     calls.delete(call_id);
   }
 };
@@ -46,9 +46,9 @@ module.exports.onBye = (request) => {
   rs.headers.to.params.tag = call_id;
   sip.send(rs);
   if (calls.has(call_id)) {
-    const { session_id, handle_id } = calls.get(call_id);
+    const { id, session_id, handle_id } = calls.get(call_id);
     janus.send(session_id, handle_id, { request: HANGUP })
-    broadcast({ type: BYE, session_id, handle_id, call_id });
+    broadcast({ id, type: BYE, session_id, handle_id, call_id });
     calls.delete(call_id);
   }
 };
@@ -90,7 +90,7 @@ module.exports.onInvite = (request) => {
   sip.send(rs180(call_id, request));
   janus.createSession((session_id) => {
     janus.attachPlugin(session_id, 'janus.plugin.nosip', (handle_id) => {
-      calls.set(call_id, { session_id, handle_id, request });
+      calls.set(call_id, { id, session_id, handle_id, request });
       const o = SDP.parse(request.content);
       o.media = o.media.filter(media => media.type === 'audio');
       janus.send(session_id, handle_id, {
