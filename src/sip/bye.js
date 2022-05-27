@@ -6,8 +6,9 @@ const { broadcast } = require('../websocket/peer');
 const { BYE, HANGUP } = require('./constants');
 
 
-module.exports = ({ session_id, handle_id, call_id }, session) => {
+module.exports = ({ call_id }, session) => {
   if (calls.has(call_id)) {
+    const { id, session_id, handle_id } = calls.get(call_id);
     const { request } = calls.get(call_id);
     const rq = {
       method: BYE,
@@ -21,7 +22,7 @@ module.exports = ({ session_id, handle_id, call_id }, session) => {
       }
     };
     sip.send(rq);
-    broadcast({ type: BYE, session_id, handle_id, call_id }, session);
+    broadcast({ id, type: BYE, session_id, handle_id, call_id }, session);
     janus.send(session_id, handle_id, { request: HANGUP })
     calls.delete(call_id);
   }

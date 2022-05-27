@@ -8,8 +8,9 @@ const { GENERATE } = require('../janus/constants');
 const { broadcast } = require('../websocket/peer');
 const calls = require('./calls');
 
-module.exports = ({ session_id, handle_id, call_id, jsep }, session) => {
-  broadcast({ type: ACK, call_id }, session);
+module.exports = ({ call_id, jsep }, session) => {
+  const { id, session_id, handle_id } = calls.get(call_id);
+  broadcast({ id, type: ACK, call_id }, session);
   janus.send(session_id, handle_id, { request: GENERATE }, jsep, ({ plugindata }) => {
     if (!plugindata) return;
     if (calls.has(call_id)) {
