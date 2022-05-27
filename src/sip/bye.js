@@ -8,8 +8,7 @@ const { BYE, HANGUP } = require('./constants');
 
 module.exports = ({ call_id }, session) => {
   if (calls.has(call_id)) {
-    const { id, session_id, handle_id } = calls.get(call_id);
-    const { request } = calls.get(call_id);
+    const { id, session_id, handle_id, request } = calls.get(call_id);
     const rq = {
       method: BYE,
       uri: request.headers.contact[0].uri,
