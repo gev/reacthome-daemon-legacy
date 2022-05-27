@@ -8,13 +8,13 @@ module.exports = ({ call_id }, session) => {
   if (calls.has(call_id)) {
     const { id, session_id, handle_id, request } = calls.get(call_id);
     const rq = {
-      method: CANNCEL,
+      method: CANCEL,
       uri: request.headers.contact[0].uri,
       headers: {
           to: request.headers.from,
           from: request.headers.to,
           'call-id': call_id,
-          cseq: { method: CANNCEL, seq: 2000 },
+          cseq: { method: CANCEL, seq: 2000 },
           via: [],
       }
     };
