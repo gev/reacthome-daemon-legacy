@@ -25,6 +25,7 @@ module.exports.onRegister = (request) => {
 };
 
 module.exports.onCancel = (request) => {
+  console.log('onCancel', request);
   let rs;
   const call_id = request.headers['call-id'];
   rs = sip.makeResponse(request, 200, 'Ok');
@@ -39,6 +40,7 @@ module.exports.onCancel = (request) => {
 };
 
 module.exports.onBye = (request) => {
+  console.log('onBye', request);
   let rs;
   const call_id = request.headers['call-id'];
   rs = sip.makeResponse(request, 200, 'Ok');
