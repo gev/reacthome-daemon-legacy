@@ -273,6 +273,8 @@ const run = (action) => {
       }
       case ACTION_DO: {
         const dev = get(action.id);
+        const { version = "" } = dev;
+        const [major, minor] = version.split(".");
         if (dev.protocol === ZIGBEE) {
           zigbee.on_off(action.id, action.index, action.value);
           return;
@@ -385,10 +387,18 @@ const run = (action) => {
                   a.push(action.value);
                 }
                 if (action.timeout !== undefined) {
+                  if (major >= 3) {
+                    a.push(2);
+                  }
                   a.push(action.timeout & 0xff);
                   a.push((action.timeout >> 8) & 0xff);
                   a.push((action.timeout >> 16) & 0xff);
                   a.push((action.timeout >> 24) & 0xff);
+                } else if (action.group !== undefined) {
+                  if (major >= 3) {
+                    a.push(3);
+                    a.push(action.group);
+                  }
                 }
                 device.send(Buffer.from(a), dev.ip);
               }
@@ -399,8 +409,6 @@ const run = (action) => {
           case DEVICE_TYPE_MIX_2:
           case DEVICE_TYPE_RELAY_6:
           case DEVICE_TYPE_RELAY_12: {
-            const { version = "" } = dev;
-            const [major, minor] = version.split(".");
             if (major >= 2) {
               switch (action.value) {
                 case ACTION_OPEN:
@@ -544,8 +552,7 @@ const run = (action) => {
         switch (dev.type) {
           case DEVICE_TYPE_MIX_1_RS:
           case DEVICE_TYPE_RELAY_2:
-          case DEVICE_TYPE_RELAY_2_DIN: 
-          case DEVICE_TYPE_RELAY_12_RS: {
+          case DEVICE_TYPE_RELAY_2_DIN: {
             device.send(
               Buffer.from([
                 ACTION_RBUS_TRANSMIT,
