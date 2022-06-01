@@ -284,10 +284,11 @@ const run = (action) => {
             drivers.handle(action);
             break;
           }
-          case DEVICE_TYPE_RELAY_2:
-          case DEVICE_TYPE_RELAY_12_RS:
+          case DEVICE_TYPE_AO_4_DIN:
           case DEVICE_TYPE_MIX_1_RS:
-          case DEVICE_TYPE_RELAY_2_DIN: {
+          case DEVICE_TYPE_RELAY_2:
+          case DEVICE_TYPE_RELAY_2_DIN: 
+          case DEVICE_TYPE_RELAY_12_RS: {
             switch (action.value) {
               case ACTION_OPEN:
               case ACTION_CLOSE:
@@ -517,9 +518,10 @@ const run = (action) => {
           3
         );
         switch (dev.type) {
-          case DEVICE_TYPE_RELAY_2:
           case DEVICE_TYPE_MIX_1_RS:
-          case DEVICE_TYPE_RELAY_2_DIN: {
+          case DEVICE_TYPE_RELAY_2:
+          case DEVICE_TYPE_RELAY_2_DIN:
+          case DEVICE_TYPE_RELAY_12_RS: {
             device.send(
               Buffer.concat([
                 Buffer.from([
@@ -540,9 +542,10 @@ const run = (action) => {
       case ACTION_DI_RELAY_SYNC: {
         const dev = get(action.id);
         switch (dev.type) {
-          case DEVICE_TYPE_RELAY_2:
           case DEVICE_TYPE_MIX_1_RS:
-          case DEVICE_TYPE_RELAY_2_DIN: {
+          case DEVICE_TYPE_RELAY_2:
+          case DEVICE_TYPE_RELAY_2_DIN: 
+          case DEVICE_TYPE_RELAY_12_RS: {
             device.send(
               Buffer.from([
                 ACTION_RBUS_TRANSMIT,
@@ -948,9 +951,10 @@ const run = (action) => {
               break;
             }
             case DEVICE_TYPE_AO_4_DIN:
-            case DEVICE_TYPE_RELAY_2:
             case DEVICE_TYPE_MIX_1_RS:
-            case DEVICE_TYPE_RELAY_2_DIN: {
+            case DEVICE_TYPE_RELAY_2:
+            case DEVICE_TYPE_RELAY_2_DIN: 
+            case DEVICE_TYPE_RELAY_12_RS: {
               device.send(
                 Buffer.from([
                   ACTION_RBUS_TRANSMIT,
@@ -1094,9 +1098,10 @@ const run = (action) => {
               break;
             }
             case DEVICE_TYPE_AO_4_DIN:
-            case DEVICE_TYPE_RELAY_2:
             case DEVICE_TYPE_MIX_1_RS:
-            case DEVICE_TYPE_RELAY_2_DIN: {
+            case DEVICE_TYPE_RELAY_2:
+            case DEVICE_TYPE_RELAY_2_DIN: 
+            case DEVICE_TYPE_RELAY_12_RS: {
               device.send(
                 Buffer.from([
                   ACTION_RBUS_TRANSMIT,
