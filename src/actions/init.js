@@ -429,6 +429,37 @@ module.exports.initialize = (id) => {
       }
       break;
     }
+    case DEVICE_TYPE_RELAY_12_RS: {
+      const mac = id.split(":").map((i) => parseInt(i, 16));
+      a[0] = ACTION_RBUS_TRANSMIT;
+      a[1] = mac[0];
+      a[2] = mac[1];
+      a[3] = mac[2];
+      a[4] = mac[3];
+      a[5] = mac[4];
+      a[6] = mac[5];
+      a[7] = ACTION_INITIALIZE;
+      for (let i = 1; i <= 12; i++) {
+        const channel = get(`${id}/${GROUP}/${i}`) || {};
+        const { enabled = 0, delay = 0 } = channel;
+        a[5 * i + 3] = enabled;
+        a[5 * i + 4] = delay & 0xff;
+        a[5 * i + 5] = (delay >> 8) & 0xff;
+        a[5 * i + 6] = (delay >> 16) & 0xff;
+        a[5 * i + 7] = (delay >> 24) & 0xff;
+      }
+      for (let i = 1; i <= 12; i++) {
+        const channel = get(`${id}/${DO}/${i}`) || {};
+        const { value = 0, timeout = 0, group = i } = channel;
+        a[6 * i + 62] = value;
+        a[6 * i + 63] = group;
+        a[6 * i + 64] = timeout & 0xff;
+        a[6 * i + 65] = (timeout >> 8) & 0xff;
+        a[6 * i + 66] = (timeout >> 16) & 0xff;
+        a[6 * i + 67] = (timeout >> 24) & 0xff;
+      }
+      break;
+    }
     case DEVICE_TYPE_RELAY_24: {
       for (let i = 1; i <= 24; i++) {
         const channel = get(`${id}/${DO}/${i}`);

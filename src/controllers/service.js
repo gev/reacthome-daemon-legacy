@@ -163,6 +163,7 @@ const {
   DEVICE_TYPE_DIM_12_LED_RS,
   POOL,
   ACTION_SITE_LIGHT_ON,
+  DEVICE_TYPE_RELAY_12_RS,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -284,6 +285,7 @@ const run = (action) => {
             break;
           }
           case DEVICE_TYPE_RELAY_2:
+          case DEVICE_TYPE_RELAY_12_RS:
           case DEVICE_TYPE_MIX_1_RS:
           case DEVICE_TYPE_RELAY_2_DIN: {
             switch (action.value) {
