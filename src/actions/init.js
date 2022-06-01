@@ -38,6 +38,7 @@ const {
   AO,
   DEVICE_TYPE_AO_4_DIN,
   DEVICE_TYPE_DIM_12_LED_RS,
+  DEVICE_TYPE_RELAY_12_RS,
 } = require("../constants");
 const { get, set, add } = require("./create");
 const { device } = require("../sockets");
