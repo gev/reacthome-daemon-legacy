@@ -22,6 +22,7 @@ module.exports = (session, message) => {
     const peer = peers.get(session);
     peer.timestamp = Date.now();
     const action = JSON.parse(message);
+    console.log(action);
     switch (action.type) {
       case LIST: {
         onList(session);
