@@ -370,7 +370,6 @@ module.exports.manage = () => {
               const chan = get(channel);
               set(channel, {
                 type,
-                group,
                 value,
                 velocity,
                 dimmable:
