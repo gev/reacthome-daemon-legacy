@@ -64,6 +64,8 @@ const {
   ACTION_IMAGE,
   ACTION_VIBRO,
   ACTION_TEMPERATURE_EXT_DEP,
+  DEVICE_TYPE_DIM4,
+  DEVICE_TYPE_DIM8,
 } = require("../constants");
 const {
   get,
@@ -344,6 +346,37 @@ module.exports.manage = () => {
                 value,
                 velocity,
                 dimable: true,
+              });
+              if (chan) {
+                const { bind } = chan;
+                if (bind) {
+                  const v = value ? 1 : 0;
+                  const v_ = chan.value ? 1 : 0;
+                  if (v !== v_) {
+                    const script = chan[onDO[v]];
+                    if (script) {
+                      run({ type: ACTION_SCRIPT_RUN, id: script });
+                    }
+                    count[v](bind);
+                  }
+                }
+              }
+              break;
+            }
+            case DEVICE_TYPE_DIM4: 
+            case DEVICE_TYPE_DIM8: {
+              const [, , , , , , , index, type, value, velocity] = data;
+              const channel = `${id}/${DIM}/${index}`;
+              const chan = get(channel);
+              set(channel, {
+                type,
+                group,
+                value,
+                velocity,
+                dimmable:
+                  type === DIM_TYPE_FALLING_EDGE ||
+                  type === DIM_TYPE_RISING_EDGE ||
+                  type === DIM_TYPE_PWM,
               });
               if (chan) {
                 const { bind } = chan;
