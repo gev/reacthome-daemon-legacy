@@ -1754,12 +1754,12 @@ const run = (action) => {
         const kind = type === DEVICE_TYPE_SCREEN ? ircodes.codes.Screen : ircodes.codes.TV;
         const codes = kind[brand][model];
         const code = codes.command[command];
-        const legacy = (i) => {
+        const legacy = (code) => {
           const data = ircodes.encode(
             codes.count,
             codes.header,
             codes.trail,
-            code[0]
+            code
           );
           const buff = Buffer.alloc(data.length * 2 + 5);
           buff.writeUInt8(ACTION_IR, 0);
@@ -1771,33 +1771,35 @@ const run = (action) => {
           }
           return buff;
         };
-        switch (type) {
-          case DEVICE_TYPE_IR_4:
-          case DEVICE_TYPE_SMART_4A:
-          case DEVICE_TYPE_SMART_4G:
-          case DEVICE_TYPE_SMART_4GD: {
-            const [major] = version.split(".");
-            const header = Buffer.alloc(7);
-            header.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
-            dev.split(":").forEach((v, i) => {
-              header.writeUInt8(parseInt(v, 16), i + 1);
-            });
-            device.send(
-              Buffer.concat([
-                header,
-                major < 2 ? legacy() : Buffer.from([ACTION_IR, index, ...code[0]]),
-              ]),
-              ip
-            );
-            break;
+        code.forEach((c) => setTimeout(() => { 
+          switch (type) {
+            case DEVICE_TYPE_IR_4:
+            case DEVICE_TYPE_SMART_4A:
+            case DEVICE_TYPE_SMART_4G:
+            case DEVICE_TYPE_SMART_4GD: {
+              const [major] = version.split(".");
+              const header = Buffer.alloc(7);
+              header.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
+              dev.split(":").forEach((v, i) => {
+                header.writeUInt8(parseInt(v, 16), i + 1);
+              });
+              device.send(
+                Buffer.concat([
+                  header,
+                  major < 2 ? legacy(c) : Buffer.from([ACTION_IR, index, ...c]),
+                ]),
+                ip
+              );
+              break;
+            }
+            case DEVICE_TYPE_LANAMP: {
+              device.send(Buffer.from([ACTION_IR, index, ...c]), ip);
+              break;
+            }
+            default:
+              device.send(legacy(c), ip);
           }
-          case DEVICE_TYPE_LANAMP: {
-            device.send(Buffer.from([ACTION_IR, index, ...code[0]]), ip);
-            break;
-          }
-          default:
-            device.send(legacy(), ip);
-        }
+        }), 100);
         break;
       }
       case ACTION_LEAKAGE_RESET: {
