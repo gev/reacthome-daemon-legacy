@@ -164,6 +164,7 @@ const {
   POOL,
   ACTION_SITE_LIGHT_ON,
   DEVICE_TYPE_RELAY_12_RS,
+  ACTION_SCREEN,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -1744,12 +1745,14 @@ const run = (action) => {
         }
         break;
       }
+      case ACTION_SCREEN:
       case ACTION_TV: {
-        const { id, command, repeat } = action;
+        const { id, command } = action;
         const { bind, brand, model } = get(id) || {};
         const [dev, , index] = bind.split("/");
         const { ip, type, version = "" } = get(dev);
-        const codes = ircodes.codes.TV[brand][model];
+        const kind = type === DEVICE_TYPE_SCREEN ? ircodes.codes.Screen : ircodes.codes.TV;
+        const codes = kind[brand][model];
         const code = codes.command[command];
         const legacy = (i) => {
           const data = ircodes.encode(
