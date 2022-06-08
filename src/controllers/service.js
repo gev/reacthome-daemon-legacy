@@ -1751,12 +1751,12 @@ const run = (action) => {
         const { ip, type, version = "" } = get(dev);
         const codes = ircodes.codes.TV[brand][model];
         const code = codes.command[command];
-        const legacy = () => {
+        const legacy = (i) => {
           const data = ircodes.encode(
             codes.count,
             codes.header,
             codes.trail,
-            code
+            code[0]
           );
           const buff = Buffer.alloc(data.length * 2 + 5);
           buff.writeUInt8(ACTION_IR, 0);
@@ -1782,14 +1782,14 @@ const run = (action) => {
             device.send(
               Buffer.concat([
                 header,
-                major < 2 ? legacy() : Buffer.from([ACTION_IR, index, ...code]),
+                major < 2 ? legacy() : Buffer.from([ACTION_IR, index, ...code[0]]),
               ]),
               ip
             );
             break;
           }
           case DEVICE_TYPE_LANAMP: {
-            device.send(Buffer.from([ACTION_IR, index, ...code]), ip);
+            device.send(Buffer.from([ACTION_IR, index, ...code[0]]), ip);
             break;
           }
           default:
