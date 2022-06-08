@@ -1751,7 +1751,7 @@ const run = (action) => {
         const { bind, brand, model } = get(id) || {};
         const [dev, , index] = bind.split("/");
         const { ip, type, version = "" } = get(dev);
-        const kind = type === ACTION_SCREEN ? ircodes.codes.Screen : ircodes.codes.TV;
+        const kind = type === ACTION_SCREEN ? ircodes.codes.screen : ircodes.codes.TV;
         const codes = kind[brand][model];
         const code = codes.command[command];
         const legacy = (code) => {
