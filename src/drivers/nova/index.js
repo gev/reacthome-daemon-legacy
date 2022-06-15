@@ -25,11 +25,11 @@ const sync = (id) => {
   const [modbus, , address] = bind.split("/");
   if (modbus) {
     if (synced) {
-      readInputRegisters(modbus, address, 1, 1);
+      readInputRegisters(modbus, address, 3, 1);
       // readHoldingRegisters(modbus, address, 1, 1);
     } else {
-      writeRegister(modbus, address, 0x0, dev.value ? dev.fan_speed : 0);
-      writeRegister(modbus, address, 0x1, dev.setpoint * 10);
+      writeRegister(modbus, address, 0x3, dev.value ? 1 : 0);
+      // writeRegister(modbus, address, 0x1, dev.setpoint * 10);
       set(id, { synced: true });
     }
   }
@@ -63,12 +63,13 @@ module.exports.handle = (action) => {
       switch (data[0]) {
         case READ_HOLDING_REGISTERS: {
           const dev = get(id) || {};
-          const fan_speed = data.readUInt16BE(2);
+          const value = data.readUInt16BE(2);
+          // const fan_speed = data.readUInt16BE(2);
           // const setpoint = data.readUInt16BE(4) / 10;
           if (dev.synced) {
             set(id, {
-              value: !!fan_speed,
-              fan_speed: fan_speed ? fan_speed : dev.fan_speed,
+              value,// !!fan_speed,
+              // fan_speed: fan_speed ? fan_speed : dev.fan_speed,
               // setpoint,
               synced: true,
             });
