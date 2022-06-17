@@ -37,6 +37,7 @@ const sync = (id) => {
 
 module.exports.handle = (action) => {
   const { id, type } = action;
+  console.log(action) 
   switch (type) {
     case ACTION_ON: {
       set(id, { value: true, synced: false });
