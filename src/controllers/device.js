@@ -328,7 +328,7 @@ module.exports.manage = () => {
           const { bind } = get(channel) || {};
           console.log(
             "RS485",
-            data
+            Array.from(data)
               .map((i) => i.toString(16).padStart(2, "0"))
               .join(" ")
           );
