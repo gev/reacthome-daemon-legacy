@@ -83,8 +83,7 @@ module.exports.manage = () => {
 };
 
 module.exports.handle = (action) => {
-  console.log(run[action.id]);
-  //console.log(run[action.id].handle);
+  console.log(run[action.id].handle);
   if (run[action.id] && run[action.id].handle) {
     run[action.id].handle(action);
   }
