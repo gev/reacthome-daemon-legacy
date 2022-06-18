@@ -1594,25 +1594,23 @@ const run = (action) => {
         } else {
           switch (mode) {
             case HEAT: {
-              // stopCool();
+              stopCool();
               if (temperature < setpoint - heat_hysteresis) {
                 stopCool();
                 startHeat();
-              } else if (temperature > setpoint - -heat_hysteresis) {
+              } else if (temperature > setpoint - (- heat_hysteresis)) {
                 stopHeat();
               }
               break;
             }
             case COOL: {
-              // stopHeat();
-              startCool();
-              // stopHeat();
-              // if (temperature > setpoint - (- cool_hysteresis)) {
-              //   stopHeat();
-              //   startCool();
-              // } else if (temperature < setpoint - cool_hysteresis) {
-              //   stopCool();
-              // }
+              stopHeat();
+              if (temperature > setpoint - (- cool_hysteresis)) {
+                stopHeat();
+                startCool();
+              } else if (temperature < setpoint - cool_hysteresis) {
+                stopCool();
+              }
               break;
             }
             default: {
