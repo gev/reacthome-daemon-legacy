@@ -11,7 +11,12 @@ const {
   ACTION_DISABLE,
   ACTION_RBUS_TRANSMIT,
   DEVICE_TYPE_IR_4,
+  DEVICE_TYPE_RELAY_12,
+  DEVICE_TYPE_IR6,
+  DEVICE_TYPE_IR1,
+  ACTION_DO,
 } = require("../../constants");
+const { run } = require("../../controllers/service");
 
 const manage = (power, setpoint, ac) => {
   if (!ac.bind) return;
@@ -41,7 +46,8 @@ const manage = (power, setpoint, ac) => {
       });
       break;
     }
-    default:
+    case DEVICE_TYPE_IR1:
+    case DEVICE_TYPE_IR6:
       command.forEach((code, i) => {
         const data = ircodes.encode(
           model.count,
@@ -59,6 +65,11 @@ const manage = (power, setpoint, ac) => {
         }
         setTimeout(device.send, i * model.delay, buff, ip);
       });
+    default: {
+      run({id: dev, index, type: ACTION_DO, value: power})
+      break;
+    }
+
   }
 };
 
