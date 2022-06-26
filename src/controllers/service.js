@@ -877,10 +877,10 @@ const run = (action) => {
           drivers.handle(action);
           return;
         }
-        if (o.type === AC) {
-          ac.handle(action);
-          return;
-        }
+        // if (o.type === AC) {
+        //   ac.handle(action);
+        //   return;
+        // }
         set(id, { value: true });
         if (o.onOn) {
           run({ type: ACTION_SCRIPT_RUN, id: o.onOn });
