@@ -20,12 +20,12 @@ const { run } = require("../../controllers/service");
 const manage = (power, setpoint, ac) => {
   if (!ac.bind) return;
   const [dev, , index] = ac.bind.split("/");
-  const { ip, type, version = "" } = get(dev) || {};
-  const model = (ircodes.codes.AC[ac.brand] || {})[ac.model];
-  const command = model.command(power, setpoint);
   switch (type) {
     case DEVICE_TYPE_IR_4: {
+      const { ip, type, version = "" } = get(dev) || {};
+      const model = (ircodes.codes.AC[ac.brand] || {})[ac.model];
       if (!model) return;
+      const command = model.command(power, setpoint);
       const [major] = version.split(".");
       if (major < 2) return;
       const header = [];
@@ -47,7 +47,9 @@ const manage = (power, setpoint, ac) => {
     }
     case DEVICE_TYPE_IR1:
     case DEVICE_TYPE_IR6: {
+      const model = (ircodes.codes.AC[ac.brand] || {})[ac.model];
       if (!model) return;
+      const command = model.command(power, setpoint);
       command.forEach((code, i) => {
         const data = ircodes.encode(
           model.count,
