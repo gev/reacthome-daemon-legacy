@@ -47,7 +47,7 @@ const manage = (power, setpoint, ac) => {
       break;
     }
     case DEVICE_TYPE_IR1:
-    case DEVICE_TYPE_IR6:
+    case DEVICE_TYPE_IR6: {
       command.forEach((code, i) => {
         const data = ircodes.encode(
           model.count,
@@ -65,6 +65,8 @@ const manage = (power, setpoint, ac) => {
         }
         setTimeout(device.send, i * model.delay, buff, ip);
       });
+      break;
+    }
     default: {
       run({id: dev, index, type: ACTION_DO, value: power})
       break;
