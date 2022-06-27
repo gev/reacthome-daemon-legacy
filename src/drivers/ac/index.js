@@ -77,11 +77,9 @@ const manage = (power, setpoint, ac) => {
 
 module.exports.handle = ({ type, id }) => {
   const ac = get(id) || {};
-  // let enabled = ac.enabled;
   const { setpoint } = get(ac.thermostat) || {};
   switch (type) {
     case ACTION_ENABLE:
-      // enabled = true;
       manage(ON, setpoint, ac);
       set(id, { value: ON, setpoint, enabled: true });
       set(ac.bind, { value: ON });
