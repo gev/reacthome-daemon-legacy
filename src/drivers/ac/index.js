@@ -11,7 +11,6 @@ const {
   ACTION_DISABLE,
   ACTION_RBUS_TRANSMIT,
   DEVICE_TYPE_IR_4,
-  DEVICE_TYPE_RELAY_12,
   DEVICE_TYPE_IR6,
   DEVICE_TYPE_IR1,
   ACTION_DO,
@@ -68,7 +67,7 @@ const manage = (power, setpoint, ac) => {
       break;
     }
     default: {
-      run({id: dev, index, type: ACTION_DO, value: power})
+      run({ id: dev, index, type: ACTION_DO, value: power })
       break;
     }
 
@@ -82,7 +81,10 @@ module.exports.handle = ({ type, id }) => {
   switch (type) {
     case ACTION_ENABLE:
       enabled = true;
+      manage(ON, setpoint, ac);
+      set(id, { value: ON, setpoint, enabled });
       set(ac.bind, { value: ON });
+      break;  
     case ACTION_ON: {
       if (!enabled) return;
       if (ac.value === ON && ac.setpoint == setpoint) return;
@@ -92,7 +94,10 @@ module.exports.handle = ({ type, id }) => {
     }
     case ACTION_DISABLE:
       enabled = false;
+      manage(OFF, setpoint, ac);
+      set(id, { value: OFF, setpoint, enabled });
       set(ac.bind, { value: OFF });
+      break;
     case ACTION_OFF: {
       if (ac.value === OFF) return;
       manage(OFF, setpoint, ac);
