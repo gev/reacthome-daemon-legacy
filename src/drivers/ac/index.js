@@ -81,10 +81,8 @@ module.exports.handle = ({ type, id }) => {
   switch (type) {
     case ACTION_ENABLE:
       enabled = true;
-      manage(ON, setpoint, ac);
-      set(id, { value: ON, setpoint, enabled });
-      set(ac.bind, { value: ON });
-      break;  
+      set(id, {setpoint, enabled });
+//      set(ac.bind, { value: ON });
     case ACTION_ON: {
       if (!enabled) return;
       if (ac.value === ON && ac.setpoint == setpoint) return;
@@ -94,10 +92,8 @@ module.exports.handle = ({ type, id }) => {
     }
     case ACTION_DISABLE:
       enabled = false;
-      manage(OFF, setpoint, ac);
-      set(id, { value: OFF, setpoint, enabled });
-      set(ac.bind, { value: OFF });
-      break;
+      set(id, {setpoint, enabled });
+  //    set(ac.bind, { value: OFF });
     case ACTION_OFF: {
       if (ac.value === OFF) return;
       manage(OFF, setpoint, ac);
