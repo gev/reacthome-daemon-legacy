@@ -20,9 +20,9 @@ const { run } = require("../../controllers/service");
 const manage = (power, setpoint, ac) => {
   if (!ac.bind) return;
   const [dev, , index] = ac.bind.split("/");
+  const { ip, type, version = "" } = get(dev) || {};
   switch (type) {
     case DEVICE_TYPE_IR_4: {
-      const { ip, type, version = "" } = get(dev) || {};
       const model = (ircodes.codes.AC[ac.brand] || {})[ac.model];
       if (!model) return;
       const command = model.command(power, setpoint);
