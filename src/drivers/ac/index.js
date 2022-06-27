@@ -22,10 +22,10 @@ const manage = (power, setpoint, ac) => {
   const [dev, , index] = ac.bind.split("/");
   const { ip, type, version = "" } = get(dev) || {};
   const model = (ircodes.codes.AC[ac.brand] || {})[ac.model];
-  if (!model) return;
   const command = model.command(power, setpoint);
   switch (type) {
     case DEVICE_TYPE_IR_4: {
+      if (!model) return;
       const [major] = version.split(".");
       if (major < 2) return;
       const header = [];
@@ -47,6 +47,7 @@ const manage = (power, setpoint, ac) => {
     }
     case DEVICE_TYPE_IR1:
     case DEVICE_TYPE_IR6: {
+      if (!model) return;
       command.forEach((code, i) => {
         const data = ircodes.encode(
           model.count,
@@ -81,8 +82,10 @@ module.exports.handle = ({ type, id }) => {
   switch (type) {
     case ACTION_ENABLE:
       enabled = true;
-      set(id, {setpoint, enabled });
-//      set(ac.bind, { value: ON });
+      manage(ON, setpoint, ac);
+      set(id, { value: ON, setpoint, enabled });
+      set(ac.bind, { value: ON });
+      break;
     case ACTION_ON: {
       if (!enabled) return;
       if (ac.value === ON && ac.setpoint == setpoint) return;
@@ -92,8 +95,10 @@ module.exports.handle = ({ type, id }) => {
     }
     case ACTION_DISABLE:
       enabled = false;
-      set(id, {setpoint, enabled });
-  //    set(ac.bind, { value: OFF });
+      manage(OFF, setpoint, ac);
+      set(id, { value: OFF, setpoint, enabled });
+      set(ac.bind, { value: OFF });
+      break;
     case ACTION_OFF: {
       if (ac.value === OFF) return;
       manage(OFF, setpoint, ac);
