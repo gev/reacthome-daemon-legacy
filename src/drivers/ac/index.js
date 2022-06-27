@@ -11,21 +11,17 @@ const {
   ACTION_DISABLE,
   ACTION_RBUS_TRANSMIT,
   DEVICE_TYPE_IR_4,
-  DEVICE_TYPE_IR6,
-  DEVICE_TYPE_IR1,
-  ACTION_DO,
 } = require("../../constants");
-const { run } = require("../../controllers/service");
 
 const manage = (power, setpoint, ac) => {
   if (!ac.bind) return;
   const [dev, , index] = ac.bind.split("/");
   const { ip, type, version = "" } = get(dev) || {};
+  const model = (ircodes.codes.AC[ac.brand] || {})[ac.model];
+  if (!model) return;
+  const command = model.command(power, setpoint);
   switch (type) {
     case DEVICE_TYPE_IR_4: {
-      const model = (ircodes.codes.AC[ac.brand] || {})[ac.model];
-      if (!model) return;
-      const command = model.command(power, setpoint);
       const [major] = version.split(".");
       if (major < 2) return;
       const header = [];
@@ -45,11 +41,7 @@ const manage = (power, setpoint, ac) => {
       });
       break;
     }
-    case DEVICE_TYPE_IR1:
-    case DEVICE_TYPE_IR6: {
-      const model = (ircodes.codes.AC[ac.brand] || {})[ac.model];
-      if (!model) return;
-      const command = model.command(power, setpoint);
+    default:
       command.forEach((code, i) => {
         const data = ircodes.encode(
           model.count,
@@ -67,40 +59,31 @@ const manage = (power, setpoint, ac) => {
         }
         setTimeout(device.send, i * model.delay, buff, ip);
       });
-      break;
-    }
-    default: {
-      run({ id: dev, index, type: ACTION_DO, value: power })
-      break;
-    }
-
   }
 };
 
 module.exports.handle = ({ type, id }) => {
   const ac = get(id) || {};
+  let enabled = ac.enabled;
   const { setpoint } = get(ac.thermostat) || {};
   switch (type) {
     case ACTION_ENABLE:
-      manage(ON, setpoint, ac);
-      set(id, { value: ON, setpoint, enabled: true });
+      enabled = true;
       set(ac.bind, { value: ON });
-      break;
     case ACTION_ON: {
+      if (!enabled) return;
       if (ac.value === ON && ac.setpoint == setpoint) return;
       manage(ON, setpoint, ac);
-      set(id, { value: ON, setpoint, enabled: true });
+      set(id, { value: ON, setpoint, enabled });
       break;
     }
     case ACTION_DISABLE:
-      manage(OFF, setpoint, ac);
-      set(id, { value: OFF, setpoint, enabled: false });
+      enabled = false;
       set(ac.bind, { value: OFF });
-      break;
     case ACTION_OFF: {
       if (ac.value === OFF) return;
       manage(OFF, setpoint, ac);
-      set(id, { value: OFF, setpoint, enabled: false });
+      set(id, { value: OFF, setpoint, enabled });
       break;
     }
   }

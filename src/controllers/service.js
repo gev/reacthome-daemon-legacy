@@ -860,7 +860,8 @@ const run = (action) => {
         const { type } = get(action.id) || {};
         switch (type) {
           case AC: {
-            ac.handle(action);
+            // ac.handle(action);
+            run({id: action.id, type: ACTION_ON})
             break;
           }
           default: {
@@ -877,10 +878,10 @@ const run = (action) => {
           drivers.handle(action);
           return;
         }
-        if (o.type === AC) {
-          ac.handle(action);
-          return;
-        }
+        // if (o.type === AC) {
+        //   ac.handle(action);
+        //   return;
+        // }
         set(id, { value: true });
         if (o.onOn) {
           run({ type: ACTION_SCRIPT_RUN, id: o.onOn });
@@ -1013,7 +1014,8 @@ const run = (action) => {
         const { type } = get(action.id) || {};
         switch (type) {
           case AC: {
-            ac.handle(action);
+            // ac.handle(action);
+            run({id: action.id, type: ACTION_OFF})
             break;
           }
           default: {
@@ -1030,10 +1032,10 @@ const run = (action) => {
           drivers.handle(action);
           return;
         }
-        if (o.type === AC) {
-          ac.handle(action);
-          return;
-        }
+        // if (o.type === AC) {
+        //   ac.handle(action);
+        //   return;
+        // }
         set(id, { value: false });
         if (o.onOff) {
           run({ type: ACTION_SCRIPT_RUN, id: o.onOff });
