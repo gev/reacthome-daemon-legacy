@@ -875,7 +875,7 @@ const run = (action) => {
         const { id } = action;
         const o = get(id) || {};
         if (o.disabled) return;
-        if (o.type === DRIVER_TYPE_INTESIS_BOX || dev.type === DRIVER_TYPE_NOVA) {
+        if (o.type === DRIVER_TYPE_INTESIS_BOX || o.type === DRIVER_TYPE_NOVA) {
           drivers.handle(action);
           return;
         }
@@ -1366,7 +1366,7 @@ const run = (action) => {
             });
           }
           set(id, { setpoint: value });
-        } else if (dev.type === DRIVER_TYPE_INTESIS_BOX || dev.type === DRIVER_TYPE_NOVA) {
+        } else if (dev.type === DRIVER_TYPE_INTESIS_BOX || o.type === DRIVER_TYPE_NOVA) {
           drivers.handle(action);
         } else {
           set(id, { setpoint: value });
