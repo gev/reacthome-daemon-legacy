@@ -165,6 +165,7 @@ const {
   ACTION_SITE_LIGHT_ON,
   DEVICE_TYPE_RELAY_12_RS,
   ACTION_SCREEN,
+  DRIVER_TYPE_NOVA,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -290,7 +291,7 @@ const run = (action) => {
           case DEVICE_TYPE_AO_4_DIN:
           case DEVICE_TYPE_MIX_1_RS:
           case DEVICE_TYPE_RELAY_2:
-          case DEVICE_TYPE_RELAY_2_DIN: 
+          case DEVICE_TYPE_RELAY_2_DIN:
           case DEVICE_TYPE_RELAY_12_RS: {
             switch (action.value) {
               case ACTION_OPEN:
@@ -840,8 +841,8 @@ const run = (action) => {
         const [i2, i1] = Array.isArray(value)
           ? value
           : Array.from(String(value).padStart(2, " "))
-              .slice(-2)
-              .map((i) => char2image[i]);
+            .slice(-2)
+            .map((i) => char2image[i]);
         const dev = get(id) || {};
         device.send(
           Buffer.from([
@@ -861,7 +862,7 @@ const run = (action) => {
         switch (type) {
           case AC: {
             // ac.handle(action);
-            run({id: action.id, type: ACTION_ON})
+            run({ id: action.id, type: ACTION_ON })
             break;
           }
           default: {
@@ -874,7 +875,7 @@ const run = (action) => {
         const { id } = action;
         const o = get(id) || {};
         if (o.disabled) return;
-        if (o.type === DRIVER_TYPE_INTESIS_BOX) {
+        if (o.type === DRIVER_TYPE_INTESIS_BOX || dev.type === DRIVER_TYPE_NOVA) {
           drivers.handle(action);
           return;
         }
@@ -962,7 +963,7 @@ const run = (action) => {
             case DEVICE_TYPE_AO_4_DIN:
             case DEVICE_TYPE_MIX_1_RS:
             case DEVICE_TYPE_RELAY_2:
-            case DEVICE_TYPE_RELAY_2_DIN: 
+            case DEVICE_TYPE_RELAY_2_DIN:
             case DEVICE_TYPE_RELAY_12_RS: {
               device.send(
                 Buffer.from([
@@ -1015,7 +1016,7 @@ const run = (action) => {
         switch (type) {
           case AC: {
             // ac.handle(action);
-            run({id: action.id, type: ACTION_OFF})
+            run({ id: action.id, type: ACTION_OFF })
             break;
           }
           default: {
@@ -1110,7 +1111,7 @@ const run = (action) => {
             case DEVICE_TYPE_AO_4_DIN:
             case DEVICE_TYPE_MIX_1_RS:
             case DEVICE_TYPE_RELAY_2:
-            case DEVICE_TYPE_RELAY_2_DIN: 
+            case DEVICE_TYPE_RELAY_2_DIN:
             case DEVICE_TYPE_RELAY_12_RS: {
               device.send(
                 Buffer.from([
@@ -1191,7 +1192,7 @@ const run = (action) => {
               );
               break;
             }
-            case DEVICE_TYPE_DIM_12_LED_RS: 
+            case DEVICE_TYPE_DIM_12_LED_RS:
             case DEVICE_TYPE_AO_4_DIN: {
               device.send(
                 Buffer.from([
@@ -1365,7 +1366,7 @@ const run = (action) => {
             });
           }
           set(id, { setpoint: value });
-        } else if (dev.type === DRIVER_TYPE_INTESIS_BOX) {
+        } else if (dev.type === DRIVER_TYPE_INTESIS_BOX || dev.type === DRIVER_TYPE_NOVA) {
           drivers.handle(action);
         } else {
           set(id, { setpoint: value });
@@ -1771,7 +1772,7 @@ const run = (action) => {
           }
           return buff;
         };
-        code.forEach((c) => setTimeout(() => { 
+        code.forEach((c) => setTimeout(() => {
           switch (type) {
             case DEVICE_TYPE_IR_4:
             case DEVICE_TYPE_SMART_4A:

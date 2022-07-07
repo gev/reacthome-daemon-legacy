@@ -25,10 +25,12 @@ const sync = (id) => {
   const [modbus, , address] = bind.split("/");
   if (modbus) {
     if (synced) {
-      readInputRegisters(modbus, address, 3, 1);
+      console.log('read', modbus, address);
+      readInputRegisters(modbus, address, 0x2, 1);
       // readHoldingRegisters(modbus, address, 1, 1);
     } else {
-      writeRegister(modbus, address, 0x3, dev.value ? 1 : 0);
+      console.log('write', modbus, address, dev.value);
+      writeRegister(modbus, address, 0x2, dev.value ? 1 : 0);
       // writeRegister(modbus, address, 0x1, dev.setpoint * 10);
       set(id, { synced: true });
     }
@@ -37,7 +39,7 @@ const sync = (id) => {
 
 module.exports.handle = (action) => {
   const { id, type } = action;
-  console.log(action) 
+  console.log(action)
   switch (type) {
     case ACTION_ON: {
       set(id, { value: true, synced: false });
@@ -61,6 +63,7 @@ module.exports.handle = (action) => {
     }
     default: {
       const { data } = action;
+      console.log(data)
       switch (data[0]) {
         case READ_HOLDING_REGISTERS: {
           const dev = get(id) || {};
