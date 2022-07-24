@@ -39,6 +39,7 @@ const {
   DEVICE_TYPE_AO_4_DIN,
   DEVICE_TYPE_DIM_12_LED_RS,
   DEVICE_TYPE_RELAY_12_RS,
+  DEVICE_TYPE_DIM_8_RS,
 } = require("../constants");
 const { get, set, add } = require("./create");
 const { device } = require("../sockets");
@@ -381,7 +382,7 @@ module.exports.initialize = (id) => {
         a[136] = (baud >> 16) & 0xff;
         a[137] = (baud >> 24) & 0xff;
         a[138] = line_control;
-      }  else if (major >= 2) {
+      } else if (major >= 2) {
         for (let i = 1; i <= 6; i++) {
           const channel = get(`${id}/${GROUP}/${i}`) || {};
           const { enabled = 0, delay = 0 } = channel;
@@ -538,6 +539,24 @@ module.exports.initialize = (id) => {
       a[6] = mac[5];
       a[7] = ACTION_INITIALIZE;
       for (let i = 1; i <= 12; i++) {
+        const channel = get(`${id}/${DIM}/${i}`);
+        a[3 * i + 5] = (channel && channel.group) || i;
+        a[3 * i + 6] = (channel && channel.type) || 0;
+        a[3 * i + 7] = (channel && channel.value) || 0;
+      }
+      break;
+    }
+    case DEVICE_TYPE_DIM_8_RS: {
+      const mac = id.split(":").map((i) => parseInt(i, 16));
+      a[0] = ACTION_RBUS_TRANSMIT;
+      a[1] = mac[0];
+      a[2] = mac[1];
+      a[3] = mac[2];
+      a[4] = mac[3];
+      a[5] = mac[4];
+      a[6] = mac[5];
+      a[7] = ACTION_INITIALIZE;
+      for (let i = 1; i <= 8; i++) {
         const channel = get(`${id}/${DIM}/${i}`);
         a[3 * i + 5] = (channel && channel.group) || i;
         a[3 * i + 6] = (channel && channel.type) || 0;

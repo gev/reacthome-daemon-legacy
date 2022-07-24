@@ -244,6 +244,7 @@ module.exports.DEVICE_TYPE_MIX_1 = 0xab;
 module.exports.DEVICE_TYPE_MIX_1_RS = 0xac;
 module.exports.DEVICE_TYPE_DIM_12_LED_RS = 0xad;
 module.exports.DEVICE_TYPE_RELAY_12_RS = 0xae;
+module.exports.DEVICE_TYPE_DIM_8_RS = 0xaf;
 
 module.exports.DEVICE_TYPE_TEMPERATURE_EXT = 0xf0;
 

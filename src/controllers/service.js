@@ -166,6 +166,7 @@ const {
   DEVICE_TYPE_RELAY_12_RS,
   ACTION_SCREEN,
   DRIVER_TYPE_NOVA,
+  DEVICE_TYPE_DIM_8_RS,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -589,9 +590,14 @@ const run = (action) => {
       case ACTION_DIMMER: {
         const dev = get(action.id) || {};
         switch (dev.type) {
+          case DEVICE_TYPE_DIM_8_RS:
           case DEVICE_TYPE_DIM_12_LED_RS:
           case DEVICE_TYPE_AO_4_DIN: {
-            const velocity = dev.type === DEVICE_TYPE_DIM_12_LED_RS ? DIM_VELOCITY : AO_VELOCITY;
+            const velocity =
+              dev.type === DEVICE_TYPE_DIM_12_LED_RS ||
+                dev.type === DEVICE_TYPE_DIM_8_RS
+                ? DIM_VELOCITY
+                : AO_VELOCITY;
             switch (action.action) {
               case DIM_TYPE:
               case DIM_GROUP: {
@@ -774,6 +780,7 @@ const run = (action) => {
                   break;
                 }
                 case DEVICE_TYPE_AO_4_DIN:
+                case DEVICE_TYPE_DIM_8_RS:
                 case DEVICE_TYPE_DIM_12_LED_RS: {
                   device.send(
                     Buffer.from([
@@ -783,7 +790,10 @@ const run = (action) => {
                       index,
                       DIM_FADE,
                       v,
-                      dev.type === DEVICE_TYPE_DIM_12_LED_RS ? DIM_VELOCITY : AO_VELOCITY,
+                      dev.type === DEVICE_TYPE_DIM_12_LED_RS ||
+                        dev.type === DEVICE_TYPE_DIM_8_RS
+                        ? DIM_VELOCITY
+                        : AO_VELOCITY,
                     ]),
                     ip
                   );
@@ -926,6 +936,7 @@ const run = (action) => {
               }
               break;
             }
+            case DEVICE_TYPE_DIM_8_RS:
             case DEVICE_TYPE_DIM_12_LED_RS: {
               switch (type) {
                 case DIM_TYPE_PWM:
@@ -1076,6 +1087,7 @@ const run = (action) => {
               }
               break;
             }
+            case DEVICE_TYPE_DIM_8_RS:
             case DEVICE_TYPE_DIM_12_LED_RS: {
               switch (type) {
                 case DIM_TYPE_PWM:
@@ -1192,6 +1204,7 @@ const run = (action) => {
               );
               break;
             }
+            case DEVICE_TYPE_DIM_8_RS:
             case DEVICE_TYPE_DIM_12_LED_RS:
             case DEVICE_TYPE_AO_4_DIN: {
               device.send(
@@ -1202,7 +1215,10 @@ const run = (action) => {
                   index,
                   DIM_FADE,
                   v,
-                  dev.type === DEVICE_TYPE_DIM_12_LED_RS ? DIM_VELOCITY : AO_VELOCITY,
+                  dev.type === DEVICE_TYPE_DIM_12_LED_RS ||
+                    dev.type === DEVICE_TYPE_DIM_8_RS
+                    ? DIM_VELOCITY
+                    : AO_VELOCITY,
                 ]),
                 ip
               );
@@ -1275,6 +1291,7 @@ const run = (action) => {
               );
               break;
             }
+            case DEVICE_TYPE_DIM_8_RS:
             case DEVICE_TYPE_DIM_12_LED_RS:
             case DEVICE_TYPE_AO_4_DIN: {
               device.send(
@@ -1285,7 +1302,10 @@ const run = (action) => {
                   index,
                   DIM_FADE,
                   v,
-                  dev.type === DEVICE_TYPE_DIM_12_LED_RS ? DIM_VELOCITY : AO_VELOCITY
+                  dev.type === DEVICE_TYPE_DIM_12_LED_RS ||
+                    dev.type === DEVICE_TYPE_DIM_8_RS
+                    ? DIM_VELOCITY
+                    : AO_VELOCITY
                 ]),
                 ip
               );
