@@ -92,6 +92,7 @@ module.exports = class {
           ]),
           buffer
         ]), ip);
+        break;
       }
       default: {
         device.send(buffer, ip);

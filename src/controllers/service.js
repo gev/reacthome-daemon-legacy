@@ -1377,6 +1377,7 @@ const run = (action) => {
               ]),
               buffer
             ]), ip);
+            break;
           }
           default: {
             device.send(buffer, ip);
