@@ -88,7 +88,7 @@ module.exports = class {
         device.send(Buffer.concat([
           Buffer.from([
             ACTION_RBUS_TRANSMIT,
-            ...action.id.split(":").map((i) => parseInt(i, 16))
+            ...dev.split(":").map((i) => parseInt(i, 16))
           ]),
           buffer
         ]), ip);
