@@ -71,3 +71,4 @@ const request = (getSize, fill) => (code) => (id, address, register, data) => {
       driver.handle({ id: bind, data: data.slice(1) });
     }
   };
+}
