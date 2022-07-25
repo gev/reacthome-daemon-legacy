@@ -75,7 +75,7 @@ module.exports = class {
     const { is_rbus } = get(bind);
     if (is_rbus) return;
     const [dev, , index] = bind.split('/');
-    const { ip } = get(dev);
+    const { ip, type } = get(dev);
     const header = Buffer.from([ACTION_RS485_TRANSMIT, index]);
     const payload = Buffer.alloc(5, 0);
     payload.writeUInt32BE(address, 0);
