@@ -315,39 +315,17 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_RS485_MODE: {
-          const { type } = get(id);
-          let offset = 0
-          let dev_id = id
-          if (type === DEVICE_TYPE_RS_HUB1_RS) {
-            offset = 7
-            dev_id = Array.from(data)
-              .slice(7, 13)
-              .map((i) => i.toString(16).padStart(2, "0"))
-              .join(":")
-
-          }
-          const index = data[offset + 7];
-          const is_rbus = data[offset + 8];
-          const baud = data.readUInt32LE(offset + 9);
-          const line_control = data[offset + 13];
-          const channel = `${dev_id}/${RS485}/${index}`;
+          const index = data[7];
+          const is_rbus = data[8];
+          const baud = data.readUInt32LE(9);
+          const line_control = data[13];
+          const channel = `${id}/${RS485}/${index}`;
           set(channel, { is_rbus, baud, line_control });
           break;
         }
         case ACTION_RS485_TRANSMIT: {
-          const { type } = get(id);
-          let offset = 0
-          let dev_id = id
-          if (type === DEVICE_TYPE_RS_HUB1_RS) {
-            offset = 7
-            dev_id = Array.from(data)
-              .slice(7, 13)
-              .map((i) => i.toString(16).padStart(2, "0"))
-              .join(":")
-
-          }
-          const index = data[offset + 7];
-          const channel = `${dev_id}/${RS485}/${index}`;
+          const index = data[7];
+          const channel = `${id}/${RS485}/${index}`;
           const { bind } = get(channel) || {};
           console.log(
             "RS485",
@@ -355,7 +333,7 @@ module.exports.manage = () => {
               .map((i) => i.toString(16).padStart(2, "0"))
               .join(" ")
           );
-          drivers.handle({ id: bind, data: data.slice(offset + 8) });
+          drivers.handle({ id: bind, data: data.slice(8) });
           break;
         }
         case ACTION_DIMMER: {
