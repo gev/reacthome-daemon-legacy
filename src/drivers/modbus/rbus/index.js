@@ -1,6 +1,6 @@
 const { crc16modbus } = require("crc");
 const { get } = require("../../../actions");
-const { ACTION_RS485_TRANSMIT } = require("../../../constants");
+const { ACTION_RS485_TRANSMIT, ACTION_RBUS_TRANSMIT, DEVICE_TYPE_RS_HUB1_RS } = require("../../../constants");
 const {
   READ_INPUT_REGISTERS,
   READ_HOLDING_REGISTERS,
@@ -15,7 +15,7 @@ const request = (getSize, fill) => (code) => (id, address, register, data) => {
   const { bind } = get(id) || {};
   if (!bind) return;
   const [dev, , index] = bind.split("/");
-  const { ip } = get(dev) || {};
+  const { ip, type } = get(dev) || {};
   if (ip && index) {
     const size = getSize(data);
     const buffer = Buffer.alloc(size + 2);
@@ -26,36 +26,48 @@ const request = (getSize, fill) => (code) => (id, address, register, data) => {
     buffer.writeUInt16BE(register, 4);
     fill(buffer, data);
     buffer.writeUInt16LE(crc16modbus(buffer.slice(2, size)), size);
-    send(buffer, ip);
-  }
-};
-
-const request8 = request(
-  () => 8,
-  (buffer, data) => {
-    buffer.writeUInt16BE(data, 6);
-  }
-);
-
-module.exports.readHoldingRegisters = request8(READ_HOLDING_REGISTERS);
-module.exports.readInputRegisters = request8(READ_INPUT_REGISTERS);
-module.exports.writeRegister = request8(WRITE_REGISTER);
-module.exports.writeRegisters = request(
-  (data) => 9 + 2 * data.length,
-  (buffer, data) => {
-    buffer.writeUInt16BE(data.length, 6);
-    buffer.writeUInt8(2 * data.length, 8);
-    for (let i = 0; i < data.length; i++) {
-      buffer.writeUInt16BE(data[i], 2 * i + 9);
+    switch (type) {
+      case DEVICE_TYPE_RS_HUB1_RS: {
+        device.send(Buffer.concat([
+          Buffer.from([
+            ACTION_RBUS_TRANSMIT,
+            ...action.id.split(":").map((i) => parseInt(i, 16))
+          ]),
+          buffer
+        ]), ip);
+      }
+      default: {
+        device.send(buffer, ip);
+      }
     }
-  }
-)(WRITE_REGISTERS);
+  };
 
-module.exports.handle = ({ id, data }) => {
-  const address = data[0];
-  const { bind } = get(`${id}/${MODBUS}/${address}`) || {};
-  console.log(id, data, address, bind);
-  if (bind) {
-    driver.handle({ id: bind, data: data.slice(1) });
-  }
-};
+  const request8 = request(
+    () => 8,
+    (buffer, data) => {
+      buffer.writeUInt16BE(data, 6);
+    }
+  );
+
+  module.exports.readHoldingRegisters = request8(READ_HOLDING_REGISTERS);
+  module.exports.readInputRegisters = request8(READ_INPUT_REGISTERS);
+  module.exports.writeRegister = request8(WRITE_REGISTER);
+  module.exports.writeRegisters = request(
+    (data) => 9 + 2 * data.length,
+    (buffer, data) => {
+      buffer.writeUInt16BE(data.length, 6);
+      buffer.writeUInt8(2 * data.length, 8);
+      for (let i = 0; i < data.length; i++) {
+        buffer.writeUInt16BE(data[i], 2 * i + 9);
+      }
+    }
+  )(WRITE_REGISTERS);
+
+  module.exports.handle = ({ id, data }) => {
+    const address = data[0];
+    const { bind } = get(`${id}/${MODBUS}/${address}`) || {};
+    console.log(id, data, address, bind);
+    if (bind) {
+      driver.handle({ id: bind, data: data.slice(1) });
+    }
+  };

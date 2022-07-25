@@ -167,6 +167,7 @@ const {
   ACTION_SCREEN,
   DRIVER_TYPE_NOVA,
   DEVICE_TYPE_DIM_8_RS,
+  DEVICE_TYPE_RS_HUB1_RS,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -1360,14 +1361,27 @@ const run = (action) => {
       }
       case ACTION_RS485_MODE: {
         const { id, index, is_rbus, baud, line_control } = action;
-        const { ip } = get(id) || {};
+        const { ip, type } = get(id) || {};
         const buffer = Buffer.alloc(8);
         buffer[0] = ACTION_RS485_MODE;
         buffer[1] = index;
         buffer[2] = is_rbus;
         buffer.writeUInt32LE(baud, 3);
         buffer[7] = line_control;
-        device.send(buffer, ip);
+        switch (type) {
+          case DEVICE_TYPE_RS_HUB1_RS: {
+            device.send(Buffer.concat([
+              Buffer.from([
+                ACTION_RBUS_TRANSMIT,
+                ...action.id.split(":").map((i) => parseInt(i, 16))
+              ]),
+              buffer
+            ]), ip);
+          }
+          default: {
+            device.send(buffer, ip);
+          }
+        }
         break;
       }
       case ACTION_SETPOINT: {

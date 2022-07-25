@@ -3,7 +3,7 @@
 const crc16 = require('crc').crc16modbus;
 const { get, set } = require('../../actions');
 const { device } = require('../../sockets');
-const { ACTION_RS485_TRANSMIT } = require('../../constants');
+const { ACTION_RS485_TRANSMIT, DEVICE_TYPE_RS_HUB1_RS, ACTION_RBUS_TRANSMIT } = require('../../constants');
 
 const address = 27321232;
 const delay = 500;
@@ -30,7 +30,7 @@ module.exports = class {
     clearTimeout(this.t);
   }
 
-  handle ({ id, data }) {
+  handle({ id, data }) {
     switch (data[4]) {
       case 0x27: {
         const t1 = number(data.slice(5, 9)) / 100;
@@ -74,7 +74,7 @@ module.exports = class {
     if (!bind) return;
     const { is_rbus } = get(bind);
     if (is_rbus) return;
-    const [dev,, index] = bind.split('/');
+    const [dev, , index] = bind.split('/');
     const { ip } = get(dev);
     const header = Buffer.from([ACTION_RS485_TRANSMIT, index]);
     const payload = Buffer.alloc(5, 0);
@@ -83,7 +83,19 @@ module.exports = class {
     const crc = Buffer.alloc(2);
     crc.writeUInt16LE(crc16(payload), 0);
     const buffer = Buffer.concat([header, payload, crc]);
-    device.send(buffer, ip);
-  }
+    switch (type) {
+      case DEVICE_TYPE_RS_HUB1_RS: {
+        device.send(Buffer.concat([
+          Buffer.from([
+            ACTION_RBUS_TRANSMIT,
+            ...action.id.split(":").map((i) => parseInt(i, 16))
+          ]),
+          buffer
+        ]), ip);
+      }
+      default: {
+        device.send(buffer, ip);
+      }
+    }
 
-};
+  };

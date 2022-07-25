@@ -66,6 +66,7 @@ const {
   ACTION_TEMPERATURE_EXT_DEP,
   DEVICE_TYPE_DIM4,
   DEVICE_TYPE_DIM8,
+  DEVICE_TYPE_RS_HUB1_RS,
 } = require("../constants");
 const {
   get,
@@ -154,7 +155,7 @@ module.exports.manage = () => {
                 hold[channel] = {
                   count: 0,
                   timestamp: Date.now(),
-                } 
+                }
               }
               const onOn = toArr(chan.onOn);
               if (onOn.length > 0) {
@@ -168,7 +169,7 @@ module.exports.manage = () => {
               if (onClick1.length > 0 || onClick2.length > 0 || onClick3.length > 0) {
                 hold[channel].count++;
                 if (onClick2.length > 0 || onClick3.length > 0) {
-                  setTimeout(() => { 
+                  setTimeout(() => {
                     switch (hold[channel].count) {
                       case 1: {
                         if (!chan.value) {
@@ -198,7 +199,7 @@ module.exports.manage = () => {
                           run({ type: ACTION_SCRIPT_RUN, id: onClick3[onClick3Count % onClick3.length] });
                         }
                         break;
-                      } 
+                      }
                     }
                     hold[channel] = { count: 0 };
                   }, parseInt(chan.timeout || 1000) / 2);
@@ -219,7 +220,7 @@ module.exports.manage = () => {
                   }
                   const onHold = toArr(chan.onHold);
                   if (onHold.length > 0) {
-                    if (start) { 
+                    if (start) {
                       set(channel, { onHoldCount: chan.onHoldCount + 1 });
                     }
                     run({ type: ACTION_SCRIPT_RUN, id: onHold[chan.onHoldCount % onHold.length] });
@@ -235,8 +236,8 @@ module.exports.manage = () => {
                   const onClick2 = toArr(chan.onClick2);
                   const onClick3 = toArr(chan.onClick3);
                   const dt = Date.now() - timestamp;
-                  if  (onClick2.length === 0 && onClick3.length === 0) {
-                      if (dt < parseInt(chan.timeout || 1000) / 2) {
+                  if (onClick2.length === 0 && onClick3.length === 0) {
+                    if (dt < parseInt(chan.timeout || 1000) / 2) {
                       const { onClick1Count = 0 } = chan;
                       set(channel, { onClick1Count: onClick1Count + 1 });
                       run({ type: ACTION_SCRIPT_RUN, id: onClick1[onClick1Count % onClick1.length] });
@@ -314,17 +315,39 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_RS485_MODE: {
-          const index = data[7];
-          const is_rbus = data[8];
-          const baud = data.readUInt32LE(9);
-          const line_control = data[13];
-          const channel = `${id}/${RS485}/${index}`;
+          const { type } = get(id);
+          let offset = 0
+          let dev_id = id
+          if (type === DEVICE_TYPE_RS_HUB1_RS) {
+            offset = 7
+            dev_id = Array.from(data)
+              .slice(7, 13)
+              .map((i) => i.toString(16).padStart(2, "0"))
+              .join(":")
+
+          }
+          const index = data[offset + 7];
+          const is_rbus = data[offset + 8];
+          const baud = data.readUInt32LE(offset + 9);
+          const line_control = data[offset + 13];
+          const channel = `${dev_id}/${RS485}/${index}`;
           set(channel, { is_rbus, baud, line_control });
           break;
         }
         case ACTION_RS485_TRANSMIT: {
-          const index = data[7];
-          const channel = `${id}/${RS485}/${index}`;
+          const { type } = get(id);
+          let offset = 0
+          let dev_id = id
+          if (type === DEVICE_TYPE_RS_HUB1_RS) {
+            offset = 7
+            dev_id = Array.from(data)
+              .slice(7, 13)
+              .map((i) => i.toString(16).padStart(2, "0"))
+              .join(":")
+
+          }
+          const index = data[offset + 7];
+          const channel = `${dev_id}/${RS485}/${index}`;
           const { bind } = get(channel) || {};
           console.log(
             "RS485",
@@ -332,7 +355,7 @@ module.exports.manage = () => {
               .map((i) => i.toString(16).padStart(2, "0"))
               .join(" ")
           );
-          drivers.handle({ id: bind, data: data.slice(8) });
+          drivers.handle({ id: bind, data: data.slice(offset + 8) });
           break;
         }
         case ACTION_DIMMER: {
@@ -363,7 +386,7 @@ module.exports.manage = () => {
               }
               break;
             }
-            case DEVICE_TYPE_DIM4: 
+            case DEVICE_TYPE_DIM4:
             case DEVICE_TYPE_DIM8: {
               const [, , , , , , , index, type, value, velocity] = data;
               const channel = `${id}/${DIM}/${index}`;
@@ -481,13 +504,13 @@ module.exports.manage = () => {
           const dev_id =
             action === ACTION_TEMPERATURE_EXT
               ? Array.from(data)
-                  .slice(7, 15)
-                  .map((i) => i.toString(16).padStart(2, "0"))
-                  .join(":")
+                .slice(7, 15)
+                .map((i) => i.toString(16).padStart(2, "0"))
+                .join(":")
               : data
-                  .slice(7, 15)
-                  .map((i) => `0${i.toString(16)}`.slice(-2))
-                  .join(":");
+                .slice(7, 15)
+                .map((i) => `0${i.toString(16)}`.slice(-2))
+                .join(":");
           const temperature = data.readInt16LE(15) / 100;
           set(dev_id, {
             ip: address,
