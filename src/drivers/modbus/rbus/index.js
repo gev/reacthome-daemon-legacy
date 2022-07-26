@@ -9,7 +9,7 @@ const {
   MODBUS,
 } = require("../constants");
 const driver = require("../../driver");
-const { send } = require("../../../sockets/device");
+const device = require("../../../sockets/device");
 
 const request = (getSize, fill) => (code) => (id, address, register, data) => {
   const { bind } = get(id) || {};
