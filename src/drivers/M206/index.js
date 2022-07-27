@@ -61,6 +61,7 @@ module.exports = class {
         break;
       }
     }
+    console.log(get(id))
   }
 
   request = () => {
