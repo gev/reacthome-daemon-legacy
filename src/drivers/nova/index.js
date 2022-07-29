@@ -27,10 +27,11 @@ const sync = (id) => {
     if (synced) {
       console.log('read', modbus, address);
       readInputRegisters(modbus, address, 0x2, 1);
-      // readHoldingRegisters(modbus, address, 1, 1);
+      // readHoldingRegisters(modbus, address, 0x1, 1);
     } else {
       console.log('write', modbus, address, dev.value);
       writeRegister(modbus, address, 0x2, dev.value ? 1 : 0);
+      writeRegister(modbus, address, 0x1E, dev.fan_speed);
       // writeRegister(modbus, address, 0x1, dev.setpoint * 10);
       set(id, { synced: true });
     }
