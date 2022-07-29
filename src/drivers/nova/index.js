@@ -30,8 +30,12 @@ const sync = (id) => {
       // readHoldingRegisters(modbus, address, 0x1, 1);
     } else {
       console.log('write', modbus, address, dev.value);
-      writeRegister(modbus, address, 0x2, dev.value ? 1 : 0);
-      writeRegister(modbus, address, 0x20, dev.fan_speed);
+
+      if (dev.value) {
+        writeRegister(modbus, address, 0x20, dev.fan_speed);
+      } else {
+        writeRegister(modbus, address, 0x2, dev.value ? 1 : 0);
+      }
       // writeRegister(modbus, address, 0x1, dev.setpoint * 10);
       set(id, { synced: true });
     }
