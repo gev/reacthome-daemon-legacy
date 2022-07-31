@@ -20,6 +20,7 @@
     "level": "^7.0.0",
     "node-fetch": "^2.6.0",
     "node-pty": "^0.9.0",
+    "onoff": "^6.0.3",
     "reacthome-ircodes": "github:gev/reacthome-ircodes",
     "sdp-transform": "^2.13.0",
     "serialport": "^9.0.3",
