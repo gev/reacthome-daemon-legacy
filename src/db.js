@@ -1,5 +1,5 @@
 
-const level = require('level');
+const { Level } = require('level');
 const { DB } = require('./assets/constants');
 
-module.exports = level(DB, { valueEncoding: 'json' });
+module.exports = new Level(DB, { valueEncoding: 'json' });

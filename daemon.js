@@ -16,7 +16,7 @@ const drivers = require("./src/drivers");
 const assets = require("./src/assets");
 const websocket = require("./src/websocket");
 // const zigbee = require("./src/zigbee");
-const janus = require("./src/janus");
+// const janus = require("./src/janus");
 const sip = require("./src/sip");
 const db = require("./src/db");
 const { cleanup } = require("./src/gc");
@@ -55,37 +55,35 @@ const start = (id) => {
     }
   }
 };
-
-db.createReadStream()
-  .on("error", (err) => {
-    // console.error(err)
-  })
-  .on("data", ({ key, value }) => {
+const load = async () => {
+  for await (const [key, value] of db.iterator()) {
     init[key] = value;
-  })
-  .on("end", async () => {
-    if (!init.mac) {
-      init.mac = v4();
-      db.put("mac", init.mac);
-    }
-    const d = init[init.mac];
-    if (d) {
-      delete d.ip;
-      set(init.mac, d);
-    }
-    cleanup(init);
-    console.log(init.mac);
-    await assets.init();
-    state.init(init);
-    weather.manage();
-    device.manage();
-    drivers.manage();
-    cpu.manage();
-    discovery.start(init.mac);
-    websocket.start(init.mac);
-    // zigbee.start(init.mac);
-    // janus.start();
-    sip.start();
-    start(init.mac);
-    set(init.mac, { token: [] });
-  });
+  }
+
+  if (!init.mac) {
+    init.mac = v4();
+    db.put("mac", init.mac);
+  }
+  const d = init[init.mac];
+  if (d) {
+    delete d.ip;
+    set(init.mac, d);
+  }
+  cleanup(init);
+  console.log(init.mac);
+  await assets.init();
+  state.init(init);
+  weather.manage();
+  device.manage();
+  drivers.manage();
+  cpu.manage();
+  discovery.start(init.mac);
+  websocket.start(init.mac);
+  // zigbee.start(init.mac);
+  // janus.start();
+  sip.start();
+  start(init.mac);
+  set(init.mac, { token: [] });
+};
+
+load();

@@ -1,4 +1,15 @@
-const { default: rbus } = require("./src/rbus");
+const { rbus } = require("./src/rbus");
 
-rbus('127.0.1.1', '/dev/ttyAMA0', 'gpio1')
-rbus('127.0.1.2', '/dev/ttyAMA2', 'gpio2')
+rbus('172.16.1.1');
+// rbus('172.16.1.1', '/dev/ttyAMA0', );
+// rbus('172.16.2.1', '/dev/ttyAMA1', );
+
+// uart1 
+// rx 9
+// tx 8
+// out 12
+
+// uart2
+// rx 5
+// tx 4
+// out 16
