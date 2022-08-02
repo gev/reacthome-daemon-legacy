@@ -1,3 +1,4 @@
+const { checkCRC } = require("../../crc");
 const { ACTION_DISCOVERY } = require("../../../constants");
 const { RBUS_PING_FRAME_SIZE } = require("../../constants");
 
