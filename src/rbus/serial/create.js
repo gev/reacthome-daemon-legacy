@@ -12,16 +12,17 @@ const createPort = (rbus, path, isRBUS, baudRate, lineControl) => {
       : { path, ...RBUS_LINE_CONTROLS[lineControl], baudRate }
   )
   port.on('data', handle(rbus));
-  port.on('drain', () => {
-    rbus.rede.write(0);
-  });
+  // port.on('drain', () => {
+  //   rbus.rede.write(0);
+  // });
   rbus.port = {
     path, baudRate, lineControl, isRBUS,
     send: (data) => {
       rbus.rede.write(1);
       port.write(data);
-      port.drain();
-      rbus.rede.write(0);
+      port.drain(() => {
+        rbus.rede.write(0);
+      });
     },
     close: port.close,
     reCreate: (isRBUS, baudRate, lineControl) => {
