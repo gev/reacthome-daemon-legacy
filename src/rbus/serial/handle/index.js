@@ -3,7 +3,7 @@ const { handleRS485 } = require("./handleRS485");
 
 module.exports.handle = (rbus) => (data) => {
   console.log(rbus.index, rbus.isRBUS, data);
-  if (rbus.isRBUS) {
+  if (rbus.port.isRBUS) {
     handleRBUS(rbus, data);
   } else {
     handleRS485(rbus, data)
