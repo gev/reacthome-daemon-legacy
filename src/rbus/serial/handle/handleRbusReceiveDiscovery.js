@@ -1,7 +1,8 @@
 const { RBUS_DISCOVERY_RX_BUFFER_SIZE } = require("../../constants");
+const { checkCRC } = require("../../crc");
 
 module.exports.handleRbusReceiveDiscovery = (rbus, data) => {
-  console.log(rbus.index, data);
+  console.log(rbus.index, data, checkCRC(data));
   // if (data.length < RBUS_DISCOVERY_RX_BUFFER_SIZE) {
   //   return;
   // }
