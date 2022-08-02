@@ -7,22 +7,19 @@ module.exports.createSocket = (rbus, host) => {
   const socket = dgram.createSocket('udp4');
   socket.bind(DEVICE_PORT, host);
   socket.on('message', handle(rbus));
+  const send = (data) => {
+    socket.send(
+      Buffer.from(data),
+      DEVICE_SERVER_PORT,
+      '127.0.0.1'
+    )
+  };
   rbus.socket = {
     host,
-    sendRBUS: (data) => {
-      socket.send(
-        Buffer.from(data),
-        DEVICE_SERVER_PORT,
-        '127.0.0.1'
-      )
-    },
-    send: (data) => {
-      socket.send(
-        Buffer.from([0, 0, 0, 0, 0, rbus.index, ...data]),
-        DEVICE_SERVER_PORT,
-        '127.0.0.1'
-      )
-    },
+    sendRBUS: send,
+    send: (data) => send(Buffer.from([
+      0, 0, 0, 0, 0, rbus.index, ...data
+    ])),
     close: socket.close
   }
   setInterval(discovery(rbus), 1000);
