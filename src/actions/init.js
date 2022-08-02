@@ -41,6 +41,7 @@ const {
   DEVICE_TYPE_RELAY_12_RS,
   DEVICE_TYPE_DIM_8_RS,
   DEVICE_TYPE_RS_HUB1_RS,
+  DEVICE_TYPE_RS_HUB1,
 } = require("../constants");
 const { get, set, add } = require("./create");
 const { device } = require("../sockets");
@@ -483,6 +484,22 @@ module.exports.initialize = (id) => {
       a[11] = (baud >> 16) & 0xff;
       a[12] = (baud >> 24) & 0xff;
       a[13] = line_control;
+      break;
+    }
+    case DEVICE_TYPE_RS_HUB1: {
+      const mac = id.split(":").map((i) => parseInt(i, 16));
+      a[0] = ACTION_INITIALIZE;
+      const {
+        is_rbus = true,
+        baud,
+        line_control,
+      } = get(`${id}/${RS485}/1`) || {};
+      a[1] = is_rbus;
+      a[2] = baud & 0xff;
+      a[3] = (baud >> 8) & 0xff;
+      a[4] = (baud >> 16) & 0xff;
+      a[5] = (baud >> 24) & 0xff;
+      a[6] = line_control;
       break;
     }
     case DEVICE_TYPE_RELAY_24: {

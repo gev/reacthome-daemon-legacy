@@ -246,6 +246,7 @@ module.exports.DEVICE_TYPE_DIM_12_LED_RS = 0xad;
 module.exports.DEVICE_TYPE_RELAY_12_RS = 0xae;
 module.exports.DEVICE_TYPE_DIM_8_RS = 0xaf;
 module.exports.DEVICE_TYPE_RS_HUB1_RS = 0xb0;
+module.exports.DEVICE_TYPE_RS_HUB1 = 0xb1;
 
 module.exports.DEVICE_TYPE_TEMPERATURE_EXT = 0xf0;
 

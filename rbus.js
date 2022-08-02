@@ -1,8 +1,7 @@
 const { rbus } = require("./src/rbus");
 
-rbus('172.16.1.1');
-// rbus('172.16.1.1', '/dev/ttyAMA0', );
-// rbus('172.16.2.1', '/dev/ttyAMA1', );
+rbus(1, '127.0.1.1', '/dev/ttyAMA2', 12);
+rbus(2, '127.0.1.2', '/dev/ttyAMA1', 16);
 
 // uart1 
 // rx 9

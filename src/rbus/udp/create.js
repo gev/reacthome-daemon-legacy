@@ -1,16 +1,21 @@
 const dgram = require('dgram');
-const { DEVICE_PORT, DEVICE_GROUP } = require('../../constants');
+const { DEVICE_PORT, DEVICE_SERVER_PORT, ACTION_INITIALIZE } = require('../../constants');
+const { discovery } = require('./discovery');
 const { handle } = require('./handle');
 
 module.exports.createSocket = (rbus, host) => {
   const socket = dgram.createSocket('udp4');
-  socket.bind(DEVICE_PORT, host, () => {
-    socket.addMembership(DEVICE_GROUP);
-  });
-  socket.on('meaasge', handle(rbus));
+  socket.bind(DEVICE_PORT, host);
+  socket.on('message', handle(rbus));
   rbus.socket = {
     host,
-    send: socket.send,
+    send: (data) => socket.send(
+      Buffer.from([0, 0, 0, 0, 0, rbus.index, ...data]),
+      DEVICE_SERVER_PORT,
+      '127.0.0.1'
+    ),
     close: socket.close
   }
+  setInterval(discovery(rbus), 1000);
+  rbus.socket.send([ACTION_INITIALIZE]);
 }
