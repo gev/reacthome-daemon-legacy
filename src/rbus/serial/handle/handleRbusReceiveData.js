@@ -12,8 +12,11 @@ module.exports.handleRbusReceiveData = (rbus, data) => {
     return;
   }
   if (checkCRC(data)) {
+    const id = data[2];
     const address = data[1];
     rbusTransmitConfirm(rbus, address);
-    rbusTransmitData(rbus, data);
+    rbusTransmitData(rbus, id, address,
+      data.slice(RBUS_DATA_HEADER_SIZE,
+        RBUS_DATA_HEADER_SIZE + expectedDataSize));
   }
 }

@@ -1,7 +1,6 @@
 const { getDevice } = require("../../pool");
 
-module.exports.rbusTransmitData = (rbus, data) => {
-  const id = data[2];
+module.exports.rbusTransmitData = (rbus, id, address, data) => {
   if (rbus.rx[address] == id) {
     return;
   }
@@ -10,7 +9,7 @@ module.exports.rbusTransmitData = (rbus, data) => {
   if (device !== undefined) {
     rbus.socket.sendRBUS([
       ...device.mac,
-      ...data.slice(RBUS_DATA_HEADER_SIZE, RBUS_DATA_HEADER_SIZE + data[3])
+      ...data
     ]);
   }
 }
