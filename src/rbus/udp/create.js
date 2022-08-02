@@ -9,11 +9,20 @@ module.exports.createSocket = (rbus, host) => {
   socket.on('message', handle(rbus));
   rbus.socket = {
     host,
-    send: (data) => socket.send(
-      Buffer.from([0, 0, 0, 0, 0, rbus.index, ...data]),
-      DEVICE_SERVER_PORT,
-      '172.16.0.1'
-    ),
+    sendRBUS: (data) => {
+      socket.send(
+        Buffer.from(data),
+        DEVICE_SERVER_PORT,
+        '127.0.0.1'
+      )
+    },
+    send: (data) => {
+      socket.send(
+        Buffer.from([0, 0, 0, 0, 0, rbus.index, ...data]),
+        DEVICE_SERVER_PORT,
+        '127.0.0.1'
+      )
+    },
     close: socket.close
   }
   setInterval(discovery(rbus), 1000);

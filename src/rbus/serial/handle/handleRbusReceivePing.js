@@ -12,7 +12,7 @@ module.exports.handleRbusReceivePing = (rbus, data) => {
     const address = data[1];
     const device = getDevice(rbus, address);
     if (device !== undefined) {
-      console.log([
+      rbus.socket.sendRBUS([
         ...device.mac,
         ACTION_DISCOVERY,
         ...device.type
