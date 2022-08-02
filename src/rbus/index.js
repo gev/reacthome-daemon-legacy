@@ -6,7 +6,7 @@ module.exports.rbus = (index, host, path, rede) => {
   const rbus = {
     index,
     pool: [],
-    // rede: new Gpio(rede, 'out'),
+    rede: new Gpio(rede, 'out'),
   };
   createSocket(rbus, host);
   createPort(rbus, path, true);

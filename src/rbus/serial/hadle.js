@@ -1,3 +1,3 @@
 module.exports.handle = (rbus) => (data) => {
-  console.log(data);
+  console.log(rbus.index, data);
 }
