@@ -9,11 +9,11 @@ module.exports.getAddress = (rbus, mac, type) => {
     address = rbus.pool.length;
   }
   rbus.pool[address] = { mac, type };
-  return address + 1;
+  return address;
 }
 
 module.exports.getDevice = (rbus, address) =>
   address >= 0
-    ? rbus.pool[address - 1]
+    ? rbus.pool[address]
     : undefined;
 
