@@ -7,7 +7,6 @@ module.exports.getAddress = (rbus, mac, type) => {
   if (address === -1) {
     address = rbus.pool.length + 1;
   }
-  console.log(mac, address);
   rbus.pool[address] = { mac, type };
   return address;
 }
