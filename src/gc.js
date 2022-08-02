@@ -40,15 +40,15 @@ const build = (id, pool, state, assets) => {
             break;
           }
           case DEVICE: {
-            v.forEach(d => { 
+            v.forEach(d => {
               // if (typeof d === 'string') {
-                Object
-                  .keys(pool)
-                  .filter(i => i.startsWith(`${d}/`))
-                  .forEach(i => {
-                    state[i] = pool[i];
-                  });
-                state[d] = pool[d];
+              Object
+                .keys(pool)
+                .filter(i => i.startsWith(`${d}/`))
+                .forEach(i => {
+                  state[i] = pool[i];
+                });
+              state[d] = pool[d];
               // }
             });
             break;
@@ -59,10 +59,10 @@ const build = (id, pool, state, assets) => {
               case PROJECT:
               case SITE:
               case SCRIPT: {
-                v.forEach(i => { 
+                v.forEach(i => {
                   // if (typeof i === 'string') {
-                    build(i, pool, state, assets);
-                    //state[i] = pool[i];
+                  build(i, pool, state, assets);
+                  //state[i] = pool[i];
                   // }
                 });
                 break;
@@ -80,12 +80,10 @@ module.exports.cleanup = (pool) => {
   const state = {};
   const assets = [];
   build(pool.mac, pool, state, assets);
-  console.log('state', Object.keys(state).length);
-  console.log('assets', Object.keys(assets).length);
-  Object.keys(pool).forEach(k => { 
+  Object.keys(pool).forEach(k => {
     if (k === 'mac') return;
     if (k === POOL) return;
-    if (state[k] === undefined) { 
+    if (state[k] === undefined) {
       delete pool[k];
       db.del(k);
     }

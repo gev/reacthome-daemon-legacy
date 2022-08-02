@@ -25,7 +25,6 @@ module.exports.onRegister = (request) => {
 };
 
 module.exports.onCancel = (request) => {
-  console.log('onCancel', request);
   let rs;
   const call_id = request.headers['call-id'];
   rs = sip.makeResponse(request, 200, 'Ok');
@@ -40,7 +39,6 @@ module.exports.onCancel = (request) => {
 };
 
 module.exports.onBye = (request) => {
-  console.log('onBye', request);
   let rs;
   const call_id = request.headers['call-id'];
   rs = sip.makeResponse(request, 200, 'Ok');
@@ -105,7 +103,7 @@ module.exports.onInvite = (request) => {
           const o = SDP.parse(jsep.sdp);
           o.media = o.media.filter(media => media.type === 'audio');
           jsep.sdp = SDP.write(o);
-          notification.broadcastAction({type: INVITE, id, session_id, handle_id, call_id, jsep});
+          notification.broadcastAction({ type: INVITE, id, session_id, handle_id, call_id, jsep });
         }
       });
     });

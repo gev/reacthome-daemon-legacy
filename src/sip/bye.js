@@ -11,14 +11,13 @@ module.exports = ({ call_id }, session) => {
       method: BYE,
       uri: request.headers.contact[0].uri,
       headers: {
-          to: request.headers.from,
-          from: request.headers.to,
-          'call-id': call_id,
-          cseq: { method: BYE, seq: 2000 },
-          via: [],
+        to: request.headers.from,
+        from: request.headers.to,
+        'call-id': call_id,
+        cseq: { method: BYE, seq: 2000 },
+        via: [],
       }
     };
-    console.log(id, session, handle_id, call_id, rq)
     sip.send(rq);
     broadcast({ id, type: BYE, session_id, handle_id, call_id }, session);
     janus.send(session_id, handle_id, { request: HANGUP })

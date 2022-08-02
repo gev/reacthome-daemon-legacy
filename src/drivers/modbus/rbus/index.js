@@ -68,7 +68,6 @@ module.exports.writeRegisters = request(
 module.exports.handle = ({ id, data }) => {
   const address = data[0];
   const { bind } = get(`${id}/${MODBUS}/${address}`) || {};
-  console.log(id, data, address, bind);
   if (bind) {
     driver.handle({ id: bind, data: data.slice(1) });
   }

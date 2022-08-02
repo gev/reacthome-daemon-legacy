@@ -70,7 +70,7 @@ const load = async () => {
     set(init.mac, d);
   }
   cleanup(init);
-  console.log(init.mac);
+  // console.log(init.mac);
   await assets.init();
   state.init(init);
   weather.manage();
