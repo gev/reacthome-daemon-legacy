@@ -17,7 +17,7 @@ module.exports.handleRbusReceivePing = (rbus, data) => {
         ...device.type
       ]);
     } else {
-      rbusTransmitPing(rbus);
+      rbusTransmitPing(rbus, address);
     }
   }
 }

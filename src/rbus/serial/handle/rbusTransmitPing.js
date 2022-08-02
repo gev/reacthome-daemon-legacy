@@ -1,9 +1,9 @@
-const { RBUS_PING_PREAMBLE_TRANSMIT, RBUS_ADDERSS } = require("../../constants")
+const { RBUS_PING_PREAMBLE_TRANSMIT } = require("../../constants")
 const { addCRC } = require("../../crc")
 
-module.exports.rbusTransmitPing = (rbus) => {
+module.exports.rbusTransmitPing = (rbus, address) => {
   rbus.port.send(addCRC(Array.from([
     RBUS_PING_PREAMBLE_TRANSMIT,
-    RBUS_ADDERSS
+    address
   ])));
 };
