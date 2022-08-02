@@ -1,7 +1,7 @@
 const { ACTION_INITIALIZED, ACTION_RS485_MODE } = require("../../../constants");
 const { RBUS_BOUDRATE } = require("../../serial/constants");
 
-module.exports.rs485Mode = (rbus, data) => {
+module.exports.handleRS485Mode = (rbus, data) => {
   const index = data.readUint8(1);
   if (index !== 1) return;
   const isRBUS = data.readUint8(2);

@@ -1,6 +1,6 @@
 const { ACTION_INITIALIZED } = require("../../../constants")
 
-module.exports.init = (rbus, data) => {
+module.exports.handleInit = (rbus, data) => {
   const isRbus = data.readUint8(0);
   const baudRate = data.readUint32LE(1);
   const lineControl = data.readUint8(5);

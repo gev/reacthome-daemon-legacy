@@ -1,6 +1,6 @@
 const { SerialPort } = require('serialport');
 const { RBUS_BOUDRATE, RBUS_LINE_CONTROL, RBUS_LINE_CONTROLS } = require('./constants');
-const { handle } = require('./hadle');
+const { handle } = require('./handle');
 
 const createPort = (rbus, path, isRBUS, baudRate, lineControl) => {
   baudRate = baudRate || RBUS_BOUDRATE
