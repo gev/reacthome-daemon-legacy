@@ -12,6 +12,7 @@ module.exports.handleRbusReceiveDiscovery = (rbus, data) => {
     const mac = data.slice(1, 7);
     const type = [data[7], data[8], data[9]];
     const address = getAddress(rbus, mac, type);
+    console.log(address);
     if (address >= 0) {
       rbusTransmitDiscovery(rbus, address, mac);
     } else {
