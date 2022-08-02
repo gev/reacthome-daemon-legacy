@@ -4,7 +4,6 @@ const { RBUS_PING_FRAME_SIZE } = require("../../constants");
 const { rbusTransmitPing } = require("./rbusTransmitPing");
 
 module.exports.handleRbusReceivePing = (rbus, data) => {
-  console.log(rbus.index, data);
   if (data.length < RBUS_PING_FRAME_SIZE) {
     return;
   }

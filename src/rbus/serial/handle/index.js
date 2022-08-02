@@ -10,6 +10,7 @@ const { handleRbusReceiveDiscovery } = require("./handleRbusReceiveDiscovery");
 const { handleRbusReceivePing } = require("./handleRbusReceivePing");
 
 module.exports.handle = (rbus) => (data) => {
+  console.log(rbus.index, data);
   const preambula = data[0];
   switch (preambula) {
     case RBUS_DATA_PREAMBLE_RECEIVE:
