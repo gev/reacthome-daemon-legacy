@@ -16,6 +16,8 @@ module.exports.handleRbusReceivePing = (rbus, data) => {
         ACTION_DISCOVERY,
         ...device.type
       ]);
+    } else {
+      rbusTransmitPing(rbus);
     }
   }
 }

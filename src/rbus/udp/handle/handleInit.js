@@ -1,5 +1,4 @@
 const { ACTION_INITIALIZED } = require("../../../constants");
-const { rbusTransmitPing } = require("../../serial/handle/rbusTransmitPing");
 
 module.exports.handleInit = (rbus, data) => {
   const isRbus = data.readUint8(0);
@@ -7,7 +6,4 @@ module.exports.handleInit = (rbus, data) => {
   const lineControl = data.readUint8(5);
   rbus.port.reCreate(isRbus, baudRate, lineControl);
   rbus.socket.send([ACTION_INITIALIZED]);
-  if (rbus.port.isRBUS) {
-    rbusTransmitPing(rbus);
-  }
 }
