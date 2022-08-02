@@ -8,8 +8,15 @@ module.exports.handleRbusReceiveDiscovery = (rbus, data) => {
     return;
   }
   if (checkCRC(data)) {
-    const mac = macS(data.slice(1, 7));
-    console.log(mac);
+    const mac_ = data.slice(1, 7);
+    const mac = macS(mac_);
+    const type = [data[7], data[8], data[9]];
+    let address = rbus.pool.findIndex(i => i.mac === mac);
+    if (adderss === undefined) {
+      address = rbus.pool.length + 1;
+    }
+    rbus.pool[address] = { mac, type };
+    console.log(mac, address, type);
     // rbus_device_type_t * type = (rbus_device_type_t *)(buffer + RBUS_DISCOVERY_HEADER_SIZE + sizeof(mac_t));
     //     int16_t address = rbus_mac_table_add_mac(& (rbus -> mac_table), mac, type);
     // if (address >= 0)
