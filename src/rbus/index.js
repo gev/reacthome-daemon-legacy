@@ -5,6 +5,8 @@ const { createSocket } = require('./udp/create');
 module.exports.rbus = (index, host, path, rede) => {
   const rbus = {
     index,
+    rx: [],
+    tx: [],
     pool: [],
     rede: new Gpio(rede, 'out'),
   };
