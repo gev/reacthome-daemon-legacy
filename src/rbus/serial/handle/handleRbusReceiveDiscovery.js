@@ -12,7 +12,7 @@ module.exports.handleRbusReceiveDiscovery = (rbus, data) => {
     const mac = macS(mac_);
     const type = [data[7], data[8], data[9]];
     let address = rbus.pool.findIndex(i => i.mac === mac);
-    if (adderss === undefined) {
+    if (address === undefined) {
       address = rbus.pool.length + 1;
     }
     rbus.pool[address] = { mac, type };
