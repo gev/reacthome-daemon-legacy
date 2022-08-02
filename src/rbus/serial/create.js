@@ -21,6 +21,7 @@ const createPort = (rbus, path, isRBUS, baudRate, lineControl) => {
       rbus.rede.write(1);
       port.write(data);
       port.drain();
+      rbus.rede.write(0);
     },
     close: port.close,
     reCreate: (isRBUS, baudRate, lineControl) => {
