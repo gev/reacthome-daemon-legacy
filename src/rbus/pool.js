@@ -4,10 +4,10 @@ module.exports.getAddress = (rbus, mac, type) => {
   let address = rbus.pool.findIndex(
     i => i?.mac ?? macEqual(i.mac, mac)
   );
-  console.log(mac, address);
   if (address === -1) {
     address = rbus.pool.length + 1;
   }
+  console.log(mac, address);
   rbus.pool[address] = { mac, type };
   return address;
 }
