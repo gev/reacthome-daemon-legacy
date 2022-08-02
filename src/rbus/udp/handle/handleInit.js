@@ -7,5 +7,5 @@ module.exports.handleInit = (rbus, data) => {
   const lineControl = data.readUint8(5);
   rbus.port.reCreate(isRbus, baudRate, lineControl);
   rbus.socket.send([ACTION_INITIALIZED]);
-  setInterval(rbusTransmit, 10, rbus);
+  setInterval(rbusTransmit, 1000, rbus);
 }
