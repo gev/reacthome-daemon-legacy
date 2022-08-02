@@ -11,6 +11,7 @@ module.exports.handleRbusReceivePing = (rbus, data) => {
   if (checkCRC(data)) {
     const address = data[1];
     const device = getDevice(address);
+    console.log(rbus.index, device)
     if (device !== undefined) {
       rbus.socket.send([
         ...device.mac,
