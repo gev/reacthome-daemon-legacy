@@ -1,4 +1,3 @@
-const { macS } = require("../../mac");
 const { checkCRC } = require("../../crc");
 const { getAddress } = require("../../pool");
 const { rbusTransmitDiscovery } = require("./rbusTransmitDiscovery");

@@ -1,5 +1,4 @@
-const { ACTION_INITIALIZED, ACTION_RS485_MODE } = require("../../../constants");
-const { RBUS_BOUDRATE } = require("../../serial/constants");
+const { ACTION_RS485_MODE } = require("../../../constants");
 
 module.exports.handleRS485Mode = (rbus, data) => {
   const index = data.readUint8(1);
@@ -15,5 +14,7 @@ module.exports.handleRS485Mode = (rbus, data) => {
   buffer.writeUInt32LE(rbus.port.baudRate, 3);
   buffer[7] = rbus.port.lineControl;
   rbus.socket.send(buffer);
-  console.log(buffer);
+  rbus.pool = [];
+  rbus.rx = [];
+  rbus.tx = [];
 }

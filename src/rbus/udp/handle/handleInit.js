@@ -1,6 +1,6 @@
 const { ACTION_INITIALIZED } = require("../../../constants");
-const { rbusTransmit } = require("../../serial/handle/rbusTransmit");
-const { rbusPing } = require("../../serial/handle/rbusPing");
+const { rbusTaskTransmit } = require("../../serial/handle/rbusTaskTransmit");
+const { rbusTaskPing } = require("../../serial/handle/rbusTaskPing");
 
 module.exports.handleInit = (rbus, data) => {
   const isRbus = data.readUint8(0);
@@ -8,6 +8,6 @@ module.exports.handleInit = (rbus, data) => {
   const lineControl = data.readUint8(5);
   rbus.port.reCreate(isRbus, baudRate, lineControl);
   rbus.socket.send([ACTION_INITIALIZED]);
-  setInterval(rbusTransmit, 10, rbus);
-  setInterval(rbusPing, 1000, rbus);
+  setInterval(rbusTaskTransmit, 10, rbus);
+  setInterval(rbusTaskPing, 1000, rbus);
 }

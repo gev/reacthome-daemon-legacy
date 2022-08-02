@@ -1,4 +1,3 @@
-const { rbus } = require(".");
 const { macEqual } = require("./mac");
 
 module.exports.getAddress = (rbus, mac, type) => {
