@@ -1,6 +1,7 @@
 const { checkCRC } = require("../../crc");
 const { ACTION_DISCOVERY } = require("../../../constants");
 const { RBUS_PING_FRAME_SIZE } = require("../../constants");
+const { rbusTransmitPing } = require("./rbusTransmitPing");
 
 module.exports.handleRbusReceivePing = (rbus, data) => {
   console.log(rbus.index, data);
