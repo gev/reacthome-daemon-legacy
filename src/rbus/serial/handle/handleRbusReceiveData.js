@@ -1,6 +1,7 @@
 const { RBUS_DATA_FRAME_SIZE, RBUS_DATA_HEADER_SIZE } = require("../../constants");
-const { checkCRC } = require("../../crc");
 const { rbusTransmitConfirm } = require("./rbusTransmitConfirm");
+const { rbusTransmitData } = require("./rbusTransmitData");
+const { checkCRC } = require("../../crc");
 
 module.exports.handleRbusReceiveData = (rbus, data) => {
   if (data.length < RBUS_DATA_FRAME_SIZE) {
@@ -12,13 +13,7 @@ module.exports.handleRbusReceiveData = (rbus, data) => {
   }
   if (checkCRC(data)) {
     const address = data[1];
-    const id = data[2];
     rbusTransmitConfirm(rbus, address);
-
-    if (rbus.rx[address] == id) {
-      return;
-    }
-    rbus.rx[address] = id;
     rbusTransmitData(rbus, data);
   }
 }
