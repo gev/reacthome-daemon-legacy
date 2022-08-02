@@ -12,7 +12,7 @@ module.exports.createSocket = (rbus, host) => {
     send: (data) => socket.send(
       Buffer.from([0, 0, 0, 0, 0, rbus.index, ...data]),
       DEVICE_SERVER_PORT,
-      '127.0.0.1'
+      '172.16.0.1'
     ),
     close: socket.close
   }
