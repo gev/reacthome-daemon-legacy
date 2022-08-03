@@ -7,6 +7,9 @@ module.exports.handleTransmitRBUS = (rbus, data) => {
   if (!rbus.port.isRBUS) {
     return;
   }
+  if (rbus.tx.length >= 64) {
+    return
+  }
   if (data.length < 8) {
     return;
   }
