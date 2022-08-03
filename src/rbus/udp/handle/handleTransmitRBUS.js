@@ -13,8 +13,6 @@ module.exports.handleTransmitRBUS = (rbus, data) => {
   }
   const mac = data.slice(1, 7);
   const address = getAddress(rbus, mac);
-  console.log(data, mac, address, data.slice(7))
-
   if (address < 0) {
     return;
   }

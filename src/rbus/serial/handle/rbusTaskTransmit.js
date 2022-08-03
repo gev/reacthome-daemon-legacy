@@ -8,6 +8,7 @@ module.exports.rbusTaskTransmit = (rbus) => {
     return;
   }
   const item = rbus.tx[0];
+  console.log(rbus.tx);
   if (item.ttl > 0) {
     item.ttl--;
     rbus.port.sendRBUS([
