@@ -8,7 +8,7 @@ module.exports.handleRbusReceiveDiscovery = (rbus, data) => {
     return;
   }
   if (checkCRC(data)) {
-    const mac = Array.from(data.slice(1, 7));
+    const mac = data.slice(1, 7);
     const type = [data[7], data[8], data[9]];
     const address = registerAddress(rbus, mac, type);
     if (address >= 0) {
