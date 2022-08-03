@@ -2,6 +2,7 @@ const { RBUS_CONFIRM_FRAME_SIZE } = require("../../constants");
 const { checkCRC } = require("../../crc");
 
 module.exports.handleRbusReceiveConfirm = (rbus, data) => {
+  console.log(data)
   if (data.length < RBUS_CONFIRM_FRAME_SIZE) {
     return;
   }
