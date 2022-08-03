@@ -7,8 +7,12 @@ module.exports.handleRbusReceiveConfirm = (rbus, data) => {
   }
   if (checkCRC(data)) {
     const address = data[1];
-    rbus.tx = rbus.tx.filter(
-      i => i.address !== address
+    index = rbus.tx.findIndex(
+      i => i.address === address
     );
+    if (i < 0) {
+      return;
+    }
+    rbus.tx.splice(index, 1);
   }
 }
