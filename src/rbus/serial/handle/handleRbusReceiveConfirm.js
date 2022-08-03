@@ -10,7 +10,7 @@ module.exports.handleRbusReceiveConfirm = (rbus, data) => {
     index = rbus.tx.findIndex(
       i => i.address === address
     );
-    if (i < 0) {
+    if (index < 0) {
       return;
     }
     rbus.tx.splice(index, 1);
