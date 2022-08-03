@@ -1,7 +1,7 @@
 *.iml
 .idea
 .history
-.vscode
+.vscode*
 
 # Logs
 logs
