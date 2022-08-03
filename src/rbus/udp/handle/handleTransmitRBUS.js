@@ -10,7 +10,7 @@ module.exports.handleTransmitRBUS = (rbus, data) => {
   if (data.length < 8) {
     return;
   }
-  if (data.length > 6 + RBUS_MESSAGE_SIZE) {
+  if (data.length > 7 + RBUS_MESSAGE_SIZE) {
     return;
   }
   const mac = data.slice(1, 7);
