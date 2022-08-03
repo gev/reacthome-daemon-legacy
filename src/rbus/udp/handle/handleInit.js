@@ -8,6 +8,6 @@ module.exports.handleInit = (rbus, data) => {
   const lineControl = data.readUint8(5);
   rbus.port.reCreate(isRbus, baudRate, lineControl);
   rbus.socket.send([ACTION_INITIALIZED]);
-  setInterval(rbusTaskTransmit, 20, rbus);
+  setInterval(rbusTaskTransmit, 3, rbus);
   setInterval(rbusTaskPing, 1000, rbus);
 }
