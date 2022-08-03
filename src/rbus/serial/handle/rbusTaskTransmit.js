@@ -13,6 +13,8 @@ module.exports.rbusTaskTransmit = (rbus) => {
     rbus.port.sendRBUS([
       RBUS_DATA_PREAMBLE_TRANSMIT,
       item.address,
+      item.id,
+      item.data.size,
       ...item.data
     ])
   } else {

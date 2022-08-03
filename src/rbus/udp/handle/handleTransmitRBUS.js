@@ -1,6 +1,8 @@
 const { RBUS_MESSAGE_SIZE, RBUS_TTL } = require("../../constants");
 const { getAddress } = require("../../pool");
 
+let id = 0;
+
 module.exports.handleTransmitRBUS = (rbus, data) => {
   if (!rbus.port.isRBUS) {
     return;
@@ -16,8 +18,11 @@ module.exports.handleTransmitRBUS = (rbus, data) => {
   if (address < 0) {
     return;
   }
+  id += 1;
+  id %= 256;
   rbus.tx.push({
     address,
+    id,
     ttl: RBUS_TTL,
     data: data.slice(7)
   });
