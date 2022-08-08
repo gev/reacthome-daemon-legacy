@@ -16,7 +16,7 @@ const drivers = require("./src/drivers");
 const assets = require("./src/assets");
 const websocket = require("./src/websocket");
 // const zigbee = require("./src/zigbee");
-// const janus = require("./src/janus");
+const janus = require("./src/janus");
 const sip = require("./src/sip");
 const db = require("./src/db");
 const { cleanup } = require("./src/gc");
@@ -70,7 +70,7 @@ const load = async () => {
     set(init.mac, d);
   }
   cleanup(init);
-  // console.log(init.mac);
+  console.log(init.mac);
   await assets.init();
   state.init(init);
   weather.manage();
@@ -80,7 +80,7 @@ const load = async () => {
   discovery.start(init.mac);
   websocket.start(init.mac);
   // zigbee.start(init.mac);
-  // janus.start();
+  janus.start();
   sip.start();
   start(init.mac);
   set(init.mac, { token: [] });
