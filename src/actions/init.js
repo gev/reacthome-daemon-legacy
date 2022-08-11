@@ -42,6 +42,7 @@ const {
   DEVICE_TYPE_DIM_8_RS,
   DEVICE_TYPE_RS_HUB1_RS,
   DEVICE_TYPE_RS_HUB1,
+  DEVICE_TYPE_SMART_4AM,
 } = require("../constants");
 const { get, set, add } = require("./create");
 const { device } = require("../sockets");
@@ -117,7 +118,8 @@ module.exports.initialize = (id) => {
       a[24] = image[1] || 0;
       break;
     }
-    case DEVICE_TYPE_SMART_4A: {
+    case DEVICE_TYPE_SMART_4A:
+    case DEVICE_TYPE_SMART_4AM: {
       const mac = id.split(":").map((i) => parseInt(i, 16));
       a[0] = ACTION_RBUS_TRANSMIT;
       a[1] = mac[0];

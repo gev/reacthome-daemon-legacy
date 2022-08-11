@@ -168,6 +168,7 @@ const {
   DRIVER_TYPE_NOVA,
   DEVICE_TYPE_DIM_8_RS,
   DEVICE_TYPE_RS_HUB1_RS,
+  DEVICE_TYPE_SMART_4AM,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -740,7 +741,8 @@ const run = (action) => {
           }
           case DEVICE_TYPE_SMART_4G:
           case DEVICE_TYPE_SMART_4GD:
-          case DEVICE_TYPE_SMART_4A: {
+          case DEVICE_TYPE_SMART_4A:
+          case DEVICE_TYPE_SMART_4AM: {
             device.send(
               Buffer.from([
                 ACTION_RBUS_TRANSMIT,
@@ -829,7 +831,8 @@ const run = (action) => {
           }
           case DEVICE_TYPE_SMART_4G:
           case DEVICE_TYPE_SMART_4GD:
-          case DEVICE_TYPE_SMART_4A: {
+          case DEVICE_TYPE_SMART_4A:
+          case DEVICE_TYPE_SMART_4AM: {
             device.send(
               Buffer.from([
                 ACTION_RBUS_TRANSMIT,
@@ -1748,6 +1751,7 @@ const run = (action) => {
         } else if (
           (dev_type === DEVICE_TYPE_IR_4 && parseInt(major) >= 3) ||
           dev_type === DEVICE_TYPE_SMART_4A ||
+          dev_type === DEVICE_TYPE_SMART_4AM ||
           dev_type === DEVICE_TYPE_SMART_4G ||
           dev_type === DEVICE_TYPE_SMART_4GD
         ) {
@@ -1811,6 +1815,7 @@ const run = (action) => {
           switch (type) {
             case DEVICE_TYPE_IR_4:
             case DEVICE_TYPE_SMART_4A:
+            case DEVICE_TYPE_SMART_4AM:
             case DEVICE_TYPE_SMART_4G:
             case DEVICE_TYPE_SMART_4GD: {
               const [major] = version.split(".");

@@ -230,6 +230,7 @@ module.exports.DEVICE_TYPE_IR_4 = 0x24;
 module.exports.DEVICE_TYPE_SMART_4G = 0x25;
 module.exports.DEVICE_TYPE_SMART_4GD = 0x26;
 module.exports.DEVICE_TYPE_SMART_4A = 0x27;
+module.exports.DEVICE_TYPE_SMART_4AM = 0x2a;
 
 module.exports.DEVICE_TYPE_RELAY_6 = 0xa0;
 module.exports.DEVICE_TYPE_RELAY_12 = 0xa1;
