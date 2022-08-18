@@ -1,7 +1,18 @@
+const os = require('os');
 const { rbus } = require("./src/rbus");
 
-rbus(1, '127.0.1.1', '/dev/ttyAMA2', 12);
-rbus(2, '127.0.1.2', '/dev/ttyAMA1', 16);
+const ifaces = os.networkInterfaces();
+const mac = (ifaces.eth0 || ifaces.eth1)[0]
+  .mac.split(':').map(i => parseInt(i, 16));
+
+const mac1 = mac;
+const mac2 = mac;
+
+mac1[0] = mac1[0] << 1;
+mac2[0] = mac1[1] << 1 | 1;
+
+rbus(mac1, '127.0.1.1', '/dev/ttyAMA2', 12);
+rbus(mac2, '127.0.1.2', '/dev/ttyAMA1', 16);
 
 // uart1 
 // rx 9

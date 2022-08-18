@@ -18,7 +18,7 @@ module.exports.createSocket = (rbus, host) => {
     host,
     sendRBUS: send,
     send: (data) => send(Buffer.from([
-      0, 0, 0, 0, 0, rbus.index, ...data
+      ...rbus.mac, ...data
     ])),
     close: socket.close
   }
