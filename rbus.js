@@ -9,7 +9,7 @@ const mac1 = mac;
 const mac2 = mac;
 
 mac1[0] = mac1[0] & 0b1111_1110;
-mac2[0] = mac1[1] | 0b0000_0001;
+mac2[0] = mac2[1] | 0b0000_0001;
 
 rbus(mac1, '127.0.1.1', '/dev/ttyAMA2', 12);
 rbus(mac2, '127.0.1.2', '/dev/ttyAMA1', 16);
