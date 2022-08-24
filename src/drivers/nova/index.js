@@ -28,17 +28,17 @@ const sync = (id) => {
       console.log('read modbus value')
       readInputRegisters(modbus, address, 0x2, 1);
     } else {
-      if (dev.fan_speed !== undefined) {
+      console.log('write modbus value');
+      writeRegister(modbus, address, 0x2, dev.value ? 1 : 0);
+      setTimeout(() => {
         console.log('write modbus fan_speed');
         writeRegister(modbus, address, 0x19, dev.fan_speed);
-      } else if (dev.value !== undefined) {
-        console.log('write modbus value');
-        writeRegister(modbus, address, 0x2, dev.value ? 1 : 0);
-      }
-      // writeRegister(modbus, address, 0x1, dev.setpoint * 10);
-      set(id, { synced: true });
+      }, 100);
     }
+    // writeRegister(modbus, address, 0x1, dev.setpoint * 10);
+    set(id, { synced: true });
   }
+
 };
 
 module.exports.handle = (action) => {
