@@ -32,7 +32,7 @@ const sync = (id) => {
       writeRegister(modbus, address, 0x2, dev.value ? 1 : 0);
       setTimeout(() => {
         console.log('write modbus fan_speed');
-        writeRegister(modbus, address, 0x19, dev.fan_speed);
+        writeRegister(modbus, address, 0x20, dev.fan_speed);
       }, 100);
     }
     // writeRegister(modbus, address, 0x1, dev.setpoint * 10);
