@@ -66,7 +66,7 @@ module.exports.handle = (action) => {
     }
     default: {
       const { data } = action;
-      console.log('modbus receive: ', data)
+      console.log('modbus receive: ', data);
       switch (data[0]) {
         case READ_HOLDING_REGISTERS: {
           const dev = get(id) || {};
@@ -85,7 +85,6 @@ module.exports.handle = (action) => {
       }
     }
   }
-}
 };
 
 module.exports.clear = () => {
