@@ -35,7 +35,7 @@ module.exports.onWatch = ({ url, audio = false, video = true }, session) => {
           audio, video,
           url: u.toString(),
           rtsp_user, rtsp_pwd,
-          // videofmtp: 'level-asymmetry-allowed=1;profile-level-id=42e01f;packetization-mode=1'
+          videofmtp: 'level-asymmetry-allowed=1;profile-level-id=42e01f;packetization-mode=1'
         }, () => {
           streams.set(url, stream_id);
           watch(stream_id);
