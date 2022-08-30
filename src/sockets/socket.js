@@ -11,8 +11,6 @@ module.exports = (discovery, interval, port, listen, multicast, hasQueue, delay 
     });
   };
 
-
-
   const startDiscovery = () => {
     try {
       socket.setMulticastInterface(multicast);
