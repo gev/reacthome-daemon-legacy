@@ -25,13 +25,12 @@ const sync = (id) => {
   const [modbus, , address] = bind.split("/");
   if (modbus) {
     if (synced) {
-      console.log('read modbus value')
+      console.log('read nova modbus')
       readInputRegisters(modbus, address, 0x2, 1);
     } else {
-      console.log('write modbus value');
+      console.log('write nova modbus');
       writeRegister(modbus, address, 0x2, dev.value ? 1 : 0);
       setTimeout(() => {
-        console.log('write modbus fan_speed');
         writeRegister(modbus, address, 0x20, dev.fan_speed);
       }, 100);
     }
@@ -66,7 +65,7 @@ module.exports.handle = (action) => {
     }
     default: {
       const { data } = action;
-      console.log('modbus receive: ', data);
+      console.log('handle nova modbus', data);
       switch (data[0]) {
         case READ_HOLDING_REGISTERS: {
           const dev = get(id) || {};
