@@ -21,6 +21,7 @@ const sync = async (id) => {
       console.log('read intesibox modbus')
       readHoldingRegisters(modbus, address, 0x0, 12);
     } else {
+      console.log('write intesibox modbus')
       writeRegister(modbus, address, 0x0, dev.value);
       await delay(100);
       writeRegister(modbus, address, 0x1, dev.mode);
