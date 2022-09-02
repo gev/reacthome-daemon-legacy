@@ -25,10 +25,10 @@ const sync = (id) => {
   const [modbus, , address] = bind.split("/");
   if (modbus) {
     if (synced) {
-      console.log('read nova modbus')
+      console.log('read nova modbus', modbus, address)
       readInputRegisters(modbus, address, 0x2, 1);
     } else {
-      console.log('write nova modbus');
+      console.log('write nova modbus', modbus, address);
       writeRegister(modbus, address, 0x2, dev.value ? 1 : 0);
       setTimeout(() => {
         writeRegister(modbus, address, 0x20, dev.fan_speed);
