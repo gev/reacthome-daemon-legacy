@@ -65,6 +65,7 @@ module.exports.handle = (action) => {
     }
     default: {
       const { data } = action;
+      console.log('handle intesisbox modbus', data)
       switch (data[0]) {
         case READ_HOLDING_REGISTERS: {
           const dev = get(id) || {};
