@@ -14,10 +14,11 @@ const delay = time => new Promise((resolve) => {
 
 const sync = async (id) => {
   const dev = get(id) || {};
-  const {bind, synced} = dev;
-  const [modbus,, address] = bind.split('/');
+  const { bind, synced } = dev;
+  const [modbus, , address] = bind.split('/');
   if (modbus && address) {
     if (synced) {
+      console.log('read intesibox modbus')
       readHoldingRegisters(modbus, address, 0x0, 12);
     } else {
       writeRegister(modbus, address, 0x0, dev.value);
@@ -29,40 +30,40 @@ const sync = async (id) => {
       writeRegister(modbus, address, 0x3, dev.direction);
       await delay(100);
       writeRegister(modbus, address, 0x4, dev.setpoint);
-      set(id, {synced: true});
+      set(id, { synced: true });
     }
   }
 };
 
 module.exports.handle = (action) => {
-  const {id, type} = action;
+  const { id, type } = action;
   switch (type) {
     case ACTION_ON: {
-      set(id, {value: true, synced: false});
+      set(id, { value: true, synced: false });
       break;
     }
     case ACTION_OFF: {
-      set(id, {value: false, synced: false});
+      set(id, { value: false, synced: false });
       break;
     }
     case ACTION_SET_MODE: {
-      set(id, {mode: action.value, synced: false});
+      set(id, { mode: action.value, synced: false });
       break;
     }
     case ACTION_SET_FAN_SPEED: {
-      set(id, {fan_speed: action.value, synced: false});
+      set(id, { fan_speed: action.value, synced: false });
       break;
     }
     case ACTION_SET_DIRECTION: {
-      set(id, {direction: action.value, synced: false});
+      set(id, { direction: action.value, synced: false });
       break;
     }
     case ACTION_SETPOINT: {
-      set(id, {setpoint: action.value, synced: false});
+      set(id, { setpoint: action.value, synced: false });
       break;
     }
     default: {
-      const {data} = action;
+      const { data } = action;
       switch (data[0]) {
         case READ_HOLDING_REGISTERS: {
           const dev = get(id) || {};
@@ -75,7 +76,7 @@ module.exports.handle = (action) => {
               setpoint: data.readUInt16BE(10),
               synced: true
             })
-          } 
+          }
           break;
         }
       }
