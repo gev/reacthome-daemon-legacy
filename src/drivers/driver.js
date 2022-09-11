@@ -10,6 +10,7 @@ const {
   DRIVER_TYPE_INTESIS_BOX,
   DRIVER_TYPE_ME210_701,
   DRIVER_TYPE_NOVA,
+  DRIVER_TYPE_SWIFT,
 } = require("../constants");
 const { get } = require("../actions");
 const RS21 = require("./RS21");
@@ -18,7 +19,8 @@ const { Plc1, Plc2 } = require("./bb");
 const M230 = require("./M230");
 const M206 = require("./M206");
 const modbus = require("./modbus/rbus");
-const nova = require("./nova");
+const nova = require("./shuft/nova");
+const swift = require("./shuft/swift");
 const varmann = require("./varmann");
 const intesisbox = require("./intesisbox");
 const me210_701 = require("./owen/me210_701");
@@ -65,6 +67,10 @@ module.exports.manage = () => {
       case DRIVER_TYPE_NOVA:
         run[id] = nova;
         nova.add(id);
+        break;
+      case DRIVER_TYPE_SWIFT:
+        run[id] = swift;
+        swift.add(id);
         break;
       case DRIVER_TYPE_VARMANN:
         run[id] = varmann;

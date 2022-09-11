@@ -1,20 +1,20 @@
-const { get, set } = require("../../actions");
+const { get, set } = require("../../../actions");
 const {
   ACTION_SET_FAN_SPEED,
   ACTION_ON,
   ACTION_OFF,
   ACTION_SETPOINT,
-} = require("../../constants");
+} = require("../../../constants");
 const {
   writeRegister,
   readHoldingRegisters,
   writeRegisters,
   readInputRegisters,
-} = require("../modbus/rbus");
+} = require("../../modbus/rbus");
 const {
   READ_HOLDING_REGISTERS,
   WRITE_REGISTER,
-} = require("../modbus/constants");
+} = require("../../modbus/constants");
 const { ADDRESS, TIMEOUT } = require("./constants");
 
 const instance = new Set();

@@ -299,6 +299,7 @@ module.exports.DRIVER_TYPE_M206 = "M206";
 module.exports.DRIVER_TYPE_M230 = "M230";
 module.exports.DRIVER_TYPE_MODBUS = "MODBUS";
 module.exports.DRIVER_TYPE_NOVA = "NOVA";
+module.exports.DRIVER_TYPE_SWIFT = "SWIFT";
 module.exports.DRIVER_TYPE_VARMANN = "VARMANN";
 module.exports.DRIVER_TYPE_INTESIS_BOX = "INTESIS_BOX";
 module.exports.DRIVER_TYPE_ME210_701 = "ME210_710";
