@@ -10,4 +10,5 @@ module.exports.handleInit = (rbus, data) => {
   rbus.socket.send([ACTION_INITIALIZED]);
   setInterval(rbusTaskTransmit, 3, rbus);
   setInterval(rbusTaskPing, 1000, rbus);
+  rbus.ready = true;
 }
