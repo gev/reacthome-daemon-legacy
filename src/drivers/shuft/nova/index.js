@@ -67,8 +67,8 @@ module.exports.handle = (action) => {
     default: {
       const { id, data } = action;
       console.log('handle nova modbus', id);
-      for (let i = 1; i <= 85; i += 2) {
-        const x = data.readUInt16BE(6);
+      for (let i = 1; i <= 85; i++) {
+        const x = data.readUInt16BE(i * 2);
         if (d[i] !== x) console.log(i, x);
         d[i] = x;
       }
