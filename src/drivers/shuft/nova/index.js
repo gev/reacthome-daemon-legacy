@@ -31,7 +31,6 @@ const sync = async (id) => {
     readHoldingRegisters(modbus, address, 0x1f, 1);
     const { value_, fan_speed_, setpoint_ } = dev
     if (value_ !== undefined) {
-      console.log(off)
       await delay(300);
       writeRegister(modbus, address, 0x2, value_);
       set(id, { value_: undefined });
@@ -51,6 +50,7 @@ const sync = async (id) => {
 
 module.exports.handle = (action) => {
   const { id, type } = action;
+  console.log(action)
   switch (type) {
     case ACTION_ON: {
       set(id, { value: 1, value_: 1 });
