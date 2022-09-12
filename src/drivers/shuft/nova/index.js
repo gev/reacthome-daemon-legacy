@@ -26,9 +26,9 @@ const sync = async (id) => {
   const { bind } = dev;
   const [modbus, , address] = bind.split("/");
   if (modbus) {
-    readInputRegisters(modbus, address, 0x0, 85);
+    readInputRegisters(modbus, address, 0x2, 1);
     await delay(300);
-    readHoldingRegisters(modbus, address, 0x1f, 1);
+    readHoldingRegisters(modbus, address, 0x0, 33);
     const { value_, fan_speed_, setpoint_ } = dev
     if (value_ !== undefined) {
       await delay(300);
@@ -72,14 +72,14 @@ module.exports.handle = (action) => {
       const { id, data } = action;
       switch (data[0]) {
         case READ_HOLDING_REGISTERS: {
-          const setpoint = data.readUInt16BE(2) / 10;
-          set(id, { setpoint });
+          const fan_speed = data.readUInt16BE(66);
+          const setpoint = data.readUInt16BE(64) / 10;
+          set(id, { fan_speed, setpoint });
           break;
         }
         case READ_INPUT_REGISTERS: {
-          const value = data.readUInt16BE(6) & 0x1;
-          const fan_speed = data.readUInt16BE(52);
-          set(id, { value, fan_speed });
+          const value = data.readUInt16BE(2) & 0x1;
+          set(id, { value });
           break;
         }
       }
