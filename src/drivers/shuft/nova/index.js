@@ -32,7 +32,7 @@ const sync = async (id) => {
       await delay(300);
       readHoldingRegisters(modbus, address, 0x1f, 1);
     } else {
-      const { value_, fan_speed_, setpoint_ } = dev
+      const { value_ = 0, fan_speed_ = 1, setpoint_ = 15 } = dev
       writeRegister(modbus, address, 0x2, value_ ? 1 : 0);
       await delay(300);
       writeRegister(modbus, address, 0x20, fan_speed_);
