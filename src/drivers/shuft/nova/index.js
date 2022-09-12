@@ -55,19 +55,19 @@ module.exports.handle = (action) => {
   const { id, type } = action;
   switch (type) {
     case ACTION_ON: {
-      set(id, { value_: true, synced: false });
+      set(id, { value: true, value_: true, synced: false });
       break;
     }
     case ACTION_OFF: {
-      set(id, { value_: false, synced: false });
+      set(id, { value: false, value_: false, synced: false });
       break;
     }
     case ACTION_SET_FAN_SPEED: {
-      set(id, { fan_speed_: action.value, synced: false });
+      set(id, { fan_speed: action.value, fan_speed_: action.value, synced: false });
       break;
     }
     case ACTION_SETPOINT: {
-      set(id, { setpoint_: action.value, synced: false });
+      set(id, { setpoint: action.value, setpoint_: action.value, synced: false });
       break;
     }
     default: {
