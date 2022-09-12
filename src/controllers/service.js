@@ -1044,7 +1044,7 @@ const run = (action) => {
         const { id } = action;
         const o = get(id) || {};
         if (o.disabled) return;
-        if (o.type === DRIVER_TYPE_INTESIS_BOX) {
+        if (o.type === DRIVER_TYPE_INTESIS_BOX || o.type === DRIVER_TYPE_NOVA) {
           drivers.handle(action);
           return;
         }
