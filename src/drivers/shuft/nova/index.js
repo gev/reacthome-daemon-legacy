@@ -34,7 +34,7 @@ const sync = async (id) => {
     } else {
       const { value_, fan_speed_, setpoint_ } = dev
       if (value_ !== undefined) {
-        writeRegister(modbus, address, 0x2, value_ ? 1 : 0);
+        writeRegister(modbus, address, 0x2, value_);
         set(id, { value_: undefined });
       }
       if (fan_speed_ !== undefined) {
@@ -55,11 +55,11 @@ module.exports.handle = (action) => {
   const { id, type } = action;
   switch (type) {
     case ACTION_ON: {
-      set(id, { value: true, value_: true, synced: false });
+      set(id, { value: 1, value_: 1, synced: false });
       break;
     }
     case ACTION_OFF: {
-      set(id, { value: false, value_: false, synced: false });
+      set(id, { value: 0, value_: 0, synced: false });
       break;
     }
     case ACTION_SET_FAN_SPEED: {
