@@ -40,7 +40,6 @@ const sync = async (id) => {
       writeRegister(modbus, address, 0x1f, setpoint_ * 10);
     }
   }
-
 };
 
 module.exports.handle = (action) => {
@@ -66,13 +65,11 @@ module.exports.handle = (action) => {
       const { id, data } = action;
       switch (data[0]) {
         case READ_HOLDING_REGISTERS: {
-          const dev = get(id) || {};
           const setpoint = data.readUInt16BE(2) / 10;
           set(id, { setpoint, synced: true });
           break;
         }
         case READ_INPUT_REGISTERS: {
-          const dev = get(id) || {};
           const value = data.readUInt16BE(6) & 0x1;
           const fan_speed = data.readUInt16BE(52);
           set(id, { value, fan_speed, synced: true });
