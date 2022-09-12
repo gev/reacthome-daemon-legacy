@@ -30,6 +30,7 @@ const sync = (id) => {
       readInputRegisters(modbus, address, 0x0, 85);
     } else {
       console.log('write nova modbus', modbus, address);
+      console.log("set", value, fan_speed);
       writeRegister(modbus, address, 0x2, dev.value ? 1 : 0);
       setTimeout(() => {
         writeRegister(modbus, address, 0x20, dev.fan_speed);
@@ -69,6 +70,7 @@ module.exports.handle = (action) => {
           const value = data.readUInt16BE(6) & 0x1;
           const fan_speed = data.readUInt16BE(52);
           // const setpoint = data.readUInt16BE(4) / 10;
+          console.log("get", value, fan_speed);
           if (dev.synced) {
             set(id, {
               value,
