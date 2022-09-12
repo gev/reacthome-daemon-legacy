@@ -28,7 +28,8 @@ const sync = async (id) => {
   if (modbus) {
     if (synced) {
       console.log('read nova modbus', modbus, address)
-      readInputRegisters(modbus, address, 0x0, 85);
+      // readInputRegisters(modbus, address, 0x0, 85);
+      readHoldingRegisters(modbus, address, 0x0, 33);
     } else {
       const { value, fan_speed, setpoint } = dev
       console.log('write nova modbus', modbus, address);
@@ -72,12 +73,16 @@ module.exports.handle = (action) => {
     default: {
       const { id, data } = action;
       console.log('handle nova modbus', id);
-      for (let i = 1; i <= 85; i++) {
+      for (let i = 1; i <= 33; i++) {
         const x = data.readUInt16BE(i * 2);
         if (d[i] !== x) console.log(i, x);
         d[i] = x;
       }
       switch (data[0]) {
+        case READ_HOLDING_REGISTERS: {
+          console.log(data)
+          break;
+        }
         case READ_INPUT_REGISTERS: {
           const dev = get(id) || {};
           const value = data.readUInt16BE(6) & 0x1;
