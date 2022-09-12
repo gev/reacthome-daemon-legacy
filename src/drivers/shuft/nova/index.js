@@ -50,7 +50,6 @@ const sync = async (id) => {
 
 module.exports.handle = (action) => {
   const { id, type } = action;
-  console.log(action)
   switch (type) {
     case ACTION_ON: {
       set(id, { value: 1, value_: 1 });
