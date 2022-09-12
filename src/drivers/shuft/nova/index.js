@@ -38,7 +38,7 @@ const sync = async (id) => {
       await delay(300);
       writeRegister(modbus, address, 0x20, fan_speed);
       await delay(300);
-      writeRegister(modbus, address, 0x1f, setpoint);
+      writeRegister(modbus, address, 0x1f, setpoint * 10);
       setTimeout(() => {
 
       }, 500);
@@ -48,8 +48,6 @@ const sync = async (id) => {
   }
 
 };
-
-let d = [];
 
 module.exports.handle = (action) => {
   const { id, type } = action;
@@ -73,11 +71,6 @@ module.exports.handle = (action) => {
     default: {
       const { id, data } = action;
       console.log('handle nova modbus', id);
-      for (let i = 1; i <= 33; i++) {
-        const x = data.readUInt16BE(i * 2);
-        if (d[i] !== x) console.log(i, x);
-        d[i] = x;
-      }
       switch (data[0]) {
         case READ_HOLDING_REGISTERS: {
           const dev = get(id) || {};
