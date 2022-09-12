@@ -29,11 +29,12 @@ const sync = (id) => {
       console.log('read nova modbus', modbus, address)
       readInputRegisters(modbus, address, 0x0, 85);
     } else {
+      const { value, fan_speed, setpoint } = dev
       console.log('write nova modbus', modbus, address);
       console.log("set", dev.value, dev.fan_speed);
-      writeRegister(modbus, address, 0x2, dev.value ? 1 : 0);
+      writeRegister(modbus, address, 0x2, value ? 1 : 0);
       setTimeout(() => {
-        writeRegister(modbus, address, 0x20, dev.fan_speed);
+        writeRegister(modbus, address, 0x20, fan_speed);
       }, 100);
     }
     // writeRegister(modbus, address, 0x1, dev.setpoint * 10);
