@@ -30,7 +30,7 @@ const sync = (id) => {
       readInputRegisters(modbus, address, 0x0, 85);
     } else {
       console.log('write nova modbus', modbus, address);
-      console.log("set", value, fan_speed);
+      console.log("set", dev.value, dev.fan_speed);
       writeRegister(modbus, address, 0x2, dev.value ? 1 : 0);
       setTimeout(() => {
         writeRegister(modbus, address, 0x20, dev.fan_speed);
