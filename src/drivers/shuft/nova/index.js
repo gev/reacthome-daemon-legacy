@@ -46,7 +46,6 @@ const sync = async (id) => {
       set(id, { setpoint_: undefined });
     }
   }
-}
 };
 
 module.exports.handle = (action) => {
