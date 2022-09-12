@@ -43,6 +43,8 @@ const sync = (id) => {
 
 };
 
+let d = [];
+
 module.exports.handle = (action) => {
   const { id, type } = action;
   switch (type) {
@@ -64,7 +66,12 @@ module.exports.handle = (action) => {
     }
     default: {
       const { id, data } = action;
-      console.log('handle nova modbus', id, data);
+      console.log('handle nova modbus', id);
+      for (let i = 1; i <= 85; i += 2) {
+        const x = data.readUInt16BE(6);
+        if (d[i] !== x) console.log(i, x);
+        d[i] = x;
+      }
       switch (data[0]) {
         case READ_INPUT_REGISTERS: {
           const dev = get(id) || {};
