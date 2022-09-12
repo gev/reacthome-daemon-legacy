@@ -80,14 +80,10 @@ module.exports.handle = (action) => {
       }
       switch (data[0]) {
         case READ_HOLDING_REGISTERS: {
-          console.log(data)
-          break;
-        }
-        case READ_INPUT_REGISTERS: {
           const dev = get(id) || {};
           const value = data.readUInt16BE(6) & 0x1;
-          const fan_speed = data.readUInt16BE(52);
-          const setpoint = data.readUInt16BE(116) / 10;
+          const fan_speed = data.readUInt16BE(66);
+          const setpoint = data.readUInt16BE(64) / 10;
           console.log("get", value, fan_speed, setpoint);
           if (dev.synced) {
             set(id, {
@@ -97,8 +93,24 @@ module.exports.handle = (action) => {
               synced: true,
             });
           }
-        }
           break;
+        }
+        case READ_INPUT_REGISTERS: {
+          const dev = get(id) || {};
+          const value = data.readUInt16BE(6) & 0x1;
+          const fan_speed = data.readUInt16BE(52);
+          const setpoint = data.readUInt16BE(50) / 10;
+          console.log("get", value, fan_speed, setpoint);
+          if (dev.synced) {
+            set(id, {
+              value,
+              fan_speed,
+              setpoint,
+              synced: true,
+            });
+          }
+          break;
+        }
       }
     }
   }
