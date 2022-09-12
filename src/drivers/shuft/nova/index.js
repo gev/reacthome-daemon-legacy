@@ -14,6 +14,7 @@ const {
 const {
   READ_HOLDING_REGISTERS,
   WRITE_REGISTER,
+  READ_INPUT_REGISTERS,
 } = require("../../modbus/constants");
 const { ADDRESS, TIMEOUT } = require("./constants");
 
@@ -63,7 +64,7 @@ module.exports.handle = (action) => {
       const { id, data } = action;
       console.log('handle nova modbus', id, data);
       switch (data[0]) {
-        case READ_HOLDING_REGISTERS: {
+        case READ_INPUT_REGISTERS: {
           const dev = get(id) || {};
           const value = data.readUInt16BE(2) & 0x1;
           const fan_speed = data.readUInt16BE(25);
