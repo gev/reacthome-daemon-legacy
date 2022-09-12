@@ -66,8 +66,8 @@ module.exports.handle = (action) => {
       switch (data[0]) {
         case READ_INPUT_REGISTERS: {
           const dev = get(id) || {};
-          const value = data.readUInt16BE(1) & 0x1;
-          const fan_speed = data.readUInt16BE(51);
+          const value = data.readUInt16BE(6) & 0x1;
+          const fan_speed = data.readUInt16BE(52);
           // const setpoint = data.readUInt16BE(4) / 10;
           if (dev.synced) {
             set(id, {
