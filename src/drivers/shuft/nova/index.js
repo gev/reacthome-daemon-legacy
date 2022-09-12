@@ -32,12 +32,12 @@ const sync = async (id) => {
       await delay(300);
       readHoldingRegisters(modbus, address, 0x1f, 1);
     } else {
-      const { value, fan_speed, setpoint } = dev
-      writeRegister(modbus, address, 0x2, value ? 1 : 0);
+      const { value_, fan_speed_, setpoint_ } = dev
+      writeRegister(modbus, address, 0x2, value_ ? 1 : 0);
       await delay(300);
-      writeRegister(modbus, address, 0x20, fan_speed);
+      writeRegister(modbus, address, 0x20, fan_speed_);
       await delay(300);
-      writeRegister(modbus, address, 0x1f, setpoint * 10);
+      writeRegister(modbus, address, 0x1f, setpoint_ * 10);
     }
   }
 
@@ -47,23 +47,19 @@ module.exports.handle = (action) => {
   const { id, type } = action;
   switch (type) {
     case ACTION_ON: {
-      set(id, { value: true, synced: false });
-      sync(id);
+      set(id, { value_: true, synced: false });
       break;
     }
     case ACTION_OFF: {
-      set(id, { value: false, synced: false });
-      sync(id);
+      set(id, { value_: false, synced: false });
       break;
     }
     case ACTION_SET_FAN_SPEED: {
-      set(id, { fan_speed: action.value, synced: false });
-      sync(id);
+      set(id, { fan_speed_: action.value, synced: false });
       break;
     }
     case ACTION_SETPOINT: {
-      set(id, { setpoint: action.value, synced: false });
-      sync(id);
+      set(id, { setpoint_: action.value, synced: false });
       break;
     }
     default: {
