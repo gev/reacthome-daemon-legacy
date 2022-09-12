@@ -69,24 +69,30 @@ module.exports.handle = (action) => {
           const fan_speed = data.readUInt16BE(25);
           // const setpoint = data.readUInt16BE(4) / 10;
           if (dev.synced) {
-            set(id, { value, fan_speed, synced: true });
+            set(id, {
+              value,
+              fan_speed,
+              // setpoint,
+              synced: true,
+            });
           }
-          break;
         }
+          break;
       }
     }
-  };
+  }
+};
 
-  module.exports.clear = () => {
-    instance.clear();
-  };
+module.exports.clear = () => {
+  instance.clear();
+};
 
-  module.exports.add = (id) => {
-    instance.add(id);
-  };
+module.exports.add = (id) => {
+  instance.add(id);
+};
 
-  setInterval(() => {
-    for (const id of instance) {
-      sync(id);
-    }
-  }, TIMEOUT);
+setInterval(() => {
+  for (const id of instance) {
+    sync(id);
+  }
+}, TIMEOUT);
