@@ -32,12 +32,21 @@ const sync = async (id) => {
       await delay(300);
       readHoldingRegisters(modbus, address, 0x1f, 1);
     } else {
-      const { value_ = 0, fan_speed_ = 1, setpoint_ = 15 } = dev
-      writeRegister(modbus, address, 0x2, value_ ? 1 : 0);
-      await delay(300);
-      writeRegister(modbus, address, 0x20, fan_speed_);
-      await delay(300);
-      writeRegister(modbus, address, 0x1f, setpoint_ * 10);
+      const { value_, fan_speed_, setpoint_ } = dev
+      if (value_ !== undefined) {
+        writeRegister(modbus, address, 0x2, value_ ? 1 : 0);
+        set(id, { value_: undefined });
+      }
+      if (fan_speed_ !== undefined) {
+        await delay(300);
+        writeRegister(modbus, address, 0x20, fan_speed_);
+        set(id, { fan_speed_: undefined });
+      }
+      if (setpoint_ !== undefined) {
+        await delay(300);
+        writeRegister(modbus, address, 0x1f, setpoint_ * 10);
+        set(id, { setpoint_: undefined });
+      }
     }
   }
 };
