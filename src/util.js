@@ -15,3 +15,7 @@ module.exports.ip2int = (ip) =>
 
 module.exports.int2ip = (ip) =>
   `${(ip >> 24) & 0xff}.${(ip >> 16) & 0xff}.${(ip >> 8) & 0xff}.${ip & 0xff}`;
+
+module.exports.delay = time => new Promise((resolve) => {
+  setTimeout(resolve, time);
+});

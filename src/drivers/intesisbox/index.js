@@ -5,12 +5,9 @@ const { writeRegister, readHoldingRegisters, writeRegisters } = require('../modb
 const { READ_HOLDING_REGISTERS, WRITE_REGISTER } = require('../modbus/constants');
 const { BROADCAST_ADDRESS, TIMEOUT } = require('./constants');
 const { del } = require('../../db');
+const { delay } = require('../../util');
 
 const instance = new Set();
-
-const delay = time => new Promise((resolve) => {
-  setTimeout(resolve, time);
-})
 
 const sync = async (id) => {
   const dev = get(id) || {};

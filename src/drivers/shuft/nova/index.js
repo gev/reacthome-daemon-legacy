@@ -17,10 +17,11 @@ const {
   READ_INPUT_REGISTERS,
 } = require("../../modbus/constants");
 const { ADDRESS, TIMEOUT } = require("./constants");
+const { delay } = require("../../../util");
 
 const instance = new Set();
 
-const sync = (id) => {
+const sync = async (id) => {
   const dev = get(id) || {};
   const { bind, synced } = dev;
   const [modbus, , address] = bind.split("/");
@@ -33,8 +34,12 @@ const sync = (id) => {
       console.log('write nova modbus', modbus, address);
       console.log("set", dev.value, dev.fan_speed);
       writeRegister(modbus, address, 0x2, value ? 1 : 0);
+      await delay(300);
+      writeRegister(modbus, address, 0x20, fan_speed);
+      await delay(300);
+      writeRegister(modbus, address, 0x1f, setpoint);
       setTimeout(() => {
-        writeRegister(modbus, address, 0x20, fan_speed);
+
       }, 500);
     }
     // writeRegister(modbus, address, 0x1, dev.setpoint * 10);
@@ -77,13 +82,13 @@ module.exports.handle = (action) => {
           const dev = get(id) || {};
           const value = data.readUInt16BE(6) & 0x1;
           const fan_speed = data.readUInt16BE(52);
-          // const setpoint = data.readUInt16BE(4) / 10;
-          console.log("get", value, fan_speed);
+          const setpoint = data.readUInt16BE(116) / 10;
+          console.log("get", value, fan_speed, setpoint);
           if (dev.synced) {
             set(id, {
               value,
               fan_speed,
-              // setpoint,
+              setpoint,
               synced: true,
             });
           }
