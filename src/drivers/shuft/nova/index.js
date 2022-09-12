@@ -27,21 +27,21 @@ const sync = async (id) => {
   const [modbus, , address] = bind.split("/");
   if (modbus) {
     readInputRegisters(modbus, address, 0x2, 1);
-    await delay(300);
+    await delay(100);
     readHoldingRegisters(modbus, address, 0x0, 33);
     const { value_, fan_speed_, setpoint_ } = dev
     if (value_ !== undefined) {
-      await delay(300);
+      await delay(100);
       writeRegister(modbus, address, 0x2, value_);
       set(id, { value_: undefined });
     }
     if (fan_speed_ !== undefined) {
-      await delay(300);
+      await delay(100);
       writeRegister(modbus, address, 0x20, fan_speed_);
       set(id, { fan_speed_: undefined });
     }
     if (setpoint_ !== undefined) {
-      await delay(300);
+      await delay(100);
       writeRegister(modbus, address, 0x1f, setpoint_ * 10);
       set(id, { setpoint_: undefined });
     }
