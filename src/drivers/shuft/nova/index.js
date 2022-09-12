@@ -65,33 +65,28 @@ module.exports.handle = (action) => {
       switch (data[0]) {
         case READ_HOLDING_REGISTERS: {
           const dev = get(id) || {};
-          // const value = data.readUInt16BE(2);
-          // const fan_speed = data.readUInt16BE(2);
+          const value = data.readUInt16BE(2) & 0x1;
+          const fan_speed = data.readUInt16BE(25);
           // const setpoint = data.readUInt16BE(4) / 10;
-          // if (dev.synced) {
-          // set(id, {
-          // value,// !!fan_speed,
-          // fan_speed: fan_speed ? fan_speed : dev.fan_speed,
-          // setpoint,
-          // synced: true,
-          // });
-        }
+          if (dev.synced) {
+            set(id, { value, fan_speed, synced: true });
+          }
           break;
+        }
       }
     }
-  }
-};
+  };
 
-module.exports.clear = () => {
-  instance.clear();
-};
+  module.exports.clear = () => {
+    instance.clear();
+  };
 
-module.exports.add = (id) => {
-  instance.add(id);
-};
+  module.exports.add = (id) => {
+    instance.add(id);
+  };
 
-setInterval(() => {
-  for (const id of instance) {
-    sync(id);
-  }
-}, TIMEOUT);
+  setInterval(() => {
+    for (const id of instance) {
+      sync(id);
+    }
+  }, TIMEOUT);
