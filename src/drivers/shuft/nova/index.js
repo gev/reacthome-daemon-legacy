@@ -27,6 +27,7 @@ const sync = async (id) => {
   const [modbus, , address] = bind.split("/");
   if (modbus) {
     if (synced) {
+      set(id, { sinked: 2 });
       readInputRegisters(modbus, address, 0x0, 85);
       await delay(300);
       readHoldingRegisters(modbus, address, 0x1f, 1);
@@ -38,8 +39,6 @@ const sync = async (id) => {
       await delay(300);
       writeRegister(modbus, address, 0x1f, setpoint * 10);
     }
-    // writeRegister(modbus, address, 0x1, dev.setpoint * 10);
-    set(id, { synced: true });
   }
 
 };
@@ -49,18 +48,22 @@ module.exports.handle = (action) => {
   switch (type) {
     case ACTION_ON: {
       set(id, { value: true, synced: false });
+      sync(id);
       break;
     }
     case ACTION_OFF: {
       set(id, { value: false, synced: false });
+      sync(id);
       break;
     }
     case ACTION_SET_FAN_SPEED: {
       set(id, { fan_speed: action.value, synced: false });
+      sync(id);
       break;
     }
     case ACTION_SETPOINT: {
       set(id, { setpoint: action.value, synced: false });
+      sync(id);
       break;
     }
     default: {
@@ -69,25 +72,14 @@ module.exports.handle = (action) => {
         case READ_HOLDING_REGISTERS: {
           const dev = get(id) || {};
           const setpoint = data.readUInt16BE(2) / 10;
-          if (dev.synced) {
-            set(id, {
-              setpoint,
-              synced: true,
-            });
-          }
+          set(id, { setpoint, synced: true });
           break;
         }
         case READ_INPUT_REGISTERS: {
           const dev = get(id) || {};
           const value = data.readUInt16BE(6) & 0x1;
           const fan_speed = data.readUInt16BE(52);
-          if (dev.synced) {
-            set(id, {
-              value,
-              fan_speed,
-              synced: true,
-            });
-          }
+          set(id, { value, fan_speed, synced: true });
           break;
         }
       }
