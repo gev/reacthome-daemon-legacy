@@ -27,21 +27,16 @@ const sync = async (id) => {
   const [modbus, , address] = bind.split("/");
   if (modbus) {
     if (synced) {
-      console.log('read nova modbus', modbus, address)
-      // readInputRegisters(modbus, address, 0x0, 85);
-      readHoldingRegisters(modbus, address, 0x0, 33);
+      readInputRegisters(modbus, address, 0x0, 85);
+      await delay(300);
+      readHoldingRegisters(modbus, address, 0x1f, 1);
     } else {
       const { value, fan_speed, setpoint } = dev
-      console.log('write nova modbus', modbus, address);
-      console.log("set", dev.value, dev.fan_speed);
       writeRegister(modbus, address, 0x2, value ? 1 : 0);
       await delay(300);
       writeRegister(modbus, address, 0x20, fan_speed);
       await delay(300);
       writeRegister(modbus, address, 0x1f, setpoint * 10);
-      setTimeout(() => {
-
-      }, 500);
     }
     // writeRegister(modbus, address, 0x1, dev.setpoint * 10);
     set(id, { synced: true });
@@ -70,18 +65,12 @@ module.exports.handle = (action) => {
     }
     default: {
       const { id, data } = action;
-      console.log('handle nova modbus', id);
       switch (data[0]) {
         case READ_HOLDING_REGISTERS: {
           const dev = get(id) || {};
-          const value = data.readUInt16BE(6) & 0x1;
-          const fan_speed = data.readUInt16BE(66);
-          const setpoint = data.readUInt16BE(64) / 10;
-          console.log("get", value, fan_speed, setpoint);
+          const setpoint = data.readUInt16BE(2) / 10;
           if (dev.synced) {
             set(id, {
-              value,
-              fan_speed,
               setpoint,
               synced: true,
             });
@@ -92,13 +81,10 @@ module.exports.handle = (action) => {
           const dev = get(id) || {};
           const value = data.readUInt16BE(6) & 0x1;
           const fan_speed = data.readUInt16BE(52);
-          const setpoint = data.readUInt16BE(50) / 10;
-          console.log("get", value, fan_speed, setpoint);
           if (dev.synced) {
             set(id, {
               value,
               fan_speed,
-              setpoint,
               synced: true,
             });
           }
