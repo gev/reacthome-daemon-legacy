@@ -16,9 +16,10 @@ const createPort = (rbus, path, isRBUS, baudRate, lineControl) => {
   const send = (data) => {
     console.log('send', rbus, data)
     rbus.rede.write(1);
-    port.write(data);
-    port.drain(() => {
-      rbus.rede.write(0);
+    port.write(data, () => {
+      port.drain(() => {
+        rbus.rede.write(0);
+      });
     });
   }
   rbus.port = {
