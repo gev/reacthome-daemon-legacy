@@ -67,6 +67,7 @@ const {
   DEVICE_TYPE_DIM4,
   DEVICE_TYPE_DIM8,
   DEVICE_TYPE_RS_HUB1_RS,
+  ACTION_CO2,
 } = require("../constants");
 const {
   get,
@@ -532,6 +533,16 @@ module.exports.manage = () => {
           set(id, { illumination });
           if (onIllumination) {
             run({ type: ACTION_SCRIPT_RUN, id: onIllumination });
+          }
+          break;
+        }
+        case ACTION_CO2: {
+          const co2 = data.readUInt16LE(7);
+          const { onCO2, site } = get(id);
+          if (site) set(site, { co2 });
+          set(id, { co2 });
+          if (onCO2) {
+            run({ type: ACTION_SCRIPT_RUN, id: onCO2 });
           }
           break;
         }
