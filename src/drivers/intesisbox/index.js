@@ -15,10 +15,8 @@ const sync = async (id) => {
   const [modbus, , address] = bind.split('/');
   if (modbus && address) {
     if (synced) {
-      console.log('read intesibox modbus', modbus, address)
       readHoldingRegisters(modbus, address, 0x0, 12);
     } else {
-      console.log('write intesibox modbus', modbus, address)
       writeRegister(modbus, address, 0x0, dev.value);
       await delay(100);
       writeRegister(modbus, address, 0x1, dev.mode);
@@ -62,7 +60,6 @@ module.exports.handle = (action) => {
     }
     default: {
       const { id, data } = action;
-      console.log('handle intesisbox modbus', id, data)
       switch (data[0]) {
         case READ_HOLDING_REGISTERS: {
           const dev = get(id) || {};
