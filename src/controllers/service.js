@@ -1704,7 +1704,10 @@ const run = (action) => {
         const f = test.find((i) => {
           const o = get(i);
           if (o.value === undefined || o.value === null) {
-            return bind.find((j) => (get(o[j]) || {}).value);
+            return bind.find((j) => {
+              const { value, inverse } = get(o[j]) || {}
+              return inverse ? !value : value
+            });
           }
           return o.value;
         });
