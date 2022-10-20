@@ -152,7 +152,7 @@ module.exports.initialize = (id) => {
       a[5] = mac[4];
       a[6] = mac[5];
       a[7] = ACTION_INITIALIZE;
-      const { correc } = get(id);
+      const { correct } = get(id);
       a[8] = correct * 10;
       for (let i = 1; i <= 6; i++) {
         const channel = get(`${id}/rgb/${i}`);
