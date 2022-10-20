@@ -169,6 +169,7 @@ const {
   DEVICE_TYPE_DIM_8_RS,
   DEVICE_TYPE_RS_HUB1_RS,
   DEVICE_TYPE_SMART_4AM,
+  DEVICE_TYPE_SMART_6_PUSH,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -742,7 +743,8 @@ const run = (action) => {
           case DEVICE_TYPE_SMART_4G:
           case DEVICE_TYPE_SMART_4GD:
           case DEVICE_TYPE_SMART_4A:
-          case DEVICE_TYPE_SMART_4AM: {
+          case DEVICE_TYPE_SMART_4AM:
+          case DEVICE_TYPE_SMART_6_PUSH: {
             device.send(
               Buffer.from([
                 ACTION_RBUS_TRANSMIT,
@@ -832,7 +834,8 @@ const run = (action) => {
           case DEVICE_TYPE_SMART_4G:
           case DEVICE_TYPE_SMART_4GD:
           case DEVICE_TYPE_SMART_4A:
-          case DEVICE_TYPE_SMART_4AM: {
+          case DEVICE_TYPE_SMART_4AM:
+          case DEVICE_TYPE_SMART_6_PUSH: {
             device.send(
               Buffer.from([
                 ACTION_RBUS_TRANSMIT,
@@ -1756,7 +1759,8 @@ const run = (action) => {
           dev_type === DEVICE_TYPE_SMART_4A ||
           dev_type === DEVICE_TYPE_SMART_4AM ||
           dev_type === DEVICE_TYPE_SMART_4G ||
-          dev_type === DEVICE_TYPE_SMART_4GD
+          dev_type === DEVICE_TYPE_SMART_4GD ||
+          dev_type === DEVICE_TYPE_SMART_6_PUSH
         ) {
           const buffer = Buffer.alloc(23);
           buffer.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
@@ -1820,7 +1824,8 @@ const run = (action) => {
             case DEVICE_TYPE_SMART_4A:
             case DEVICE_TYPE_SMART_4AM:
             case DEVICE_TYPE_SMART_4G:
-            case DEVICE_TYPE_SMART_4GD: {
+            case DEVICE_TYPE_SMART_4GD:
+            case DEVICE_TYPE_SMART_6_PUSH: {
               const [major] = version.split(".");
               const header = Buffer.alloc(7);
               header.writeUInt8(ACTION_RBUS_TRANSMIT, 0);

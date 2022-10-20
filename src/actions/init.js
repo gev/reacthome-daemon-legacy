@@ -44,6 +44,7 @@ const {
   DEVICE_TYPE_RS_HUB1,
   DEVICE_TYPE_SMART_4AM,
   DEVICE_TYPE_RS_HUB4,
+  DEVICE_TYPE_SMART_6_PUSH,
 } = require("../constants");
 const { get, set, add } = require("./create");
 const { device } = require("../sockets");
@@ -134,6 +135,26 @@ module.exports.initialize = (id) => {
       a[8] = correct * 10;
       a[9] = vibro;
       for (let i = 1; i <= 5; i++) {
+        const channel = get(`${id}/rgb/${i}`);
+        a[3 * i + 7] = (channel && channel.r) || 0;
+        a[3 * i + 8] = (channel && channel.g) || 0;
+        a[3 * i + 9] = (channel && channel.b) || 0;
+      }
+      break;
+    }
+    case DEVICE_TYPE_SMART_6_PUSH: {
+      const mac = id.split(":").map((i) => parseInt(i, 16));
+      a[0] = ACTION_RBUS_TRANSMIT;
+      a[1] = mac[0];
+      a[2] = mac[1];
+      a[3] = mac[2];
+      a[4] = mac[3];
+      a[5] = mac[4];
+      a[6] = mac[5];
+      a[7] = ACTION_INITIALIZE;
+      const { correc } = get(id);
+      a[8] = correct * 10;
+      for (let i = 1; i <= 6; i++) {
         const channel = get(`${id}/rgb/${i}`);
         a[3 * i + 7] = (channel && channel.r) || 0;
         a[3 * i + 8] = (channel && channel.g) || 0;
