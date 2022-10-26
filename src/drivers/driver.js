@@ -83,7 +83,7 @@ module.exports.manage = () => {
         intesisbox.add(id);
         break;
       case DRIVER_TYPE_ALINK:
-        run[id] = intesisbox;
+        run[id] = alink;
         alink.add(id);
         break;
       case DRIVER_TYPE_ME210_701:
