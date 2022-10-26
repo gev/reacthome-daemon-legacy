@@ -16,7 +16,7 @@ const sync = async (id) => {
   if (modbus && address) {
     if (synced) {
       console.log('Alink read holding')
-      readHoldingRegisters(modbus, 0x0, 4001, 11);
+      readHoldingRegisters(modbus, address, 4001, 11);
     } else {
       // writeRegister(modbus, address, 0x0, dev.value);
       // await delay(100);
