@@ -15,6 +15,7 @@ const sync = async (id) => {
   const [modbus, , address] = bind.split('/');
   if (modbus && address) {
     if (synced) {
+      console.log('Alink read holding')
       readHoldingRegisters(modbus, 0x4, 0x1, 11);
     } else {
       // writeRegister(modbus, address, 0x0, dev.value);
