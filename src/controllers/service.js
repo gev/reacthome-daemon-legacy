@@ -1409,7 +1409,7 @@ const run = (action) => {
             });
           }
           set(id, { setpoint: value });
-        } else if (dev.type === DRIVER_TYPE_INTESIS_BOX || dev.type === DRIVER_TYPE_NOVA) {
+        } else if (dev.type === DRIVER_TYPE_INTESIS_BOX || dev.type === DRIVER_TYPE_NOVA || o.type === DRIVER_TYPE_SWIFT || o.type === DRIVER_TYPE_ALINK) {
           drivers.handle(action);
         } else {
           set(id, { setpoint: value });
