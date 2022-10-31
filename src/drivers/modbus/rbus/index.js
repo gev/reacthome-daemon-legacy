@@ -7,9 +7,10 @@ const {
   WRITE_REGISTER,
   WRITE_REGISTERS,
   MODBUS,
-  READ_INPUT,
+  READ_INPUTS,
   WRITE_COIL,
   WRITE_COILS,
+  READ_COILS,
 } = require("../constants");
 const driver = require("../../driver");
 const device = require("../../../sockets/device");
@@ -54,8 +55,8 @@ const request8 = request(
   }
 );
 
-module.exports.readCoil = request8(READ_COIL);
-module.exports.readInnput = request8(READ_INPUT);
+module.exports.readCoils = request8(READ_COILS);
+module.exports.readInputs = request8(READ_INPUTS);
 module.exports.readHoldingRegisters = request8(READ_HOLDING_REGISTERS);
 module.exports.readInputRegisters = request8(READ_INPUT_REGISTERS);
 module.exports.writeCoil = request8(WRITE_COIL);
