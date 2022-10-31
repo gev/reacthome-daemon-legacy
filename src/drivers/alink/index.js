@@ -75,9 +75,9 @@ module.exports.handle = (action) => {
           const dev = get(id) || {};
           if (dev.synced) {
             set(id, {
-              mode: data.readUInt16BE(4),
-              setpoint: data.readUInt16BE(6) / 10,
-              fan_speed: data.readUInt16BE(8),
+              mode: data.readUInt16BE(6),
+              setpoint: data.readUInt16BE(8) / 10,
+              fan_speed: data.readUInt16BE(10),
               synced: true
             })
           }
