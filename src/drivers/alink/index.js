@@ -21,7 +21,7 @@ const sync = async (id) => {
       readHoldingRegisters(modbus, address, 0, 11);
     } else {
       console.log('Alink write')
-      writeCoil(modbus, address, 1, dev.value & 0b1);
+      writeCoil(modbus, address, 1, dev.value ? 0xff00 : 0x0000);
       await delay(100);
       writeRegister(modbus, address, 2, dev.mode);
       await delay(100);
