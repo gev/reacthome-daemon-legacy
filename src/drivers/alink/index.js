@@ -1,7 +1,7 @@
 
 const { get, set } = require('../../actions');
 const { ACTION_SET_ADDRESS, ACTION_SET_FAN_SPEED, ACTION_ON, ACTION_OFF, ACTION_SET_MODE, ACTION_SET_DIRECTION, ACTION_SETPOINT } = require('../../constants');
-const { writeRegister, readHoldingRegisters, writeRegisters } = require('../modbus/rbus');
+const { writeRegister, readHoldingRegisters, writeRegisters, readCoil } = require('../modbus/rbus');
 const { READ_HOLDING_REGISTERS, WRITE_REGISTER } = require('../modbus/constants');
 const { BROADCAST_ADDRESS, TIMEOUT } = require('./constants');
 const { del } = require('../../db');
@@ -16,6 +16,8 @@ const sync = async (id) => {
   if (modbus && address) {
     if (synced) {
       console.log('Alink read holding')
+      readCoil(modbus, address, 0, 11);
+      await delay(100);
       readHoldingRegisters(modbus, address, 0, 11);
     } else {
       // writeRegister(modbus, address, 0x0, dev.value);
