@@ -170,6 +170,8 @@ const {
   DEVICE_TYPE_RS_HUB1_RS,
   DEVICE_TYPE_SMART_4AM,
   DEVICE_TYPE_SMART_6_PUSH,
+  DRIVER_TYPE_SWIFT,
+  DRIVER_TYPE_ALINK,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -892,14 +894,14 @@ const run = (action) => {
         const { id } = action;
         const o = get(id) || {};
         if (o.disabled) return;
-        if (o.type === DRIVER_TYPE_INTESIS_BOX || o.type === DRIVER_TYPE_NOVA) {
+        if (o.type === DRIVER_TYPE_INTESIS_BOX || o.type === DRIVER_TYPE_NOVA || o.type === DRIVER_TYPE_SWIFT || o.type === DRIVER_TYPE_ALINK) {
           drivers.handle(action);
           return;
         }
-        if (o.type === AC) {
-          ac.handle(action);
-          return;
-        }
+        // if (o.type === AC) {
+        //   ac.handle(action);
+        //   return;
+        // }
         set(id, { value: true });
         if (o.onOn) {
           run({ type: ACTION_SCRIPT_RUN, id: o.onOn });
@@ -1047,14 +1049,14 @@ const run = (action) => {
         const { id } = action;
         const o = get(id) || {};
         if (o.disabled) return;
-        if (o.type === DRIVER_TYPE_INTESIS_BOX || o.type === DRIVER_TYPE_NOVA) {
+        if (o.type === DRIVER_TYPE_INTESIS_BOX || o.type === DRIVER_TYPE_NOVA || o.type === DRIVER_TYPE_SWIFT || o.type === DRIVER_TYPE_ALINK) {
           drivers.handle(action);
           return;
         }
-        if (o.type === AC) {
-          ac.handle(action);
-          return;
-        }
+        // if (o.type === AC) {
+        //   ac.handle(action);
+        //   return;
+        // }
         set(id, { value: false });
         if (o.onOff) {
           run({ type: ACTION_SCRIPT_RUN, id: o.onOff });
