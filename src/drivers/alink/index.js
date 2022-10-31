@@ -80,10 +80,10 @@ module.exports.handle = (action) => {
       //       synced: true
       //     })
       //     // }
-      //     break;
-      //   }
+      break;
     }
   }
+}
 }
 };
 
