@@ -7,6 +7,9 @@ const {
   WRITE_REGISTER,
   WRITE_REGISTERS,
   MODBUS,
+  READ_INPUT,
+  WRITE_COIL,
+  WRITE_COILS,
 } = require("../constants");
 const driver = require("../../driver");
 const device = require("../../../sockets/device");
@@ -51,9 +54,37 @@ const request8 = request(
   }
 );
 
+module.exports.readCoil = request8(READ_COIL);
+module.exports.readInnput = request8(READ_INPUT);
 module.exports.readHoldingRegisters = request8(READ_HOLDING_REGISTERS);
 module.exports.readInputRegisters = request8(READ_INPUT_REGISTERS);
+module.exports.writeCoil = request8(WRITE_COIL);
 module.exports.writeRegister = request8(WRITE_REGISTER);
+module.exports.writeRegisters = request(
+  (data) => {
+    const m = data.length % 8;
+    const n = Math.ceil(data.length / 8);
+    const l = (n == 0 || m !== 0) ? n + 1 : n;
+    return 9 + 2 * l;
+  },
+  (buffer, data) => {
+    buffer.writeUInt16BE(data.length, 6);
+    buffer.writeUInt8(2 * data.length, 8);
+    let j = 0; b = 0;
+    for (let i = 0; i < data.length;) {
+      const k = i % 8;
+      if (data[i]) {
+        b = b | (i << k);
+      }
+      i += 1;
+      if (i % 8 === 0) {
+        buffer.writeUInt8(data[i], j + 9);
+        j += 1;
+        b = 0;
+      }
+    }
+  }
+)(WRITE_COILS);
 module.exports.writeRegisters = request(
   (data) => 9 + 2 * data.length,
   (buffer, data) => {
