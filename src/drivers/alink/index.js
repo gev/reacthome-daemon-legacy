@@ -17,16 +17,16 @@ const sync = async (id) => {
     if (synced) {
       console.log('Alink read')
       readHoldingRegisters(modbus, address, 0, 11);
-      await delay(200);
+      await delay(1000);
       readCoils(modbus, address, 0, 11);
     } else {
       console.log('Alink write')
       writeRegister(modbus, address, 2, dev.mode);
-      await delay(200);
+      await delay(1000);
       writeRegister(modbus, address, 3, dev.setpoint * 10);
-      await delay(200);
+      await delay(1000);
       writeRegister(modbus, address, 4, dev.fan_speed);
-      await delay(200);
+      await delay(1000);
       writeCoil(modbus, address, 1, dev.value ? 0xff00 : 0x0000);
       set(id, { synced: true });
     }
