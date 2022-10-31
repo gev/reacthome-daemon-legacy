@@ -35,6 +35,7 @@ const sync = async (id) => {
 
 module.exports.handle = (action) => {
   const { id, type } = action;
+  console.log(action)
   switch (type) {
     case ACTION_ON: {
       set(id, { value: true, synced: false });
@@ -50,10 +51,6 @@ module.exports.handle = (action) => {
     }
     case ACTION_SET_FAN_SPEED: {
       set(id, { fan_speed: action.value, synced: false });
-      break;
-    }
-    case ACTION_SET_DIRECTION: {
-      set(id, { direction: action.value, synced: false });
       break;
     }
     case ACTION_SETPOINT: {
