@@ -12,8 +12,8 @@ mac1[0] = mac1[0] & 0b1111_1110;
 mac2[0] = mac2[0] | 0b0000_0001;
 
 setTimeout(() => {
-  rbus(mac1, '127.0.1.1', '/dev/ttyAMA2', 12);
-  rbus(mac2, '127.0.1.2', '/dev/ttyAMA1', 16);
+  rbus(mac1, '127.0.1.1', '/dev/ttyAMA2', 16);
+  rbus(mac2, '127.0.1.2', '/dev/ttyAMA1', 12);
 }, 10_000)
 
 // uart1 
