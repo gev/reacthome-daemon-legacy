@@ -15,12 +15,10 @@ const sync = async (id) => {
   const [modbus, , address] = bind.split('/');
   if (modbus && address) {
     if (synced) {
-      console.log('Alink read')
       readHoldingRegisters(modbus, address, 0, 11);
       await delay(1000);
       readCoils(modbus, address, 0, 11);
     } else {
-      console.log('Alink write')
       writeRegister(modbus, address, 2, dev.mode);
       await delay(1000);
       writeRegister(modbus, address, 3, dev.setpoint * 10);
@@ -35,7 +33,6 @@ const sync = async (id) => {
 
 module.exports.handle = (action) => {
   const { id, type } = action;
-  console.log(type)
   switch (type) {
     case ACTION_ON: {
       set(id, { value: true, synced: false });
@@ -59,7 +56,6 @@ module.exports.handle = (action) => {
     }
     default: {
       const { id, data } = action;
-      console.log(data)
       switch (data[0]) {
         case READ_COILS: {
           const dev = get(id) || {};
