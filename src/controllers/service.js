@@ -1710,11 +1710,13 @@ const run = (action) => {
           const o = get(i);
           if (true || o.value === undefined || o.value === null) {
             return bind.find((j) => {
-              const { value } = get(o[j]) || {}
-              return o.inverse ? !value : value
+              if (o[j]) {
+                const { value } = get(o[j]) || {}
+                return o.inverse ? !value : value
+              }
             });
           }
-          return o.value;
+          return o.inverse ? !o.value : o.value;
         });
         if (f) {
           if (onOff) {
