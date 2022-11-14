@@ -1708,7 +1708,7 @@ const run = (action) => {
         const { test = [], onOn, onOff } = action;
         const f = test.find((i) => {
           const o = get(i);
-          if (o.value === undefined || o.value === null) {
+          if (true || o.value === undefined || o.value === null) {
             return bind.find((j) => {
               const { value, inverse } = get(o[j]) || {}
               return inverse ? !value : value
