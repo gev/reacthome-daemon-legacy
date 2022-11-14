@@ -1710,8 +1710,8 @@ const run = (action) => {
           const o = get(i);
           if (true || o.value === undefined || o.value === null) {
             return bind.find((j) => {
-              const { value, inverse } = get(o[j]) || {}
-              return inverse ? !value : value
+              const { value } = get(o[j]) || {}
+              return o.inverse ? !value : value
             });
           }
           return o.value;
