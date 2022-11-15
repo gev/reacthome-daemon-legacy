@@ -1691,13 +1691,12 @@ const run = (action) => {
         set(id, { disabled: false });
         if (temperature > max - -hysteresis) {
           stopHeat();
+          set(id, { disabled: true });
         } else if (temperature < min - hysteresis) {
           startHeat();
-        } else if (
-          temperature > min - -hysteresis &&
-          temperature < max - hysteresis
-        )
-          break;
+          set(id, { disabled: true });
+        }
+        break;
       }
       case ACTION_TOGGLE: {
         const { test = [], onOn, onOff } = action;
