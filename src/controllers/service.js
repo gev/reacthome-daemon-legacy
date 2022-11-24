@@ -1219,13 +1219,13 @@ const run = (action) => {
               device.send(
                 Buffer.from([
                   ACTION_RBUS_TRANSMIT,
-                  ...action.id.split(":").map((i) => parseInt(i, 16)),
+                  ...dev.split(":").map((i) => parseInt(i, 16)),
                   ACTION_DIMMER,
                   index,
                   DIM_FADE,
                   v,
-                  dev.type === DEVICE_TYPE_DIM_12_LED_RS ||
-                    dev.type === DEVICE_TYPE_DIM_8_RS
+                  deviceType === DEVICE_TYPE_DIM_12_LED_RS ||
+                    deviceType === DEVICE_TYPE_DIM_8_RS
                     ? DIM_VELOCITY
                     : AO_VELOCITY,
                 ]),
@@ -1306,13 +1306,13 @@ const run = (action) => {
               device.send(
                 Buffer.from([
                   ACTION_RBUS_TRANSMIT,
-                  ...action.id.split(":").map((i) => parseInt(i, 16)),
+                  ...dev.split(":").map((i) => parseInt(i, 16)),
                   ACTION_DIMMER,
                   index,
                   DIM_FADE,
                   v,
-                  dev.type === DEVICE_TYPE_DIM_12_LED_RS ||
-                    dev.type === DEVICE_TYPE_DIM_8_RS
+                  deviceType === DEVICE_TYPE_DIM_12_LED_RS ||
+                    deviceType === DEVICE_TYPE_DIM_8_RS
                     ? DIM_VELOCITY
                     : AO_VELOCITY
                 ]),
