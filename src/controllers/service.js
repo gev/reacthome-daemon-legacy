@@ -172,6 +172,7 @@ const {
   DEVICE_TYPE_SMART_6_PUSH,
   DRIVER_TYPE_SWIFT,
   DRIVER_TYPE_ALINK,
+  ACTION_SETPOINT_MIN_MAX,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -1414,6 +1415,12 @@ const run = (action) => {
         } else {
           set(id, { setpoint: value });
         }
+        break;
+      }
+      case ACTION_SETPOINT_MIN_MAX: {
+        const { id, min, max } = action;
+        const dev = get(id) || {};
+        set(id, { min, max });
         break;
       }
       case ACTION_INC_SETPOINT: {
