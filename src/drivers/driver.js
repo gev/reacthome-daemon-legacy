@@ -12,6 +12,7 @@ const {
   DRIVER_TYPE_NOVA,
   DRIVER_TYPE_SWIFT,
   DRIVER_TYPE_ALINK,
+  DRIVER_TYPE_RTD_RA,
 } = require("../constants");
 const { get } = require("../actions");
 const RS21 = require("./RS21");
@@ -24,6 +25,7 @@ const nova = require("./shuft/nova");
 const swift = require("./shuft/swift");
 const varmann = require("./varmann");
 const intesisbox = require("./intesisbox");
+const rtdra = require("./RTD-RA");
 const alink = require("./alink");
 const me210_701 = require("./owen/me210_701");
 const mac = require("../mac");
@@ -81,6 +83,10 @@ module.exports.manage = () => {
       case DRIVER_TYPE_INTESIS_BOX:
         run[id] = intesisbox;
         intesisbox.add(id);
+        break;
+      case DRIVER_TYPE_RTD_RA:
+        run[id] = rtdra;
+        rtdra.add(id);
         break;
       case DRIVER_TYPE_ALINK:
         run[id] = alink;
