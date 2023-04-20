@@ -15,18 +15,18 @@ const sync = async (id) => {
   const [modbus, , address] = bind.split('/');
   if (modbus && address) {
     if (synced) {
-      readHoldingRegisters(modbus, address, 0x1, 5);
+      readHoldingRegisters(modbus, address, 0x0, 5);
     } else {
-      writeRegister(modbus, address, 0x5, dev.value);
+      writeRegister(modbus, address, 0x4, dev.value);
       await delay(100);
-      writeRegister(modbus, address, 0x3, dev.mode);
+      writeRegister(modbus, address, 0x2, dev.mode);
       await delay(100);
-      writeRegister(modbus, address, 0x2, dev.fan_speed);
+      writeRegister(modbus, address, 0x1, dev.fan_speed);
       await delay(100);
-      writeRegister(modbus, address, 0x4, dev.direction);
+      writeRegister(modbus, address, 0x3, dev.direction);
       await delay(100);
-      writeRegister(modbus, address, 0x1, dev.setpoint);
-      set(id, { synced: true });
+      writeRegister(modbus, address, 0x0, dev.setpoint);
+      //set(id, { synced: true });
     }
   }
 };
@@ -65,11 +65,11 @@ module.exports.handle = (action) => {
           const dev = get(id) || {};
           if (dev.synced) {
             set(id, {
-              value: data.readUInt16BE(5),
-              mode: data.readUInt16BE(3),
-              fan_speed: data.readUInt16BE(2),
-              direction: data.readUInt16BE(4),
-              setpoint: data.readUInt16BE(1),
+              value: data.readUInt16BE(10),
+              mode: data.readUInt16BE(6),
+              fan_speed: data.readUInt16BE(4),
+              direction: data.readUInt16BE(8),
+              setpoint: data.readUInt16BE(2),
               synced: true
             })
           }
