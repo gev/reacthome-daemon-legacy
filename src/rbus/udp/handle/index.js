@@ -9,18 +9,19 @@ const {
   ACTION_RS485_TRANSMIT
 } = require("../../../constants");
 
-module.exports.handle = (rbus) => (data, info) => {
-  const action = data[0];
-  switch (action) {
-    case ACTION_INITIALIZE:
-      handleInit(rbus, data);
-      break;
-    case ACTION_RS485_MODE:
-      handleRS485Mode(rbus, data);
-      break;
-    case ACTION_RBUS_TRANSMIT:
-      handleTransmitRBUS(rbus, data);
-    case ACTION_RS485_TRANSMIT:
-      handleTransmitRS485(rbus, data);
-  }
+module.exports.handle = (rbus) => (data) => {
+  console.log(data)
+  // const action = data[0];
+  // switch (action) {
+  //   case ACTION_INITIALIZE:
+  //     handleInit(rbus, data);
+  //     break;
+  //   case ACTION_RS485_MODE:
+  //     handleRS485Mode(rbus, data);
+  //     break;
+  //   case ACTION_RBUS_TRANSMIT:
+  //     handleTransmitRBUS(rbus, data);
+  //   case ACTION_RS485_TRANSMIT:
+  //     handleTransmitRS485(rbus, data);
+}
 }
