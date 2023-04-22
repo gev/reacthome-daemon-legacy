@@ -9,16 +9,13 @@ module.exports.createSocket = (rbus, host) => {
   const send = (data) => {
     console.log("UDP send", data)
     socket.send(
-      Buffer.from(data),
+      data,
       DEVICE_SERVER_PORT,
       '127.0.0.1'
     )
   };
   rbus.socket = {
-    host,
-    send: (data) => send(Buffer.from([
-      ...rbus.mac, ...data
-    ])),
+    host, send,
     close: socket.close
   }
 }
