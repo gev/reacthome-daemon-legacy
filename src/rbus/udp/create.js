@@ -26,4 +26,5 @@ module.exports.createSocket = (rbus, host) => {
       1, 0 // Version
     ]))
   }, 1_000)
+  rbus.socket.send(Buffer.from([...rbus.mac, ACTION_INITIALIZE]));
 }
