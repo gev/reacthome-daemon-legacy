@@ -20,6 +20,7 @@ module.exports.createSocket = (rbus, host) => {
   }
   setInterval(() => {
     rbus.socket.send(Buffer.from([
+      ...rbus.mac,
       rbus.ready ? ACTION_READY : ACTION_DISCOVERY,
       DEVICE_TYPE_RS_HUB4,
       1, 0 // Version
