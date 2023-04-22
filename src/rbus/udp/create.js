@@ -1,5 +1,5 @@
 const dgram = require('dgram');
-const { DEVICE_PORT, DEVICE_SERVER_PORT, ACTION_READY, ACTION_DISCOVERY, DEVICE_TYPE_RS_HUB4 } = require('../../constants');
+const { DEVICE_PORT, DEVICE_SERVER_PORT, ACTION_READY, ACTION_DISCOVERY, DEVICE_TYPE_RS_HUB4, ACTION_INITIALIZE } = require('../../constants');
 const { handle } = require('./handle');
 
 module.exports.createSocket = (rbus, host) => {
