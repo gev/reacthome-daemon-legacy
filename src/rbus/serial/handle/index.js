@@ -3,5 +3,5 @@ module.exports.handle = (rbus) => (data) => {
   const x = data.slice(2, 8)
   const mac = Array.from(x).map(i => i.toString(16)).join(':')
   rbus.pool[mac] = { port: data[8], address: data[9] }
-  rbus.socket.send(Buffer.concat([x, data.slice(10)]))
+  rbus.socket.send(Buffer.concat([x, data.slice(10, data.length - 2)]))
 }
