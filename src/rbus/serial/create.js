@@ -1,30 +1,22 @@
 const { SerialPort } = require('serialport');
 const { addCRC } = require('../crc');
-const { RBUS_BOUDRATE, RBUS_LINE_CONTROL, RBUS_LINE_CONTROLS } = require('./constants');
 const { handle } = require('./handle');
 
-const createPort = (rbus, path, isRBUS, baudRate, lineControl) => {
-  baudRate = baudRate || RBUS_BOUDRATE
-  lineControl = lineControl || RBUS_LINE_CONTROL
-  isRBUS = !!isRBUS;
+const createPort = (rbus, path) => {
   const port = new SerialPort(
-    isRBUS
-      ? { path, ...RBUS_LINE_CONTROLS[lineControl], baudRate: RBUS_BOUDRATE }
-      : { path, ...RBUS_LINE_CONTROLS[lineControl], baudRate }
+    { path, baudRate: 2_000_000, dataBits: 8, stopBits: 1, parity: 'none' }
   )
   port.on('data', handle(rbus));
   const send = (data) => {
-    rbus.rede.write(1);
     port.write(data)
   }
   rbus.port = {
-    path, baudRate, lineControl, isRBUS,
-    send,
-    sendRBUS: (data) => send(addCRC(data)),
+    path,
+    send: (data) => send(addCRC(data)),
     close: port.close,
-    reCreate: (isRBUS, baudRate, lineControl) => {
+    reCreate: () => {
       port.close();
-      createPort(rbus, path, isRBUS, baudRate, lineControl);
+      createPort(rbus, path);
     }
   };
 }

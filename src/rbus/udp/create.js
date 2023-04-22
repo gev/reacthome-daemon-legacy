@@ -1,8 +1,6 @@
 const dgram = require('dgram');
-const { DEVICE_PORT, DEVICE_SERVER_PORT, ACTION_INITIALIZE } = require('../../constants');
-const { discovery } = require('./discovery');
+const { DEVICE_PORT, DEVICE_SERVER_PORT } = require('../../constants');
 const { handle } = require('./handle');
-const { addCRC } = require('../crc');
 
 module.exports.createSocket = (rbus, host) => {
   const socket = dgram.createSocket('udp4');
@@ -22,6 +20,4 @@ module.exports.createSocket = (rbus, host) => {
     ])),
     close: socket.close
   }
-  setInterval(discovery(rbus), 1000);
-  rbus.socket.send([ACTION_INITIALIZE]);
 }
