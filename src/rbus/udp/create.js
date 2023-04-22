@@ -1,5 +1,5 @@
 const dgram = require('dgram');
-const { DEVICE_PORT, DEVICE_SERVER_PORT } = require('../../constants');
+const { DEVICE_PORT, DEVICE_SERVER_PORT, ACTION_READY, ACTION_DISCOVERY, DEVICE_TYPE_RS_HUB4 } = require('../../constants');
 const { handle } = require('./handle');
 
 module.exports.createSocket = (rbus, host) => {
@@ -13,9 +13,16 @@ module.exports.createSocket = (rbus, host) => {
       DEVICE_SERVER_PORT,
       '127.0.0.1'
     )
-  };
+  }
   rbus.socket = {
     host, send,
     close: socket.close
   }
+  setInterval(() => {
+    rbus.socket.send(Buffer.from([
+      rbus.ready ? ACTION_READY : ACTION_DISCOVERY,
+      DEVICE_TYPE_RS_HUB4,
+      1, 0 // Version
+    ]))
+  }, 1_000)
 }
