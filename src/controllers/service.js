@@ -194,8 +194,6 @@ const { device } = require("../sockets");
 const mac = require("../mac");
 const { ac } = require("../drivers");
 const { broadcast } = require("../websocket/peer");
-const { ZIGBEE } = require("../zigbee/constants");
-const zigbee = require("../zigbee/out");
 const { asset, writeFile } = require("../fs");
 const { RING } = require("../ring/constants");
 const { ip2int } = require("../util");
@@ -264,19 +262,7 @@ const run = (action) => {
         if (o.bind) {
           const [dev, type, index] = o.bind.split("/");
           const { protocol } = get(dev) || {};
-          if (protocol === ZIGBEE) {
-            zigbee.closure(dev, index, action.type);
-            const script = {
-              [ACTION_OPEN]: "onOpen",
-              [ACTION_CLOSE]: "onClose",
-              [ACTION_STOP]: "onStop",
-            }[action.type];
-            if (o[script]) {
-              run({ type: ACTION_SCRIPT_RUN, id: o[script] });
-            }
-          } else if (type === GROUP) {
-            run({ type: ACTION_DO, id: dev, index, value: action.type });
-          }
+          run({ type: ACTION_DO, id: dev, index, value: action.type });
         }
         break;
       }
@@ -284,10 +270,6 @@ const run = (action) => {
         const dev = get(action.id);
         const { version = "" } = dev;
         const [major, minor] = version.split(".");
-        if (dev.protocol === ZIGBEE) {
-          zigbee.on_off(action.id, action.index, action.value);
-          return;
-        }
         // const id = `${action.id}/${DO}/${action.index}`;
         switch (dev.type) {
           case DRIVER_TYPE_BB_PLC1:
@@ -708,27 +690,6 @@ const run = (action) => {
         }
         break;
       }
-      case ACTION_MOVE_TO_HUE: {
-        const dev = get(action.id) || {};
-        if (dev.protocol === ZIGBEE) {
-          zigbee.move_to_hue(action.id, action.index, action.value);
-        }
-        break;
-      }
-      case ACTION_MOVE_TO_SATURATION: {
-        const dev = get(action.id) || {};
-        if (dev.protocol === ZIGBEE) {
-          zigbee.move_to_saturation(action.id, action.index, action.value);
-        }
-        break;
-      }
-      case ACTION_MOVE_TO_LEVEL: {
-        const dev = get(action.id) || {};
-        if (dev.protocol === ZIGBEE) {
-          zigbee.move_to_level(action.id, action.index, action.value);
-        }
-        break;
-      }
       case ACTION_ARTNET: {
         drivers.handle(action);
         break;
@@ -914,10 +875,6 @@ const run = (action) => {
           const { velocity, type } = get(o[i]) || {};
           const [dev, , index] = o[i].split("/");
           const { ip, type: deviceType, protocol } = get(dev);
-          if (protocol === ZIGBEE) {
-            zigbee.on(dev, index);
-            return;
-          }
           const value = isOn ? (i === "bind" ? last.value : last[i]) : 255;
           switch (deviceType) {
             case DEVICE_TYPE_DIM4:
@@ -1068,10 +1025,6 @@ const run = (action) => {
           const { velocity, type } = get(o[i]) || {};
           const [dev, , index] = o[i].split("/");
           const { ip, type: deviceType, protocol } = get(dev);
-          if (protocol === ZIGBEE) {
-            zigbee.off(dev, index);
-            return;
-          }
           switch (deviceType) {
             case DEVICE_TYPE_DIM4:
             case DEVICE_TYPE_DIM_4:
@@ -1397,9 +1350,7 @@ const run = (action) => {
       case ACTION_SETPOINT: {
         const { id, value } = action;
         const dev = get(id) || {};
-        if (dev.protocol === ZIGBEE) {
-          zigbee.setpoint(action.id, action.index, action.value);
-        } else if (dev.type === SITE) {
+        if (dev.type === SITE) {
           if (Array.isArray(dev.thermostat)) {
             dev.thermostat.forEach((t, i) => {
               setTimeout(run, 1000 * i, {
@@ -1876,10 +1827,6 @@ const run = (action) => {
       case CLOSURE: {
         const { id, index, value } = action;
         const { protocol } = get(id) || {};
-        if (protocol === ZIGBEE) {
-          zigbee.closure(id, index, value);
-          return;
-        }
         let type;
         switch (value) {
           case OPEN:
