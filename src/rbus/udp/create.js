@@ -9,10 +9,11 @@ module.exports.createSocket = (rbus, host) => {
   socket.bind(DEVICE_PORT, host);
   socket.on('message', handle(rbus));
   const send = (data) => {
-    buffer = Buffer.alloc(data.length + 3)
-    buffer.writeUint8(0xa5, 0)
-    buffer.copy(data, 1)
-    addCRC(buffer)
+    console.log(data)
+    // buffer = Buffer.alloc(data.length + 3)
+    // buffer.writeUint8(0xa5, 0)
+    // buffer.copy(data, 1)
+    // addCRC(buffer)
     socket.send(buffer, DEVICE_SERVER_PORT, '127.0.0.1')
   };
   rbus.socket = {
