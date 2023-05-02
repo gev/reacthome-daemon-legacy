@@ -26,6 +26,8 @@ module.exports.handle = (rbus) => {
 
   const receivePreamble = (v) => {
     if (v === PREAMBLE) {
+      buff[offset] = v;
+      offset++
       phase = WAITING_SIZE
       offset = 0
       size = 0
@@ -34,6 +36,8 @@ module.exports.handle = (rbus) => {
   }
 
   const receiveSize = (v) => {
+    buff[offset] = v;
+    offset++
     size = v;
     phase = WAITING_DATA
   }
@@ -41,7 +45,7 @@ module.exports.handle = (rbus) => {
   const receiveData = (v) => {
     buff[offset] = v;
     offset++
-    if (offset === size) {
+    if (offset === size + 2) {
       phase = WAITING_MSB_CRC
     }
   }
@@ -53,11 +57,11 @@ module.exports.handle = (rbus) => {
 
   const receiveLsbCRC = (v) => {
     crc = (v << 8) | crc
-    const buff_ = buff.slice(0, size);
+    const buff_ = buff.slice(0, size + 2);
     const crc_ = crc16modbus(buff_)
     console.log(buff_, crc_.toString(16), crc.toString(16))
     if (crc_ === crc) {
-      handleRBUS(buff_)
+      handleRBUS(buff_.slice(2))
     }
     phase = WAITING_PREAMBLE
   }
