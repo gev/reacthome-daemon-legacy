@@ -10,7 +10,8 @@ const PREAMBLE = 0xa5
 
 module.exports.handle = (rbus) => {
 
-  let phase, offset, size, crc
+  let phase = WAITING_PREAMBLE
+    , offset, size, crc
   let buff = Buffer.alloc(255)
 
   const handleRBUS = (buff) => {
@@ -77,8 +78,6 @@ module.exports.handle = (rbus) => {
         break
     }
   }
-
-  reset()
 
   return (data) => {
     console.log("UART receive", data)
