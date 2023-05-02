@@ -12,7 +12,7 @@ module.exports.handle = (rbus) => {
 
   let phase = WAITING_PREAMBLE
     , offset, size, crc
-  let buff = Buffer.alloc(255)
+  let buff = Buffer.alloc(512)
 
   const handleRBUS = (buff) => {
     const x = buff.slice(0, 6)
