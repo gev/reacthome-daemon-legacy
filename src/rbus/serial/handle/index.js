@@ -53,10 +53,11 @@ module.exports.handle = (rbus) => {
 
   const receiveLsbCRC = (v) => {
     crc = (v << 8) | crc
-    const crc_ = crc16modbus(buff)
-    console.log(buff, crc_.toString(16), crc.toString16)
+    const buff_ = buff.slice(0, size);
+    const crc_ = crc16modbus(buff_)
+    console.log(buff_, crc_.toString(16), crc.toString(16))
     if (crc_ === crc) {
-      handleRBUS(buff.slice(0, size))
+      handleRBUS(buff_)
     }
     phase = WAITING_PREAMBLE
   }
