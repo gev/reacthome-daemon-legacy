@@ -1,4 +1,4 @@
-const { addCRC } = require('crc');
+const { crc16modbus } = require('crc');
 
 const WAITING_PREAMBLE = 0
 const WAITING_SIZE = 1
