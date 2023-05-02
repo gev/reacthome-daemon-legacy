@@ -26,12 +26,12 @@ module.exports.handle = (rbus) => {
 
   const receivePreamble = (v) => {
     if (v === PREAMBLE) {
-      buff[offset] = v;
-      offset++
-      phase = WAITING_SIZE
       offset = 0
       size = 0
       crc = 0
+      buff[offset] = v;
+      offset++
+      phase = WAITING_SIZE
     }
   }
 
