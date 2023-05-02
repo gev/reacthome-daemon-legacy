@@ -52,7 +52,7 @@ module.exports.handle = (rbus) => {
   }
 
   const receiveLsbCRC = (v) => {
-    crc = (crc << 8) | v
+    crc = (v << 8) | crc
     if (crc16modbus(buff) === crc) {
       handleRBUS(buff.slice(0, size))
     }
