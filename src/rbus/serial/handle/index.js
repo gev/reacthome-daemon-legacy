@@ -1,4 +1,5 @@
 const { crc16modbus } = require('crc');
+const { ACTION_RBUS_TRANSMIT } = require('../../../constants');
 
 const WAITING_PREAMBLE = 0
 const WAITING_SIZE = 1
@@ -14,14 +15,22 @@ module.exports.handle = (rbus) => {
     , offset, size, crc
   let buff = Buffer.alloc(512)
 
-  const handleRBUS = (buff) => {
+  const handle_RBUS_TRANSMIT = (buff) => {
     const x = buff.slice(0, 6)
     const mac = Array.from(x).map(i => i.toString(16)).join(':')
     rbus.pool[mac] = { port: buff[6], address: buff[7] }
     rbus.socket.send(Buffer.concat([x, buff.slice(8)]))
   }
 
-  const handleRS485 = (buff) => {
+  const handle_RS485_TRANSMIT = (buff) => {
+  }
+
+  handle = (buff) => {
+    switch (buff[0]) {
+      case ACTION_RBUS_TRANSMIT:
+        handle_RBUS_TRANSMIT(buff.slice(1))
+        break;
+    }
   }
 
   const receivePreamble = (v) => {
@@ -61,7 +70,7 @@ module.exports.handle = (rbus) => {
     const crc_ = crc16modbus(buff_)
     console.log(buff_, crc_.toString(16), crc.toString(16))
     if (crc_ === crc) {
-      handleRBUS(buff_.slice(2))
+      handle(buff_.slice(2))
     }
     phase = WAITING_PREAMBLE
   }
