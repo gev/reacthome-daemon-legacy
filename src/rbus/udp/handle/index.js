@@ -2,7 +2,7 @@ const { ACTION_RBUS_TRANSMIT } = require("../../../constants");
 
 module.exports.handle = (rbus) => (data) => {
   console.log("UDP receive", data)
-  if (data[0] = ACTION_RBUS_TRANSMIT) {
+  if (data[0] === ACTION_RBUS_TRANSMIT) {
     const x = data.slice(0, 7)
     mac = Array.from(x.slice(1)).map(i => i.toString(16)).join(':')
     entry = rbus.pool[mac]
