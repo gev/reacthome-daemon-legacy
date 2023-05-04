@@ -15,21 +15,14 @@ module.exports.handle = (rbus) => {
     , offset, size, crc
   let buff = Buffer.alloc(512)
 
-  const handle_RBUS_TRANSMIT = (buff) => {
-    const x = buff.slice(0, 6)
-    const mac = Array.from(x).map(i => i.toString(16)).join(':')
-    rbus.pool[mac] = { port: buff[6], address: buff[7] }
-    rbus.socket.send(Buffer.concat([x, buff.slice(8)]))
-  }
-
-  const handle_RS485_TRANSMIT = (buff) => {
-  }
-
   handle = (buff) => {
-    switch (buff[0]) {
-      case ACTION_RBUS_TRANSMIT:
-        handle_RBUS_TRANSMIT(buff.slice(1))
-        break;
+    if (buff[0] === ACTION_RBUS_TRANSMIT) {
+      const x = buff.slice(0, 6)
+      const mac = Array.from(x).map(i => i.toString(16)).join(':')
+      rbus.pool[mac] = { port: buff[6], address: buff[7] }
+      rbus.socket.send(Buffer.concat([x, buff.slice(8)]))
+    } else {
+      rbus.socket.send(buff)
     }
   }
 
