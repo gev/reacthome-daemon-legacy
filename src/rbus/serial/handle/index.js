@@ -11,18 +11,20 @@ const PREAMBLE = 0xa5
 
 module.exports.handle = (rbus) => {
 
+  const mac = Buffer.from(rbus.mac)
+
   let phase = WAITING_PREAMBLE
     , offset, size, crc
   let buff = Buffer.alloc(512)
 
   handle = (buff) => {
     if (buff[0] === ACTION_RBUS_TRANSMIT) {
-      const x = buff.slice(0, 6)
+      const x = buff.slice(1, 7)
       const mac = Array.from(x).map(i => i.toString(16)).join(':')
-      rbus.pool[mac] = { port: buff[6], address: buff[7] }
-      rbus.socket.send(Buffer.concat([x, buff.slice(8)]))
+      rbus.pool[mac] = { port: buff[7], address: buff[8] }
+      rbus.socket.send(Buffer.concat([x, buff.slice(9)]))
     } else {
-      rbus.socket.send(buff)
+      rbus.socket.send(Buffer.concat([mac, buff]))
     }
   }
 
