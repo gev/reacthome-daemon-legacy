@@ -71,7 +71,7 @@ module.exports.handle = (rbus) => {
   }
 
   const process = (v) => {
-    console.warn(phase)
+    console.log(phase)
     switch (phase) {
       case WAITING_PREAMBLE:
         receivePreamble(v)
