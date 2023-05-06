@@ -6,7 +6,7 @@ const createPort = (rbus, path) => {
   const port = new SerialPort(
     { path, baudRate: 2_000_000, dataBits: 8, stopBits: 1, parity: 'none' },
     (err) => {
-      if (err) console.error(error)
+      if (err) console.error(err)
     }
   )
   port.on('data', handle(rbus));
