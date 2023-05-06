@@ -4,7 +4,10 @@ const { handle } = require('./handle');
 
 const createPort = (rbus, path) => {
   const port = new SerialPort(
-    { path, baudRate: 2_000_000, dataBits: 8, stopBits: 1, parity: 'none' }
+    { path, baudRate: 2_000_000, dataBits: 8, stopBits: 1, parity: 'none' },
+    (err) => {
+      if (err) console.error(error)
+    }
   )
   port.on('data', handle(rbus));
   const send = (data) => {
