@@ -9,7 +9,7 @@ const createPort = (rbus, path) => {
       if (err) console.error(err)
     }
   )
-  while (1) port.write(Buffer.from([0x55]))
+  setTimeout(() => port.write(Buffer.from([0x55])), 1)
   const send = (data) => {
     // console.log("UART send", data)
     port.write(data)
