@@ -43,7 +43,7 @@ module.exports.handle = (rbus) => {
     buff[offset] = v;
     offset++
     size = v;
-    phase = м === 0 ? WAITING_MSB_CRC : WAITING_DATA
+    phase = v === 0 ? WAITING_MSB_CRC : WAITING_DATA
   }
 
   const receiveData = (v) => {
