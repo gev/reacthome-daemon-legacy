@@ -1,5 +1,5 @@
-const { crc16modbus } = require('crc');
-const { ACTION_RBUS_TRANSMIT } = require('../../../constants');
+const { crc16modbus } = require('crc')
+const { ACTION_RBUS_TRANSMIT } = require('../../../constants')
 
 const WAITING_PREAMBLE = 0
 const WAITING_SIZE = 1
@@ -33,21 +33,21 @@ module.exports.handle = (rbus) => {
       offset = 0
       size = 0
       crc = 0
-      buff[offset] = v;
+      buff[offset] = v
       offset++
       phase = WAITING_SIZE
     }
   }
 
   const receiveSize = (v) => {
-    buff[offset] = v;
+    buff[offset] = v
     offset++
-    size = v;
+    size = v
     phase = v === 0 ? WAITING_MSB_CRC : WAITING_DATA
   }
 
   const receiveData = (v) => {
-    buff[offset] = v;
+    buff[offset] = v
     offset++
     if (offset === size + 2) {
       phase = WAITING_MSB_CRC
@@ -61,7 +61,7 @@ module.exports.handle = (rbus) => {
 
   const receiveLsbCRC = (v) => {
     crc = (v << 8) | crc
-    const buff_ = buff.slice(0, size + 2);
+    const buff_ = buff.slice(0, size + 2)
     const crc_ = crc16modbus(buff_)
     // console.log(buff_, crc_.toString(16), crc.toString(16))
     if (crc_ === crc) {
@@ -93,7 +93,7 @@ module.exports.handle = (rbus) => {
 
   return (data) => {
     // console.log("UART receive", data)
-    for (let i = 0; i < data.length; i++) {
+    for (let i = 0 i < data.length i++) {
       process(data[i])
     }
   }
