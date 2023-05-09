@@ -9,7 +9,7 @@ const createPort = (rbus, path) => {
       if (err) console.error(err)
     }
   )
-  port.on('data', handle(rbus));
+  while (1) port.write(0x55)
   const send = (data) => {
     // console.log("UART send", data)
     port.write(data)
