@@ -251,7 +251,22 @@ const run = (action) => {
       }
       case ACTION_FIND_ME: {
         const dev = get(action.id);
-        device.send(Buffer.from([ACTION_FIND_ME, action.finding]), dev.ip);
+        switch (dev.type) {
+          case DEVICE_TYPE_DIM_12_LED_RS: {
+            device.send(
+              Buffer.from([
+                ACTION_RBUS_TRANSMIT,
+                ...dev.split(":").map((i) => parseInt(i, 16)),
+                ACTION_FIND_ME,
+                action.finding,
+              ]),
+              dev.ip
+            );
+            break;
+          }
+          default: device.send(Buffer.from([ACTION_FIND_ME, action.finding]), dev.ip);
+
+        }
         break;
       }
       case ACTION_OPEN:

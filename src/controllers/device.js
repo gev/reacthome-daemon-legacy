@@ -668,7 +668,7 @@ module.exports.manage = () => {
         case ACTION_DISCOVERY: {
           const type = data[7];
           const version = `${data[8]}.${data[9]}`;
-          online(id, type, version, address, action === ACTION_READY);
+          online(id, type, version, address, true);
           break;
         }
         case ACTION_FIND_ME: {

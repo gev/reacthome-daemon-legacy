@@ -43,8 +43,8 @@ const online = (id, type, version, ip, ready) => {
     type,
     version,
     ip,
-    online: true,
     ready,
+    online: true,
   });
   add(mac(), DEVICE, id);
   // if (!device.initialized) initialize(id);
