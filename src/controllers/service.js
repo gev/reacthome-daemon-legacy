@@ -256,7 +256,7 @@ const run = (action) => {
             device.send(
               Buffer.from([
                 ACTION_RBUS_TRANSMIT,
-                ...dev.split(":").map((i) => parseInt(i, 16)),
+                ...(action.id).split(":").map((i) => parseInt(i, 16)),
                 ACTION_FIND_ME,
                 action.finding,
               ]),
