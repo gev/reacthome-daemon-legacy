@@ -253,6 +253,10 @@ module.exports.DEVICE_TYPE_RS_HUB1_RS = 0xb0;
 module.exports.DEVICE_TYPE_RS_HUB1 = 0xb1;
 module.exports.DEVICE_TYPE_RS_HUB4 = 0xb2;
 
+module.exports.DEVICE_TYPE_DIM_12_AC_RS = 0xb3;
+module.exports.DEVICE_TYPE_DIM_12_DC_RS = 0xb4;
+
+
 module.exports.DEVICE_TYPE_TEMPERATURE_EXT = 0xf0;
 
 module.exports.onIR = "onIR";

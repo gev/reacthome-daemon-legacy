@@ -38,6 +38,8 @@ const {
   AO,
   DEVICE_TYPE_AO_4_DIN,
   DEVICE_TYPE_DIM_12_LED_RS,
+  DEVICE_TYPE_DIM_12_AC_RS,
+  DEVICE_TYPE_DIM_12_DC_RS,
   DEVICE_TYPE_RELAY_12_RS,
   DEVICE_TYPE_DIM_8_RS,
   DEVICE_TYPE_RS_HUB1_RS,
@@ -608,7 +610,9 @@ module.exports.initialize = (id) => {
       }
       break;
     }
-    case DEVICE_TYPE_DIM_12_LED_RS: {
+    case DEVICE_TYPE_DIM_12_LED_RS:
+    case DEVICE_TYPE_DIM_12_AC_RS:
+    case DEVICE_TYPE_DIM_12_DC_RS: {
       const mac = id.split(":").map((i) => parseInt(i, 16));
       a[0] = ACTION_RBUS_TRANSMIT;
       a[1] = mac[0];

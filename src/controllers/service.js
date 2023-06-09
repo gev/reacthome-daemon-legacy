@@ -161,6 +161,8 @@ const {
   DIM_GROUP,
   ACTION_RGB_BUTTON_SET,
   DEVICE_TYPE_DIM_12_LED_RS,
+  DEVICE_TYPE_DIM_12_AC_RS,
+  DEVICE_TYPE_DIM_12_DC_RS,
   POOL,
   ACTION_SITE_LIGHT_ON,
   DEVICE_TYPE_RELAY_12_RS,
@@ -252,7 +254,9 @@ const run = (action) => {
       case ACTION_FIND_ME: {
         const dev = get(action.id);
         switch (dev.type) {
-          case DEVICE_TYPE_DIM_12_LED_RS: {
+          case DEVICE_TYPE_DIM_12_LED_RS:
+          case DEVICE_TYPE_DIM_12_AC_RS:
+          case DEVICE_TYPE_DIM_12_DC_RS: {
             device.send(
               Buffer.from([
                 ACTION_RBUS_TRANSMIT,
@@ -595,9 +599,13 @@ const run = (action) => {
         switch (dev.type) {
           case DEVICE_TYPE_DIM_8_RS:
           case DEVICE_TYPE_DIM_12_LED_RS:
+          case DEVICE_TYPE_DIM_12_AC_RS:
+          case DEVICE_TYPE_DIM_12_DC_RS:
           case DEVICE_TYPE_AO_4_DIN: {
             const velocity =
               dev.type === DEVICE_TYPE_DIM_12_LED_RS ||
+                dev.type === DEVICE_TYPE_DIM_12_AC_RS ||
+                dev.type === DEVICE_TYPE_DIM_12_DC_RS ||
                 dev.type === DEVICE_TYPE_DIM_8_RS
                 ? DIM_VELOCITY
                 : AO_VELOCITY;
@@ -765,7 +773,9 @@ const run = (action) => {
                 }
                 case DEVICE_TYPE_AO_4_DIN:
                 case DEVICE_TYPE_DIM_8_RS:
-                case DEVICE_TYPE_DIM_12_LED_RS: {
+                case DEVICE_TYPE_DIM_12_LED_RS:
+                case DEVICE_TYPE_DIM_12_AC_RS:
+                case DEVICE_TYPE_DIM_12_DC_RS: {
                   device.send(
                     Buffer.from([
                       ACTION_RBUS_TRANSMIT,
@@ -775,6 +785,8 @@ const run = (action) => {
                       DIM_FADE,
                       v,
                       dev.type === DEVICE_TYPE_DIM_12_LED_RS ||
+                        dev.type === DEVICE_TYPE_DIM_12_AC_RS ||
+                        dev.type === DEVICE_TYPE_DIM_12_DC_RS ||
                         dev.type === DEVICE_TYPE_DIM_8_RS
                         ? DIM_VELOCITY
                         : AO_VELOCITY,
@@ -919,7 +931,9 @@ const run = (action) => {
               break;
             }
             case DEVICE_TYPE_DIM_8_RS:
-            case DEVICE_TYPE_DIM_12_LED_RS: {
+            case DEVICE_TYPE_DIM_12_LED_RS:
+            case DEVICE_TYPE_DIM_12_AC_RS:
+            case DEVICE_TYPE_DIM_12_DC_RS: {
               switch (type) {
                 case DIM_TYPE_PWM:
                 case DIM_TYPE_RISING_EDGE:
@@ -1066,7 +1080,9 @@ const run = (action) => {
               break;
             }
             case DEVICE_TYPE_DIM_8_RS:
-            case DEVICE_TYPE_DIM_12_LED_RS: {
+            case DEVICE_TYPE_DIM_12_LED_RS:
+            case DEVICE_TYPE_DIM_12_AC_RS:
+            case DEVICE_TYPE_DIM_12_DC_RS: {
               switch (type) {
                 case DIM_TYPE_PWM:
                 case DIM_TYPE_RISING_EDGE:
@@ -1184,6 +1200,8 @@ const run = (action) => {
             }
             case DEVICE_TYPE_DIM_8_RS:
             case DEVICE_TYPE_DIM_12_LED_RS:
+            case DEVICE_TYPE_DIM_12_AC_RS:
+            case DEVICE_TYPE_DIM_12_DC_RS:
             case DEVICE_TYPE_AO_4_DIN: {
               device.send(
                 Buffer.from([
@@ -1194,6 +1212,8 @@ const run = (action) => {
                   DIM_FADE,
                   v,
                   deviceType === DEVICE_TYPE_DIM_12_LED_RS ||
+                    deviceType === DEVICE_TYPE_DIM_12_AC_RS ||
+                    deviceType === DEVICE_TYPE_DIM_12_DC_RS ||
                     deviceType === DEVICE_TYPE_DIM_8_RS
                     ? DIM_VELOCITY
                     : AO_VELOCITY,
@@ -1271,6 +1291,8 @@ const run = (action) => {
             }
             case DEVICE_TYPE_DIM_8_RS:
             case DEVICE_TYPE_DIM_12_LED_RS:
+            case DEVICE_TYPE_DIM_12_AC_RS:
+            case DEVICE_TYPE_DIM_12_DC_RS:
             case DEVICE_TYPE_AO_4_DIN: {
               device.send(
                 Buffer.from([
@@ -1281,6 +1303,8 @@ const run = (action) => {
                   DIM_FADE,
                   v,
                   deviceType === DEVICE_TYPE_DIM_12_LED_RS ||
+                    deviceType === DEVICE_TYPE_DIM_12_AC_RS ||
+                    deviceType === DEVICE_TYPE_DIM_12_DC_RS ||
                     deviceType === DEVICE_TYPE_DIM_8_RS
                     ? DIM_VELOCITY
                     : AO_VELOCITY
