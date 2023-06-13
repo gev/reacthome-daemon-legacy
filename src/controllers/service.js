@@ -254,6 +254,7 @@ const run = (action) => {
       case ACTION_FIND_ME: {
         const dev = get(action.id);
         switch (dev.type) {
+          case DEVICE_TYPE_RELAY_12_RS:
           case DEVICE_TYPE_DIM_12_LED_RS:
           case DEVICE_TYPE_DIM_12_AC_RS:
           case DEVICE_TYPE_DIM_12_DC_RS: {
