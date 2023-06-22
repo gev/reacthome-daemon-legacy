@@ -175,6 +175,7 @@ const {
   DRIVER_TYPE_SWIFT,
   DRIVER_TYPE_ALINK,
   ACTION_SETPOINT_MIN_MAX,
+  DEVICE_TYPE_MIX_6x12_RS,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -299,6 +300,7 @@ const run = (action) => {
           }
           case DEVICE_TYPE_AO_4_DIN:
           case DEVICE_TYPE_MIX_1_RS:
+          case DEVICE_TYPE_MIX_6x12_RS:
           case DEVICE_TYPE_RELAY_2:
           case DEVICE_TYPE_RELAY_2_DIN:
           case DEVICE_TYPE_RELAY_12_RS: {
@@ -538,6 +540,7 @@ const run = (action) => {
         );
         switch (dev.type) {
           case DEVICE_TYPE_MIX_1_RS:
+          case DEVICE_TYPE_MIX_6x12_RS:
           case DEVICE_TYPE_RELAY_2:
           case DEVICE_TYPE_RELAY_2_DIN:
           case DEVICE_TYPE_RELAY_12_RS: {
@@ -562,6 +565,7 @@ const run = (action) => {
         const dev = get(action.id);
         switch (dev.type) {
           case DEVICE_TYPE_MIX_1_RS:
+          case DEVICE_TYPE_MIX_6x12_RS:
           case DEVICE_TYPE_RELAY_2:
           case DEVICE_TYPE_RELAY_2_DIN: {
             device.send(
@@ -970,6 +974,7 @@ const run = (action) => {
             }
             case DEVICE_TYPE_AO_4_DIN:
             case DEVICE_TYPE_MIX_1_RS:
+            case DEVICE_TYPE_MIX_6x12_RS:
             case DEVICE_TYPE_RELAY_2:
             case DEVICE_TYPE_RELAY_2_DIN:
             case DEVICE_TYPE_RELAY_12_RS: {
@@ -1117,6 +1122,7 @@ const run = (action) => {
             }
             case DEVICE_TYPE_AO_4_DIN:
             case DEVICE_TYPE_MIX_1_RS:
+            case DEVICE_TYPE_MIX_6x12_RS:
             case DEVICE_TYPE_RELAY_2:
             case DEVICE_TYPE_RELAY_2_DIN:
             case DEVICE_TYPE_RELAY_12_RS: {

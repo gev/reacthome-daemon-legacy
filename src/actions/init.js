@@ -47,6 +47,7 @@ const {
   DEVICE_TYPE_SMART_4AM,
   DEVICE_TYPE_RS_HUB4,
   DEVICE_TYPE_SMART_6_PUSH,
+  DEVICE_TYPE_MIX_6x12_RS,
 } = require("../constants");
 const { get, set, add } = require("./create");
 const { device } = require("../sockets");
@@ -290,7 +291,6 @@ module.exports.initialize = (id) => {
       }
       break;
     }
-
     case DEVICE_TYPE_MIX_1_RS: {
       const mac = id.split(":").map((i) => parseInt(i, 16));
       a[0] = ACTION_RBUS_TRANSMIT;
@@ -318,6 +318,36 @@ module.exports.initialize = (id) => {
         a[5 * i + 20] = (timeout >> 8) & 0xff;
         a[5 * i + 21] = (timeout >> 16) & 0xff;
         a[5 * i + 22] = (timeout >> 24) & 0xff;
+      }
+      break;
+    }
+    case DEVICE_TYPE_MIX_6x12_RS: {
+      const mac = id.split(":").map((i) => parseInt(i, 16));
+      a[0] = ACTION_RBUS_TRANSMIT;
+      a[1] = mac[0];
+      a[2] = mac[1];
+      a[3] = mac[2];
+      a[4] = mac[3];
+      a[5] = mac[4];
+      a[6] = mac[5];
+      a[7] = ACTION_INITIALIZE;
+      for (let i = 1; i <= 6; i++) {
+        const channel = get(`${id}/${GROUP}/${i}`) || {};
+        const { enabled = 0, delay = 0 } = channel;
+        a[5 * i + 3] = enabled;
+        a[5 * i + 4] = delay & 0xff;
+        a[5 * i + 5] = (delay >> 8) & 0xff;
+        a[5 * i + 6] = (delay >> 16) & 0xff;
+        a[5 * i + 7] = (delay >> 24) & 0xff;
+      }
+      for (let i = 1; i <= 6; i++) {
+        const channel = get(`${id}/${DO}/${i}`) || {};
+        const { value = 0, timeout = 0 } = channel;
+        a[5 * i + 33] = value;
+        a[5 * i + 34] = timeout & 0xff;
+        a[5 * i + 35] = (timeout >> 8) & 0xff;
+        a[5 * i + 36] = (timeout >> 16) & 0xff;
+        a[5 * i + 37] = (timeout >> 24) & 0xff;
       }
       break;
     }

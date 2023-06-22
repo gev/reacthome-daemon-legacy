@@ -9,6 +9,7 @@ const {
   ACTION_GET_STATE,
   ACTION_RBUS_TRANSMIT,
   DEVICE_TYPE_MIX_1_RS,
+  DEVICE_TYPE_MIX_6x12_RS,
 } = require("../constants");
 const mac = require("../mac");
 const { device } = require("../sockets");
@@ -26,6 +27,7 @@ const online = (id, type, version, ip, ready) => {
     switch (type) {
       case DEVICE_TYPE_RELAY_2:
       case DEVICE_TYPE_MIX_1_RS:
+      case DEVICE_TYPE_MIX_6x12_RS:
       case DEVICE_TYPE_RELAY_2_DIN: {
         device.send(
           Buffer.from([
