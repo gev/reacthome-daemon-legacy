@@ -258,7 +258,8 @@ const run = (action) => {
           case DEVICE_TYPE_RELAY_12_RS:
           case DEVICE_TYPE_DIM_12_LED_RS:
           case DEVICE_TYPE_DIM_12_AC_RS:
-          case DEVICE_TYPE_DIM_12_DC_RS: {
+          case DEVICE_TYPE_DIM_12_DC_RS:
+          case DEVICE_TYPE_MIX_6x12_RS: {
             device.send(
               Buffer.from([
                 ACTION_RBUS_TRANSMIT,
