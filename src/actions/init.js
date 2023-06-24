@@ -342,12 +342,13 @@ module.exports.initialize = (id) => {
       }
       for (let i = 1; i <= 6; i++) {
         const channel = get(`${id}/${DO}/${i}`) || {};
-        const { value = 0, timeout = 0 } = channel;
-        a[5 * i + 33] = value;
-        a[5 * i + 34] = timeout & 0xff;
-        a[5 * i + 35] = (timeout >> 8) & 0xff;
-        a[5 * i + 36] = (timeout >> 16) & 0xff;
-        a[5 * i + 37] = (timeout >> 24) & 0xff;
+        const { value = 0, timeout = 0, group = i } = channel;
+        a[6 * i + 33] = value;
+        a[6 * i + 34] = group;
+        a[6 * i + 35] = timeout & 0xff;
+        a[6 * i + 36] = (timeout >> 8) & 0xff;
+        a[6 * i + 37] = (timeout >> 16) & 0xff;
+        a[6 * i + 38] = (timeout >> 24) & 0xff;
       }
       break;
     }
