@@ -68,6 +68,7 @@ const {
   DEVICE_TYPE_DIM8,
   DEVICE_TYPE_RS_HUB1_RS,
   ACTION_CO2,
+  ACTION_ATS_MODE,
 } = require("../constants");
 const {
   get,
@@ -313,6 +314,11 @@ module.exports.manage = () => {
           const onOn = value.slice(value.length / 2);
           const channel = `${id}/${DI}/${index}`;
           set(channel, { sync: [[...onOff], [...onOn]] });
+          break;
+        }
+        case ACTION_ATS_MODE: {
+          const mode = data[7];
+          set(id, { mode });
           break;
         }
         case ACTION_RS485_MODE: {
