@@ -176,6 +176,7 @@ const {
   DRIVER_TYPE_ALINK,
   ACTION_SETPOINT_MIN_MAX,
   DEVICE_TYPE_MIX_6x12_RS,
+  ACTION_ATS_MODE,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -592,6 +593,26 @@ const run = (action) => {
               ]),
               dev.ip
             );
+        }
+        break;
+      }
+      case ACTION_ATS_MODE: {
+        const dev = get(action.id);
+        switch (dev.type) {
+          case DEVICE_TYPE_MIX_6x12_RS: {
+            device.send(
+              Buffer.from([
+                ACTION_RBUS_TRANSMIT,
+                ...action.id.split(":").map((i) => parseInt(i, 16)),
+                ACTION_DI_RELAY_SYNC,
+                action.index,
+                ...action.value[0],
+                ...action.value[1],
+              ]),
+              dev.ip
+            );
+            break;
+          }
         }
         break;
       }
