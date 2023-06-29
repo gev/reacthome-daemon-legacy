@@ -604,10 +604,8 @@ const run = (action) => {
               Buffer.from([
                 ACTION_RBUS_TRANSMIT,
                 ...action.id.split(":").map((i) => parseInt(i, 16)),
-                ACTION_DI_RELAY_SYNC,
-                action.index,
-                ...action.value[0],
-                ...action.value[1],
+                ACTION_ATS_MODE,
+                action.value,
               ]),
               dev.ip
             );
