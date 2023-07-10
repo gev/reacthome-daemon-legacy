@@ -595,11 +595,24 @@ module.exports.initialize = (id) => {
       break;
     }
     case DEVICE_TYPE_SERVER: {
+      for (i = 1; i <= 4; i++) {
+        const {
+          is_rbus = true,
+          baud,
+          line_control,
+        } = get(`${id}/${RS485}/${i}`) || {};
+        a[i * 6 - 5] = is_rbus;
+        a[i * 6 - 4] = baud & 0xff;
+        a[i * 6 - 3] = (baud >> 8) & 0xff;
+        a[i * 6 - 2] = (baud >> 16) & 0xff;
+        a[i * 6 - 1] = (baud >> 24) & 0xff;
+        a[i * 6] = line_control;
+      }
       for (let i = 1; i <= 3; i++) {
         const channel = get(`${id}/${DIM}/${i}`);
-        a[3 * i - 2] = (channel && channel.group) || i;
-        a[3 * i - 1] = (channel && channel.type) || 0;
-        a[3 * i] = (channel && channel.value) || 0;
+        a[3 * i + 22] = (channel && channel.group) || i;
+        a[3 * i + 23] = (channel && channel.type) || 0;
+        a[3 * i + 24] = (channel && channel.value) || 0;
       }
       break;
     }
