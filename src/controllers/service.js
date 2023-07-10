@@ -177,6 +177,7 @@ const {
   ACTION_SETPOINT_MIN_MAX,
   DEVICE_TYPE_MIX_6x12_RS,
   ACTION_ATS_MODE,
+  DEVICE_TYPE_SERVER,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -780,6 +781,7 @@ const run = (action) => {
               const { ip, type: deviceType } = get(dev);
               const v = value[i];
               switch (deviceType) {
+                case DEVICE_TYPE_SERVER:
                 case DEVICE_TYPE_DIM4:
                 case DEVICE_TYPE_DIM_4:
                 case DEVICE_TYPE_DIM8:
@@ -929,6 +931,7 @@ const run = (action) => {
           const { ip, type: deviceType, protocol } = get(dev);
           const value = isOn ? (i === "bind" ? last.value : last[i]) : 255;
           switch (deviceType) {
+            case DEVICE_TYPE_SERVER:
             case DEVICE_TYPE_DIM4:
             case DEVICE_TYPE_DIM_4:
             case DEVICE_TYPE_DIM8:
@@ -1081,6 +1084,7 @@ const run = (action) => {
           const [dev, , index] = o[i].split("/");
           const { ip, type: deviceType, protocol } = get(dev);
           switch (deviceType) {
+            case DEVICE_TYPE_SERVER:
             case DEVICE_TYPE_DIM4:
             case DEVICE_TYPE_DIM_4:
             case DEVICE_TYPE_DIM8:
@@ -1215,6 +1219,7 @@ const run = (action) => {
             v = rgb[c];
           }
           switch (deviceType) {
+            case DEVICE_TYPE_SERVER:
             case DEVICE_TYPE_DIM4:
             case DEVICE_TYPE_DIM_4:
             case DEVICE_TYPE_DIM8:
@@ -1306,6 +1311,7 @@ const run = (action) => {
             v = rgb[c];
           }
           switch (deviceType) {
+            case DEVICE_TYPE_SERVER:
             case DEVICE_TYPE_DIM4:
             case DEVICE_TYPE_DIM_4:
             case DEVICE_TYPE_DIM8:

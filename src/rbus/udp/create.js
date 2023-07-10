@@ -1,5 +1,5 @@
 const dgram = require('dgram');
-const { DEVICE_PORT, DEVICE_SERVER_PORT, ACTION_READY, ACTION_DISCOVERY, DEVICE_TYPE_RS_HUB4, ACTION_INITIALIZE } = require('../../constants');
+const { DEVICE_PORT, DEVICE_SERVER_PORT, ACTION_READY, ACTION_DISCOVERY, ACTION_INITIALIZE, DEVICE_TYPE_SERVER } = require('../../constants');
 const { handle } = require('./handle');
 
 module.exports.createSocket = (rbus, host) => {
@@ -22,7 +22,7 @@ module.exports.createSocket = (rbus, host) => {
     rbus.socket.send(Buffer.from([
       ...rbus.mac,
       rbus.ready ? ACTION_READY : ACTION_DISCOVERY,
-      DEVICE_TYPE_RS_HUB4,
+      DEVICE_TYPE_SERVER,
       1, 0 // Version
     ]))
   }, 1_000)
