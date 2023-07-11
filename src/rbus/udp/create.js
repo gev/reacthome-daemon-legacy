@@ -23,7 +23,7 @@ module.exports.createSocket = (rbus, host) => {
       ...rbus.mac,
       rbus.ready ? ACTION_READY : ACTION_DISCOVERY,
       DEVICE_TYPE_SERVER,
-      1, 0 // Version
+      3, 0 // Version
     ]))
   }, 1_000)
   rbus.socket.send(Buffer.from([...rbus.mac, ACTION_INITIALIZE]));
