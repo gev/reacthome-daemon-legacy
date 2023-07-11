@@ -7,7 +7,7 @@ module.exports.createSocket = (rbus, host) => {
   socket.bind(DEVICE_PORT, host);
   socket.on('message', handle(rbus));
   const send = (data) => {
-    // console.log("UDP send", data)
+    console.log("UDP send", data)
     socket.send(
       data,
       DEVICE_SERVER_PORT,
