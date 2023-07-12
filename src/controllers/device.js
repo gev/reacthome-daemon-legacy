@@ -317,8 +317,7 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_ATS_MODE: {
-          const mode = data[7];
-          set(id, { mode });
+          set(id, { mode: data[7], source: data[8], attempt: data[9], state: data[10] });
           break;
         }
         case ACTION_RS485_MODE: {
