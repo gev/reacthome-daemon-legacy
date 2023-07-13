@@ -178,6 +178,7 @@ const {
   DEVICE_TYPE_MIX_6x12_RS,
   ACTION_ATS_MODE,
   DEVICE_TYPE_SERVER,
+  ACTION_ERROR,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -2033,6 +2034,24 @@ const run = (action) => {
         }
         break;
       }
+      case ACTION_ERROR: {
+        const dev = get(action.id);
+        switch (dev.type) {
+          case DEVICE_TYPE_MIX_6x12_RS: {
+            device.send(
+              Buffer.from([
+                ACTION_RBUS_TRANSMIT,
+                ...action.id.split(":").map((i) => parseInt(i, 16)),
+                ACTION_ERROR,
+              ]),
+              dev.ip
+            );
+            break;
+          }
+        }
+        break;
+      }
+
     }
   } catch (e) {
     console.error(action);
