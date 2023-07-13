@@ -321,7 +321,7 @@ module.exports.manage = () => {
             mode: data[7],
             source: data[8],
             attempt: data[9],
-            error: [data[10], data[11], data[12], data[13], data[14]]
+            error: [data[10], data[11], data[12], data[13]]
           });
           break;
         }
