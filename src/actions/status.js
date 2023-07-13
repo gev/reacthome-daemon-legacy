@@ -39,6 +39,14 @@ const online = (id, type, version, ip, ready) => {
         );
         break;
       }
+      default: {
+        device.send(
+          Buffer.from([
+            ACTION_GET_STATE
+          ]),
+          dev.ip
+        );
+      }
     }
   }
   set(id, {
