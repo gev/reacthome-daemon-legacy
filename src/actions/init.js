@@ -823,6 +823,5 @@ module.exports.initialize = (id) => {
       return;
     }
   }
-  console.log(a)
   confirm(id, Buffer.from(a));
 };
