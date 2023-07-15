@@ -704,8 +704,6 @@ module.exports.manage = () => {
         // default: {
         // }
       }
-      online(id, { ip: address, ready: true });
-
     } catch (e) {
       console.error(e);
     }
