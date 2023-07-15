@@ -108,7 +108,7 @@ module.exports.manage = () => {
       const dev_mac = Array.from(data.slice(0, 6));
       const id = dev_mac.map((i) => `0${i.toString(16)}`.slice(-2)).join(":");
       const action = data[6];
-      online({ id, ip: address, ready: true });
+      online(id, { ip: address, ready: true });
       switch (action) {
         case DEVICE_TYPE_PLC: {
           for (let i = 1; i <= 36; i++) {
@@ -679,7 +679,7 @@ module.exports.manage = () => {
         case ACTION_DISCOVERY: {
           const type = data[7];
           const version = `${data[8]}.${data[9]}`;
-          online({ id, type, version, ip: address, ready: true });
+          online(id, { type, version, ip: address, ready: true });
           break;
         }
         case ACTION_FIND_ME: {

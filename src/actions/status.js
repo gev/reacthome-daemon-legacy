@@ -20,7 +20,7 @@ const offline = (id) => {
   set(id, { online: false, ready: false, initialized: false });
 };
 
-const online = ({ id, type, version, ip, ready }) => {
+const online = (id, { type, version, ip, ready }) => {
   clearTimeout(timeout[id]);
   const dev = get(id) || {};
   if (!dev.online) {
