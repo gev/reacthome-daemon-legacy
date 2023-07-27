@@ -1,9 +1,9 @@
 
 const net = require('net');
 const { get } = require('../../../actions');
-const { 
+const {
   READ_INPUT_REGISTERS,
-  READ_HOLDING_REGISTERS, 
+  READ_HOLDING_REGISTERS,
   WRITE_REGISTER,
   WRITE_REGISTERS,
   MODBUS,
@@ -13,7 +13,7 @@ const driver = require('../../driver');
 const sockets = new Map();
 
 const connect = (host, port) => new Promise((resolve, reject) => {
-  const socket = net.connect({host, port}, () => {
+  const socket = net.connect({ host, port }, () => {
     resolve(socket);
   });
   socket.on('error', err => {
@@ -45,8 +45,8 @@ const send = async (data, port, host) => {
 
 let tid = 0;
 
-const request = (getSize, fill) => (code) => (ip, port, address, register, data) => {
-  // const {ip, port} = get(id) || {};
+const request = (getSize, fill) => (code) => (id, register, data) => {
+  const { ip, port } = get(id) || {};
   if (ip) {
     tid = (tid + 1) % 0xffff;
     const size = getSize(data);
@@ -54,7 +54,7 @@ const request = (getSize, fill) => (code) => (ip, port, address, register, data)
     buffer.writeUInt16BE(tid, 0);
     buffer.writeUInt16BE(0, 2);
     buffer.writeUInt16BE(size - 6, 4);
-    buffer.writeUInt8(address, 6);
+    buffer.writeUInt8(0xff, 6);
     buffer.writeUInt8(code, 7);
     buffer.writeUInt16BE(register, 8);
     fill(buffer, data);
@@ -63,7 +63,7 @@ const request = (getSize, fill) => (code) => (ip, port, address, register, data)
 }
 
 const request12 = request(
-  () => 12, 
+  () => 12,
   (buffer, data) => {
     buffer.writeUInt16BE(data, 10);
   }
@@ -83,10 +83,10 @@ module.exports.writeRegisters = request(
   }
 )(WRITE_REGISTERS);
 
-module.exports.handle = ({id, data}) => {
+module.exports.handle = ({ id, data }) => {
   const address = data[0];
-  const {bind} = get(`${id}/${MODBUS}/${address}`) || {};
+  const { bind } = get(`${id}/${MODBUS}/${address}`) || {};
   if (bind) {
-    driver.handle({id: bind, data: data.slice(1)});
+    driver.handle({ id: bind, data: data.slice(1) });
   }
 }
