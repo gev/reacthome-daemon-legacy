@@ -824,6 +824,7 @@ const run = (action) => {
                     kind,
                     index,
                     value: v,
+                    type: DIM_TYPE_PWM
                   });
                   break;
                 }
@@ -1036,6 +1037,7 @@ const run = (action) => {
                 kind,
                 index,
                 value,
+                type: DIM_TYPE_PWM
               });
               break;
             }
@@ -1194,6 +1196,7 @@ const run = (action) => {
                 kind,
                 index,
                 value: 0,
+                type: DIM_TYPE_PWM
               });
               break;
             }
@@ -1282,6 +1285,7 @@ const run = (action) => {
                 kind,
                 index,
                 value: v,
+                type: DIM_TYPE_PWM
               });
               break;
             }
@@ -1382,6 +1386,7 @@ const run = (action) => {
                 kind,
                 index,
                 value: v,
+                type: DIM_TYPE_PWM
               });
               break;
             }
