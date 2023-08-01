@@ -21,10 +21,9 @@ const connect = (host, port) => new Promise((resolve, reject) => {
     reject(err);
   });
   socket.on('data', (data) => {
-    console.log(data)
-    const b = Buffer.alloc(4);
-    b.writeUInt16BE(data.readUInt16BE(9), 2);
-    b.writeUInt16BE(data.readUInt16BE(11), 0);
+    // const b = Buffer.alloc(4);
+    // b.writeUInt16BE(data.readUInt16BE(9), 2);
+    // b.writeUInt16BE(data.readUInt16BE(11), 0);
   });
 });
 
