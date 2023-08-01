@@ -21,6 +21,7 @@ const connect = (host, port) => new Promise((resolve, reject) => {
     reject(err);
   });
   socket.on('data', (data) => {
+    console.log(data)
     const b = Buffer.alloc(4);
     b.writeUInt16BE(data.readUInt16BE(9), 2);
     b.writeUInt16BE(data.readUInt16BE(11), 0);
@@ -37,6 +38,8 @@ const send = async (data, port, host) => {
       socket = await connect(host, port);
       sockets.set(id, socket);
     }
+    console.log(data, port, host);
+
     await socket.write(data);
   } catch (e) {
     console.error(e);
@@ -58,7 +61,6 @@ const request = (getSize, fill) => (code) => (id, register, data) => {
     buffer.writeUInt8(code, 7);
     buffer.writeUInt16BE(register, 8);
     fill(buffer, data);
-    console.log(buffer, port, host, data);
     send(buffer, port, host);
   }
 }
