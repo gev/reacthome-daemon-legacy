@@ -310,7 +310,7 @@ module.exports.BIND = "BIND";
 
 module.exports.DRIVER_TYPE_RS21 = "RS21";
 module.exports.DRIVER_TYPE_ARTNET = "ARTNET";
-module.exports.DRIVER_TYPE_DALI_GW = "dali_gw";
+module.exports.DRIVER_TYPE_DALI_GW = "DALI_GW";
 module.exports.DRIVER_TYPE_BB_PLC1 = "BB_PLC1";
 module.exports.DRIVER_TYPE_BB_PLC2 = "BB_PLC2";
 module.exports.DRIVER_TYPE_M206 = "M206";

@@ -727,7 +727,6 @@ const run = (action) => {
         break;
       }
       case ACTION_DALI: {
-        console.log(action, get(action.id))
         drivers.handle(action);
         break;
       }
