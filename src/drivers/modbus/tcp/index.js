@@ -37,8 +37,6 @@ const send = async (data, port, host) => {
       socket = await connect(host, port);
       sockets.set(id, socket);
     }
-    console.log(data, port, host);
-
     await socket.write(data);
   } catch (e) {
     console.error(e);
