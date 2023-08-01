@@ -28,7 +28,7 @@ const sync = async (id) => {
 };
 
 module.exports.handle = (a) => {
-  console.log(action);
+  console.log(a);
   // const { id, type, action, value } = action;
   // if (type === ACTION_DALI) {
   //   switch (type) {
