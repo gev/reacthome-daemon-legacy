@@ -1,30 +1,28 @@
 
 const { get, set } = require('../../actions');
-const { ACTION_ON, ACTION_OFF, ACTION_DALI } = require('../../constants');
-const { writeRegister, readHoldingRegisters } = require('../modbus/tcp');
+const { ACTION_ON, ACTION_OFF, ACTION_DALI, DALI_GROUP, DALI_LIGHT } = require('../../constants');
+const { writeRegister } = require('../modbus/tcp');
 const { READ_HOLDING_REGISTERS } = require('../modbus/constants');
 const { delay } = require('../../util');
 
-const instance = new Set();
+const instance = new Map();
 
-const sync = async (id) => {
-  const dev = get(id) || {};
-  // if (modbus && address) {
-  //   if (synced) {
-  //     readHoldingRegisters(modbus, address, 0x0, 12);
-  //   } else {
-  //     writeRegister(modbus, address, 0x0, dev.value);
-  //     await delay(100);
-  //     writeRegister(modbus, address, 0x1, dev.mode);
-  //     await delay(100);
-  //     writeRegister(modbus, address, 0x2, dev.fan_speed);
-  //     await delay(100);
-  //     writeRegister(modbus, address, 0x3, dev.direction);
-  //     await delay(100);
-  //     writeRegister(modbus, address, 0x4, dev.setpoint);
-  //     set(id, { synced: true });
-  //   }
-  // }
+const sync = async (id, kind, r, n) => {
+  for (let i = 0; i < n; i += 1) {
+    const ch = `${id}/${kind}/${index}`
+    const { synced, value } = get(ch) || {};
+    if (!synced) {
+      writeRegister(id, r + index * 5, value);
+      set(ch, { synced: true });
+      await (50);
+    }
+  }
+}
+
+const loop = (id) => async () => {
+  await sync(id, DALI_GROUP, 2000, 16);
+  await sync(id, DALI_LIGHT, 3000, 64);
+  instance.set(id, setImmediate(loop(id)));
 };
 
 module.exports.handle = (a) => {
@@ -34,15 +32,13 @@ module.exports.handle = (a) => {
 
 
 module.exports.clear = () => {
+  instance.forEach(i => clearImmediate(i))
   instance.clear();
 }
 
 module.exports.add = (id) => {
-  instance.add(id);
-};
-
-setInterval(async () => {
-  for (const id of instance) {
-    await sync(id);
+  if (instance.has(id)) {
+    clearImmediate(instance.get(id))
   }
-}, 1000);
+  instance.set(id, setImmediate(loop(id)));
+};

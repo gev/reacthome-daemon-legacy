@@ -323,3 +323,6 @@ module.exports.DRIVER_TYPE_INTESIS_BOX = "INTESIS_BOX";
 module.exports.DRIVER_TYPE_RTD_RA = "RT_DA";
 module.exports.DRIVER_TYPE_ALINK = "ALINK";
 module.exports.DRIVER_TYPE_ME210_701 = "ME210_710";
+
+module.exports.DALI_LIGHT = 'dali_light';
+module.exports.DALI_GROUP = 'dali_group';

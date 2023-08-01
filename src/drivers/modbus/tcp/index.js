@@ -47,7 +47,7 @@ let tid = 0;
 
 const request = (getSize, fill) => (code) => (id, register, data) => {
   const { ip, port } = get(id) || {};
-  if (ip) {
+  if (ip && port) {
     tid = (tid + 1) % 0xffff;
     const size = getSize(data);
     const buffer = Buffer.alloc(size);
