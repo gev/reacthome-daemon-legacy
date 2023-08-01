@@ -12,7 +12,7 @@ const sync = async (id, kind, r, n) => {
     const ch = `${id}/${kind}/${i}`
     const { synced, value } = get(ch) || {};
     if (!synced) {
-      writeRegister(id, r + index * 5, value);
+      writeRegister(id, r + i * 5, value);
       set(ch, { synced: true });
       await (50);
     }
