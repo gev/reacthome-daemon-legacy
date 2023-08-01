@@ -160,6 +160,7 @@ const {
   ACTION_ERROR,
   DRIVER_TYPE_DALI_GW,
   DALI_FADE,
+  ACTION_DALI,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
