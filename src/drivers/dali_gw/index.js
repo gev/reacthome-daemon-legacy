@@ -1,6 +1,6 @@
 
 const { get, set } = require('../../actions');
-const { ACTION_ON, ACTION_OFF, , ACTION_SET_DIRECTION, ACTION_SETPOINT, ACTION_DALI } = require('../../constants');
+const { ACTION_ON, ACTION_OFF, ACTION_DALI } = require('../../constants');
 const { writeRegister, readHoldingRegisters } = require('../modbus/tcp');
 const { READ_HOLDING_REGISTERS } = require('../modbus/constants');
 const { delay } = require('../../util');
