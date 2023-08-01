@@ -46,9 +46,8 @@ const send = async (data, port, host) => {
 let tid = 0;
 
 const request = (getSize, fill) => (code) => (id, register, data) => {
-  console.log(get(id))
-  const { ip, port } = get(id) || {};
-  if (ip && port) {
+  const { host, port } = get(id) || {};
+  if (host && port) {
     tid = (tid + 1) % 0xffff;
     const size = getSize(data);
     const buffer = Buffer.alloc(size);
@@ -59,8 +58,8 @@ const request = (getSize, fill) => (code) => (id, register, data) => {
     buffer.writeUInt8(code, 7);
     buffer.writeUInt16BE(register, 8);
     fill(buffer, data);
-    console.log(buffer, port, ip);
-    send(buffer, port, ip);
+    console.log(buffer, port, host);
+    send(buffer, port, host);
   }
 }
 
