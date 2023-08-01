@@ -9,7 +9,7 @@ const instance = new Map();
 
 const sync = async (id, kind, r, n) => {
   for (let i = 0; i < n; i += 1) {
-    const ch = `${id}/${kind}/${index}`
+    const ch = `${id}/${kind}/${i}`
     const { synced, value } = get(ch) || {};
     if (!synced) {
       writeRegister(id, r + index * 5, value);
