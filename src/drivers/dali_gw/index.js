@@ -28,49 +28,10 @@ const sync = async (id) => {
 };
 
 module.exports.handle = (a) => {
-  console.log(a);
-  // const { id, type, action, value } = action;
-  // if (type === ACTION_DALI) {
-  //   switch (type) {
-  //     case ACTION_ON: {
-  //       set(id, { value, synced: false });
-  //       break;
-  //     }
-  //     case ACTION_OFF: {
-  //       set(id, { value: false, synced: false });
-  //       break;
-  //     }
-  //     case ACTION_SET_DIRECTION: {
-  //       set(id, { direction: action.value, synced: false });
-  //       break;
-  //     }
-  //     case ACTION_SETPOINT: {
-  //       set(id, { setpoint: action.value, synced: false });
-  //       break;
-  //     }
-  //     default: {
-  //       const { id, data } = action;
-  //       switch (data[0]) {
-  //         case READ_HOLDING_REGISTERS: {
-  //           const dev = get(id) || {};
-  //           if (dev.synced) {
-  //             set(id, {
-  //               value: data.readUInt16BE(2),
-  //               mode: data.readUInt16BE(4),
-  //               fan_speed: data.readUInt16BE(6),
-  //               direction: data.readUInt16BE(8),
-  //               setpoint: data.readUInt16BE(10),
-  //               synced: true
-  //             })
-  //           }
-  //           break;
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
+  const { id, kind, index, value } = a;
+  set(`${id}/${kind}/${index}`, { value, synced: false })
+}
 
-};
 
 module.exports.clear = () => {
   instance.clear();

@@ -763,7 +763,7 @@ const run = (action) => {
             set(id, { last: { r, g, b } });
             rgb.forEach((i) => {
               if (!o[i]) return;
-              const [dev, type, index] = o[i].split("/");
+              const [dev, kind, index] = o[i].split("/");
               const { ip, type: deviceType } = get(dev);
               const v = value[i];
               switch (deviceType) {
@@ -821,9 +821,8 @@ const run = (action) => {
                 case DRIVER_TYPE_DALI_GW: {
                   drivers.handle({
                     id: dev,
+                    kind,
                     index,
-                    type,
-                    action: DALI_FADE,
                     value: v,
                   });
                   break;
@@ -922,8 +921,8 @@ const run = (action) => {
         const isOn = last.r > 0 || last.g > 0 || last.b > 0 || last.value > 0;
         bind.forEach((i) => {
           if (!o[i]) return;
-          const { velocity, type } = get(o[i]) || {};
-          const [dev, , index] = o[i].split("/");
+          const { type } = get(o[i]) || {};
+          const [dev, kind, index] = o[i].split("/");
           const { ip, type: deviceType, protocol } = get(dev);
           const value = isOn ? (i === "bind" ? last.value : last[i]) : 255;
           switch (deviceType) {
@@ -1034,9 +1033,9 @@ const run = (action) => {
             case DRIVER_TYPE_DALI_GW: {
               drivers.handle({
                 id: dev,
+                kind,
                 index,
-                type: ACTION_DO,
-                value: ON,
+                value,
               });
               break;
             }
@@ -1085,8 +1084,8 @@ const run = (action) => {
         const { type: payloadType } = o;
         bind.forEach((i) => {
           if (!o[i]) return;
-          const { velocity, type } = get(o[i]) || {};
-          const [dev, , index] = o[i].split("/");
+          const { type } = get(o[i]) || {};
+          const [dev, kind, index] = o[i].split("/");
           const { ip, type: deviceType, protocol } = get(dev);
           switch (deviceType) {
             case DEVICE_TYPE_SERVER:
@@ -1192,9 +1191,9 @@ const run = (action) => {
             case DRIVER_TYPE_DALI_GW: {
               drivers.handle({
                 id: dev,
+                kind,
                 index,
-                type: ACTION_DO,
-                value: OFF,
+                value: 0,
               });
               break;
             }
@@ -1223,8 +1222,7 @@ const run = (action) => {
         set(id, { last: o.bind ? { value } : { r, g, b }, value: !!value });
         bind.forEach((i, c) => {
           if (!o[i]) return;
-          const { velocity } = get(o[i]) || {};
-          const [dev, , index] = o[i].split("/");
+          const [dev, kind, index] = o[i].split("/");
           const { ip, type: deviceType } = get(dev);
           let v;
           if (i === "bind") {
@@ -1281,9 +1279,9 @@ const run = (action) => {
             case DRIVER_TYPE_DALI_GW: {
               drivers.handle({
                 id: dev,
+                kind,
                 index,
-                action: DALI_FADE,
-                v,
+                value: v,
               });
               break;
             }
@@ -1327,8 +1325,7 @@ const run = (action) => {
         set(id, { last: o.bind ? { v } : { r, g, b }, value: !!v });
         bind.forEach((i, c) => {
           if (!o[i]) return;
-          const { velocity } = get(o[i]) || {};
-          const [dev, , index] = o[i].split("/");
+          const [dev, kind, index] = o[i].split("/");
           const { ip, type: deviceType } = get(dev);
           if (i !== "bind") {
             v = rgb[c];
@@ -1382,9 +1379,9 @@ const run = (action) => {
             case DRIVER_TYPE_DALI_GW: {
               drivers.handle({
                 id: dev,
+                kind,
                 index,
-                action: DALI_FADE,
-                v,
+                value: v,
               });
               break;
             }
