@@ -824,7 +824,6 @@ const run = (action) => {
                     kind,
                     index,
                     value: v,
-                    dimmable: true
                   });
                   break;
                 }
@@ -1037,7 +1036,6 @@ const run = (action) => {
                 kind,
                 index,
                 value,
-                dimmable: true
               });
               break;
             }
@@ -1196,7 +1194,6 @@ const run = (action) => {
                 kind,
                 index,
                 value: 0,
-                dimmable: true
               });
               break;
             }
@@ -1285,7 +1282,6 @@ const run = (action) => {
                 kind,
                 index,
                 value: v,
-                dimmable: true
               });
               break;
             }
@@ -1386,7 +1382,6 @@ const run = (action) => {
                 kind,
                 index,
                 value: v,
-                dimmable: true
               });
               break;
             }

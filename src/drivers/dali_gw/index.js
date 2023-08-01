@@ -27,7 +27,7 @@ const loop = (id) => async () => {
 
 module.exports.handle = (a) => {
   const { id, kind, index, value } = a;
-  set(`${id}/${kind}/${index}`, { value, synced: false })
+  set(`${id}/${kind}/${index}`, { value, synced: false, dimmable: true })
 }
 
 
