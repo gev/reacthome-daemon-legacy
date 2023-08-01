@@ -77,13 +77,6 @@ const {
   DRIVER_TYPE_BB_PLC1,
   DRIVER_TYPE_BB_PLC2,
   DRIVER_TYPE_INTESIS_BOX,
-  DISCOVERY_INTERVAL,
-  DAEMON,
-  MOBILE,
-  DEVICE,
-  SERVICE,
-  CLIENT_PORT,
-  CLIENT_GROUP,
   ON,
   OFF,
   DIM_ON,
@@ -91,19 +84,11 @@ const {
   DIM_SET,
   DIM_FADE,
   DIM_TYPE,
-  DIM_TYPE_RELAY,
   DIM_TYPE_FALLING_EDGE,
   DIM_TYPE_RISING_EDGE,
   DIM_TYPE_PWM,
-  ARTNET_ON,
-  ARTNET_OFF,
-  ARTNET_SET,
   ARTNET_FADE,
-  ARTNET_CONFIG,
-  ARTNET_TYPE,
   ARTNET_TYPE_DIMMER,
-  ARTNET_TYPE_RELAY,
-  ARTNET_TYPE_PWM,
   OPERATOR_PLUS,
   OPERATOR_MINUS,
   OPERATOR_MUL,
@@ -114,18 +99,13 @@ const {
   OPERATOR_NE,
   OPERATOR_GE,
   OPERATOR_GT,
-  STATE,
   STOP,
   HEAT,
   COOL,
   LIGHT_RGB,
-  COLOR,
-  MOVE_TO_LEVEL,
-  MOVE_TO_HUE_SATURATION,
   CLOSURE,
   CLOSE,
   OPEN,
-  START,
   ACTION_OPEN,
   ACTION_STOP,
   ACTION_CLOSE,
@@ -134,7 +114,6 @@ const {
   ACTION_SET_FAN_SPEED,
   ACTION_SET_DIRECTION,
   ACTION_SET_MODE,
-  DRIVER_TYPE_VARMANN,
   DEVICE_TYPE_MIX_1,
   DEVICE_TYPE_MIX_1_RS,
   DEVICE_TYPE_MIX_2,
@@ -179,6 +158,8 @@ const {
   ACTION_ATS_MODE,
   DEVICE_TYPE_SERVER,
   ACTION_ERROR,
+  DRIVER_TYPE_DALI_GW,
+  DALI_FADE,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -744,6 +725,10 @@ const run = (action) => {
         drivers.handle(action);
         break;
       }
+      case ACTION_DALI: {
+        drivers.handle(action);
+        break;
+      }
       case ACTION_RGB_DIM: {
         const { id, value = {}, index = 0 } = action;
         const { r, g, b } = value;
@@ -777,8 +762,7 @@ const run = (action) => {
             set(id, { last: { r, g, b } });
             rgb.forEach((i) => {
               if (!o[i]) return;
-              const { velocity } = get(o[i]) || {};
-              const [dev, , index] = o[i].split("/");
+              const [dev, type, index] = o[i].split("/");
               const { ip, type: deviceType } = get(dev);
               const v = value[i];
               switch (deviceType) {
@@ -830,6 +814,16 @@ const run = (action) => {
                     action: ARTNET_FADE,
                     v,
                     velocity: ARTNET_VELOCITY,
+                  });
+                  break;
+                }
+                case DRIVER_TYPE_DALI_GW: {
+                  drivers.handle({
+                    id: dev,
+                    index,
+                    type,
+                    action: DALI_FADE,
+                    value: v,
                   });
                   break;
                 }
@@ -1036,6 +1030,15 @@ const run = (action) => {
               }
               break;
             }
+            case DRIVER_TYPE_DALI_GW: {
+              drivers.handle({
+                id: dev,
+                index,
+                type: ACTION_DO,
+                value: ON,
+              });
+              break;
+            }
             case DRIVER_TYPE_BB_PLC1:
             case DRIVER_TYPE_BB_PLC2: {
               drivers.handle({ id: dev, index, value: ON });
@@ -1185,6 +1188,15 @@ const run = (action) => {
               }
               break;
             }
+            case DRIVER_TYPE_DALI_GW: {
+              drivers.handle({
+                id: dev,
+                index,
+                type: ACTION_DO,
+                value: OFF,
+              });
+              break;
+            }
             case DRIVER_TYPE_BB_PLC1:
             case DRIVER_TYPE_BB_PLC2: {
               drivers.handle({ id: dev, index, value: OFF });
@@ -1262,6 +1274,15 @@ const run = (action) => {
                 action: ARTNET_FADE,
                 v,
                 velocity: ARTNET_VELOCITY,
+              });
+              break;
+            }
+            case DRIVER_TYPE_DALI_GW: {
+              drivers.handle({
+                id: dev,
+                index,
+                action: DALI_FADE,
+                v,
               });
               break;
             }
@@ -1354,6 +1375,15 @@ const run = (action) => {
                 action: ARTNET_FADE,
                 v,
                 velocity: ARTNET_VELOCITY,
+              });
+              break;
+            }
+            case DRIVER_TYPE_DALI_GW: {
+              drivers.handle({
+                id: dev,
+                index,
+                action: DALI_FADE,
+                v,
               });
               break;
             }

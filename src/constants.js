@@ -87,6 +87,7 @@ module.exports.ACTION_CO2 = 0xc5;
 module.exports.ACTION_TEMPERATURE_CORRECT = 0xcf;
 module.exports.ACTION_DIMMER = 0xd0;
 module.exports.ACTION_ARTNET = 0xd1;
+module.exports.ACTION_DALI = 0xd1;
 module.exports.ACTION_RGB = 0xe0;
 module.exports.ACTION_IMAGE = 0xe1;
 module.exports.ACTION_DISCOVERY = 0xf0;
@@ -190,6 +191,11 @@ module.exports.ARTNET_SET = 0x2;
 module.exports.ARTNET_FADE = 0x3;
 module.exports.ARTNET_TYPE = 0x4;
 module.exports.ARTNET_CONFIG = 0x5;
+
+module.exports.DALI_OFF = 0x0;
+module.exports.DALI_ON = 0x1;
+module.exports.DALI_SET = 0x2;
+module.exports.DALI_FADE = 0x3;
 
 module.exports.PNP_ENABLE = 0x0;
 module.exports.PNP_STEP = 0x1;
@@ -304,6 +310,7 @@ module.exports.BIND = "BIND";
 
 module.exports.DRIVER_TYPE_RS21 = "RS21";
 module.exports.DRIVER_TYPE_ARTNET = "ARTNET";
+module.exports.DRIVER_TYPE_DALI_GW = "dali_gw";
 module.exports.DRIVER_TYPE_BB_PLC1 = "BB_PLC1";
 module.exports.DRIVER_TYPE_BB_PLC2 = "BB_PLC2";
 module.exports.DRIVER_TYPE_M206 = "M206";

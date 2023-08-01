@@ -13,6 +13,7 @@ const {
   DRIVER_TYPE_SWIFT,
   DRIVER_TYPE_ALINK,
   DRIVER_TYPE_RTD_RA,
+  DRIVER_TYPE_DALI_GW
 } = require("../constants");
 const { get } = require("../actions");
 const RS21 = require("./RS21");
@@ -28,6 +29,7 @@ const intesisbox = require("./intesisbox");
 const rtdra = require("./RTD-RA");
 const alink = require("./alink");
 const me210_701 = require("./owen/me210_701");
+const dali_gw = require("./dali_gw");
 const mac = require("../mac");
 
 let run = {};
@@ -95,6 +97,10 @@ module.exports.manage = () => {
       case DRIVER_TYPE_ME210_701:
         run[id] = me210_701;
         me210_701.add(id);
+        break;
+      case DRIVER_TYPE_DALI_GW:
+        run[id] = dali_gw;
+        dali_gw.add(id);
         break;
     }
   });
