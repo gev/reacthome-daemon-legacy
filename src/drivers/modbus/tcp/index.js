@@ -58,6 +58,7 @@ const request = (getSize, fill) => (code) => (id, register, data) => {
     buffer.writeUInt8(code, 7);
     buffer.writeUInt16BE(register, 8);
     fill(buffer, data);
+    console.log(buffer, port, ip);
     send(buffer, port, ip);
   }
 }
