@@ -57,7 +57,7 @@ const request = (getSize, fill) => (code) => (id, register, data) => {
     buffer.writeUInt16BE(tid, 0);
     buffer.writeUInt16BE(0, 2);
     buffer.writeUInt16BE(size - 6, 4);
-    buffer.writeUInt8(21, 6);
+    buffer.writeUInt8(1, 6);
     buffer.writeUInt8(code, 7);
     buffer.writeUInt16BE(register, 8);
     fill(buffer, data);
