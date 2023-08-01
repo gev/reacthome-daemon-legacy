@@ -46,6 +46,7 @@ const send = async (data, port, host) => {
 let tid = 0;
 
 const request = (getSize, fill) => (code) => (id, register, data) => {
+  console.log(get(id))
   const { ip, port } = get(id) || {};
   if (ip && port) {
     tid = (tid + 1) % 0xffff;
