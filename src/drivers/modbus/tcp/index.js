@@ -7,6 +7,9 @@ const {
   WRITE_REGISTER,
   WRITE_REGISTERS,
   MODBUS,
+  READ_COILS,
+  READ_INPUTS,
+  WRITE_COIL,
 } = require('../constants');
 const driver = require('../../driver');
 
@@ -65,8 +68,11 @@ const request12 = request(
   }
 );
 
+module.exports.readCoils = request12(READ_COILS);
+module.exports.readInputs = request12(READ_INPUTS);
 module.exports.readHoldingRegisters = request12(READ_HOLDING_REGISTERS);
 module.exports.readInputRegisters = request12(READ_INPUT_REGISTERS);
+module.exports.writeCoil = request8(WRITE_COIL);
 module.exports.writeRegister = request12(WRITE_REGISTER);
 module.exports.writeRegisters = request(
   (data) => 13 + 2 * data.length,
@@ -89,3 +95,5 @@ const handle = ({ id, data }) => {
 };
 
 module.exports.handle = handle;
+
+module.exports.run = () => { };

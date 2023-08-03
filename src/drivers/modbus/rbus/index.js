@@ -104,3 +104,5 @@ module.exports.handle = ({ id, data }) => {
     driver.handle({ id: bind, data: data.slice(1) });
   }
 };
+
+module.exports.run = () => { };
