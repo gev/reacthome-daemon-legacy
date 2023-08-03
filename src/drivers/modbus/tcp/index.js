@@ -15,7 +15,7 @@ const driver = require('../../driver');
 
 const sockets = new Map();
 
-const connect = (host, port) => new Promise((resolve, reject) => {
+const connect = (host, port, handle) => new Promise((resolve, reject) => {
   const socket = net.connect({ host, port }, () => {
     resolve(socket);
   });
@@ -26,14 +26,14 @@ const connect = (host, port) => new Promise((resolve, reject) => {
   socket.on('data', handle);
 });
 
-const send = async (data, port, host) => {
+const send = async (data, port, host, handle) => {
   try {
     const id = `${host}:${port}`;
     let socket;
     if (sockets.has(id)) {
       socket = sockets.get(id)
     } else {
-      socket = await connect(host, port);
+      socket = await connect(host, port, handle);
       sockets.set(id, socket);
     }
     await socket.write(data);
@@ -57,7 +57,7 @@ const request = (getSize, fill) => (code) => (id, register, data) => {
     buffer.writeUInt8(code, 7);
     buffer.writeUInt16BE(register, 8);
     fill(buffer, data);
-    send(buffer, port, host);
+    send(buffer, port, host, handle(id));
   }
 }
 
@@ -85,7 +85,7 @@ module.exports.writeRegisters = request(
   }
 )(WRITE_REGISTERS);
 
-const handle = ({ id, data }) => {
+const handle = (id) => (data) => {
   console.log(data);
   const address = data[0];
   const { bind } = get(`${id}/${MODBUS}/${address}`) || {};
