@@ -8,7 +8,7 @@ const {
   DRIVER_TYPE_MODBUS,
   DRIVER_TYPE_VARMANN,
   DRIVER_TYPE_INTESIS_BOX,
-  DRIVER_TYPE_ME210_701,
+  // DRIVER_TYPE_ME210_701,
   DRIVER_TYPE_NOVA,
   DRIVER_TYPE_SWIFT,
   DRIVER_TYPE_ALINK,
@@ -31,82 +31,86 @@ const varmann = require("./varmann");
 const intesisbox = require("./intesisbox");
 const rtdra = require("./RTD-RA");
 const alink = require("./alink");
-const me210_701 = require("./owen/me210_701");
+// const me210_701 = require("./owen/me210_701");
 const dali_gw = require("./dali_gw");
 const mac = require("../mac");
 
-let run = {};
+let instances = require("./drivers");
 
 module.exports.manage = () => {
   const { project } = get(mac()) || {};
   if (project === undefined) return;
   const { driver } = get(project) || {};
-  Object.entries(run).forEach(([_, drv]) => {
-    if (drv.stop) drv.stop();
-  });
-  run = {};
+
+  instances.clear();
   nova.clear();
+  swift.clear();
   varmann.clear();
   intesisbox.clear();
+  rtdra.clear();
+  alink.clear();
+  // me210_701.clear()
+  dali_gw.clear();
+
   if (!Array.isArray(driver)) return;
   driver.forEach((id) => {
     const { type } = get(id) || {};
     switch (type) {
       case DRIVER_TYPE_RS21:
-        run[id] = new RS21(id);
+        instances.add(id, new RS21(id));
         break;
       case DRIVER_TYPE_ARTNET:
-        run[id] = new Artnet(id);
+        instances.add(id, new Artnet(id));
         break;
       case DRIVER_TYPE_BB_PLC1:
-        run[id] = new Plc1(id);
+        instances.add(id, new Plc1(id));
         break;
       case DRIVER_TYPE_BB_PLC2:
-        run[id] = new Plc2(id);
+        instances.add(id, new Plc2(id));
         break;
       case DRIVER_TYPE_M206:
-        run[id] = new M206(id);
+        instances.add(id, new M206(id));
         break;
       case DRIVER_TYPE_M230:
-        run[id] = new M230(id);
+        instances.add(id, new M230(id));
         break;
       case DRIVER_TYPE_MODBUS:
       case DRIVER_TYPE_MODBUS_RBUS:
-        run[id] = modbusRBUS;
+        instances.add(id, modbusRBUS);
         break;
       case DRIVER_TYPE_MODBUS_TCP:
-        run[id] = modbusTCP;
+        instances.add(id, modbusTCP);
         break;
       case DRIVER_TYPE_NOVA:
-        run[id] = nova;
+        instances.add(id, nova);
         nova.add(id);
         break;
       case DRIVER_TYPE_SWIFT:
-        run[id] = swift;
+        instances.add(id, swift);
         swift.add(id);
         break;
       case DRIVER_TYPE_VARMANN:
-        run[id] = varmann;
+        instances.add(id, varmann);
         varmann.add(id);
         break;
       case DRIVER_TYPE_INTESIS_BOX:
-        run[id] = intesisbox;
+        instances.add(id, intesisbox);
         intesisbox.add(id);
         break;
       case DRIVER_TYPE_RTD_RA:
-        run[id] = rtdra;
+        instances.add(id, rtdra);
         rtdra.add(id);
         break;
       case DRIVER_TYPE_ALINK:
-        run[id] = alink;
+        instances.add(id, alink);
         alink.add(id);
         break;
-      case DRIVER_TYPE_ME210_701:
-        run[id] = me210_701;
-        me210_701.add(id);
-        break;
+      // case DRIVER_TYPE_ME210_701:
+      //   instances.add(id, me210_701);
+      //   me210_701.add(id);
+      //   break;
       case DRIVER_TYPE_DALI_GW:
-        run[id] = dali_gw;
+        instances.add(id, dali_gw);
         dali_gw.add(id);
         break;
     }
@@ -114,13 +118,15 @@ module.exports.manage = () => {
 };
 
 module.exports.run = (action) => {
-  if (run[action.id] && run[action.id].run) {
-    run[action.id].run(action);
+  const instance = instances.get(action.id)
+  if (instance && instance.run) {
+    instance.run(action);
   }
 };
 
 module.exports.handle = (action) => {
-  if (run[action.id] && run[action.id].handle) {
-    run[action.id].handle(action);
+  const instance = instances.get(action.id)
+  if (instance && instance.handle) {
+    instance.handle(action);
   }
 };

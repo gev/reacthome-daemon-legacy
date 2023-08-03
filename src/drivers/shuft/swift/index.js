@@ -10,7 +10,7 @@ const {
   readHoldingRegisters,
   writeRegisters,
   readInputRegisters,
-} = require("../../modbus/rbus");
+} = require("../../modbus");
 const {
   READ_HOLDING_REGISTERS,
   WRITE_REGISTER,

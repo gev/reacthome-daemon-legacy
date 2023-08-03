@@ -1,4 +1,4 @@
-const { readHoldingRegisters } = require("../modbus/tcp");
+const { readHoldingRegisters } = require("../modbus");
 
 
 

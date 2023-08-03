@@ -1,9 +1,7 @@
 
 const { get, set } = require('../../actions');
-const { ACTION_ON, ACTION_OFF, ACTION_DALI, DALI_GROUP, DALI_LIGHT } = require('../../constants');
-const { writeRegister } = require('../modbus/tcp');
-const { READ_HOLDING_REGISTERS } = require('../modbus/constants');
-const { delay } = require('../../util');
+const { DALI_GROUP, DALI_LIGHT } = require('../../constants');
+const { writeRegister } = require('../modbus');
 
 const instance = new Map();
 
