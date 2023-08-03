@@ -94,6 +94,6 @@ const handle = (id) => (data) => {
   }
 };
 
-module.exports.handle = handle;
+module.exports.handle = () => { };
 
 module.exports.run = () => { };
