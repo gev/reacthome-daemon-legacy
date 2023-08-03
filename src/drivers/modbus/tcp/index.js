@@ -31,7 +31,7 @@ const connect = (host, port) => new Promise((resolve, reject) => {
   });
 });
 
-const send = async (data, port, host) => {
+const send = async (data, port, host, handle) => {
   try {
     const id = `${host}:${port}`;
     let socket;
@@ -42,6 +42,7 @@ const send = async (data, port, host) => {
       sockets.set(id, socket);
       socket.callbacks = [];
     }
+    socket.callbacks[tid] = handle
     await socket.write(data);
   } catch (e) {
     console.error(e);
@@ -63,8 +64,7 @@ const request = (getSize, fill) => (code) => (id, address, register, data) => {
     buffer.writeUInt8(code, 7);
     buffer.writeUInt16BE(register, 8);
     fill(buffer, data);
-    socket.callbacks[tid] = handle(id, address, register)
-    send(buffer, port, host,);
+    send(buffer, port, host, handle(id, address, register));
   }
 }
 
