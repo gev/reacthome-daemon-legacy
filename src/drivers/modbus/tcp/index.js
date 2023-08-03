@@ -20,11 +20,7 @@ const connect = (host, port) => new Promise((resolve, reject) => {
     socket.destroy();
     reject(err);
   });
-  socket.on('data', (data) => {
-    // const b = Buffer.alloc(4);
-    // b.writeUInt16BE(data.readUInt16BE(9), 2);
-    // b.writeUInt16BE(data.readUInt16BE(11), 0);
-  });
+  socket.on('data', handle);
 });
 
 const send = async (data, port, host) => {
@@ -83,6 +79,13 @@ module.exports.writeRegisters = request(
   }
 )(WRITE_REGISTERS);
 
-module.exports.handle = ({ id, data }) => {
-  driver.run({ id, data: data.slice(1) });
-}
+const handle = ({ id, data }) => {
+  console.log(data);
+  const address = data[0];
+  const { bind } = get(`${id}/${MODBUS}/${address}`) || {};
+  if (bind) {
+    driver.handle({ id: bind, data: data.slice(1) });
+  }
+};
+
+module.exports.handle = handle;

@@ -13,7 +13,9 @@ const {
   DRIVER_TYPE_SWIFT,
   DRIVER_TYPE_ALINK,
   DRIVER_TYPE_RTD_RA,
-  DRIVER_TYPE_DALI_GW
+  DRIVER_TYPE_DALI_GW,
+  DRIVER_TYPE_MODBUS_RBUS,
+  DRIVER_TYPE_MODBUS_TCP
 } = require("../constants");
 const { get } = require("../actions");
 const RS21 = require("./RS21");
@@ -21,7 +23,8 @@ const Artnet = require("./artnet");
 const { Plc1, Plc2 } = require("./bb");
 const M230 = require("./M230");
 const M206 = require("./M206");
-const modbus = require("./modbus/rbus");
+const modbusRBUS = require("./modbus/rbus");
+const modbusTCP = require("./modbus/tcp");
 const nova = require("./shuft/nova");
 const swift = require("./shuft/swift");
 const varmann = require("./varmann");
@@ -68,7 +71,11 @@ module.exports.manage = () => {
         run[id] = new M230(id);
         break;
       case DRIVER_TYPE_MODBUS:
-        run[id] = modbus;
+      case DRIVER_TYPE_MODBUS_RBUS:
+        run[id] = modbusRBUS;
+        break;
+      case DRIVER_TYPE_MODBUS_TCP:
+        run[id] = modbusTCP;
         break;
       case DRIVER_TYPE_NOVA:
         run[id] = nova;
