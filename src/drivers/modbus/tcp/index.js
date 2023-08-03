@@ -25,7 +25,9 @@ const connect = (host, port) => new Promise((resolve, reject) => {
     reject(err);
   });
   socket.on('data', (data) => {
-    socket.callbacks(data.readUint16BE(0))(data.slice(1));
+    const tid = data.readUint16BE(0);
+    socket.callbacks[tid](data.slice(1));
+    socket.callbacks[tid] = null;
   });
 });
 
