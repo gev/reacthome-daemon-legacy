@@ -15,26 +15,30 @@ const driver = require('../../driver');
 
 const sockets = new Map();
 
-const connect = (host, port, handle) => new Promise((resolve, reject) => {
+const connect = (host, port) => new Promise((resolve, reject) => {
   const socket = net.connect({ host, port }, () => {
     resolve(socket);
   });
   socket.on('error', err => {
+    socket.callbacks = [];
     socket.destroy();
     reject(err);
   });
-  socket.on('data', handle);
+  socket.on('data', (data) => {
+    socket.callbacks(data.readUint16BE(0))(data.slice(1));
+  });
 });
 
-const send = async (data, port, host, handle) => {
+const send = async (data, port, host) => {
   try {
     const id = `${host}:${port}`;
     let socket;
     if (sockets.has(id)) {
       socket = sockets.get(id)
     } else {
-      socket = await connect(host, port, handle);
+      socket = await connect(host, port);
       sockets.set(id, socket);
+      socket.callbacks = [];
     }
     await socket.write(data);
   } catch (e) {
@@ -57,7 +61,8 @@ const request = (getSize, fill) => (code) => (id, address, register, data) => {
     buffer.writeUInt8(code, 7);
     buffer.writeUInt16BE(register, 8);
     fill(buffer, data);
-    send(buffer, port, host, handle(id));
+    socket.callbacks[tid] = handle(id, address, register)
+    send(buffer, port, host,);
   }
 }
 
@@ -85,11 +90,10 @@ module.exports.writeRegisters = request(
   }
 )(WRITE_REGISTERS);
 
-const handle = (id) => (data) => {
-  const address = data[6];
+const handle = (id, address, register) => (data) => {
   const { bind } = get(`${id}/${MODBUS}/${address}`) || {};
   if (bind) {
-    driver.handle({ id: bind, data: data.slice(7) });
+    driver.handle({ id: bind, data: data.slice(7), address, register });
   }
 };
 
