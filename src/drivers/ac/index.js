@@ -62,7 +62,7 @@ const manage = (power, setpoint, ac) => {
   }
 };
 
-module.exports.handle = ({ type, id }) => {
+module.exports.run = ({ type, id }) => {
   const ac = get(id) || {};
   let enabled = ac.enabled;
   const { setpoint } = get(ac.thermostat) || {};
@@ -88,3 +88,5 @@ module.exports.handle = ({ type, id }) => {
     }
   }
 };
+
+module.exports.handle = () => { }

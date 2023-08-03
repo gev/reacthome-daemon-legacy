@@ -44,7 +44,7 @@ const send = (action, ip) => {
   parentPort.postMessage(action);
 }
 
-const handle = (action) => {
+const run = (action) => {
   switch (action.type) {
     case ACTION_DO: {
       const { index, value } = action;
@@ -80,7 +80,7 @@ const handle = (action) => {
           artnet.play(index, fade(value));
           break;
         }
-        case ARTNET_ON:{
+        case ARTNET_ON: {
           const { index } = action;
           if (!config.type[index]) return;
           config.state[index] = 255;
@@ -88,7 +88,7 @@ const handle = (action) => {
           artnet.play(index, set(255));
           break;
         }
-        case ARTNET_OFF:{
+        case ARTNET_OFF: {
           const { index } = action;
           if (!config.type[index]) return;
           config.state[index] = 0;
@@ -102,4 +102,4 @@ const handle = (action) => {
   }
 };
 
-parentPort.on('message', handle);
+parentPort.on('message', run);

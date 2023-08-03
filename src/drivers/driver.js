@@ -106,6 +106,12 @@ module.exports.manage = () => {
   });
 };
 
+module.exports.run = (action) => {
+  if (run[action.id] && run[action.id].run) {
+    run[action.id].run(action);
+  }
+};
+
 module.exports.handle = (action) => {
   if (run[action.id] && run[action.id].handle) {
     run[action.id].handle(action);

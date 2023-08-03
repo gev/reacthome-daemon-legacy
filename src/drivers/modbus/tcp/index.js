@@ -84,5 +84,5 @@ module.exports.writeRegisters = request(
 )(WRITE_REGISTERS);
 
 module.exports.handle = ({ id, data }) => {
-  driver.handle({ id, data: data.slice(1) });
+  driver.run({ id, data: data.slice(1) });
 }

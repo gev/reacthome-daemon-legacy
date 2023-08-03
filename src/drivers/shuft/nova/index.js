@@ -53,7 +53,7 @@ const sync = async (id) => {
   }
 };
 
-module.exports.handle = (action) => {
+module.exports.run = (action) => {
   const { id, type } = action;
   switch (type) {
     case ACTION_ON: {
@@ -72,21 +72,22 @@ module.exports.handle = (action) => {
       set(id, { setpoint: action.value, setpoint_: action.value });
       break;
     }
-    default: {
-      const { id, data } = action;
-      switch (data[0]) {
-        case READ_HOLDING_REGISTERS: {
-          const fan_speed = data.readUInt16BE(66);
-          const setpoint = data.readUInt16BE(64) / 10;
-          set(id, { fan_speed, setpoint });
-          break;
-        }
-        case READ_INPUT_REGISTERS: {
-          const value = data.readUInt16BE(2) & 0x1;
-          set(id, { value });
-          break;
-        }
-      }
+  }
+};
+
+module.exports.handle = (action) => {
+  const { id, data } = action;
+  switch (data[0]) {
+    case READ_HOLDING_REGISTERS: {
+      const fan_speed = data.readUInt16BE(66);
+      const setpoint = data.readUInt16BE(64) / 10;
+      set(id, { fan_speed, setpoint });
+      break;
+    }
+    case READ_INPUT_REGISTERS: {
+      const value = data.readUInt16BE(2) & 0x1;
+      set(id, { value });
+      break;
     }
   }
 };

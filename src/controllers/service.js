@@ -281,7 +281,7 @@ const run = (action) => {
         switch (dev.type) {
           case DRIVER_TYPE_BB_PLC1:
           case DRIVER_TYPE_BB_PLC2: {
-            drivers.handle(action);
+            drivers.run(action);
             break;
           }
           case DEVICE_TYPE_AO_4_DIN:
@@ -723,11 +723,11 @@ const run = (action) => {
         break;
       }
       case ACTION_ARTNET: {
-        drivers.handle(action);
+        drivers.run(action);
         break;
       }
       case ACTION_DALI: {
-        drivers.handle(action);
+        drivers.run(action);
         break;
       }
       case ACTION_RGB_DIM: {
@@ -809,7 +809,7 @@ const run = (action) => {
                   break;
                 }
                 case DRIVER_TYPE_ARTNET: {
-                  drivers.handle({
+                  drivers.run({
                     id: dev,
                     index,
                     action: ARTNET_FADE,
@@ -819,7 +819,7 @@ const run = (action) => {
                   break;
                 }
                 case DRIVER_TYPE_DALI_GW: {
-                  drivers.handle({
+                  drivers.run({
                     id: dev,
                     kind,
                     index,
@@ -906,7 +906,7 @@ const run = (action) => {
         const o = get(id) || {};
         if (o.disabled) return;
         if (o.type === DRIVER_TYPE_INTESIS_BOX || o.type === DRIVER_TYPE_NOVA || o.type === DRIVER_TYPE_SWIFT || o.type === DRIVER_TYPE_ALINK) {
-          drivers.handle(action);
+          drivers.run(action);
           return;
         }
         // if (o.type === AC) {
@@ -1011,7 +1011,7 @@ const run = (action) => {
             case DRIVER_TYPE_ARTNET: {
               switch (type) {
                 case ARTNET_TYPE_DIMMER:
-                  drivers.handle({
+                  drivers.run({
                     id: dev,
                     index,
                     action: ARTNET_FADE,
@@ -1020,7 +1020,7 @@ const run = (action) => {
                   });
                   break;
                 default:
-                  drivers.handle({
+                  drivers.run({
                     id: dev,
                     index,
                     type: ACTION_DO,
@@ -1031,7 +1031,7 @@ const run = (action) => {
               break;
             }
             case DRIVER_TYPE_DALI_GW: {
-              drivers.handle({
+              drivers.run({
                 id: dev,
                 kind,
                 index,
@@ -1041,7 +1041,7 @@ const run = (action) => {
             }
             case DRIVER_TYPE_BB_PLC1:
             case DRIVER_TYPE_BB_PLC2: {
-              drivers.handle({ id: dev, index, value: ON });
+              drivers.run({ id: dev, index, value: ON });
               break;
             }
             default: {
@@ -1070,7 +1070,7 @@ const run = (action) => {
         const o = get(id) || {};
         if (o.disabled) return;
         if (o.type === DRIVER_TYPE_INTESIS_BOX || o.type === DRIVER_TYPE_NOVA || o.type === DRIVER_TYPE_SWIFT || o.type === DRIVER_TYPE_ALINK) {
-          drivers.handle(action);
+          drivers.run(action);
           return;
         }
         // if (o.type === AC) {
@@ -1169,7 +1169,7 @@ const run = (action) => {
             case DRIVER_TYPE_ARTNET: {
               switch (type) {
                 case ARTNET_TYPE_DIMMER:
-                  drivers.handle({
+                  drivers.run({
                     id: dev,
                     index,
                     action: ARTNET_FADE,
@@ -1178,7 +1178,7 @@ const run = (action) => {
                   });
                   break;
                 default:
-                  drivers.handle({
+                  drivers.run({
                     id: dev,
                     index,
                     type: ACTION_DO,
@@ -1189,7 +1189,7 @@ const run = (action) => {
               break;
             }
             case DRIVER_TYPE_DALI_GW: {
-              drivers.handle({
+              drivers.run({
                 id: dev,
                 kind,
                 index,
@@ -1199,7 +1199,7 @@ const run = (action) => {
             }
             case DRIVER_TYPE_BB_PLC1:
             case DRIVER_TYPE_BB_PLC2: {
-              drivers.handle({ id: dev, index, value: OFF });
+              drivers.run({ id: dev, index, value: OFF });
               break;
             }
             default: {
@@ -1267,7 +1267,7 @@ const run = (action) => {
               break;
             }
             case DRIVER_TYPE_ARTNET: {
-              drivers.handle({
+              drivers.run({
                 id: dev,
                 index,
                 action: ARTNET_FADE,
@@ -1277,7 +1277,7 @@ const run = (action) => {
               break;
             }
             case DRIVER_TYPE_DALI_GW: {
-              drivers.handle({
+              drivers.run({
                 id: dev,
                 kind,
                 index,
@@ -1367,7 +1367,7 @@ const run = (action) => {
               break;
             }
             case DRIVER_TYPE_ARTNET: {
-              drivers.handle({
+              drivers.run({
                 id: dev,
                 index,
                 action: ARTNET_FADE,
@@ -1377,7 +1377,7 @@ const run = (action) => {
               break;
             }
             case DRIVER_TYPE_DALI_GW: {
-              drivers.handle({
+              drivers.run({
                 id: dev,
                 kind,
                 index,
@@ -1463,7 +1463,7 @@ const run = (action) => {
           }
           set(id, { setpoint: value });
         } else if (dev.type === DRIVER_TYPE_INTESIS_BOX || dev.type === DRIVER_TYPE_NOVA || dev.type === DRIVER_TYPE_SWIFT || dev.type === DRIVER_TYPE_ALINK) {
-          drivers.handle(action);
+          drivers.run(action);
         } else {
           set(id, { setpoint: value });
         }
@@ -1973,7 +1973,7 @@ const run = (action) => {
       case ACTION_SET_MODE:
       case ACTION_SET_DIRECTION:
       case ACTION_SET_FAN_SPEED: {
-        drivers.handle(action);
+        drivers.run(action);
         break;
       }
       case ACTION_LANAMP: {

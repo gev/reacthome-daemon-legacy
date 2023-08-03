@@ -31,7 +31,7 @@ const sync = async (id) => {
   }
 };
 
-module.exports.handle = (action) => {
+module.exports.run = (action) => {
   const { id, type } = action;
   switch (type) {
     case ACTION_ON: {
@@ -54,32 +54,33 @@ module.exports.handle = (action) => {
       set(id, { setpoint: action.value, synced: false });
       break;
     }
-    default: {
-      const { id, data } = action;
-      switch (data[0]) {
-        case READ_COILS: {
-          const dev = get(id) || {};
-          if (dev.synced) {
-            set(id, {
-              value: Boolean(data[2] & 0b10),
-              synced: true
-            })
-          }
-          break;
-        }
-        case READ_HOLDING_REGISTERS: {
-          const dev = get(id) || {};
-          if (dev.synced) {
-            set(id, {
-              mode: data.readUInt16BE(6),
-              setpoint: data.readUInt16BE(8) / 10,
-              fan_speed: data.readUInt16BE(10),
-              synced: true
-            })
-          }
-          break;
-        }
+  }
+};
+
+module.exports.handle = (action) => {
+  const { id, data } = action;
+  switch (data[0]) {
+    case READ_COILS: {
+      const dev = get(id) || {};
+      if (dev.synced) {
+        set(id, {
+          value: Boolean(data[2] & 0b10),
+          synced: true
+        })
       }
+      break;
+    }
+    case READ_HOLDING_REGISTERS: {
+      const dev = get(id) || {};
+      if (dev.synced) {
+        set(id, {
+          mode: data.readUInt16BE(6),
+          setpoint: data.readUInt16BE(8) / 10,
+          fan_speed: data.readUInt16BE(10),
+          synced: true
+        })
+      }
+      break;
     }
   }
 };

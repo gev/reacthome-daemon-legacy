@@ -25,7 +25,7 @@ const loop = (id) => async () => {
   instance.set(id, setImmediate(loop(id)));
 };
 
-module.exports.handle = (a) => {
+module.exports.run = (a) => {
   const { id, kind, index, value } = a;
   set(`${id}/${kind}/${index}`, { value, synced: false, dimmable: true })
 }

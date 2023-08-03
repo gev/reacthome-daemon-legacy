@@ -31,7 +31,7 @@ const sync = async (id) => {
   }
 };
 
-module.exports.handle = (action) => {
+module.exports.run = (action) => {
   const { id, type } = action;
   switch (type) {
     case ACTION_ON: {
@@ -58,24 +58,25 @@ module.exports.handle = (action) => {
       set(id, { setpoint: action.value, synced: false });
       break;
     }
-    default: {
-      const { id, data } = action;
-      switch (data[0]) {
-        case READ_HOLDING_REGISTERS: {
-          const dev = get(id) || {};
-          if (dev.synced) {
-            set(id, {
-              value: data.readUInt16BE(5),
-              mode: data.readUInt16BE(3),
-              fan_speed: data.readUInt16BE(2),
-              direction: data.readUInt16BE(4),
-              setpoint: data.readUInt16BE(1),
-              synced: true
-            })
-          }
-          break;
-        }
+  }
+};
+
+module.exports.handle = (action) => {
+  const { id, data } = action;
+  switch (data[0]) {
+    case READ_HOLDING_REGISTERS: {
+      const dev = get(id) || {};
+      if (dev.synced) {
+        set(id, {
+          value: data.readUInt16BE(5),
+          mode: data.readUInt16BE(3),
+          fan_speed: data.readUInt16BE(2),
+          direction: data.readUInt16BE(4),
+          setpoint: data.readUInt16BE(1),
+          synced: true
+        })
       }
+      break;
     }
   }
 };
