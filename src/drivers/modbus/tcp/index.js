@@ -44,8 +44,8 @@ const send = async (data, port, host, handle) => {
 
 let tid = 0;
 
-const request = (getSize, fill) => (code) => (id, register, data) => {
-  const { host, port, address } = get(id) || {};
+const request = (getSize, fill) => (code) => (id, address, register, data) => {
+  const { host, port } = get(id) || {};
   if (host && port) {
     tid = (tid + 1) % 0xffff;
     const size = getSize(data);

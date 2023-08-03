@@ -5,12 +5,12 @@ const { writeRegister } = require('../modbus');
 
 const instance = new Map();
 
-const sync = async (id, kind, r, n) => {
+const sync = async (id, kind, modbus, address, r, n) => {
   for (let i = 0; i < n; i += 1) {
     const ch = `${id}/${kind}/${i}`
     const { synced, value } = get(ch) || {};
     if (!synced) {
-      writeRegister(id, r + i * 5, value > 254 ? 254 : value);
+      writeRegister(modbus, address, r + i * 5, value > 254 ? 254 : value);
       set(ch, { synced: true });
       await (50);
     }
@@ -18,10 +18,17 @@ const sync = async (id, kind, r, n) => {
 }
 
 const loop = (id) => async () => {
-  await sync(id, DALI_GROUP, 2000, 16);
-  await sync(id, DALI_LIGHT, 3000, 64);
-  instance.set(id, setImmediate(loop(id)));
-};
+  const dev = get(id) || {};
+  const { bind, synced } = dev;
+  const [modbus, , address] = bind.split('/');
+  if (modbus) {
+    if (synced) {
+      await sync(id, DALI_GROUP, modbus, address, 2000, 16);
+      await sync(id, DALI_LIGHT, modbus, address, 3000, 64);
+      instance.set(id, setImmediate(loop(id)));
+    };
+  }
+}
 
 module.exports.run = (a) => {
   const { id, kind, index, value } = a;
