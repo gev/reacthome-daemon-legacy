@@ -19,7 +19,6 @@ const sync = async (id, kind, modbus, address, r, n) => {
 
 const loop = (id) => async () => {
   const dev = get(id) || {};
-  console.log(dev);
   const { bind } = dev;
   const [modbus, , address] = bind.split('/');
   await sync(id, DALI_GROUP, modbus, address, 2000, 16);
