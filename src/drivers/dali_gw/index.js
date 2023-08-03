@@ -20,13 +20,11 @@ const sync = async (id, kind, modbus, address, r, n) => {
 const loop = (id) => async () => {
   const dev = get(id) || {};
   console.log(dev);
-  const { bind, synced } = dev;
+  const { bind } = dev;
   const [modbus, , address] = bind.split('/');
-  if (synced) {
-    await sync(id, DALI_GROUP, modbus, address, 2000, 16);
-    await sync(id, DALI_LIGHT, modbus, address, 3000, 64);
-    instance.set(id, setImmediate(loop(id)));
-  };
+  await sync(id, DALI_GROUP, modbus, address, 2000, 16);
+  await sync(id, DALI_LIGHT, modbus, address, 3000, 64);
+  instance.set(id, setImmediate(loop(id)));
 }
 
 module.exports.run = (a) => {
