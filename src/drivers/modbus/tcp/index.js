@@ -86,7 +86,6 @@ module.exports.writeRegisters = request(
 )(WRITE_REGISTERS);
 
 const handle = (id) => (data) => {
-  console.log(data);
   const address = data[6];
   const { bind } = get(`${id}/${MODBUS}/${address}`) || {};
   if (bind) {

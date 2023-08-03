@@ -31,6 +31,10 @@ module.exports.run = (a) => {
   set(`${id}/${kind}/${index}`, { value, synced: false, dimmable: true })
 }
 
+module.exports.handle = ({ id, data }) => {
+  console.log(id, data);
+}
+
 
 module.exports.clear = () => {
   instance.forEach(i => clearImmediate(i))
