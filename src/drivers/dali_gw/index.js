@@ -19,6 +19,7 @@ const sync = async (id, kind, modbus, address, r, n) => {
 
 const loop = (id) => async () => {
   const dev = get(id) || {};
+  console.log(dev);
   const { bind, synced } = dev;
   const [modbus, , address] = bind.split('/');
   if (synced) {
