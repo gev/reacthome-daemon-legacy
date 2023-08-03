@@ -24,31 +24,29 @@ const sync = async (id) => {
   const dev = get(id) || {};
   const { bind } = dev;
   const [modbus, , address] = bind.split("/");
-  if (modbus) {
-    let reading = true;
-    const { value_, fan_speed_, setpoint_ } = dev
-    if (value_ !== undefined) {
-      reading = false;
-      writeRegister(modbus, address, 0x2, value_);
-      set(id, { value_: undefined });
-    }
-    if (fan_speed_ !== undefined) {
-      reading = false;
-      await delay(100);
-      writeRegister(modbus, address, 0x20, fan_speed_);
-      set(id, { fan_speed_: undefined });
-    }
-    if (setpoint_ !== undefined) {
-      reading = false;
-      await delay(100);
-      writeRegister(modbus, address, 0x1f, setpoint_ * 10);
-      set(id, { setpoint_: undefined });
-    }
-    if (reading) {
-      readInputRegisters(modbus, address, 0x2, 1);
-      await delay(100);
-      readHoldingRegisters(modbus, address, 0x0, 33);
-    }
+  let reading = true;
+  const { value_, fan_speed_, setpoint_ } = dev
+  if (value_ !== undefined) {
+    reading = false;
+    writeRegister(modbus, address, 0x2, value_);
+    set(id, { value_: undefined });
+  }
+  if (fan_speed_ !== undefined) {
+    reading = false;
+    await delay(100);
+    writeRegister(modbus, address, 0x20, fan_speed_);
+    set(id, { fan_speed_: undefined });
+  }
+  if (setpoint_ !== undefined) {
+    reading = false;
+    await delay(100);
+    writeRegister(modbus, address, 0x1f, setpoint_ * 10);
+    set(id, { setpoint_: undefined });
+  }
+  if (reading) {
+    readInputRegisters(modbus, address, 0x2, 1);
+    await delay(100);
+    readHoldingRegisters(modbus, address, 0x0, 33);
   }
 };
 

@@ -11,17 +11,15 @@ const sync = (id) => {
   const dev = get(id) || {};
   const { bind, synced } = dev;
   const [modbus, , address] = (bind || '').split('/');
-  if (modbus && address) {
-    if (synced) {
-      readHoldingRegisters(modbus, address, 0x0, 25);
+  if (synced) {
+    readHoldingRegisters(modbus, address, 0x0, 25);
+  } else {
+    if (dev.broadcast) {
+      writeRegister(modbus, BROADCAST_ADDRESS, 0x0, dev.address);
+      set(id, { synced: true, broadcast: false });
     } else {
-      if (dev.broadcast) {
-        writeRegister(modbus, BROADCAST_ADDRESS, 0x0, dev.address);
-        set(id, { synced: true, broadcast: false });
-      } else {
-        writeRegister(modbus, address, 0x6, dev.fan_speed);
-        set(id, { synced: true });
-      }
+      writeRegister(modbus, address, 0x6, dev.fan_speed);
+      set(id, { synced: true });
     }
   }
 };

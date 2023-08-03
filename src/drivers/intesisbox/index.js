@@ -13,21 +13,19 @@ const sync = async (id) => {
   const dev = get(id) || {};
   const { bind, synced } = dev;
   const [modbus, , address] = bind.split('/');
-  if (modbus && address) {
-    if (synced) {
-      readHoldingRegisters(modbus, address, 0x0, 12);
-    } else {
-      writeRegister(modbus, address, 0x0, dev.value);
-      await delay(100);
-      writeRegister(modbus, address, 0x1, dev.mode);
-      await delay(100);
-      writeRegister(modbus, address, 0x2, dev.fan_speed);
-      await delay(100);
-      writeRegister(modbus, address, 0x3, dev.direction);
-      await delay(100);
-      writeRegister(modbus, address, 0x4, dev.setpoint);
-      set(id, { synced: true });
-    }
+  if (synced) {
+    readHoldingRegisters(modbus, address, 0x0, 12);
+  } else {
+    writeRegister(modbus, address, 0x0, dev.value);
+    await delay(100);
+    writeRegister(modbus, address, 0x1, dev.mode);
+    await delay(100);
+    writeRegister(modbus, address, 0x2, dev.fan_speed);
+    await delay(100);
+    writeRegister(modbus, address, 0x3, dev.direction);
+    await delay(100);
+    writeRegister(modbus, address, 0x4, dev.setpoint);
+    set(id, { synced: true });
   }
 };
 

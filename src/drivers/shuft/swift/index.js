@@ -23,18 +23,16 @@ const sync = (id) => {
   const dev = get(id) || {};
   const { bind, synced } = dev;
   const [modbus, , address] = bind.split("/");
-  if (modbus) {
-    if (synced) {
-      readInputRegisters(modbus, address, 0x2, 1);
-    } else {
-      writeRegister(modbus, address, 0x2, dev.value ? 1 : 0);
-      setTimeout(() => {
-        writeRegister(modbus, address, 0x20, dev.fan_speed);
-      }, 100);
-    }
-    // writeRegister(modbus, address, 0x1, dev.setpoint * 10);
-    set(id, { synced: true });
+  if (synced) {
+    readInputRegisters(modbus, address, 0x2, 1);
+  } else {
+    writeRegister(modbus, address, 0x2, dev.value ? 1 : 0);
+    setTimeout(() => {
+      writeRegister(modbus, address, 0x20, dev.fan_speed);
+    }, 100);
   }
+  // writeRegister(modbus, address, 0x1, dev.setpoint * 10);
+  set(id, { synced: true });
 
 };
 
