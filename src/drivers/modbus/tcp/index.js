@@ -87,10 +87,10 @@ module.exports.writeRegisters = request(
 
 const handle = (id) => (data) => {
   console.log(data);
-  const address = data[0];
+  const address = data[6];
   const { bind } = get(`${id}/${MODBUS}/${address}`) || {};
   if (bind) {
-    driver.handle({ id: bind, data: data.slice(1) });
+    driver.handle({ id: bind, data: data.slice(7) });
   }
 };
 
