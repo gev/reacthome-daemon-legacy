@@ -6,7 +6,7 @@ const CLIENT_GROUP = "224.0.0.2";
 const CLIENT_PORT = 2021;
 
 module.exports.start = (id) => {
-  const socket = createSocket({ type: "udp4", reuseAddress: true });
+  const socket = createSocket({ type: "udp4", reuseAddr: true });
   const discoveryMessage = JSON.stringify({
     id,
     type: DISCOVERY,
