@@ -6,21 +6,18 @@ const CLIENT_GROUP = "224.0.0.2";
 const CLIENT_PORT = 2021;
 
 module.exports.start = (id) => {
-  const socket = createSocket("udp4");
+  const socket = createSocket({ type: "udp4", reuseAddress: true });
+  const discoveryMessage = JSON.stringify({
+    id,
+    type: DISCOVERY,
+    payload: get(id),
+  })
   socket.on("error", console.error);
   socket.on("message", (message, { port, address }) => {
     try {
       const { type } = JSON.parse(Buffer.from(message));
       if (type === DISCOVERY) {
-        socket.send(
-          JSON.stringify({
-            id,
-            type: DISCOVERY,
-            payload: get(id),
-          }),
-          port,
-          address
-        );
+        socket.send(discoveryMessage, port, address);
       }
     } catch (e) {
       console.error(e);
@@ -30,4 +27,7 @@ module.exports.start = (id) => {
     socket.addMembership(CLIENT_GROUP);
   });
   socket.bind(CLIENT_PORT);
+  setInterval(() => {
+    socket.send(discoveryMessage, CLIENT_PORT, CLIENT_GROUP);
+  }, 10_000)
 };

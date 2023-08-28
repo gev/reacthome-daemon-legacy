@@ -2,7 +2,7 @@
 const firebase = require('firebase-admin');
 const { get } = require('../actions');
 const mac = require('../mac');
-const {deleteToken} = require ('./token');
+const { deleteToken } = require('./token');
 const serviceAccount = require('../../var/firebase.json');
 
 const sound = 'default';
@@ -18,7 +18,7 @@ const params = {
 };
 
 const notification = (action) => {
-  const {title, code} = get(mac());
+  const { title, code } = get(mac());
   return {
     title: action.title || title || code,
     body: action.message,
@@ -43,7 +43,7 @@ module.exports.dataMessage = (action) => ({
 module.exports.send = (token, message) => {
   firebase.messaging()
     .sendToDevice(token, message, params)
-    .then(({results = []} = {}) => {
+    .then(({ results = [] } = {}) => {
       for (const result of results) {
         if (result.error) {
           deleteToken(token);
