@@ -13,20 +13,9 @@ module.exports.start = (id) => {
     payload: get(id),
   })
   socket.on("error", console.error);
-  socket.on("message", (message, { port, address }) => {
-    try {
-      const { type } = JSON.parse(Buffer.from(message));
-      if (type === DISCOVERY) {
-        socket.send(discoveryMessage, port, address);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  });
   socket.on("listening", () => {
     socket.addMembership(CLIENT_GROUP);
   });
-  socket.bind(CLIENT_PORT);
   setInterval(() => {
     socket.send(discoveryMessage, CLIENT_PORT, CLIENT_GROUP);
   }, 10_000)
