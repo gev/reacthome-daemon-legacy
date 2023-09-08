@@ -17,7 +17,6 @@ module.exports.start = (id) => {
     socket.addMembership(CLIENT_GROUP);
   });
   setInterval(() => {
-    socket.send(discoveryMessage, CLIENT_PORT, "192.168.11.255");
     socket.send(discoveryMessage, CLIENT_PORT, CLIENT_GROUP);
   }, 10_000)
 };
