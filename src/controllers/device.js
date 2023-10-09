@@ -490,6 +490,7 @@ module.exports.manage = () => {
         }
         case ACTION_TEMPERATURE_EXT_DEP:
         case ACTION_TEMPERATURE_EXT: {
+          console.log(data);
           const dev_id =
             action === ACTION_TEMPERATURE_EXT
               ? Array.from(data)
