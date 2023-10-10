@@ -15,7 +15,6 @@ const {
   ACTION_RS485_MODE,
   ACTION_RS485_TRANSMIT,
   ACTION_TEMPERATURE,
-  ACTION_TEMPERATURE_EXT,
   ACTION_TEMPERATURE_CORRECT,
   ACTION_HUMIDITY,
   ACTION_ILLUMINATION,
@@ -63,12 +62,14 @@ const {
   ACTION_RGB,
   ACTION_IMAGE,
   ACTION_VIBRO,
-  ACTION_TEMPERATURE_EXT_DEP,
   DEVICE_TYPE_DIM4,
   DEVICE_TYPE_DIM8,
   DEVICE_TYPE_RS_HUB1_RS,
   ACTION_CO2,
   ACTION_ATS_MODE,
+  ACTION_TEMPERATURE_EXT_DEPRECATED,
+  ACTION_TEMPERATURE_EXT_OLD,
+  ACTION_TEMPERATURE_EXT,
 } = require("../constants");
 const {
   get,
@@ -488,14 +489,15 @@ module.exports.manage = () => {
           }
           break;
         }
-        case ACTION_TEMPERATURE_EXT_DEP:
+        case ACTION_TEMPERATURE_EXT_DEPRECATED:
+        case ACTION_TEMPERATURE_EXT_OLD:
         case ACTION_TEMPERATURE_EXT: {
           console.log(data);
           if (data.length < 15) {
             return;
           }
           const dev_id =
-            action === ACTION_TEMPERATURE_EXT
+            action === ACTION_TEMPERATURE_EXT || action === ACTION_TEMPERATURE_EXT_OLD
               ? Array.from(data)
                 .slice(7, 15)
                 .map((i) => i.toString(16).padStart(2, "0"))
