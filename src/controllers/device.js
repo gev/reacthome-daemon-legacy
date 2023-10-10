@@ -491,6 +491,9 @@ module.exports.manage = () => {
         case ACTION_TEMPERATURE_EXT_DEP:
         case ACTION_TEMPERATURE_EXT: {
           console.log(data);
+          if (data.length < 15) {
+            return;
+          }
           const dev_id =
             action === ACTION_TEMPERATURE_EXT
               ? Array.from(data)
@@ -501,6 +504,9 @@ module.exports.manage = () => {
                 .slice(7, 15)
                 .map((i) => `0${i.toString(16)}`.slice(-2))
                 .join(":");
+          if (data.length < 17) {
+            return;
+          }
           const temperature = data.readInt16LE(15) / 100;
           set(dev_id, {
             ip: address,
