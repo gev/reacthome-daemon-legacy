@@ -15,7 +15,8 @@ const {
   DRIVER_TYPE_RTD_RA,
   DRIVER_TYPE_DALI_GW,
   DRIVER_TYPE_MODBUS_RBUS,
-  DRIVER_TYPE_MODBUS_TCP
+  DRIVER_TYPE_MODBUS_TCP,
+  DRIVER_TYPE_COMFOVENT
 } = require("../constants");
 const { get } = require("../actions");
 const RS21 = require("./RS21");
