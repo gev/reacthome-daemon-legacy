@@ -1685,53 +1685,57 @@ const run = (action) => {
             run({ type: ACTION_SCRIPT_RUN, id: script });
           }
         };
-        const stopCool = make(STOP, onStopCool, mode);
-        const stopHeat = make(STOP, onStopHeat, mode);
+        const stopCool = make(STOP, onStopCool, COOL);
+        const stopHeat = make(STOP, onStopHeat, HEAT);
         const startCool = make(COOL, onStartCool, COOL);
         const startHeat = make(HEAT, onStartHeat, HEAT);
         set(site, { temperature });
-        if (temperature > setpoint - -heat_threshold) {
-          stopHeat();
-          startCool();
-        } else if (temperature < setpoint - cool_threshold) {
-          stopCool();
-          startHeat();
-        } else {
-          switch (mode) {
-            case HEAT: {
-              stopCool();
-              if (temperature < setpoint - heat_hysteresis) {
-                stopCool();
-                startHeat();
-              } else if (temperature > setpoint - (- heat_hysteresis)) {
-                stopHeat();
-              }
-              break;
-            }
-            case COOL: {
+        //if (temperature > setpoint - -heat_threshold) {
+        //   stopHeat();
+        //   startCool();
+        // } else if (temperature < setpoint - cool_threshold) {
+        //   stopCool();
+        //   startHeat();
+        // } else {
+        switch (mode) {
+          case HEAT: {
+            //stopCool();
+            if (temperature > setpoint - (- heat_threshold)) {
               stopHeat();
-              if (temperature > setpoint - (- cool_hysteresis)) {
-                stopHeat();
-                startCool();
-              } else if (temperature < setpoint - cool_hysteresis) {
-                stopCool();
-              }
-              break;
+              startCool();
+            } else if (temperature > setpoint - (- heat_hysteresis)) {
+              stopHeat();
+            } else if (temperature < setpoint - heat_hysteresis) {
+              startHeat();
             }
-            default: {
-              if (temperature > setpoint) {
-                stopHeat();
-                startCool();
-              } else if (temperature < setpoint) {
-                stopCool();
-                startHeat();
-              } else {
-                stopCool();
-                stopHeat();
-              }
+            break;
+          }
+          case COOL: {
+            //stopHeat();
+            if (temperature < setpoint - cool_threshold) {
+              stopCool();
+              startHeat();
+            } else if (temperature < setpoint - cool_hysteresis) {
+              stopCool();
+            } else if (temperature > setpoint - (- cool_hysteresis)) {
+              startCool();
+            }
+            break;
+          }
+          default: {
+            if (temperature > setpoint) {
+              stopHeat();
+              startCool();
+            } else if (temperature < setpoint) {
+              stopCool();
+              startHeat();
+            } else {
+              stopCool();
+              stopHeat();
             }
           }
         }
+        //}
         break;
       }
       case ACTION_LIMIT_HEATING_HANDLE: {
