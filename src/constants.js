@@ -321,6 +321,7 @@ module.exports.DRIVER_TYPE_MODBUS_RBUS = "MODBUS_RBUS";
 module.exports.DRIVER_TYPE_MODBUS_TCP = "MODBUS_TCP";
 module.exports.DRIVER_TYPE_NOVA = "NOVA";
 module.exports.DRIVER_TYPE_SWIFT = "SWIFT";
+module.exports.DRIVER_TYPE_COMFOVENT = "COMFOVENT";
 module.exports.DRIVER_TYPE_VARMANN = "VARMANN";
 module.exports.DRIVER_TYPE_INTESIS_BOX = "INTESIS_BOX";
 module.exports.DRIVER_TYPE_RTD_RA = "RT_DA";

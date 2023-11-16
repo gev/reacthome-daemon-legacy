@@ -27,6 +27,7 @@ const modbusRBUS = require("./modbus/rbus");
 const modbusTCP = require("./modbus/tcp");
 const nova = require("./shuft/nova");
 const swift = require("./shuft/swift");
+const comfovent = require("./comfovent");
 const varmann = require("./varmann");
 const intesisbox = require("./intesisbox");
 const rtdra = require("./RTD-RA");
@@ -45,6 +46,7 @@ module.exports.manage = () => {
   instances.clear();
   nova.clear();
   swift.clear();
+  comfovent.clear();
   varmann.clear();
   intesisbox.clear();
   rtdra.clear();
@@ -96,6 +98,10 @@ module.exports.manage = () => {
       case DRIVER_TYPE_INTESIS_BOX:
         instances.add(id, intesisbox);
         intesisbox.add(id);
+        break;
+      case DRIVER_TYPE_COMFOVENT:
+        instances.add(id, comfovent);
+        comfovent.add(id);
         break;
       case DRIVER_TYPE_RTD_RA:
         instances.add(id, rtdra);
