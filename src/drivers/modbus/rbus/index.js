@@ -42,7 +42,7 @@ const request = (getSize, fill) => (code) => (id, address, register, data) => {
         break;
       }
       default: {
-        console.log(buffer, ip);
+        // console.log(buffer, ip);
         device.send(buffer, ip);
       }
     }
@@ -99,7 +99,7 @@ module.exports.writeRegisters = request(
 )(WRITE_REGISTERS);
 
 module.exports.handle = ({ id, data }) => {
-  console.log(id, data);
+  // console.log(id, data);
   const address = data[0];
   const { bind } = get(`${id}/${MODBUS}/${address}`) || {};
   if (bind) {
