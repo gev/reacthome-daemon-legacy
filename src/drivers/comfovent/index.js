@@ -14,11 +14,11 @@ const sync = async (id) => {
   const { bind, synced } = dev;
   const [modbus, , address] = bind.split('/');
   if (synced) {
-    readHoldingRegisters(modbus, address, 0x1, 10);
+    readHoldingRegisters(modbus, address, 0x0, 10);
   } else {
-    writeRegister(modbus, address, 0x1, dev.value);
+    writeRegister(modbus, address, 0x0, dev.value);
     await delay(100);
-    writeRegister(modbus, address, 0x5, dev.mode);
+    writeRegister(modbus, address, 0x4, dev.mode);
     await delay(100);
     set(id, { synced: true });
   }
