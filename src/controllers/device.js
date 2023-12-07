@@ -70,6 +70,7 @@ const {
   ACTION_TEMPERATURE_EXT_DEPRECATED,
   ACTION_TEMPERATURE_EXT_OLD,
   ACTION_TEMPERATURE_EXT,
+  ACTION_RBUS_TRANSMIT,
 } = require("../constants");
 const {
   get,
@@ -104,10 +105,11 @@ module.exports.manage = () => {
     offline(id);
   });
 
-  device.handle((data, { address }) => {
+  device.handle((data, { address }, hub = null) => {
     try {
       const dev_mac = Array.from(data.slice(0, 6));
       const id = dev_mac.map((i) => `0${i.toString(16)}`.slice(-2)).join(":");
+      set(id, { hub });
       const action = data[6];
       switch (action) {
         case DEVICE_TYPE_PLC: {
@@ -339,14 +341,27 @@ module.exports.manage = () => {
           const index = data[7];
           const channel = `${id}/${RS485}/${index}`;
           const { bind } = get(channel) || {};
-          console.log(
-            "RS485",
-            Array.from(data)
-              .map((i) => i.toString(16).padStart(2, "0"))
-              .join(" ")
-          );
+          // console.log(
+          //   "RS485",
+          //   Array.from(data)
+          //     .map((i) => i.toString(16).padStart(2, "0"))
+          //     .join(" ")
+          // );
           drivers.handle({ id: bind, data: data.slice(8) });
           break;
+        }
+        case ACTION_RBUS_TRANSMIT: {
+          const buff = data.slice(7);
+          const mac = buff.slice(0, 6);
+          const did = Array.from(mac).map((i) => i.toString(16).padStart(2, '0')).join(':');
+          set(did({
+            port: buff[6],
+            address: buff[7],
+            hub: id,
+          }));
+          device.handle(Buffer.concat([mac, buff.slice(7)]), { address }, id);
+          break;
+
         }
         case ACTION_DIMMER: {
           const device = get(id) || {};

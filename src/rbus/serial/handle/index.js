@@ -1,5 +1,4 @@
 const { crc16modbus } = require('crc')
-const { ACTION_RBUS_TRANSMIT } = require('../../../constants')
 
 const WAITING_PREAMBLE = 0
 const WAITING_SIZE = 1
@@ -18,14 +17,7 @@ module.exports.handle = (rbus) => {
   let buff = Buffer.alloc(512)
 
   handle = (buff) => {
-    if (buff[0] === ACTION_RBUS_TRANSMIT) {
-      const x = buff.slice(1, 7)
-      const mac = Array.from(x).map(i => i.toString(16)).join(':')
-      rbus.pool[mac] = { port: buff[7], address: buff[8] }
-      rbus.socket.send(Buffer.concat([x, buff.slice(9)]))
-    } else {
-      rbus.socket.send(Buffer.concat([mac, buff]))
-    }
+    rbus.socket.send(Buffer.concat([mac, buff]))
   }
 
   const receivePreamble = (v) => {

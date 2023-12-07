@@ -7,7 +7,6 @@ const {
   DEVICE_TYPE_RELAY_2,
   DEVICE_TYPE_RELAY_2_DIN,
   ACTION_GET_STATE,
-  ACTION_RBUS_TRANSMIT,
   DEVICE_TYPE_MIX_1_RS,
   DEVICE_TYPE_MIX_6x12_RS,
 } = require("../constants");
@@ -29,13 +28,11 @@ const online = (id, { type, version, ip, ready }) => {
       case DEVICE_TYPE_MIX_1_RS:
       case DEVICE_TYPE_MIX_6x12_RS:
       case DEVICE_TYPE_RELAY_2_DIN: {
-        device.send(
+        device.sendRBUS(
           Buffer.from([
-            ACTION_RBUS_TRANSMIT,
-            ...id.split(":").map((i) => parseInt(i, 16)),
             ACTION_GET_STATE,
           ]),
-          dev.ip
+          id
         );
         break;
       }
