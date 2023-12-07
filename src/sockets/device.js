@@ -9,7 +9,6 @@ const {
   IP_ADDRESS,
   ACTION_RBUS_TRANSMIT,
 } = require('../constants');
-const { get } = require('../db');
 const socket = require('./socket');
 
 const device = socket((socket) => {
