@@ -504,7 +504,7 @@ const run = (action) => {
           case DEVICE_TYPE_RELAY_2:
           case DEVICE_TYPE_RELAY_2_DIN:
           case DEVICE_TYPE_RELAY_12_RS: {
-            device.send(buffer, dev);
+            device.sendRBUS(buffer, action.id);
             break;
           }
           default:
