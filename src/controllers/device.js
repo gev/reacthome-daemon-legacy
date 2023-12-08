@@ -105,7 +105,7 @@ module.exports.manage = () => {
     offline(id);
   });
 
-  device.handle((data, { address }, hub = null) => {
+  const handleData = (data, { address }, hub = null) => {
     try {
       const dev_mac = Array.from(data.slice(0, 6));
       const id = dev_mac.map((i) => `0${i.toString(16)}`.slice(-2)).join(":");
@@ -359,7 +359,7 @@ module.exports.manage = () => {
             address: buff[7],
             hub: id,
           });
-          device.handle(Buffer.concat([mac, buff.slice(7)]), { address }, id);
+          handleData(Buffer.concat([mac, buff.slice(7)]), { address }, id);
           break;
 
         }
@@ -730,5 +730,6 @@ module.exports.manage = () => {
     } catch (e) {
       console.error(e);
     }
-  });
+  };
+  device.handle(handleData);
 };
