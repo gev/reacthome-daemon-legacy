@@ -361,7 +361,7 @@ module.exports.manage = () => {
           set(did, {
             port: buff[6],
             address: buff[7],
-            hub: id,
+            // hub: id,
           });
           handleData(Buffer.concat([mac, buff.slice(8)]), { address }, id);
           break;
