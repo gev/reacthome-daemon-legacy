@@ -356,14 +356,14 @@ module.exports.manage = () => {
           const buff = data.slice(7);
           const mac = buff.slice(0, 6);
           const did = Array.from(mac).map((i) => i.toString(16).padStart(2, '0')).join(':');
-          console.log(id, mac, did, buff[6], buff[7], buff.slice(7));
+          console.log(id, mac, did, buff[6], buff[7], buff.slice(8));
           const device = get(id) || {};
           set(did, {
             port: buff[6],
             address: buff[7],
             hub: id,
           });
-          handleData(Buffer.concat([mac, buff.slice(7)]), { address }, id);
+          handleData(Buffer.concat([mac, buff.slice(8)]), { address }, id);
           break;
 
         }
