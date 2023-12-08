@@ -352,6 +352,7 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_RBUS_TRANSMIT: {
+          console.log('receive', address, hub, data);
           const buff = data.slice(7);
           const mac = buff.slice(0, 6);
           const did = Array.from(mac).map((i) => i.toString(16).padStart(2, '0')).join(':');
