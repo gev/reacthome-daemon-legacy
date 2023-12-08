@@ -1,5 +1,5 @@
 
-const { get } = require('../actions');
+const { get } = require('../state');
 const {
   DISCOVERY_INTERVAL,
   ACTION_DISCOVERY,
