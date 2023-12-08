@@ -107,6 +107,7 @@ module.exports.manage = () => {
 
   const handleData = (data, { address }, hub = null) => {
     try {
+      if (hub) console.log('receive', address, hub, data)
       const dev_mac = Array.from(data.slice(0, 6));
       const id = dev_mac.map((i) => `0${i.toString(16)}`.slice(-2)).join(":");
       set(id, { hub });
@@ -351,6 +352,7 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_RBUS_TRANSMIT: {
+          console.log('receive', address, hub, data);
           const buff = data.slice(7);
           const mac = buff.slice(0, 6);
           const did = Array.from(mac).map((i) => i.toString(16).padStart(2, '0')).join(':');
