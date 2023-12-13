@@ -258,14 +258,15 @@ module.exports.DEVICE_TYPE_DIM_12_LED_RS = 0xad;
 module.exports.DEVICE_TYPE_RELAY_12_RS = 0xae;
 module.exports.DEVICE_TYPE_DIM_8_RS = 0xaf;
 module.exports.DEVICE_TYPE_RS_HUB1_RS = 0xb0;
-module.exports.DEVICE_TYPE_RS_HUB1 = 0xb1;
-module.exports.DEVICE_TYPE_RS_HUB4 = 0xb2;
+module.exports.DEVICE_TYPE_RS_HUB1_LEGACY = 0xb1;
+module.exports.DEVICE_TYPE_RS_HUB4_LEGACY = 0xb2;
 
 module.exports.DEVICE_TYPE_DIM_12_AC_RS = 0xb3;
 module.exports.DEVICE_TYPE_DIM_12_DC_RS = 0xb4;
 module.exports.DEVICE_TYPE_MIX_6x12_RS = 0xb5;
 
 module.exports.DEVICE_TYPE_SERVER = 0xc0;
+module.exports.DEVICE_TYPE_RS_HUB4 = 0xc1;
 
 
 module.exports.DEVICE_TYPE_TEMPERATURE_EXT = 0xf0;

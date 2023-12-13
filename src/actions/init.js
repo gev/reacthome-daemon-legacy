@@ -43,9 +43,9 @@ const {
   DEVICE_TYPE_RELAY_12_RS,
   DEVICE_TYPE_DIM_8_RS,
   DEVICE_TYPE_RS_HUB1_RS,
-  DEVICE_TYPE_RS_HUB1,
+  DEVICE_TYPE_RS_HUB1_LEGACY: DEVICE_TYPE_RS_HUB1,
   DEVICE_TYPE_SMART_4AM,
-  DEVICE_TYPE_RS_HUB4,
+  DEVICE_TYPE_RS_HUB4_LEGACY: DEVICE_TYPE_RS_HUB4,
   DEVICE_TYPE_SMART_6_PUSH,
   DEVICE_TYPE_MIX_6x12_RS,
   DEVICE_TYPE_SERVER,
@@ -594,7 +594,8 @@ module.exports.initialize = (id) => {
       a[30] = line_control;
       break;
     }
-    case DEVICE_TYPE_SERVER: {
+    case DEVICE_TYPE_SERVER:
+    case DEVICE_TYPE_RS_HUB4: {
       for (i = 1; i <= 4; i++) {
         const {
           is_rbus = true,
