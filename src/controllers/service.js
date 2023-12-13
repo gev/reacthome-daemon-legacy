@@ -161,6 +161,7 @@ const {
   DALI_FADE,
   ACTION_DALI,
   DRIVER_TYPE_COMFOVENT,
+  DEVICE_TYPE_RS_HUB4,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -712,6 +713,7 @@ const run = (action) => {
               const v = value[i];
               switch (deviceType) {
                 case DEVICE_TYPE_SERVER:
+                case DEVICE_TYPE_RS_HUB4:
                 case DEVICE_TYPE_DIM4:
                 case DEVICE_TYPE_DIM_4:
                 case DEVICE_TYPE_DIM8:
@@ -862,6 +864,7 @@ const run = (action) => {
           const value = isOn ? (i === "bind" ? last.value : last[i]) : 255;
           switch (deviceType) {
             case DEVICE_TYPE_SERVER:
+            case DEVICE_TYPE_RS_HUB4:
             case DEVICE_TYPE_DIM4:
             case DEVICE_TYPE_DIM_4:
             case DEVICE_TYPE_DIM8:
@@ -1015,6 +1018,7 @@ const run = (action) => {
           const { ip, type: deviceType, protocol } = get(dev);
           switch (deviceType) {
             case DEVICE_TYPE_SERVER:
+            case DEVICE_TYPE_RS_HUB4:
             case DEVICE_TYPE_DIM4:
             case DEVICE_TYPE_DIM_4:
             case DEVICE_TYPE_DIM8:
@@ -1149,6 +1153,7 @@ const run = (action) => {
           }
           switch (deviceType) {
             case DEVICE_TYPE_SERVER:
+            case DEVICE_TYPE_RS_HUB4:
             case DEVICE_TYPE_DIM4:
             case DEVICE_TYPE_DIM_4:
             case DEVICE_TYPE_DIM8:
@@ -1246,6 +1251,7 @@ const run = (action) => {
           }
           switch (deviceType) {
             case DEVICE_TYPE_SERVER:
+            case DEVICE_TYPE_RS_HUB4:
             case DEVICE_TYPE_DIM4:
             case DEVICE_TYPE_DIM_4:
             case DEVICE_TYPE_DIM8:
