@@ -1,5 +1,5 @@
 const os = require('os');
-const { rbus } = require("./src/rbus/v1");
+const { rbus } = require("./src/rbus/v3");
 
 const ifaces = os.networkInterfaces();
 const mac = (ifaces.eth0 || ifaces.eth1)[0]
