@@ -43,12 +43,12 @@ const {
   DEVICE_TYPE_RELAY_12_RS,
   DEVICE_TYPE_DIM_8_RS,
   DEVICE_TYPE_RS_HUB1_RS,
-  DEVICE_TYPE_RS_HUB1_LEGACY: DEVICE_TYPE_RS_HUB1,
+  DEVICE_TYPE_RS_HUB1_LEGACY,
+  DEVICE_TYPE_RS_HUB4_LEGACY,
+  DEVICE_TYPE_SERVER,
   DEVICE_TYPE_SMART_4AM,
-  DEVICE_TYPE_RS_HUB4_LEGACY: DEVICE_TYPE_RS_HUB4,
   DEVICE_TYPE_SMART_6_PUSH,
   DEVICE_TYPE_MIX_6x12_RS,
-  DEVICE_TYPE_SERVER,
 } = require("../constants");
 const { get, set, add } = require("./create");
 const { device } = require("../sockets");
@@ -544,7 +544,7 @@ module.exports.initialize = (id) => {
       a[13] = line_control;
       break;
     }
-    case DEVICE_TYPE_RS_HUB1: {
+    case DEVICE_TYPE_RS_HUB1_LEGACY: {
       a[0] = ACTION_INITIALIZE;
       const {
         is_rbus = true,
@@ -559,7 +559,7 @@ module.exports.initialize = (id) => {
       a[6] = line_control;
       break;
     }
-    case DEVICE_TYPE_RS_HUB4: {
+    case DEVICE_TYPE_RS_HUB4_LEGACY: {
       a[0] = ACTION_INITIALIZE;
       for (i = 1; i <= 4; i++) {
         const {
