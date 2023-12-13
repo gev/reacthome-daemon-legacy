@@ -44,10 +44,10 @@ const {
   DEVICE_TYPE_RS_HUB1_RS,
   DEVICE_TYPE_RS_HUB1_LEGACY,
   DEVICE_TYPE_RS_HUB4_LEGACY,
+  DEVICE_TYPE_SERVER,
   DEVICE_TYPE_SMART_4AM,
   DEVICE_TYPE_SMART_6_PUSH,
   DEVICE_TYPE_MIX_6x12_RS,
-  DEVICE_TYPE_SERVER,
 } = require("../constants");
 const { get, set, add } = require("./create");
 const { device } = require("../sockets");
