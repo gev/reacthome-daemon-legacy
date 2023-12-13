@@ -1,4 +1,4 @@
-const { ACTION_RBUS_TRANSMIT } = require("../../../constants");
+const { ACTION_RBUS_TRANSMIT } = require("../../../../constants");
 
 module.exports.handle = (rbus) => (data) => {
   // console.log("UDP receive", data)

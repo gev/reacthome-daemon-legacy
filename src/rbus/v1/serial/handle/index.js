@@ -1,5 +1,5 @@
 const { crc16modbus } = require('crc')
-const { ACTION_RBUS_TRANSMIT } = require('../../../constants')
+const { ACTION_RBUS_TRANSMIT } = require('../../../../constants')
 
 const WAITING_PREAMBLE = 0
 const WAITING_SIZE = 1
