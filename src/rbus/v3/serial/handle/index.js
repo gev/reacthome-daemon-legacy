@@ -1,8 +1,5 @@
 const { crc16modbus } = require('crc')
-<<<<<<<< HEAD:src/rbus/v4/serial/handle/index.js
-========
 const { ACTION_RBUS_TRANSMIT } = require('../../../../constants')
->>>>>>>> 32794ae (up):src/rbus/v1/serial/handle/index.js
 
 const WAITING_PREAMBLE = 0
 const WAITING_SIZE = 1
