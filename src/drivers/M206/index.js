@@ -3,7 +3,7 @@
 const crc16 = require('crc').crc16modbus;
 const { get, set } = require('../../actions');
 const { device } = require('../../sockets');
-const { ACTION_RS485_TRANSMIT, DEVICE_TYPE_RS_HUB1_RS, ACTION_RBUS_TRANSMIT } = require('../../constants');
+const { ACTION_RS485_TRANSMIT, DEVICE_TYPE_RS_HUB1_RS } = require('../../constants');
 
 const address = 27321232;
 const delay = 500;
@@ -85,13 +85,7 @@ module.exports = class {
     const buffer = Buffer.concat([header, payload, crc]);
     switch (type) {
       case DEVICE_TYPE_RS_HUB1_RS: {
-        device.send(Buffer.concat([
-          Buffer.from([
-            ACTION_RBUS_TRANSMIT,
-            ...dev.split(":").map((i) => parseInt(i, 16))
-          ]),
-          buffer
-        ]), ip);
+        device.sendRBUS(buffer, dev);
         break;
       }
       default: {

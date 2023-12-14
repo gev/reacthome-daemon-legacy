@@ -33,7 +33,6 @@ const {
   ACTION_ON,
   ACTION_OFF,
   ACTION_RS485_MODE,
-  ACTION_RBUS_TRANSMIT,
   ACTION_DIM,
   ACTION_ENABLE,
   ACTION_DISABLE,
@@ -247,14 +246,11 @@ const run = (action) => {
           case DEVICE_TYPE_DIM_12_AC_RS:
           case DEVICE_TYPE_DIM_12_DC_RS:
           case DEVICE_TYPE_MIX_6x12_RS: {
-            device.send(
-              Buffer.from([
-                ACTION_RBUS_TRANSMIT,
-                ...(action.id).split(":").map((i) => parseInt(i, 16)),
-                ACTION_FIND_ME,
-                action.finding,
-              ]),
-              dev.ip
+            device.sendRBUS(Buffer.from([
+              ACTION_FIND_ME,
+              action.finding,
+            ]),
+              action.id
             );
             break;
           }
@@ -300,76 +296,58 @@ const run = (action) => {
                 if (!group || !group.enabled) return;
                 switch (action.value) {
                   case ACTION_STOP: {
-                    device.send(
-                      Buffer.from([
-                        ACTION_RBUS_TRANSMIT,
-                        ...action.id.split(":").map((i) => parseInt(i, 16)),
-                        ACTION_DO,
-                        2 * action.index - 1,
-                        0,
-                      ]),
-                      dev.ip
+                    device.sendRBUS(Buffer.from([
+                      ACTION_DO,
+                      2 * action.index - 1,
+                      0,
+                    ]),
+                      action.id
                     );
-                    device.send(
-                      Buffer.from([
-                        ACTION_RBUS_TRANSMIT,
-                        ...action.id.split(":").map((i) => parseInt(i, 16)),
-                        ACTION_DO,
-                        2 * action.index,
-                        0,
-                      ]),
-                      dev.ip
+                    device.sendRBUS(Buffer.from([
+                      ACTION_DO,
+                      2 * action.index,
+                      0,
+                    ]),
+                      action.id
                     );
                     break;
                   }
                   case ACTION_OPEN: {
                     if (group.type === CLOSE_OPEN) {
-                      device.send(
-                        Buffer.from([
-                          ACTION_RBUS_TRANSMIT,
-                          ...action.id.split(":").map((i) => parseInt(i, 16)),
-                          ACTION_DO,
-                          2 * action.index,
-                          1,
-                        ]),
-                        dev.ip
+                      device.sendRBUS(Buffer.from([
+                        ACTION_DO,
+                        2 * action.index,
+                        1,
+                      ]),
+                        action.id
                       );
                     } else {
-                      device.send(
-                        Buffer.from([
-                          ACTION_RBUS_TRANSMIT,
-                          ...action.id.split(":").map((i) => parseInt(i, 16)),
-                          ACTION_DO,
-                          2 * action.index - 1,
-                          1,
-                        ]),
-                        dev.ip
+                      device.sendRBUS(Buffer.from([
+                        ACTION_DO,
+                        2 * action.index - 1,
+                        1,
+                      ]),
+                        action.id
                       );
                     }
                     break;
                   }
                   case ACTION_CLOSE: {
                     if (group.type === CLOSE_OPEN) {
-                      device.send(
-                        Buffer.from([
-                          ACTION_RBUS_TRANSMIT,
-                          ...action.id.split(":").map((i) => parseInt(i, 16)),
-                          ACTION_DO,
-                          2 * action.index - 1,
-                          1,
-                        ]),
-                        dev.ip
+                      device.sendRBUS(Buffer.from([
+                        ACTION_DO,
+                        2 * action.index - 1,
+                        1,
+                      ]),
+                        action.id
                       );
                     } else {
-                      device.send(
-                        Buffer.from([
-                          ACTION_RBUS_TRANSMIT,
-                          ...action.id.split(":").map((i) => parseInt(i, 16)),
-                          ACTION_DO,
-                          2 * action.index,
-                          1,
-                        ]),
-                        dev.ip
+                      device.sendRBUS(Buffer.from([
+                        ACTION_DO,
+                        2 * action.index,
+                        1,
+                      ]),
+                        action.id
                       );
                     }
                     break;
@@ -379,8 +357,6 @@ const run = (action) => {
               }
               default: {
                 const a = [
-                  ACTION_RBUS_TRANSMIT,
-                  ...action.id.split(":").map((i) => parseInt(i, 16)),
                   ACTION_DO,
                   action.index,
                 ];
@@ -401,7 +377,7 @@ const run = (action) => {
                     a.push(action.group);
                   }
                 }
-                device.send(Buffer.from(a), dev.ip);
+                device.sendRBUS(Buffer.from(a), action.id);
               }
             }
             break;
@@ -490,15 +466,12 @@ const run = (action) => {
             break;
           }
           case DEVICE_TYPE_AO_4_DIN: {
-            device.send(
-              Buffer.from([
-                ACTION_RBUS_TRANSMIT,
-                ...action.id.split(":").map((i) => parseInt(i, 16)),
-                ACTION_DO,
-                action.index,
-                action.value,
-              ]),
-              dev.ip
+            device.sendRBUS(Buffer.from([
+              ACTION_DO,
+              action.index,
+              action.value,
+            ]),
+              action.id
             );
             break;
           }
@@ -532,16 +505,7 @@ const run = (action) => {
           case DEVICE_TYPE_RELAY_2:
           case DEVICE_TYPE_RELAY_2_DIN:
           case DEVICE_TYPE_RELAY_12_RS: {
-            device.send(
-              Buffer.concat([
-                Buffer.from([
-                  ACTION_RBUS_TRANSMIT,
-                  ...action.id.split(":").map((i) => parseInt(i, 16)),
-                ]),
-                buffer,
-              ]),
-              dev.ip
-            );
+            device.sendRBUS(buffer, action.id);
             break;
           }
           default:
@@ -556,16 +520,13 @@ const run = (action) => {
           case DEVICE_TYPE_MIX_6x12_RS:
           case DEVICE_TYPE_RELAY_2:
           case DEVICE_TYPE_RELAY_2_DIN: {
-            device.send(
-              Buffer.from([
-                ACTION_RBUS_TRANSMIT,
-                ...action.id.split(":").map((i) => parseInt(i, 16)),
-                ACTION_DI_RELAY_SYNC,
-                action.index,
-                ...action.value[0],
-                ...action.value[1],
-              ]),
-              dev.ip
+            device.sendRBUS(Buffer.from([
+              ACTION_DI_RELAY_SYNC,
+              action.index,
+              ...action.value[0],
+              ...action.value[1],
+            ]),
+              action.id
             );
             break;
           }
@@ -586,14 +547,11 @@ const run = (action) => {
         const dev = get(action.id);
         switch (dev.type) {
           case DEVICE_TYPE_MIX_6x12_RS: {
-            device.send(
-              Buffer.from([
-                ACTION_RBUS_TRANSMIT,
-                ...action.id.split(":").map((i) => parseInt(i, 16)),
-                ACTION_ATS_MODE,
-                action.value,
-              ]),
-              dev.ip
+            device.sendRBUS(Buffer.from([
+              ACTION_ATS_MODE,
+              action.value,
+            ]),
+              action.id
             );
             break;
           }
@@ -628,54 +586,42 @@ const run = (action) => {
                 }
               }
               case DIM_SET:
-                device.send(
-                  Buffer.from([
-                    ACTION_RBUS_TRANSMIT,
-                    ...action.id.split(":").map((i) => parseInt(i, 16)),
-                    ACTION_DIMMER,
-                    action.index,
-                    action.action,
-                    action.value,
-                  ]),
-                  dev.ip
+                device.sendRBUS(Buffer.from([
+                  ACTION_DIMMER,
+                  action.index,
+                  action.action,
+                  action.value,
+                ]),
+                  action.id
                 );
                 break;
               case DIM_FADE:
-                device.send(
-                  Buffer.from([
-                    ACTION_RBUS_TRANSMIT,
-                    ...action.id.split(":").map((i) => parseInt(i, 16)),
-                    ACTION_DIMMER,
-                    action.index,
-                    action.action,
-                    action.value,
-                    velocity,
-                  ]),
-                  dev.ip
+                device.sendRBUS(Buffer.from([
+                  ACTION_DIMMER,
+                  action.index,
+                  action.action,
+                  action.value,
+                  velocity,
+                ]),
+                  action.id
                 );
                 break;
               case DIM_ON:
-                device.send(
-                  Buffer.from([
-                    ACTION_RBUS_TRANSMIT,
-                    ...action.id.split(":").map((i) => parseInt(i, 16)),
-                    ACTION_DIMMER,
-                    action.index,
-                    action.action,
-                  ]),
-                  dev.ip
+                device.sendRBUS(Buffer.from([
+                  ACTION_DIMMER,
+                  action.index,
+                  action.action,
+                ]),
+                  action.id
                 );
                 break;
               case DIM_OFF:
-                device.send(
-                  Buffer.from([
-                    ACTION_RBUS_TRANSMIT,
-                    ...action.id.split(":").map((i) => parseInt(i, 16)),
-                    ACTION_DIMMER,
-                    action.index,
-                    action.action,
-                  ]),
-                  dev.ip
+                device.sendRBUS(Buffer.from([
+                  ACTION_DIMMER,
+                  action.index,
+                  action.action,
+                ]),
+                  action.id
                 );
                 break;
             }
@@ -747,17 +693,14 @@ const run = (action) => {
           case DEVICE_TYPE_SMART_4A:
           case DEVICE_TYPE_SMART_4AM:
           case DEVICE_TYPE_SMART_6_PUSH: {
-            device.send(
-              Buffer.from([
-                ACTION_RBUS_TRANSMIT,
-                ...id.split(":").map((i) => parseInt(i, 16)),
-                ACTION_RGB,
-                index,
-                r,
-                g,
-                b,
-              ]),
-              ip
+            device.sendRBUS(Buffer.from([
+              ACTION_RGB,
+              index,
+              r,
+              g,
+              b,
+            ]),
+              action.id
             );
             break;
           }
@@ -792,22 +735,19 @@ const run = (action) => {
                 case DEVICE_TYPE_DIM_12_LED_RS:
                 case DEVICE_TYPE_DIM_12_AC_RS:
                 case DEVICE_TYPE_DIM_12_DC_RS: {
-                  device.send(
-                    Buffer.from([
-                      ACTION_RBUS_TRANSMIT,
-                      ...dev.split(":").map((i) => parseInt(i, 16)),
-                      ACTION_DIMMER,
-                      index,
-                      DIM_FADE,
-                      v,
-                      dev.type === DEVICE_TYPE_DIM_12_LED_RS ||
-                        dev.type === DEVICE_TYPE_DIM_12_AC_RS ||
-                        dev.type === DEVICE_TYPE_DIM_12_DC_RS ||
-                        dev.type === DEVICE_TYPE_DIM_8_RS
-                        ? DIM_VELOCITY
-                        : AO_VELOCITY,
-                    ]),
-                    ip
+                  device.sendRBUS(Buffer.from([
+                    ACTION_DIMMER,
+                    index,
+                    DIM_FADE,
+                    v,
+                    dev.type === DEVICE_TYPE_DIM_12_LED_RS ||
+                      dev.type === DEVICE_TYPE_DIM_12_AC_RS ||
+                      dev.type === DEVICE_TYPE_DIM_12_DC_RS ||
+                      dev.type === DEVICE_TYPE_DIM_8_RS
+                      ? DIM_VELOCITY
+                      : AO_VELOCITY,
+                  ]),
+                    action.id
                   );
                   break;
                 }
@@ -852,17 +792,14 @@ const run = (action) => {
           case DEVICE_TYPE_SMART_4A:
           case DEVICE_TYPE_SMART_4AM:
           case DEVICE_TYPE_SMART_6_PUSH: {
-            device.send(
-              Buffer.from([
-                ACTION_RBUS_TRANSMIT,
-                ...id.split(":").map((i) => parseInt(i, 16)),
-                ACTION_RGB,
-                index,
-                r,
-                g,
-                b,
-              ]),
-              ip
+            device.sendRBUS(Buffer.from([
+              ACTION_RGB,
+              index,
+              r,
+              g,
+              b,
+            ]),
+              action.id
             );
             break;
           }
@@ -877,16 +814,13 @@ const run = (action) => {
             .slice(-2)
             .map((i) => char2image[i]);
         const dev = get(id) || {};
-        device.send(
-          Buffer.from([
-            ACTION_RBUS_TRANSMIT,
-            ...id.split(":").map((i) => parseInt(i, 16)),
-            ACTION_IMAGE,
-            level || dev.level,
-            i2,
-            i1,
-          ]),
-          dev.ip
+        device.sendRBUS(Buffer.from([
+          ACTION_IMAGE,
+          level || dev.level,
+          i2,
+          i1,
+        ]),
+          action.id
         );
         break;
       }
@@ -965,30 +899,24 @@ const run = (action) => {
                 case DIM_TYPE_PWM:
                 case DIM_TYPE_RISING_EDGE:
                 case DIM_TYPE_FALLING_EDGE: {
-                  device.send(
-                    Buffer.from([
-                      ACTION_RBUS_TRANSMIT,
-                      ...dev.split(":").map((i) => parseInt(i, 16)),
-                      ACTION_DIMMER,
-                      index,
-                      DIM_FADE,
-                      value,
-                      DIM_VELOCITY,
-                    ]),
-                    ip
+                  device.sendRBUS(Buffer.from([
+                    ACTION_DIMMER,
+                    index,
+                    DIM_FADE,
+                    value,
+                    DIM_VELOCITY,
+                  ]),
+                    action.id
                   );
                   break;
                 }
                 default: {
-                  device.send(
-                    Buffer.from([
-                      ACTION_RBUS_TRANSMIT,
-                      ...dev.split(":").map((i) => parseInt(i, 16)),
-                      ACTION_DO,
-                      index,
-                      ON,
-                    ]),
-                    ip
+                  device.sendRBUS(Buffer.from([
+                    ACTION_DO,
+                    index,
+                    ON,
+                  ]),
+                    action.id
                   );
                 }
               }
@@ -1000,15 +928,12 @@ const run = (action) => {
             case DEVICE_TYPE_RELAY_2:
             case DEVICE_TYPE_RELAY_2_DIN:
             case DEVICE_TYPE_RELAY_12_RS: {
-              device.send(
-                Buffer.from([
-                  ACTION_RBUS_TRANSMIT,
-                  ...dev.split(":").map((i) => parseInt(i, 16)),
-                  ACTION_DO,
-                  index,
-                  ON,
-                ]),
-                ip
+              device.sendRBUS(Buffer.from([
+                ACTION_DO,
+                index,
+                ON,
+              ]),
+                action.id
               );
               break;
             }
@@ -1126,29 +1051,23 @@ const run = (action) => {
                 case DIM_TYPE_PWM:
                 case DIM_TYPE_RISING_EDGE:
                 case DIM_TYPE_FALLING_EDGE:
-                  device.send(
-                    Buffer.from([
-                      ACTION_RBUS_TRANSMIT,
-                      ...dev.split(":").map((i) => parseInt(i, 16)),
-                      ACTION_DIMMER,
-                      index,
-                      DIM_FADE,
-                      0,
-                      DIM_VELOCITY,
-                    ]),
-                    ip
+                  device.sendRBUS(Buffer.from([
+                    ACTION_DIMMER,
+                    index,
+                    DIM_FADE,
+                    0,
+                    DIM_VELOCITY,
+                  ]),
+                    action.id
                   );
                   break;
                 default:
-                  device.send(
-                    Buffer.from([
-                      ACTION_RBUS_TRANSMIT,
-                      ...dev.split(":").map((i) => parseInt(i, 16)),
-                      ACTION_DO,
-                      index,
-                      OFF,
-                    ]),
-                    ip
+                  device.sendRBUS(Buffer.from([
+                    ACTION_DO,
+                    index,
+                    OFF,
+                  ]),
+                    action.id
                   );
               }
               break;
@@ -1159,15 +1078,12 @@ const run = (action) => {
             case DEVICE_TYPE_RELAY_2:
             case DEVICE_TYPE_RELAY_2_DIN:
             case DEVICE_TYPE_RELAY_12_RS: {
-              device.send(
-                Buffer.from([
-                  ACTION_RBUS_TRANSMIT,
-                  ...dev.split(":").map((i) => parseInt(i, 16)),
-                  ACTION_DO,
-                  index,
-                  OFF,
-                ]),
-                ip
+              device.sendRBUS(Buffer.from([
+                ACTION_DO,
+                index,
+                OFF,
+              ]),
+                action.id
               );
               break;
             }
@@ -1253,22 +1169,19 @@ const run = (action) => {
             case DEVICE_TYPE_DIM_12_AC_RS:
             case DEVICE_TYPE_DIM_12_DC_RS:
             case DEVICE_TYPE_AO_4_DIN: {
-              device.send(
-                Buffer.from([
-                  ACTION_RBUS_TRANSMIT,
-                  ...dev.split(":").map((i) => parseInt(i, 16)),
-                  ACTION_DIMMER,
-                  index,
-                  DIM_FADE,
-                  v,
-                  deviceType === DEVICE_TYPE_DIM_12_LED_RS ||
-                    deviceType === DEVICE_TYPE_DIM_12_AC_RS ||
-                    deviceType === DEVICE_TYPE_DIM_12_DC_RS ||
-                    deviceType === DEVICE_TYPE_DIM_8_RS
-                    ? DIM_VELOCITY
-                    : AO_VELOCITY,
-                ]),
-                ip
+              device.sendRBUS(Buffer.from([
+                ACTION_DIMMER,
+                index,
+                DIM_FADE,
+                v,
+                deviceType === DEVICE_TYPE_DIM_12_LED_RS ||
+                  deviceType === DEVICE_TYPE_DIM_12_AC_RS ||
+                  deviceType === DEVICE_TYPE_DIM_12_DC_RS ||
+                  deviceType === DEVICE_TYPE_DIM_8_RS
+                  ? DIM_VELOCITY
+                  : AO_VELOCITY,
+              ]),
+                action.id
               );
               break;
             }
@@ -1354,22 +1267,19 @@ const run = (action) => {
             case DEVICE_TYPE_DIM_12_AC_RS:
             case DEVICE_TYPE_DIM_12_DC_RS:
             case DEVICE_TYPE_AO_4_DIN: {
-              device.send(
-                Buffer.from([
-                  ACTION_RBUS_TRANSMIT,
-                  ...dev.split(":").map((i) => parseInt(i, 16)),
-                  ACTION_DIMMER,
-                  index,
-                  DIM_FADE,
-                  v,
-                  deviceType === DEVICE_TYPE_DIM_12_LED_RS ||
-                    deviceType === DEVICE_TYPE_DIM_12_AC_RS ||
-                    deviceType === DEVICE_TYPE_DIM_12_DC_RS ||
-                    deviceType === DEVICE_TYPE_DIM_8_RS
-                    ? DIM_VELOCITY
-                    : AO_VELOCITY
-                ]),
-                ip
+              device.sendRBUS(Buffer.from([
+                ACTION_DIMMER,
+                index,
+                DIM_FADE,
+                v,
+                deviceType === DEVICE_TYPE_DIM_12_LED_RS ||
+                  deviceType === DEVICE_TYPE_DIM_12_AC_RS ||
+                  deviceType === DEVICE_TYPE_DIM_12_DC_RS ||
+                  deviceType === DEVICE_TYPE_DIM_8_RS
+                  ? DIM_VELOCITY
+                  : AO_VELOCITY
+              ]),
+                action.id
               );
               break;
             }
@@ -1440,13 +1350,7 @@ const run = (action) => {
         buffer[7] = line_control;
         switch (type) {
           case DEVICE_TYPE_RS_HUB1_RS: {
-            device.send(Buffer.concat([
-              Buffer.from([
-                ACTION_RBUS_TRANSMIT,
-                ...action.id.split(":").map((i) => parseInt(i, 16))
-              ]),
-              buffer
-            ]), ip);
+            device.sendRBUS(buffer, action.id);
             break;
           }
           default: {
@@ -1808,20 +1712,16 @@ const run = (action) => {
         } = ((ircodes.codes[type] || {})[brand] || {})[model] || {};
         const [major] = version.split(".");
         if (dev_type === DEVICE_TYPE_IR_4 && parseInt(major) === 2) {
-          const buffer = Buffer.alloc(21);
-          buffer.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
-          dev
-            .split(":")
-            .forEach((t, i) => buffer.writeUInt8(parseInt(t, 16), i + 1));
-          buffer.writeUInt8(ACTION_IR_CONFIG, 7);
-          buffer.writeUInt8(index, 8);
-          buffer.writeUInt16LE(frequency, 9);
-          buffer.writeUInt16LE(count[0], 11);
-          buffer.writeUInt16LE(count[1], 13);
-          buffer.writeUInt16LE(header[0], 15);
-          buffer.writeUInt16LE(header[1], 17);
-          buffer.writeUInt16LE(trail, 19);
-          device.send(buffer, ip);
+          const buffer = Buffer.alloc(14);
+          buffer.writeUInt8(ACTION_IR_CONFIG, 0);
+          buffer.writeUInt8(index, 1);
+          buffer.writeUInt16LE(frequency, 2);
+          buffer.writeUInt16LE(count[0], 4);
+          buffer.writeUInt16LE(count[1], 6);
+          buffer.writeUInt16LE(header[0], 8);
+          buffer.writeUInt16LE(header[1], 10);
+          buffer.writeUInt16LE(trail, 12);
+          device.sendRBUS(buffer, action.id);
         } else if (
           (dev_type === DEVICE_TYPE_IR_4 && parseInt(major) >= 3) ||
           dev_type === DEVICE_TYPE_SMART_4A ||
@@ -1830,21 +1730,17 @@ const run = (action) => {
           dev_type === DEVICE_TYPE_SMART_4GD ||
           dev_type === DEVICE_TYPE_SMART_6_PUSH
         ) {
-          const buffer = Buffer.alloc(23);
-          buffer.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
-          dev
-            .split(":")
-            .forEach((t, i) => buffer.writeUInt8(parseInt(t, 16), i + 1));
-          buffer.writeUInt8(ACTION_IR_CONFIG, 7);
-          buffer.writeUInt8(index, 8);
-          buffer.writeUInt16LE(frequency, 9);
-          buffer.writeUInt16LE(count[0], 11);
-          buffer.writeUInt16LE(count[1], 13);
-          buffer.writeUInt16LE(count[2], 15);
-          buffer.writeUInt16LE(header[0], 17);
-          buffer.writeUInt16LE(header[1], 19);
-          buffer.writeUInt16LE(trail, 21);
-          device.send(buffer, ip);
+          const buffer = Buffer.alloc(16);
+          buffer.writeUInt8(ACTION_IR_CONFIG, 0);
+          buffer.writeUInt8(index, 1);
+          buffer.writeUInt16LE(frequency, 2);
+          buffer.writeUInt16LE(count[0], 4);
+          buffer.writeUInt16LE(count[1], 6);
+          buffer.writeUInt16LE(count[2], 8);
+          buffer.writeUInt16LE(header[0], 10);
+          buffer.writeUInt16LE(header[1], 12);
+          buffer.writeUInt16LE(trail, 14);
+          device.sendRBUS(buffer, action.id);
         } else if (dev_type === DEVICE_TYPE_LANAMP) {
           const buffer = Buffer.alloc(16);
           buffer.writeUInt8(ACTION_IR_CONFIG, 0);
@@ -1895,17 +1791,9 @@ const run = (action) => {
             case DEVICE_TYPE_SMART_4GD:
             case DEVICE_TYPE_SMART_6_PUSH: {
               const [major] = version.split(".");
-              const header = Buffer.alloc(7);
-              header.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
-              dev.split(":").forEach((v, i) => {
-                header.writeUInt8(parseInt(v, 16), i + 1);
-              });
-              device.send(
-                Buffer.concat([
-                  header,
-                  major < 2 ? legacy(c) : Buffer.from([ACTION_IR, index, ...c]),
-                ]),
-                ip
+              device.sendRBUS(
+                major < 2 ? legacy(c) : Buffer.from([ACTION_IR, index, ...c]),
+                action.id
               );
               break;
             }
@@ -1957,27 +1845,17 @@ const run = (action) => {
         break;
       }
       case ACTION_TEMPERATURE_CORRECT: {
-        const buffer = Buffer.alloc(9);
-        buffer.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
-        const { ip } = get(action.id) || {};
-        action.id.split(":").forEach((v, i) => {
-          buffer.writeUInt8(parseInt(v, 16), i + 1);
-        });
-        buffer.writeUInt8(ACTION_TEMPERATURE_CORRECT, 7);
-        buffer.writeInt8(action.value * 10, 8);
-        device.send(buffer, ip);
+        const buffer = Buffer.alloc(2);
+        buffer.writeUInt8(ACTION_TEMPERATURE_CORRECT, 0);
+        buffer.writeInt8(action.value * 10, 1);
+        device.sendRBUS(buffer, action.id);
         break;
       }
       case ACTION_VIBRO: {
-        const buffer = Buffer.alloc(9);
-        buffer.writeUInt8(ACTION_RBUS_TRANSMIT, 0);
-        const { ip } = get(action.id) || {};
-        action.id.split(":").forEach((v, i) => {
-          buffer.writeUInt8(parseInt(v, 16), i + 1);
-        });
-        buffer.writeUInt8(ACTION_VIBRO, 7);
-        buffer.writeUInt8(action.value, 8);
-        device.send(buffer, ip);
+        const buffer = Buffer.alloc(2);
+        buffer.writeUInt8(ACTION_VIBRO, 0);
+        buffer.writeUInt8(action.value, 1);
+        device.sendRBUS(buffer, action.id);
         break;
       }
       case ACTION_SET_ADDRESS:
@@ -2077,13 +1955,10 @@ const run = (action) => {
         const dev = get(action.id);
         switch (dev.type) {
           case DEVICE_TYPE_MIX_6x12_RS: {
-            device.send(
-              Buffer.from([
-                ACTION_RBUS_TRANSMIT,
-                ...action.id.split(":").map((i) => parseInt(i, 16)),
-                ACTION_ERROR,
-              ]),
-              dev.ip
+            device.sendRBUS(Buffer.from([
+              ACTION_ERROR,
+            ]),
+              action.id
             );
             break;
           }

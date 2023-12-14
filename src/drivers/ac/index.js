@@ -9,7 +9,6 @@ const {
   ACTION_OFF,
   ACTION_ENABLE,
   ACTION_DISABLE,
-  ACTION_RBUS_TRANSMIT,
   DEVICE_TYPE_IR_4,
 } = require("../../constants");
 
@@ -24,18 +23,11 @@ const manage = (power, setpoint, ac) => {
     case DEVICE_TYPE_IR_4: {
       const [major] = version.split(".");
       if (major < 2) return;
-      const header = [];
-      header[0] = ACTION_RBUS_TRANSMIT;
-      dev.split(":").forEach((v, i) => {
-        header[i + 1] = parseInt(v, 16);
-      });
-      header[7] = ACTION_IR;
-      header[8] = index;
       command.forEach((code, i) => {
         setTimeout(
           device.send,
           i * model.delay,
-          Buffer.from([...header, ...code]),
+          Buffer.from([ACTION_IR, index, ...code]),
           ip
         );
       });
