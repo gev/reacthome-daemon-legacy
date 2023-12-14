@@ -1,5 +1,5 @@
 const { SerialPort } = require('serialport');
-const { addCRC } = require('../../crc');
+const { addCRC } = require('../crc');
 const { handle } = require('./handle');
 
 const createPort = (rbus, path) => {
