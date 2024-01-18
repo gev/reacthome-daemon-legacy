@@ -17,7 +17,9 @@ module.exports.handle = (rbus) => {
   let buff = Buffer.alloc(512)
 
   handle = (buff) => {
-    rbus.socket.send(Buffer.concat([mac, buff]))
+    if (buff[0] !== 0xf0) {
+      rbus.socket.send(Buffer.concat([mac, buff]))
+    }
   }
 
   const receivePreamble = (v) => {
