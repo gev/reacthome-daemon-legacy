@@ -529,14 +529,7 @@ module.exports.manage = () => {
             return;
           }
           const temperature = data.readInt16LE(15) / 100;
-          set(dev_id, {
-            ip: address,
-            online: true,
-            temperature,
-            type: DEVICE_TYPE_TEMPERATURE_EXT,
-            master: id,
-            version: "1.0",
-          });
+          online(dev_id, { temperature, master: id, type: DEVICE_TYPE_TEMPERATURE_EXT, version, ready: true });
           add(id, TEMPERATURE_EXT, dev_id);
           const { onTemperature: onTemperature, display, site } = get(dev_id);
           if (site) set(site, { temperature });
@@ -708,6 +701,7 @@ module.exports.manage = () => {
           const type = data[7];
           const version = `${data[8]}.${data[9]}`;
           online(id, { type, version, ip: address, ready: true });
+          add(mac(), DEVICE, id)
           break;
         }
         case ACTION_FIND_ME: {

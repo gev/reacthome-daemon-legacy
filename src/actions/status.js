@@ -19,7 +19,7 @@ const offline = (id) => {
   set(id, { online: false, ready: false, initialized: false });
 };
 
-const online = (id, { type, version, ip, ready }) => {
+const online = (id, props) => {
   clearTimeout(timeout[id]);
   const dev = get(id) || {};
   if (!dev.online) {
@@ -46,15 +46,7 @@ const online = (id, { type, version, ip, ready }) => {
       }
     }
   }
-  set(id, {
-    type,
-    version,
-    ip,
-    ready,
-    online: true,
-  });
-  add(mac(), DEVICE, id);
-  // if (!device.initialized) initialize(id);
+  set(id, { ...props, online: true });
   if (dev.pending) updateFirmware(id);
   timeout[id] = setTimeout(() => {
     offline(id);
