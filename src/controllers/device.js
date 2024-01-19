@@ -531,6 +531,7 @@ module.exports.manage = () => {
           const temperature = data.readInt16LE(15) / 100;
           online(dev_id, { temperature, master: id, type: DEVICE_TYPE_TEMPERATURE_EXT, version: '1.0', ready: true });
           add(id, TEMPERATURE_EXT, dev_id);
+          console.log(get(dev_id));
           const { onTemperature: onTemperature, display, site } = get(dev_id);
           if (site) set(site, { temperature });
           if (onTemperature) {
