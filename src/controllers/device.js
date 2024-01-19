@@ -71,6 +71,7 @@ const {
   ACTION_TEMPERATURE_EXT_OLD,
   ACTION_TEMPERATURE_EXT,
   ACTION_RBUS_TRANSMIT,
+  TEMPERATURE_EXT,
 } = require("../constants");
 const {
   get,
@@ -533,9 +534,10 @@ module.exports.manage = () => {
             online: true,
             temperature,
             type: DEVICE_TYPE_TEMPERATURE_EXT,
+            master: id,
             version: "1.0",
           });
-          add(mac(), DEVICE, dev_id);
+          add(id, TEMPERATURE_EXT, dev_id);
           const { onTemperature: onTemperature, display, site } = get(dev_id);
           if (site) set(site, { temperature });
           if (onTemperature) {

@@ -176,6 +176,8 @@ module.exports.ACTION_SET_FAN_SPEED = "ACTION_SET_FAN_SPEED";
 module.exports.ACTION_SET_MODE = "ACTION_SET_MODE";
 module.exports.ACTION_SET_DIRECTION = "ACTION_SET_DIRECTION";
 
+module.exports.TEMPERATURE_EXT = "TEMPERATURE_EXT";
+
 module.exports.OFF = 0x0;
 module.exports.ON = 0x1;
 
