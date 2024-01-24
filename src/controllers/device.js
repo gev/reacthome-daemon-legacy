@@ -106,9 +106,8 @@ module.exports.manage = () => {
     offline(id);
   });
 
-  const handleData = (data, { address }, hub = null) => {
+  const handleData = (data, { address }, { hub = null }) => {
     try {
-      if (hub) console.log('receive', address, hub, data)
       const dev_mac = Array.from(data.slice(0, 6));
       const id = dev_mac.map((i) => `0${i.toString(16)}`.slice(-2)).join(":");
       set(id, { hub });
@@ -353,18 +352,16 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_RBUS_TRANSMIT: {
-          console.log('receive', address, data);
           const buff = data.slice(7);
           const mac = buff.slice(0, 6);
           const did = Array.from(mac).map((i) => i.toString(16).padStart(2, '0')).join(':');
-          console.log(id, mac, did, buff[6], buff[7], buff.slice(8));
           const device = get(id) || {};
           set(did, {
             port: buff[6],
             address: buff[7],
             hub: id,
           });
-          handleData(Buffer.concat([mac, buff.slice(8)]), { address }, id);
+          handleData(Buffer.concat([mac, buff.slice(8)]), { address }, { hub: id });
           break;
 
         }
@@ -531,7 +528,6 @@ module.exports.manage = () => {
           const temperature = data.readInt16LE(15) / 100;
           online(dev_id, { temperature, master: id, type: DEVICE_TYPE_TEMPERATURE_EXT, version: '1.0', ready: true });
           add(id, TEMPERATURE_EXT, dev_id);
-          console.log(get(dev_id));
           const { onTemperature: onTemperature, display, site } = get(dev_id);
           if (site) set(site, { temperature });
           if (onTemperature) {

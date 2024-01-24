@@ -36,7 +36,6 @@ const request = (getSize, fill) => (code) => (id, address, register, data) => {
         break;
       }
       default: {
-        // console.log(buffer, ip);
         device.send(buffer, ip);
       }
     }

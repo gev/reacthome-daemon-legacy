@@ -57,7 +57,6 @@ module.exports.handle = (rbus) => {
     crc = (v << 8) | crc
     const buff_ = buff.slice(0, size + 2)
     const crc_ = crc16modbus(buff_)
-    // console.log(buff_, crc_.toString(16), crc.toString(16))
     if (crc_ === crc) {
       handle(buff_.slice(2))
     }
@@ -65,7 +64,6 @@ module.exports.handle = (rbus) => {
   }
 
   const process = (v) => {
-    // console.log(phase)
     switch (phase) {
       case WAITING_PREAMBLE:
         receivePreamble(v)

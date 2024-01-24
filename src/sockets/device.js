@@ -27,7 +27,6 @@ device.sendRBUS = (data, id) => {
   const header = [ACTION_RBUS_TRANSMIT, ...mac];
   const dev = get(id);
   if (dev) {
-    console.log(id, dev.ip, data)
     if (dev.hub) {
       device.send(Buffer.from([...header, dev.port, dev.address, ...data]), dev.ip);
     } else {
