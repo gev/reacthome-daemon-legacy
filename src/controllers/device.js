@@ -372,7 +372,8 @@ module.exports.manage = () => {
             case ACTION_DISCOVERY: {
               const top_mac = Array.from(data.slice(8, 14));
               const top_id = top_mac.map((i) => `0${i.toString(16)}`.slice(-2)).join(":");
-              console.log(top_id);
+              set(id, { top: top_id });
+              online(top_id, { type: data[14], version: `$data[15].$data[16]`, ip: address, ready: true });
               break;
             }
           }
