@@ -371,7 +371,8 @@ module.exports.manage = () => {
           switch (data[7]) {
             case ACTION_DISCOVERY: {
               const top_mac = Array.from(data.slice(8, 14));
-              console.log(top_mac);
+              const top_id = top_mac.map((i) => `0${i.toString(16)}`.slice(-2)).join(":");
+              console.log(top_id);
               break;
             }
           }
