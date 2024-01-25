@@ -111,7 +111,7 @@ module.exports.manage = () => {
     try {
       const dev_mac = Array.from(data.slice(0, 6));
       const id = dev_mac.map((i) => `0${i.toString(16)}`.slice(-2)).join(":");
-      set(id, { hub });
+      online(id, { ip: address, hub });
       const action = data[6];
       switch (action) {
         case DEVICE_TYPE_PLC: {
