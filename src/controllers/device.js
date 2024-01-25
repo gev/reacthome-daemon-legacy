@@ -72,6 +72,7 @@ const {
   ACTION_TEMPERATURE_EXT,
   ACTION_RBUS_TRANSMIT,
   TEMPERATURE_EXT,
+  ACTION_SMART_TOP,
 } = require("../constants");
 const {
   get,
@@ -364,6 +365,9 @@ module.exports.manage = () => {
           handleData(Buffer.concat([mac, buff.slice(8)]), { address }, { hub: id });
           break;
 
+        }
+        case ACTION_SMART_TOP: {
+          console.log('smart top:', data);
         }
         case ACTION_DIMMER: {
           const device = get(id) || {};
