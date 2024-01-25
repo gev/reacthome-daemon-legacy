@@ -368,7 +368,8 @@ module.exports.manage = () => {
         }
         case ACTION_SMART_TOP: {
           console.log('smart top:', data);
-          switch (data[7]) {
+          const action = data[7];
+          switch (action) {
             case ACTION_DISCOVERY: {
               const top_mac = Array.from(data.slice(8, 14));
               const top_id = top_mac.map((i) => `0${i.toString(16)}`.slice(-2)).join(":");
@@ -376,8 +377,31 @@ module.exports.manage = () => {
               online(top_id, { type: data[14], version: `$data[15].$data[16]`, ip: address, ready: true });
               break;
             }
+            default: {
+              const { top } = get(id) || {};
+              if (top) {
+                switch (action) {
+                  case ACTION_DI: {
+                    const index = data[8];
+                    const value = data[9];
+                    const channel = `${top}/${DI}/${index}`;
+                    set(channel, { value });
+                    break;
+                  }
+                  case ACTION_TEMPERATURE: {
+                    const temperature = data.readUInt16LE(8) / 100;
+                    set(top, { temperature });
+                    break;
+                  }
+                  case ACTION_HUMIDITY: {
+                    const humidity = data.readUInt16LE(8) / 100;
+                    set(top, { humidity });
+                    break;
+                  }
+                }
+              }
+            }
           }
-
           break;
         }
         case ACTION_DIMMER: {
