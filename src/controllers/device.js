@@ -368,6 +368,15 @@ module.exports.manage = () => {
         }
         case ACTION_SMART_TOP: {
           console.log('smart top:', data);
+          switch (data[7]) {
+            case ACTION_DISCOVERY: {
+              const top_mac = Array.from(data.slice(8, 14));
+              console.log(top_mac);
+              break;
+            }
+          }
+
+          break;
         }
         case ACTION_DIMMER: {
           const device = get(id) || {};
