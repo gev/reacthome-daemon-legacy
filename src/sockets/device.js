@@ -24,6 +24,7 @@ const device = socket((socket) => {
 
 
 device.sendRBUS = (data, id) => {
+  console.log('to rbus', id, data);
   const mac = id.split(":").map((i) => parseInt(i, 16));
   const header = [ACTION_RBUS_TRANSMIT, ...mac];
   const dev = get(id);
