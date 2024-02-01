@@ -162,6 +162,7 @@ const {
   ACTION_DALI,
   DRIVER_TYPE_COMFOVENT,
   DEVICE_TYPE_RS_HUB4,
+  DEVICE_TYPE_SMART_TOP_A6P,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -704,6 +705,18 @@ const run = (action) => {
             );
             break;
           }
+          case DEVICE_TYPE_SMART_TOP_A6P: {
+            device.sendTOP(Buffer.from([
+              ACTION_RGB,
+              index,
+              r,
+              g,
+              b,
+            ]),
+              action.id
+            );
+            break;
+          }
           case LIGHT_RGB: {
             set(id, { last: { r, g, b } });
             rgb.forEach((i) => {
@@ -793,6 +806,18 @@ const run = (action) => {
           case DEVICE_TYPE_SMART_4AM:
           case DEVICE_TYPE_SMART_6_PUSH: {
             device.sendRBUS(Buffer.from([
+              ACTION_RGB,
+              index,
+              r,
+              g,
+              b,
+            ]),
+              action.id
+            );
+            break;
+          }
+          case DEVICE_TYPE_SMART_TOP_A6P: {
+            device.sendTOP(Buffer.from([
               ACTION_RGB,
               index,
               r,

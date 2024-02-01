@@ -8,6 +8,7 @@ const {
   DEVICE_SERVER_PORT,
   IP_ADDRESS,
   ACTION_RBUS_TRANSMIT,
+  ACTION_SMART_TOP,
 } = require('../constants');
 const socket = require('./socket');
 
@@ -35,6 +36,13 @@ device.sendRBUS = (data, id) => {
   }
 }
 
+
+device.sendTOP = (data, id) => {
+  const { bottom } = get(id) || {};
+  if (bottom) {
+    device.sendRBUS([ACTION_SMART_TOP, ...data], bottom);
+  }
+}
 
 
 

@@ -58,7 +58,6 @@ const {
   AO,
   DEVICE_TYPE_AO_4_DIN,
   ACTION_RTP,
-  ACTION_RGB_DIM,
   ACTION_RGB,
   ACTION_IMAGE,
   ACTION_VIBRO,
@@ -374,7 +373,7 @@ module.exports.manage = () => {
               const top_mac = Array.from(data.slice(8, 14));
               const top_id = top_mac.map((i) => `0${i.toString(16)}`.slice(-2)).join(":");
               set(id, { top: top_id });
-              online(top_id, { type: data[14], version: `$data[15].$data[16]`, ip: address, ready: true });
+              online(top_id, { type: data[14], bottom: id, version: `$data[15].$data[16]`, ip: address, ready: true });
               break;
             }
             default: {
@@ -396,6 +395,12 @@ module.exports.manage = () => {
                   case ACTION_HUMIDITY: {
                     const humidity = data.readUInt16LE(8) / 100;
                     set(top, { humidity });
+                    break;
+                  }
+                  case ACTION_RGB: {
+                    const [, , , , , , , , index, r, g, b] = data;
+                    const chan = `${top_id}/rgb/${index}`;
+                    set(chan, { r, g, b });
                     break;
                   }
                 }

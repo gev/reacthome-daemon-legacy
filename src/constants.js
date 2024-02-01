@@ -246,6 +246,10 @@ module.exports.DEVICE_TYPE_SMART_4A = 0x27;
 module.exports.DEVICE_TYPE_SMART_4AM = 0x2a;
 module.exports.DEVICE_TYPE_SMART_6_PUSH = 0x2c;
 
+module.exports.DEVICE_TYPE_SMART_TOP_A6P = 0x30;
+module.exports.DEVICE_TYPE_BOTTOM_1 = 0x3a;
+module.exports.DEVICE_TYPE_BOTTOM_2 = 0x3b;
+
 module.exports.DEVICE_TYPE_RELAY_6 = 0xa0;
 module.exports.DEVICE_TYPE_RELAY_12 = 0xa1;
 module.exports.DEVICE_TYPE_RELAY_24 = 0xa2;
