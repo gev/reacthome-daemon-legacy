@@ -399,7 +399,7 @@ module.exports.manage = () => {
                   }
                   case ACTION_RGB: {
                     const [, , , , , , , , index, r, g, b] = data;
-                    const chan = `${top_id}/rgb/${index}`;
+                    const chan = `${top}/rgb/${index}`;
                     set(chan, { r, g, b });
                     break;
                   }
