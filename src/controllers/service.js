@@ -163,6 +163,7 @@ const {
   DRIVER_TYPE_COMFOVENT,
   DEVICE_TYPE_RS_HUB4,
   DEVICE_TYPE_SMART_TOP_A6P,
+  DEVICE_TYPE_SMART_BOTTOM_1,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -246,7 +247,8 @@ const run = (action) => {
           case DEVICE_TYPE_DIM_12_LED_RS:
           case DEVICE_TYPE_DIM_12_AC_RS:
           case DEVICE_TYPE_DIM_12_DC_RS:
-          case DEVICE_TYPE_MIX_6x12_RS: {
+          case DEVICE_TYPE_MIX_6x12_RS:
+          case DEVICE_TYPE_SMART_BOTTOM_1: {
             device.sendRBUS(Buffer.from([
               ACTION_FIND_ME,
               action.finding,
