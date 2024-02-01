@@ -380,6 +380,10 @@ module.exports.manage = () => {
               const { top } = get(id) || {};
               if (top) {
                 switch (action) {
+                  case ACTION_INITIALIZE: {
+                    initialize(top);
+                    break;
+                  }
                   case ACTION_DI: {
                     const index = data[8];
                     const value = data[9];

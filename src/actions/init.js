@@ -49,6 +49,7 @@ const {
   DEVICE_TYPE_SMART_4AM,
   DEVICE_TYPE_SMART_6_PUSH,
   DEVICE_TYPE_MIX_6x12_RS,
+  DEVICE_TYPE_SMART_TOP_A6P,
 } = require("../constants");
 const { get, set, add } = require("./create");
 const { device } = require("../sockets");
@@ -136,6 +137,18 @@ module.exports.initialize = (id) => {
         a[3 * i + 2] = (channel && channel.b) || 0;
       }
       device.sendRBUS(Buffer.from(a), id);
+      break;
+    }
+    case DEVICE_TYPE_SMART_TOP_A6P: {
+      const mac = id.split(":").map((i) => parseInt(i, 16));
+      a[0] = ACTION_INITIALIZE;
+      for (let i = 1; i <= 6; i++) {
+        const channel = get(`${id}/rgb/${i}`);
+        a[3 * i - 2] = (channel && channel.r) || 0;
+        a[3 * i - 1] = (channel && channel.g) || 0;
+        a[3 * i + 0] = (channel && channel.b) || 0;
+      }
+      device.sendTOP(Buffer.from(a), id);
       break;
     }
     case DEVICE_TYPE_DI24: {
