@@ -680,6 +680,7 @@ const run = (action) => {
         break;
       }
       case ACTION_RGB_DIM: {
+        console.log(action);
         const { id, value = {}, index = 0 } = action;
         const { r, g, b } = value;
         const o = get(id) || {};
