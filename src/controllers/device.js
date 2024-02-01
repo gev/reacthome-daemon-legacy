@@ -374,8 +374,6 @@ module.exports.manage = () => {
               const top_id = top_mac.map((i) => `0${i.toString(16)}`.slice(-2)).join(":");
               set(id, { top: top_id });
               online(top_id, { type: data[14], bottom: id, version: `$data[15].$data[16]`, ip: address, ready: true });
-              console.log(get(id));
-              console.log(get(top_id));
               break;
             }
             default: {
