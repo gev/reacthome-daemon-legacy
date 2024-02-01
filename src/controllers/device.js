@@ -384,10 +384,6 @@ module.exports.manage = () => {
                     initialize(top);
                     break;
                   }
-                  case ACTION_FIND_ME: {
-                    set(top, { finding: !!data[7] });
-                    break;
-                  }
                   case ACTION_DI: {
                     const index = data[8];
                     const value = data[9];
