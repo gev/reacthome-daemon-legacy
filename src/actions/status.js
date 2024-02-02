@@ -14,7 +14,6 @@ const { device } = require("../sockets");
 const timeout = {};
 
 const offline = (id) => {
-  console.log('offline', get(id))
   set(id, { online: false, ready: false, initialized: false });
 };
 
@@ -22,7 +21,6 @@ const online = (id, props) => {
   clearTimeout(timeout[id]);
   const dev = get(id) || {};
   if (!dev.online) {
-    console.log('online', props, dev)
     switch (props.type) {
       case DEVICE_TYPE_RELAY_2:
       case DEVICE_TYPE_MIX_1_RS:
