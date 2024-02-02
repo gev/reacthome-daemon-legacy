@@ -20,6 +20,7 @@ const offline = (id) => {
 const online = (id, props) => {
   clearTimeout(timeout[id]);
   const dev = get(id) || {};
+  console.log(dev)
   if (!dev.online) {
     switch (props.type) {
       case DEVICE_TYPE_RELAY_2:
