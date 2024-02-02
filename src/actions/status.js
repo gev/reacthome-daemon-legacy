@@ -21,7 +21,7 @@ const online = (id, props) => {
   clearTimeout(timeout[id]);
   const dev = get(id) || {};
   if (!dev.online) {
-    switch (props.type) {
+    switch (props.type || dev.type) {
       case DEVICE_TYPE_RELAY_2:
       case DEVICE_TYPE_MIX_1_RS:
       case DEVICE_TYPE_MIX_6x12_RS:
