@@ -74,6 +74,7 @@ module.exports.ACTION_IR_CONFIG = 0x11;
 module.exports.ACTION_LANAMP = 0x20;
 module.exports.ACTION_RTP = 0x21;
 module.exports.ACTION_SMART_TOP = 0x30;
+module.exports.ACTION_SMART_TOP_DETECT = 0x31;
 module.exports.ACTION_RS485_MODE = 0xa0;
 module.exports.ACTION_RBUS_TRANSMIT = 0xa1;
 module.exports.ACTION_RS485_TRANSMIT = 0xa2;

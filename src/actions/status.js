@@ -2,7 +2,6 @@ const { get, set, add } = require("./create");
 const { initialize } = require("./init");
 const { updateFirmware } = require("./firmware");
 const {
-  DEVICE,
   DISCOVERY_INTERVAL,
   DEVICE_TYPE_RELAY_2,
   DEVICE_TYPE_RELAY_2_DIN,
