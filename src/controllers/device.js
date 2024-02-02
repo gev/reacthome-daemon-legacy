@@ -416,7 +416,7 @@ module.exports.manage = () => {
         }
         case ACTION_SMART_TOP_DETECT: {
           if (!detected) {
-            set(id, { topDetected: data[8] });
+            set(id, { topDetected: data[7] });
           }
           break;
         }
