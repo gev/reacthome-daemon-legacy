@@ -758,7 +758,6 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_FIND_ME: {
-          console.log('find me', data);
           set(id, { finding: !!data[7] });
           break;
         }

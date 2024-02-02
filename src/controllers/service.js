@@ -243,7 +243,6 @@ const run = (action) => {
       }
       case ACTION_FIND_ME: {
         const dev = get(action.id);
-        console.log('find me', action.id);
         switch (dev.type) {
           case DEVICE_TYPE_RELAY_12_RS:
           case DEVICE_TYPE_DIM_12_LED_RS:
@@ -685,7 +684,6 @@ const run = (action) => {
         break;
       }
       case ACTION_RGB_DIM: {
-        console.log(action);
         const { id, value = {}, index = 0 } = action;
         const { r, g, b } = value;
         const o = get(id) || {};

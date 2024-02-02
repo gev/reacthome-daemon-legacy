@@ -24,7 +24,7 @@ const device = socket((socket) => {
 
 
 device.sendRBUS = (data, id) => {
-  console.log('to rbus', id, data);
+  // console.log('to rbus', id, data);
   const mac = id.split(":").map((i) => parseInt(i, 16));
   const header = [ACTION_RBUS_TRANSMIT, ...mac];
   const dev = get(id);
@@ -41,7 +41,7 @@ device.sendRBUS = (data, id) => {
 device.sendTOP = (data, id) => {
   const { bottom } = get(id) || {};
   if (bottom) {
-    console.log('to top:', bottom, [ACTION_SMART_TOP, ...data]);
+    // console.log('to top:', bottom, [ACTION_SMART_TOP, ...data]);
     device.sendRBUS([ACTION_SMART_TOP, ...data], bottom);
   }
 }
