@@ -62,7 +62,7 @@ module.exports.initialized = (id) => {
 };
 
 module.exports.initialize = (id) => {
-  add(mac(), DEVICE, id);
+  // add(mac(), DEVICE, id);
   set(id, { initialized: false });
   const dev = get(id);
   const a = [ACTION_INITIALIZE];
