@@ -22,6 +22,7 @@ const online = (id, props) => {
   clearTimeout(timeout[id]);
   const dev = get(id) || {};
   if (!dev.online) {
+    console.log('online', props, dev)
     switch (props.type) {
       case DEVICE_TYPE_RELAY_2:
       case DEVICE_TYPE_MIX_1_RS:
@@ -29,7 +30,6 @@ const online = (id, props) => {
       case DEVICE_TYPE_RELAY_2_DIN:
       case DEVICE_TYPE_SMART_BOTTOM_1:
       case DEVICE_TYPE_SMART_BOTTOM_2: {
-        console.log('online', dev)
         device.sendRBUS(
           Buffer.from([
             ACTION_GET_STATE,
