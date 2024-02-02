@@ -370,7 +370,7 @@ module.exports.manage = () => {
 
         }
         case ACTION_SMART_TOP: {
-          console.log('from top:', data);
+          // console.log('from top:', data);
           const action = data[7];
           switch (action) {
             case ACTION_DISCOVERY: {
