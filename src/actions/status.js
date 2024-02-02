@@ -1,6 +1,4 @@
-const { get, set, add } = require("./create");
-const { initialize } = require("./init");
-const { updateFirmware } = require("./firmware");
+const { get, set } = require("./create");
 const {
   DISCOVERY_INTERVAL,
   DEVICE_TYPE_RELAY_2,
@@ -11,7 +9,6 @@ const {
   DEVICE_TYPE_SMART_BOTTOM_1,
   DEVICE_TYPE_SMART_BOTTOM_2,
 } = require("../constants");
-const mac = require("../mac");
 const { device } = require("../sockets");
 
 const timeout = {};
@@ -50,11 +47,10 @@ const online = (id, props) => {
     }
   }
   set(id, { ...props, online: true });
-  if (dev.pending) updateFirmware(id);
   timeout[id] = setTimeout(() => {
     offline(id);
     delete timeout[id];
-  }, 10 * DISCOVERY_INTERVAL);
+  }, 2 * DISCOVERY_INTERVAL);
 };
 
 module.exports = { offline, online };
