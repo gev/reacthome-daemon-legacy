@@ -634,7 +634,7 @@ module.exports.manage = () => {
         }
         case ACTION_DOPPLER0: {
           const [, , , , , , , value, gain] = data;
-          const { onDoppler, threshold } = get(id) || {};
+          const { onDoppler } = get(id) || {};
           set(id, { value, gain });
           if (onDoppler) {
             run({ type: ACTION_SCRIPT_RUN, id: onDoppler });
@@ -643,14 +643,11 @@ module.exports.manage = () => {
         }
         case ACTION_DOPPLER1: {
           const value = [...data.slice(7)];
-          value.forEach((value, index) => {
-            const channel = `${id}/${DOPPLER}/${index + 1}`;
-            set(channel, { value });
-            const { onDoppler } = get(channel);
-            if (onDoppler) {
-              run({ type: ACTION_SCRIPT_RUN, id: onDoppler });
-            }
-          });
+          const { onDoppler } = get(id) || {};
+          set(id, { value });
+          if (onDoppler) {
+            run({ type: ACTION_SCRIPT_RUN, id: onDoppler });
+          }
           break;
         }
         case ACTION_DOPPLER_RAW: {
