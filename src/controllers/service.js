@@ -16,7 +16,7 @@ const {
   ACTION_DO,
   ACTION_GROUP,
   ACTION_DI_RELAY_SYNC,
-  ACTION_DOPPLER,
+  ACTION_DOPPLER0,
   ACTION_DIMMER,
   ACTION_ARTNET,
   ACTION_DISCOVERY,
@@ -165,6 +165,7 @@ const {
   DEVICE_TYPE_SMART_TOP_A6P,
   DEVICE_TYPE_SMART_BOTTOM_1,
   DEVICE_TYPE_SMART_BOTTOM_2,
+  ACTION_DOPPLER1,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -565,7 +566,7 @@ const run = (action) => {
       }
       case ACTION_DOPPLER: {
         const dev = get(action.id);
-        device.send(Buffer.from([ACTION_DOPPLER, action.gain]), dev.ip);
+        device.send(Buffer.from([ACTION_DOPPLER10, action.gain]), dev.ip);
         break;
       }
       case ACTION_DIMMER: {
