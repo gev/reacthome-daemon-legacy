@@ -644,6 +644,7 @@ module.exports.manage = () => {
         }
         case ACTION_DOPPLER1: {
           const value = [...data.slice(7)];
+          console.log(value);
           const { onDoppler } = get(id) || {};
           set(id, { value });
           if (onDoppler) {
