@@ -74,6 +74,7 @@ const {
   ACTION_SMART_TOP,
   ACTION_SMART_TOP_DETECT,
   DOPPLER,
+  ACTION_DOPPLER1,
 } = require("../constants");
 const {
   get,
