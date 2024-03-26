@@ -250,6 +250,7 @@ module.exports.DEVICE_TYPE_SMART_4AM = 0x2a;
 module.exports.DEVICE_TYPE_SMART_6_PUSH = 0x2c;
 
 module.exports.DEVICE_TYPE_SMART_TOP_A6P = 0x30;
+module.exports.DEVICE_TYPE_SMART_TOP_G4D = 0x31;
 module.exports.DEVICE_TYPE_SMART_BOTTOM_1 = 0x3a;
 module.exports.DEVICE_TYPE_SMART_BOTTOM_2 = 0x3b;
 

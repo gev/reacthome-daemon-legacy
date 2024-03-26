@@ -165,6 +165,7 @@ const {
   DEVICE_TYPE_SMART_TOP_A6P,
   DEVICE_TYPE_SMART_BOTTOM_1,
   DEVICE_TYPE_SMART_BOTTOM_2,
+  DEVICE_TYPE_SMART_TOP_G4D,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -709,7 +710,8 @@ const run = (action) => {
             );
             break;
           }
-          case DEVICE_TYPE_SMART_TOP_A6P: {
+          case DEVICE_TYPE_SMART_TOP_A6P:
+          case DEVICE_TYPE_SMART_TOP_G4D: {
             device.sendTOP(Buffer.from([
               ACTION_RGB,
               index,
@@ -820,7 +822,8 @@ const run = (action) => {
             );
             break;
           }
-          case DEVICE_TYPE_SMART_TOP_A6P: {
+          case DEVICE_TYPE_SMART_TOP_A6P:
+          case DEVICE_TYPE_SMART_TOP_G4D: {
             device.sendTOP(Buffer.from([
               ACTION_RGB,
               index,
