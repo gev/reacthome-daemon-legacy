@@ -1586,26 +1586,36 @@ const run = (action) => {
         const { id, low, high, onQuiet, onLowThreshold, onHighThreshold } =
           action;
         const { active } = get(action.action) || {};
-        const { value } = get(id) || {};
-        if (value >= high) {
-          set(action.action, { active: true });
-          if (onHighThreshold) {
-            run({ type: ACTION_SCRIPT_RUN, id: onHighThreshold });
+        const { value, index = 0 } = get(id) || {};
+        const process = (value) => {
+          if (value >= high) {
+            set(action.action, { active: true });
+            if (onHighThreshold) {
+              run({ type: ACTION_SCRIPT_RUN, id: onHighThreshold });
+            }
+            if (onLowThreshold) {
+              run({ type: ACTION_SCRIPT_RUN, id: onLowThreshold });
+            }
+          } else if (value >= low) {
+            set(action.action, { active: true });
+            if (onLowThreshold) {
+              run({ type: ACTION_SCRIPT_RUN, id: onLowThreshold });
+            }
+          } else if (active) {
+            set(action.action, { active: false });
+            if (onQuiet) {
+              run({ type: ACTION_SCRIPT_RUN, id: onQuiet });
+            }
           }
-          if (onLowThreshold) {
-            run({ type: ACTION_SCRIPT_RUN, id: onLowThreshold });
-          }
-        } else if (value >= low) {
-          set(action.action, { active: true });
-          if (onLowThreshold) {
-            run({ type: ACTION_SCRIPT_RUN, id: onLowThreshold });
-          }
-        } else if (active) {
-          set(action.action, { active: false });
-          if (onQuiet) {
-            run({ type: ACTION_SCRIPT_RUN, id: onQuiet });
+          if (Array.isArray(value)) {
+            if (index > 0 && index <= value.length) {
+              process(value[index - 1]);
+            }
+          } else {
+            process(value);
           }
         }
+
         break;
       }
       case ACTION_THERMOSTAT_HANDLE: {
