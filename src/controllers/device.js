@@ -367,7 +367,7 @@ module.exports.manage = () => {
             address: buff[7],
             hub: id,
           });
-          handleData(Buffer.concat([mac, buff.slice(7)]), { address }, { hub: id });
+          handleData(Buffer.concat([mac, buff.slice(8)]), { address }, { hub: id });
           break;
 
         }
@@ -386,7 +386,7 @@ module.exports.manage = () => {
               const { top, hub } = get(id) || {};
               if (top) {
                 const mac_ = Buffer.from(top.split(':').map(i => parseInt(i, 16)));
-                handleData(Buffer.concat([mac_, data.slice(8)]), { address }, { hub });
+                handleData(Buffer.concat([mac_, data.slice(7)]), { address }, { hub });
                 // switch (action) {
                 //   case ACTION_INITIALIZE: {
                 //     initialize(top);
