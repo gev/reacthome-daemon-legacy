@@ -873,7 +873,6 @@ const run = (action) => {
       case ACTION_ON: {
         const { id } = action;
         const o = get(id) || {};
-        console.log(action, o);
         if (o.disabled) return;
         if (o.type === DRIVER_TYPE_INTESIS_BOX || o.type === DRIVER_TYPE_NOVA || o.type === DRIVER_TYPE_SWIFT || o.type === DRIVER_TYPE_ALINK || o.type === DRIVER_TYPE_COMFOVENT) {
           drivers.run(action);
@@ -961,6 +960,7 @@ const run = (action) => {
             case DEVICE_TYPE_RELAY_2:
             case DEVICE_TYPE_RELAY_2_DIN:
             case DEVICE_TYPE_RELAY_12_RS: {
+              console.log(dec, kind, index);
               device.sendRBUS(Buffer.from([
                 ACTION_DO,
                 index,
