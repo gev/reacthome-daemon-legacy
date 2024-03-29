@@ -766,7 +766,7 @@ const run = (action) => {
                       ? DIM_VELOCITY
                       : AO_VELOCITY,
                   ]),
-                    action.id
+                    dev
                   );
                   break;
                 }
@@ -892,7 +892,6 @@ const run = (action) => {
           if (!o[i]) return;
           const { type } = get(o[i]) || {};
           const [dev, kind, index] = o[i].split("/");
-          console.log(dev, kind, index);
           const { ip, type: deviceType, protocol } = get(dev);
           const value = isOn ? (i === "bind" ? last.value : last[i]) : 255;
           switch (deviceType) {
@@ -939,7 +938,7 @@ const run = (action) => {
                     value,
                     DIM_VELOCITY,
                   ]),
-                    action.id
+                    dev
                   );
                   break;
                 }
@@ -949,7 +948,7 @@ const run = (action) => {
                     index,
                     ON,
                   ]),
-                    action.id
+                    dev
                   );
                 }
               }
@@ -961,13 +960,12 @@ const run = (action) => {
             case DEVICE_TYPE_RELAY_2:
             case DEVICE_TYPE_RELAY_2_DIN:
             case DEVICE_TYPE_RELAY_12_RS: {
-              console.log(dev, kind, index);
               device.sendRBUS(Buffer.from([
                 ACTION_DO,
                 index,
                 ON,
               ]),
-                action.id
+                dev
               );
               break;
             }
@@ -1092,7 +1090,7 @@ const run = (action) => {
                     0,
                     DIM_VELOCITY,
                   ]),
-                    action.id
+                    dev
                   );
                   break;
                 default:
@@ -1101,7 +1099,7 @@ const run = (action) => {
                     index,
                     OFF,
                   ]),
-                    action.id
+                    dev
                   );
               }
               break;
@@ -1117,7 +1115,7 @@ const run = (action) => {
                 index,
                 OFF,
               ]),
-                action.id
+                dev
               );
               break;
             }
@@ -1215,7 +1213,7 @@ const run = (action) => {
                   ? DIM_VELOCITY
                   : AO_VELOCITY,
               ]),
-                action.id
+                dev
               );
               break;
             }
@@ -1313,7 +1311,7 @@ const run = (action) => {
                   ? DIM_VELOCITY
                   : AO_VELOCITY
               ]),
-                action.id
+                dev
               );
               break;
             }
@@ -1836,7 +1834,7 @@ const run = (action) => {
               const [major] = version.split(".");
               device.sendRBUS(
                 major < 2 ? legacy(c) : Buffer.from([ACTION_IR, index, ...c]),
-                action.id
+                dev
               );
               break;
             }
