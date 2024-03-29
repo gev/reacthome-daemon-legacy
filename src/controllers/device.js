@@ -386,7 +386,7 @@ module.exports.manage = () => {
               const { top, hub } = get(id) || {};
               if (top) {
                 const mac_ = top.split(':').map(i => parseInt(i, 16));
-                handleData(Buffer.concat([mac_, buff.slice(8)]), { address }, { hub });
+                handleData(Buffer.concat([mac_, data.slice(8)]), { address }, { hub });
                 // switch (action) {
                 //   case ACTION_INITIALIZE: {
                 //     initialize(top);
