@@ -367,7 +367,7 @@ module.exports.manage = () => {
             address: buff[7],
             hub: id,
           });
-          handleData(Buffer.concat([mac, buff.slice(8)]), { address }, { hub: id });
+          handleData(Buffer.concat([mac, buff.slice(7)]), { address }, { hub: id });
           break;
 
         }
