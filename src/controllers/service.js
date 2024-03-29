@@ -961,7 +961,7 @@ const run = (action) => {
             case DEVICE_TYPE_RELAY_2:
             case DEVICE_TYPE_RELAY_2_DIN:
             case DEVICE_TYPE_RELAY_12_RS: {
-              console.log(dec, kind, index);
+              console.log(dev, kind, index);
               device.sendRBUS(Buffer.from([
                 ACTION_DO,
                 index,
