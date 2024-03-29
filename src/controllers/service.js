@@ -1607,15 +1607,14 @@ const run = (action) => {
               run({ type: ACTION_SCRIPT_RUN, id: onQuiet });
             }
           }
-          if (Array.isArray(value)) {
-            if (index > 0 && index <= value.length) {
-              process(value[index - 1]);
-            }
-          } else {
-            process(value);
-          }
         }
-
+        if (Array.isArray(value)) {
+          if (index > 0 && index <= value.length) {
+            process(value[index - 1]);
+          }
+        } else {
+          process(value);
+        }
         break;
       }
       case ACTION_THERMOSTAT_HANDLE: {
