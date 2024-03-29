@@ -873,6 +873,7 @@ const run = (action) => {
       case ACTION_ON: {
         const { id } = action;
         const o = get(id) || {};
+        console.log(action, o);
         if (o.disabled) return;
         if (o.type === DRIVER_TYPE_INTESIS_BOX || o.type === DRIVER_TYPE_NOVA || o.type === DRIVER_TYPE_SWIFT || o.type === DRIVER_TYPE_ALINK || o.type === DRIVER_TYPE_COMFOVENT) {
           drivers.run(action);
