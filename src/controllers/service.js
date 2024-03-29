@@ -892,6 +892,7 @@ const run = (action) => {
           if (!o[i]) return;
           const { type } = get(o[i]) || {};
           const [dev, kind, index] = o[i].split("/");
+          console.log(dev, kind, index);
           const { ip, type: deviceType, protocol } = get(dev);
           const value = isOn ? (i === "bind" ? last.value : last[i]) : 255;
           switch (deviceType) {
