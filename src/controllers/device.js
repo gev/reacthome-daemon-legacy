@@ -385,7 +385,7 @@ module.exports.manage = () => {
             default: {
               const { top, hub } = get(id) || {};
               if (top) {
-                const mac_ = Buffer.from(top_mac.top.split(':').map(i => parseInt(i, 16)));
+                const mac_ = Buffer.from(top.split(':').map(i => parseInt(i, 16)));
                 handleData(Buffer.concat([mac_, data.slice(8)]), { address }, { hub });
                 // switch (action) {
                 //   case ACTION_INITIALIZE: {
