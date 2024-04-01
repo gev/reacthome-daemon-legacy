@@ -16,7 +16,7 @@ const {
   ACTION_DO,
   ACTION_GROUP,
   ACTION_DI_RELAY_SYNC,
-  ACTION_DOPPLER,
+  ACTION_DOPPLER0,
   ACTION_DIMMER,
   ACTION_ARTNET,
   ACTION_DISCOVERY,
@@ -165,6 +165,7 @@ const {
   DEVICE_TYPE_SMART_TOP_A6P,
   DEVICE_TYPE_SMART_BOTTOM_1,
   DEVICE_TYPE_SMART_BOTTOM_2,
+  DEVICE_TYPE_SMART_TOP_G4D,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -563,9 +564,9 @@ const run = (action) => {
         }
         break;
       }
-      case ACTION_DOPPLER: {
+      case ACTION_DOPPLER0: {
         const dev = get(action.id);
-        device.send(Buffer.from([ACTION_DOPPLER, action.gain]), dev.ip);
+        device.send(Buffer.from([ACTION_DOPPLER0, action.gain]), dev.ip);
         break;
       }
       case ACTION_DIMMER: {
@@ -709,7 +710,8 @@ const run = (action) => {
             );
             break;
           }
-          case DEVICE_TYPE_SMART_TOP_A6P: {
+          case DEVICE_TYPE_SMART_TOP_A6P:
+          case DEVICE_TYPE_SMART_TOP_G4D: {
             device.sendTOP(Buffer.from([
               ACTION_RGB,
               index,
@@ -764,7 +766,7 @@ const run = (action) => {
                       ? DIM_VELOCITY
                       : AO_VELOCITY,
                   ]),
-                    action.id
+                    dev
                   );
                   break;
                 }
@@ -820,7 +822,8 @@ const run = (action) => {
             );
             break;
           }
-          case DEVICE_TYPE_SMART_TOP_A6P: {
+          case DEVICE_TYPE_SMART_TOP_A6P:
+          case DEVICE_TYPE_SMART_TOP_G4D: {
             device.sendTOP(Buffer.from([
               ACTION_RGB,
               index,
@@ -935,7 +938,7 @@ const run = (action) => {
                     value,
                     DIM_VELOCITY,
                   ]),
-                    action.id
+                    dev
                   );
                   break;
                 }
@@ -945,7 +948,7 @@ const run = (action) => {
                     index,
                     ON,
                   ]),
-                    action.id
+                    dev
                   );
                 }
               }
@@ -962,7 +965,7 @@ const run = (action) => {
                 index,
                 ON,
               ]),
-                action.id
+                dev
               );
               break;
             }
@@ -1087,7 +1090,7 @@ const run = (action) => {
                     0,
                     DIM_VELOCITY,
                   ]),
-                    action.id
+                    dev
                   );
                   break;
                 default:
@@ -1096,7 +1099,7 @@ const run = (action) => {
                     index,
                     OFF,
                   ]),
-                    action.id
+                    dev
                   );
               }
               break;
@@ -1112,7 +1115,7 @@ const run = (action) => {
                 index,
                 OFF,
               ]),
-                action.id
+                dev
               );
               break;
             }
@@ -1210,7 +1213,7 @@ const run = (action) => {
                   ? DIM_VELOCITY
                   : AO_VELOCITY,
               ]),
-                action.id
+                dev
               );
               break;
             }
@@ -1308,7 +1311,7 @@ const run = (action) => {
                   ? DIM_VELOCITY
                   : AO_VELOCITY
               ]),
-                action.id
+                dev
               );
               break;
             }
@@ -1580,28 +1583,37 @@ const run = (action) => {
         break;
       }
       case ACTION_DOPPLER_HANDLE: {
-        const { id, low, high, onQuiet, onLowThreshold, onHighThreshold } =
+        const { id, low, high, onQuiet, onLowThreshold, onHighThreshold, index = 0 } =
           action;
         const { active } = get(action.action) || {};
         const { value } = get(id) || {};
-        if (value >= high) {
-          set(action.action, { active: true });
-          if (onHighThreshold) {
-            run({ type: ACTION_SCRIPT_RUN, id: onHighThreshold });
+        const process = (value) => {
+          if (value >= high) {
+            set(action.action, { active: true });
+            if (onHighThreshold) {
+              run({ type: ACTION_SCRIPT_RUN, id: onHighThreshold });
+            }
+            if (onLowThreshold) {
+              run({ type: ACTION_SCRIPT_RUN, id: onLowThreshold });
+            }
+          } else if (value >= low) {
+            set(action.action, { active: true });
+            if (onLowThreshold) {
+              run({ type: ACTION_SCRIPT_RUN, id: onLowThreshold });
+            }
+          } else if (active) {
+            set(action.action, { active: false });
+            if (onQuiet) {
+              run({ type: ACTION_SCRIPT_RUN, id: onQuiet });
+            }
           }
-          if (onLowThreshold) {
-            run({ type: ACTION_SCRIPT_RUN, id: onLowThreshold });
+        }
+        if (Array.isArray(value)) {
+          if (index > 0 && index <= value.length) {
+            process(value[index - 1]);
           }
-        } else if (value >= low) {
-          set(action.action, { active: true });
-          if (onLowThreshold) {
-            run({ type: ACTION_SCRIPT_RUN, id: onLowThreshold });
-          }
-        } else if (active) {
-          set(action.action, { active: false });
-          if (onQuiet) {
-            run({ type: ACTION_SCRIPT_RUN, id: onQuiet });
-          }
+        } else {
+          process(value);
         }
         break;
       }
@@ -1822,7 +1834,7 @@ const run = (action) => {
               const [major] = version.split(".");
               device.sendRBUS(
                 major < 2 ? legacy(c) : Buffer.from([ACTION_IR, index, ...c]),
-                action.id
+                dev
               );
               break;
             }

@@ -35,6 +35,7 @@ module.exports.DO = "do";
 module.exports.DI = "di";
 module.exports.AO = "ao";
 module.exports.DIM = "dim";
+module.exports.DOPPLER = "doppler";
 module.exports.ENDPOINT = "endpoint";
 module.exports.ALARM = "alarm";
 module.exports.COLOR = "color";
@@ -78,8 +79,9 @@ module.exports.ACTION_SMART_TOP_DETECT = 0x31;
 module.exports.ACTION_RS485_MODE = 0xa0;
 module.exports.ACTION_RBUS_TRANSMIT = 0xa1;
 module.exports.ACTION_RS485_TRANSMIT = 0xa2;
-module.exports.ACTION_DOPPLER = 0xb0;
+module.exports.ACTION_DOPPLER0 = 0xb0;
 module.exports.ACTION_DOPPLER_RAW = 0xb1;
+module.exports.ACTION_DOPPLER1 = 0xb2;
 module.exports.ACTION_TEMPERATURE = 0xc0;
 module.exports.ACTION_TEMPERATURE_EXT_DEPRECATED = 0xc1;
 module.exports.ACTION_HUMIDITY = 0xc2;
@@ -248,6 +250,7 @@ module.exports.DEVICE_TYPE_SMART_4AM = 0x2a;
 module.exports.DEVICE_TYPE_SMART_6_PUSH = 0x2c;
 
 module.exports.DEVICE_TYPE_SMART_TOP_A6P = 0x30;
+module.exports.DEVICE_TYPE_SMART_TOP_G4D = 0x31;
 module.exports.DEVICE_TYPE_SMART_BOTTOM_1 = 0x3a;
 module.exports.DEVICE_TYPE_SMART_BOTTOM_2 = 0x3b;
 

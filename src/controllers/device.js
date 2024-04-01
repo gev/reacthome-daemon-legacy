@@ -19,7 +19,7 @@ const {
   ACTION_HUMIDITY,
   ACTION_ILLUMINATION,
   ACTION_DIMMER,
-  ACTION_DOPPLER,
+  ACTION_DOPPLER0,
   ACTION_DOPPLER_RAW,
   ACTION_SCRIPT_RUN,
   ACTION_IP_ADDRESS,
@@ -73,6 +73,8 @@ const {
   TEMPERATURE_EXT,
   ACTION_SMART_TOP,
   ACTION_SMART_TOP_DETECT,
+  DOPPLER,
+  ACTION_DOPPLER1,
 } = require("../constants");
 const {
   get,
@@ -381,37 +383,39 @@ module.exports.manage = () => {
               break;
             }
             default: {
-              const { top } = get(id) || {};
+              const { top, hub } = get(id) || {};
               if (top) {
-                switch (action) {
-                  case ACTION_INITIALIZE: {
-                    initialize(top);
-                    break;
-                  }
-                  case ACTION_DI: {
-                    const index = data[8];
-                    const value = data[9];
-                    const channel = `${top}/${DI}/${index}`;
-                    set(channel, { value });
-                    break;
-                  }
-                  case ACTION_TEMPERATURE: {
-                    const temperature = data.readUInt16LE(8) / 100;
-                    set(top, { temperature });
-                    break;
-                  }
-                  case ACTION_HUMIDITY: {
-                    const humidity = data.readUInt16LE(8) / 100;
-                    set(top, { humidity });
-                    break;
-                  }
-                  case ACTION_RGB: {
-                    const [, , , , , , , , index, r, g, b] = data;
-                    const chan = `${top}/rgb/${index}`;
-                    set(chan, { r, g, b });
-                    break;
-                  }
-                }
+                const mac_ = Buffer.from(top.split(':').map(i => parseInt(i, 16)));
+                handleData(Buffer.concat([mac_, data.slice(7)]), { address }, { hub });
+                // switch (action) {
+                //   case ACTION_INITIALIZE: {
+                //     initialize(top);
+                //     break;
+                //   }
+                //   case ACTION_DI: {
+                //     const index = data[8];
+                //     const value = data[9];
+                //     const channel = `${top}/${DI}/${index}`;
+                //     set(channel, { value });
+                //     break;
+                //   }
+                //   case ACTION_TEMPERATURE: {
+                //     const temperature = data.readUInt16LE(8) / 100;
+                //     set(top, { temperature });
+                //     break;
+                //   }
+                //   case ACTION_HUMIDITY: {
+                //     const humidity = data.readUInt16LE(8) / 100;
+                //     set(top, { humidity });
+                //     break;
+                //   }
+                //   case ACTION_RGB: {
+                //     const [, , , , , , , , index, r, g, b] = data;
+                //     const chan = `${top}/rgb/${index}`;
+                //     set(chan, { r, g, b });
+                //     break;
+                //   }
+                // }
               }
             }
           }
@@ -631,10 +635,19 @@ module.exports.manage = () => {
           }
           break;
         }
-        case ACTION_DOPPLER: {
+        case ACTION_DOPPLER0: {
           const [, , , , , , , value, gain] = data;
-          const { onDoppler, threshold } = get(id) || {};
+          const { onDoppler } = get(id) || {};
           set(id, { value, gain });
+          if (onDoppler) {
+            run({ type: ACTION_SCRIPT_RUN, id: onDoppler });
+          }
+          break;
+        }
+        case ACTION_DOPPLER1: {
+          const value = [...data.slice(7)];
+          const { onDoppler } = get(id) || {};
+          set(id, { value });
           if (onDoppler) {
             run({ type: ACTION_SCRIPT_RUN, id: onDoppler });
           }
