@@ -1273,6 +1273,7 @@ const run = (action) => {
           if (v > 100) v = 100;
         }
         const rgb = color.hsv.rgb(h, s, v);
+        const [r, g, b] = rgb || [0, 0, 0];
         set(id, { last: o.bind ? { v } : { r, g, b }, value: !!v });
         bind.forEach((i, c) => {
           if (!o[i]) return;
