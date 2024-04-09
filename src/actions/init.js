@@ -155,7 +155,7 @@ module.exports.initialize = (id) => {
     case DEVICE_TYPE_SMART_TOP_G4D: {
       const mac = id.split(":").map((i) => parseInt(i, 16));
       a[0] = ACTION_INITIALIZE;
-      for (let i = 1; i <= 68; i++) {
+      for (let i = 1; i <= 8; i++) {
         const channel = get(`${id}/rgb/${i}`);
         a[3 * i - 2] = (channel && channel.r) || 0;
         a[3 * i - 1] = (channel && channel.g) || 0;
