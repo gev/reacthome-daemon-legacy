@@ -643,6 +643,16 @@ const run = (action) => {
             }
             break;
           }
+          case DEVICE_TYPE_SMART_TOP_A6P:
+          case DEVICE_TYPE_SMART_TOP_G4D: {
+            device.sendTOP(Buffer.from([
+              ACTION_DIMMER,
+              action.value,
+            ]),
+              action.id
+            );
+            break;
+          }
           default: {
             let velocity = DIM_VELOCITY;
             if (dev.type === DRIVER_TYPE_ARTNET) {
@@ -682,16 +692,6 @@ const run = (action) => {
                 );
                 break;
             }
-          }
-          case DEVICE_TYPE_SMART_TOP_A6P:
-          case DEVICE_TYPE_SMART_TOP_G4D: {
-            device.sendTOP(Buffer.from([
-              ACTION_DIMMER,
-              action.value,
-            ]),
-              action.id
-            );
-            break;
           }
         }
         break;
