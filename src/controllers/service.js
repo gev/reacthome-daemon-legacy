@@ -685,6 +685,16 @@ const run = (action) => {
         }
         break;
       }
+      case DEVICE_TYPE_SMART_TOP_A6P:
+      case DEVICE_TYPE_SMART_TOP_G4D: {
+        device.sendTOP(Buffer.from([
+          ACTION_DIMMER,
+          v,
+        ]),
+          action.id
+        );
+        break;
+      }
       case ACTION_ARTNET: {
         drivers.run(action);
         break;
@@ -1241,16 +1251,6 @@ const run = (action) => {
                   : AO_VELOCITY,
               ]),
                 dev
-              );
-              break;
-            }
-            case DEVICE_TYPE_SMART_TOP_A6P:
-            case DEVICE_TYPE_SMART_TOP_G4D: {
-              device.sendTOP(Buffer.from([
-                ACTION_DIMMER,
-                v,
-              ]),
-                action.id
               );
               break;
             }
