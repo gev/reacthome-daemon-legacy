@@ -204,6 +204,7 @@ const bind = ["r", "g", "b", "bind"];
 const rgb = ["r", "g", "b"];
 
 const run = (action) => {
+  console.log(action)
   try {
     switch (action.type) {
       case ACTION_SET: {
