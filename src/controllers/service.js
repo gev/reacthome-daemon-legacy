@@ -204,7 +204,6 @@ const bind = ["r", "g", "b", "bind"];
 const rgb = ["r", "g", "b"];
 
 const run = (action) => {
-  console.log(action)
   try {
     switch (action.type) {
       case ACTION_SET: {
@@ -279,7 +278,6 @@ const run = (action) => {
         break;
       }
       case ACTION_DO: {
-        console.log(action)
         const dev = get(action.id);
         const { version = "" } = dev;
         const [major, minor] = version.split(".");
@@ -685,17 +683,17 @@ const run = (action) => {
                 break;
             }
           }
+          case DEVICE_TYPE_SMART_TOP_A6P:
+          case DEVICE_TYPE_SMART_TOP_G4D: {
+            device.sendTOP(Buffer.from([
+              ACTION_DIMMER,
+              action.value,
+            ]),
+              action.id
+            );
+            break;
+          }
         }
-        break;
-      }
-      case DEVICE_TYPE_SMART_TOP_A6P:
-      case DEVICE_TYPE_SMART_TOP_G4D: {
-        device.sendTOP(Buffer.from([
-          ACTION_DIMMER,
-          action.value,
-        ]),
-          action.id
-        );
         break;
       }
       case ACTION_ARTNET: {
