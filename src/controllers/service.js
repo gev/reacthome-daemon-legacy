@@ -689,7 +689,7 @@ const run = (action) => {
       case DEVICE_TYPE_SMART_TOP_G4D: {
         device.sendTOP(Buffer.from([
           ACTION_DIMMER,
-          v,
+          action.value,
         ]),
           action.id
         );
