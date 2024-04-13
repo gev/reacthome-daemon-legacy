@@ -75,6 +75,9 @@ const {
   ACTION_SMART_TOP_DETECT,
   DOPPLER,
   ACTION_DOPPLER1,
+  DEVICE_TYPE_SMART_TOP_A6P,
+  DEVICE_TYPE_SMART_TOP_G4D,
+  DEVICE_TYPE_DIM_4,
 } = require("../constants");
 const {
   get,
@@ -272,6 +275,11 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_DO: {
+          const { type } = get(id) || {};
+          if (type === DEVICE_TYPE_SMART_TOP_A6P || type === DEVICE_TYPE_SMART_TOP_G4D) {
+            set(id, { state: data[7] })
+            return;
+          }
           const index = data[7];
           const value = data[8];
           const cid = `${id}/${DO}/${index}`;
@@ -481,6 +489,11 @@ module.exports.manage = () => {
                   }
                 }
               }
+              break;
+            }
+            case DEVICE_TYPE_SMART_TOP_A6P:
+            case DEVICE_TYPE_SMART_TOP_G4D: {
+              set(id, { brightness: data[7] });
               break;
             }
             default: {

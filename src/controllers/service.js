@@ -481,6 +481,15 @@ const run = (action) => {
             );
             break;
           }
+          case DEVICE_TYPE_SMART_TOP_A6P:
+          case DEVICE_TYPE_SMART_TOP_G4D: {
+            device.sendTOP(Buffer.from([
+              ACTION_DO, action.value
+            ]),
+              action.id
+            );
+            break;
+          }
           default: {
             device.send(
               Buffer.from([ACTION_DO, action.index, action.value]),
@@ -969,6 +978,15 @@ const run = (action) => {
               );
               break;
             }
+            case DEVICE_TYPE_SMART_TOP_A6P:
+            case DEVICE_TYPE_SMART_TOP_G4D: {
+              device.sendTOP(Buffer.from([
+                ACTION_DO, ON
+              ]),
+                action.id
+              );
+              break;
+            }
             case DRIVER_TYPE_ARTNET: {
               switch (type) {
                 case ARTNET_TYPE_DIMMER:
@@ -1119,6 +1137,15 @@ const run = (action) => {
               );
               break;
             }
+            case DEVICE_TYPE_SMART_TOP_A6P:
+            case DEVICE_TYPE_SMART_TOP_G4D: {
+              device.sendTOP(Buffer.from([
+                ACTION_DO, OFF
+              ]),
+                action.id
+              );
+              break;
+            }
             case DRIVER_TYPE_ARTNET: {
               switch (type) {
                 case ARTNET_TYPE_DIMMER:
@@ -1214,6 +1241,16 @@ const run = (action) => {
                   : AO_VELOCITY,
               ]),
                 dev
+              );
+              break;
+            }
+            case DEVICE_TYPE_SMART_TOP_A6P:
+            case DEVICE_TYPE_SMART_TOP_G4D: {
+              device.sendTOP(Buffer.from([
+                ACTION_DIMMER,
+                v,
+              ]),
+                action.id
               );
               break;
             }
