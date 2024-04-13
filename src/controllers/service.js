@@ -1931,10 +1931,20 @@ const run = (action) => {
         break;
       }
       case ACTION_VIBRO: {
+        const { type } = get(action.id) || {};
         const buffer = Buffer.alloc(2);
         buffer.writeUInt8(ACTION_VIBRO, 0);
         buffer.writeUInt8(action.value, 1);
-        device.sendRBUS(buffer, action.id);
+        switch (type) {
+          case DEVICE_TYPE_SMART_TOP_A6P:
+          case DEVICE_TYPE_SMART_TOP_G4D: {
+            device.sendTOP(buffer, action.id);
+            break;
+          }
+          default: {
+            device.sendRBUS(buffer, action.id);
+          }
+        }
         break;
       }
       case ACTION_SET_ADDRESS:
