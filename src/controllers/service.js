@@ -890,7 +890,7 @@ const run = (action) => {
               }
             }
             console.log(cmd);
-            // device.sendTOP(Buffer.from(cmd), action.id);
+            device.sendTOP(Buffer.from(cmd), action.id);
             break;
           }
         }
