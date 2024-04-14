@@ -864,10 +864,10 @@ const run = (action) => {
         switch (type) {
           case DEVICE_TYPE_SMART_TOP_G4D: {
             set(`${id}/gradient/${index}`, { value });
-            const { value: topLeft } = get(`${id}/gradient/0`) || {};
-            const { value: topRight } = get(`${id}/gradient/1`) || {};
-            const { value: bottomLeft } = get(`${id}/gradient/2`) || {};
-            const { value: bottomRight } = get(`${id}/gradient/3`) || {};
+            const { value: topLeft } = get(`${id}/gradient/1`) || {};
+            const { value: topRight } = get(`${id}/gradient/2`) || {};
+            const { value: bottomLeft } = get(`${id}/gradient/3`) || {};
+            const { value: bottomRight } = get(`${id}/gradient/4`) || {};
             const cmd = [ACTION_RGB, 19];
             for (let i = 0; i < 5; i++) {
               const top = compose(topLeft, 13 - i, topRight, i);
@@ -886,9 +886,8 @@ const run = (action) => {
                 cmd.push(compose(top, 4 - j, bottom, j));
               }
             }
-            device.sendTOP(Buffer.from(cmd),
-              action.id
-            );
+            console.log(cmd);
+            device.sendTOP(Buffer.from(cmd), action.id);
             break;
           }
         }
