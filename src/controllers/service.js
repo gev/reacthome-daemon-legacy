@@ -883,7 +883,10 @@ const run = (action) => {
                 if (j === 10 && i !== 4) continue;
                 if (j === 12 && i === 1) continue;
                 if (j === 12 && i === 3) continue;
-                cmd.push(compose(top, 4 - j, bottom, j));
+                const { r, g, b } = compose(top, 4 - j, bottom, j);
+                cmd.push(r);
+                cmd.push(g)
+                cmd.push(b);
               }
             }
             console.log(cmd);
