@@ -2099,7 +2099,7 @@ const run = (action) => {
   }
 };
 
-const compose = (ac, am = 1, bc, bm = 1) => {
+const compose = (ac = {}, am = 1, bc = {}, bm = 1) => {
   const s = am + bm;
   const blend = (a = 0, b = 0) => Math.floor((a * am + b * bm) / s);
   return ({
