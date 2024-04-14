@@ -166,6 +166,7 @@ const {
   DEVICE_TYPE_SMART_BOTTOM_1,
   DEVICE_TYPE_SMART_BOTTOM_2,
   DEVICE_TYPE_SMART_TOP_G4D,
+  ACTION_GRADIENT,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -850,6 +851,42 @@ const run = (action) => {
               g,
               b,
             ]),
+              action.id
+            );
+            break;
+          }
+        }
+        break;
+      }
+      case ACTION_GRADIENT: {
+        const { id, index, value } = action;
+        const { type } = get(id) || {};
+        switch (type) {
+          case DEVICE_TYPE_SMART_TOP_G4D: {
+            set(`${id}/gradient/${index}`, { value });
+            const { value: topLeft } = get(`${id}/gradient/0`) || {};
+            const { value: topRight } = get(`${id}/gradient/1`) || {};
+            const { value: bottomLeft } = get(`${id}/gradient/2`) || {};
+            const { value: bottomRight } = get(`${id}/gradient/3`) || {};
+            const cmd = [ACTION_RGB, 19];
+            for (let i = 0; i < 5; i++) {
+              const top = compose(topLeft, 13 - i, topRight, i);
+              const bottom = compose(bottomLeft, 13 - i, bottomRight, i);
+              for (let j = 0; j < 14; j++) {
+                if (j === 0 && i !== 2) continue;
+                if (j === 2) continue;
+                if (j === 4 && i === 1) continue;
+                if (j === 4 && i === 3) continue;
+                if (j === 6) continue;
+                if (j === 8 && i === 1) continue;
+                if (j === 8 && i === 3) continue;
+                if (j === 10 && i !== 4) continue;
+                if (j === 12 && i === 1) continue;
+                if (j === 12 && i === 3) continue;
+                cmd.push(compose(top, 4 - j, bottom, j));
+              }
+            }
+            device.sendTOP(Buffer.from(cmd),
               action.id
             );
             break;
@@ -2060,6 +2097,16 @@ const run = (action) => {
     console.error(action);
     console.error(e);
   }
+};
+
+const compose = (ac, am = 1, bc, bm = 1) => {
+  const s = am + bm;
+  const blend = (a = 0, b = 0) => Math.floor((a * am + b * bm) / s);
+  return ({
+    r: blend(ac.r, bc.r),
+    g: blend(ac.g, bc.g),
+    b: blend(ac.b, cc.b),
+  });
 };
 
 module.exports.run = run;

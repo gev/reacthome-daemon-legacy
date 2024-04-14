@@ -443,7 +443,7 @@ module.exports.manage = () => {
               set(channel, {
                 value,
                 velocity,
-                dimable: true,
+                dimmable: true,
               });
               if (chan) {
                 const { bind } = chan;
@@ -537,9 +537,15 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_RGB: {
-          const [, , , , , , , index, r, g, b] = data;
-          const chan = `${id}/rgb/${index}`;
-          set(chan, { r, g, b });
+          const [, , , , , , , index] = data;
+          for (let i = 0; i < (data.length - 8) / 3; i++) {
+            const chan = `${id}/rgb/${index + i}`;
+            set(chan, {
+              r: data[i * 3 + 8],
+              g: data[i * 3 + 9],
+              b: data[i * 3 + 10],
+            });
+          }
           break;
         }
         case ACTION_IMAGE: {
