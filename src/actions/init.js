@@ -156,13 +156,13 @@ module.exports.initialize = (id) => {
     case DEVICE_TYPE_SMART_TOP_G4D: {
       const mac = id.split(":").map((i) => parseInt(i, 16));
       a[0] = ACTION_INITIALIZE;
+      a[1] = vibro;
       const { state = 1, brightness = 128, mask = [], vibro } = get(id);
-      a[1] = state;
-      a[2] = brightness;
+      a[2] = state;
+      a[3] = brightness;
       for (let i = 0; i < 8; i++) {
-        a[i + 3] = mask[i] || 0;
+        a[i + 4] = mask[i] || 0;
       }
-      a[11] = vibro;
       for (let i = 1; i <= 64; i++) {
         const channel = get(`${id}/rgb/${i}`);
         a[3 * i + 9] = (channel && channel.r) || 0;
