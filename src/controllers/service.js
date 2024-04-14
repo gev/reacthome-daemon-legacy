@@ -870,8 +870,8 @@ const run = (action) => {
             const { value: bottomRight } = get(`${id}/gradient/4`) || {};
             const cmd = [ACTION_RGB, 19];
             for (let i = 0; i < 5; i++) {
-              const top = compose(topLeft, 13 - i, topRight, i);
-              const bottom = compose(bottomLeft, 13 - i, bottomRight, i);
+              const left = compose(topLeft, 5 - i, bottomLeft, i);
+              const right = compose(topRight, 5 - i, bottomRight, i);
               for (let j = 0; j < 14; j++) {
                 if (j === 0 && i !== 2) continue;
                 if (j === 2) continue;
@@ -883,7 +883,7 @@ const run = (action) => {
                 if (j === 10 && i !== 4) continue;
                 if (j === 12 && i === 1) continue;
                 if (j === 12 && i === 3) continue;
-                const { r, g, b } = compose(top, 4 - j, bottom, j);
+                const { r, g, b } = compose(left, 13 - j, right, j);
                 cmd.push(r);
                 cmd.push(g)
                 cmd.push(b);
