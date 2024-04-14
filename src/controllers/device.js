@@ -538,7 +538,7 @@ module.exports.manage = () => {
         }
         case ACTION_RGB: {
           const [, , , , , , , index] = data;
-          console.log(Array.from(data.slice(6)).join(' '), Array.from(data.slice(6)).join(' ').length)
+          console.log(Array.from(data.slice(6)).join(' '), data.length)
           for (let i = 0; i < (data.length - 8) / 3; i++) {
             const chan = `${id}/rgb/${index + i}`;
             set(chan, {
