@@ -2105,7 +2105,7 @@ const compose = (ac = {}, am = 1, bc = {}, bm = 1) => {
   return ({
     r: blend(ac.r, bc.r),
     g: blend(ac.g, bc.g),
-    b: blend(ac.b, cc.b),
+    b: blend(ac.b, bc.b),
   });
 };
 
