@@ -863,7 +863,7 @@ const run = (action) => {
         const { type } = get(id) || {};
         switch (type) {
           case DEVICE_TYPE_SMART_TOP_G4D: {
-            set(`${id}/gradient/${index}`, { value });
+            set(`${id}/gradient/${index}`, value);
             const { value: topLeft } = get(`${id}/gradient/1`) || {};
             const { value: topRight } = get(`${id}/gradient/2`) || {};
             const { value: bottomLeft } = get(`${id}/gradient/3`) || {};
