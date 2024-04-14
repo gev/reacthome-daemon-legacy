@@ -889,6 +889,8 @@ const run = (action) => {
                 cmd.push(b);
               }
             }
+
+            console.log(cmd);
             device.sendTOP(Buffer.from(cmd), action.id);
             break;
           }
