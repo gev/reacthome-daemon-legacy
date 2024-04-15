@@ -900,7 +900,8 @@ const run = (action) => {
         const { type } = get(id) || {};
         switch (type) {
           case DEVICE_TYPE_SMART_TOP_G4D: {
-            set(id, value);
+            console.log(value)
+            set(id, { image: value });
             break;
           }
           default:
