@@ -553,8 +553,9 @@ module.exports.manage = () => {
           switch (type) {
             case DEVICE_TYPE_SMART_TOP_A6P:
             case DEVICE_TYPE_SMART_TOP_G4D: {
-              const image = Array.from(data.slice(7))
+              const image = Array.from(data.slice(7, 15))
               set(id, { image });
+              console.log(image)
               break;
             }
             default:
