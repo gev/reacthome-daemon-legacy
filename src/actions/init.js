@@ -161,7 +161,7 @@ module.exports.initialize = (id) => {
       a[2] = state;
       a[3] = brightness;
       for (let i = 0; i < 8; i++) {
-        a[i + 4] = mask[i] || 0;
+        a[i + 4] = image[i] || 0;
       }
       for (let i = 1; i <= 64; i++) {
         const channel = get(`${id}/rgb/${i}`);
