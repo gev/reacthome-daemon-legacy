@@ -900,11 +900,18 @@ const run = (action) => {
         const { type } = get(id) || {};
         switch (type) {
           case DEVICE_TYPE_SMART_TOP_A6P:
+            const buff = Buffer.alloc(2);
+            buff[0] = ACTION_IMAGE;
+            buff[1] = value[0] || 0;
+            device.sendTOP(buff, action.id);
+            break;
           case DEVICE_TYPE_SMART_TOP_G4D: {
-            console.log('<-', value);
-            device.sendTOP(Buffer.from([
-              ACTION_IMAGE, ...value
-            ]), action.id);
+            const buff = Buffer.alloc(9);
+            buff[0] = ACTION_IMAGE;
+            for (let i = 0; i < 8; i++) {
+              buff[i + 1] = value[i] || 0;
+            }
+            device.sendTOP(buff, action.id);
             break;
           }
           default:
