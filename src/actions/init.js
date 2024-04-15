@@ -170,6 +170,7 @@ module.exports.initialize = (id) => {
         a[3 * i + 11] = (channel && channel.b) || 0;
       }
       device.sendTOP(Buffer.from(a), id);
+      console.log(a.length);
       break;
     }
     case DEVICE_TYPE_DI24: {
