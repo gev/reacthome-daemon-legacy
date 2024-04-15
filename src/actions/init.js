@@ -155,7 +155,7 @@ module.exports.initialize = (id) => {
     }
     case DEVICE_TYPE_SMART_TOP_G4D: {
       const mac = id.split(":").map((i) => parseInt(i, 16));
-      const { state = 1, brightness = 128, mask = [], vibro } = get(id);
+      const { state = 1, brightness = 128, image = [], vibro } = get(id);
       a[0] = ACTION_INITIALIZE;
       a[1] = vibro;
       a[2] = state;
