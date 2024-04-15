@@ -549,10 +549,20 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_IMAGE: {
-          const [, , , , , , , level, i2, i1] = data;
-          const c2 = image2char[i2] || " ";
-          const c1 = image2char[i1] || " ";
-          set(id, { level, image: [i2, i1], text: c2 + c1 });
+          const { type } = get(id) || {};
+          switch (type) {
+            case DEVICE_TYPE_SMART_TOP_A6P:
+            case DEVICE_TYPE_SMART_TOP_G4D: {
+              const image = Array.from(data.slice(7))
+              set(id, { image });
+              break;
+            }
+            default:
+              const [, , , , , , , level, i2, i1] = data;
+              const c2 = image2char[i2] || " ";
+              const c1 = image2char[i1] || " ";
+              set(id, { level, image: [i2, i1], text: c2 + c1 });
+          }
           break;
         }
         case ACTION_TEMPERATURE_CORRECT: {

@@ -899,8 +899,11 @@ const run = (action) => {
         const { id, level, value } = action;
         const { type } = get(id) || {};
         switch (type) {
+          case DEVICE_TYPE_SMART_TOP_A6P:
           case DEVICE_TYPE_SMART_TOP_G4D: {
-            set(id, { image: value });
+            device.sendTOP(Buffer.from([
+              ACTION_IMAGE, ...value
+            ]), action.id);
             break;
           }
           default:
