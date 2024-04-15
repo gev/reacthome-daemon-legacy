@@ -41,7 +41,6 @@ device.sendRBUS = (data, id) => {
 device.sendTOP = (data, id) => {
   const { bottom } = get(id) || {};
   if (bottom) {
-    // console.log('to top:', bottom, [ACTION_SMART_TOP, ...data]);
     device.sendRBUS([ACTION_SMART_TOP, ...data], bottom);
   }
 }

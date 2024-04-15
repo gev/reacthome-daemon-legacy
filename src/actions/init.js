@@ -57,6 +57,7 @@ const { device } = require("../sockets");
 const mac = require("../mac");
 const { codes } = require("reacthome-ircodes");
 const { ip2int } = require("../util");
+const { forEach } = require("../sip/calls");
 
 module.exports.initialized = (id) => {
   set(id, { initialized: true });
@@ -154,12 +155,19 @@ module.exports.initialize = (id) => {
     }
     case DEVICE_TYPE_SMART_TOP_G4D: {
       const mac = id.split(":").map((i) => parseInt(i, 16));
+      const { state = 1, brightness = 128, image = [], vibro = 100 } = get(id);
       a[0] = ACTION_INITIALIZE;
-      for (let i = 1; i <= 8; i++) {
+      a[1] = vibro;
+      a[2] = state;
+      a[3] = brightness;
+      for (let i = 0; i < 8; i++) {
+        a[i + 4] = image[i] || 0;
+      }
+      for (let i = 1; i <= 64; i++) {
         const channel = get(`${id}/rgb/${i}`);
-        a[3 * i - 2] = (channel && channel.r) || 0;
-        a[3 * i - 1] = (channel && channel.g) || 0;
-        a[3 * i + 0] = (channel && channel.b) || 0;
+        a[3 * i + 9] = (channel && channel.r) || 0;
+        a[3 * i + 10] = (channel && channel.g) || 0;
+        a[3 * i + 11] = (channel && channel.b) || 0;
       }
       device.sendTOP(Buffer.from(a), id);
       break;

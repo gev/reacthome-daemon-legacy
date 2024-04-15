@@ -75,6 +75,9 @@ const {
   ACTION_SMART_TOP_DETECT,
   DOPPLER,
   ACTION_DOPPLER1,
+  DEVICE_TYPE_SMART_TOP_A6P,
+  DEVICE_TYPE_SMART_TOP_G4D,
+  DEVICE_TYPE_DIM_4,
 } = require("../constants");
 const {
   get,
@@ -272,6 +275,11 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_DO: {
+          const { type } = get(id) || {};
+          if (type === DEVICE_TYPE_SMART_TOP_A6P || type === DEVICE_TYPE_SMART_TOP_G4D) {
+            set(id, { state: data[7] })
+            return;
+          }
           const index = data[7];
           const value = data[8];
           const cid = `${id}/${DO}/${index}`;
@@ -435,7 +443,7 @@ module.exports.manage = () => {
               set(channel, {
                 value,
                 velocity,
-                dimable: true,
+                dimmable: true,
               });
               if (chan) {
                 const { bind } = chan;
@@ -483,6 +491,11 @@ module.exports.manage = () => {
               }
               break;
             }
+            case DEVICE_TYPE_SMART_TOP_A6P:
+            case DEVICE_TYPE_SMART_TOP_G4D: {
+              set(id, { brightness: data[7] });
+              break;
+            }
             default: {
               const { version = "" } = get(id) || {};
               const major = parseInt(version.split(".")[0], 10);
@@ -524,16 +537,32 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_RGB: {
-          const [, , , , , , , index, r, g, b] = data;
-          const chan = `${id}/rgb/${index}`;
-          set(chan, { r, g, b });
+          const [, , , , , , , index] = data;
+          for (let i = 0; i < (data.length - 8) / 3; i++) {
+            const chan = `${id}/rgb/${index + i}`;
+            set(chan, {
+              r: data[i * 3 + 8],
+              g: data[i * 3 + 9],
+              b: data[i * 3 + 10],
+            });
+          }
           break;
         }
         case ACTION_IMAGE: {
-          const [, , , , , , , level, i2, i1] = data;
-          const c2 = image2char[i2] || " ";
-          const c1 = image2char[i1] || " ";
-          set(id, { level, image: [i2, i1], text: c2 + c1 });
+          const { type } = get(id) || {};
+          switch (type) {
+            case DEVICE_TYPE_SMART_TOP_A6P:
+            case DEVICE_TYPE_SMART_TOP_G4D: {
+              const image = Array.from(data.slice(7, 15))
+              set(id, { image });
+              break;
+            }
+            default:
+              const [, , , , , , , level, i2, i1] = data;
+              const c2 = image2char[i2] || " ";
+              const c1 = image2char[i1] || " ";
+              set(id, { level, image: [i2, i1], text: c2 + c1 });
+          }
           break;
         }
         case ACTION_TEMPERATURE_CORRECT: {

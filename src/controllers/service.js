@@ -166,6 +166,7 @@ const {
   DEVICE_TYPE_SMART_BOTTOM_1,
   DEVICE_TYPE_SMART_BOTTOM_2,
   DEVICE_TYPE_SMART_TOP_G4D,
+  ACTION_GRADIENT,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -481,6 +482,15 @@ const run = (action) => {
             );
             break;
           }
+          case DEVICE_TYPE_SMART_TOP_A6P:
+          case DEVICE_TYPE_SMART_TOP_G4D: {
+            device.sendTOP(Buffer.from([
+              ACTION_DO, action.value
+            ]),
+              action.id
+            );
+            break;
+          }
           default: {
             device.send(
               Buffer.from([ACTION_DO, action.index, action.value]),
@@ -631,6 +641,16 @@ const run = (action) => {
                 );
                 break;
             }
+            break;
+          }
+          case DEVICE_TYPE_SMART_TOP_A6P:
+          case DEVICE_TYPE_SMART_TOP_G4D: {
+            device.sendTOP(Buffer.from([
+              ACTION_DIMMER,
+              action.value,
+            ]),
+              action.id
+            );
             break;
           }
           default: {
@@ -838,22 +858,78 @@ const run = (action) => {
         }
         break;
       }
+      case ACTION_GRADIENT: {
+        const { id, index, value } = action;
+        const { type } = get(id) || {};
+        switch (type) {
+          case DEVICE_TYPE_SMART_TOP_G4D: {
+            set(`${id}/gradient/${index}`, value);
+            const topLeft = get(`${id}/gradient/1`) || {};
+            const topRight = get(`${id}/gradient/2`) || {};
+            const bottomLeft = get(`${id}/gradient/3`) || {};
+            const bottomRight = get(`${id}/gradient/4`) || {};
+            const cmd = [ACTION_RGB, 19];
+            for (let i = 0; i < 5; i++) {
+              const left = compose(topLeft, 5 - i, bottomLeft, i);
+              const right = compose(topRight, 5 - i, bottomRight, i);
+              for (let j = 0; j < 14; j++) {
+                if (j === 0 && i !== 2) continue;
+                if (j === 2) continue;
+                if (j === 4 && i === 1) continue;
+                if (j === 4 && i === 3) continue;
+                if (j === 6) continue;
+                if (j === 8 && i === 1) continue;
+                if (j === 8 && i === 3) continue;
+                if (j === 10 && i !== 4) continue;
+                if (j === 12 && i === 1) continue;
+                if (j === 12 && i === 3) continue;
+                const { r, g, b } = compose(left, 13 - j, right, j);
+                cmd.push(r);
+                cmd.push(g)
+                cmd.push(b);
+              }
+            }
+            device.sendTOP(Buffer.from(cmd), action.id);
+            break;
+          }
+        }
+        break;
+      }
       case ACTION_IMAGE: {
         const { id, level, value } = action;
-        const [i2, i1] = Array.isArray(value)
-          ? value
-          : Array.from(String(value).padStart(2, " "))
-            .slice(-2)
-            .map((i) => char2image[i]);
-        const dev = get(id) || {};
-        device.sendRBUS(Buffer.from([
-          ACTION_IMAGE,
-          level || dev.level,
-          i2,
-          i1,
-        ]),
-          action.id
-        );
+        const { type } = get(id) || {};
+        switch (type) {
+          case DEVICE_TYPE_SMART_TOP_A6P:
+            const buff = Buffer.alloc(2);
+            buff[0] = ACTION_IMAGE;
+            buff[1] = value[0] || 0;
+            device.sendTOP(buff, action.id);
+            break;
+          case DEVICE_TYPE_SMART_TOP_G4D: {
+            const buff = Buffer.alloc(9);
+            buff[0] = ACTION_IMAGE;
+            for (let i = 0; i < 8; i++) {
+              buff[i + 1] = value[i] || 0;
+            }
+            device.sendTOP(buff, action.id);
+            break;
+          }
+          default:
+            const [i2, i1] = Array.isArray(value)
+              ? value
+              : Array.from(String(value).padStart(2, " "))
+                .slice(-2)
+                .map((i) => char2image[i]);
+            const dev = get(id) || {};
+            device.sendRBUS(Buffer.from([
+              ACTION_IMAGE,
+              level || dev.level,
+              i2,
+              i1,
+            ]),
+              action.id
+            );
+        }
         break;
       }
       case ACTION_ENABLE: {
@@ -966,6 +1042,15 @@ const run = (action) => {
                 ON,
               ]),
                 dev
+              );
+              break;
+            }
+            case DEVICE_TYPE_SMART_TOP_A6P:
+            case DEVICE_TYPE_SMART_TOP_G4D: {
+              device.sendTOP(Buffer.from([
+                ACTION_DO, ON
+              ]),
+                action.id
               );
               break;
             }
@@ -1116,6 +1201,15 @@ const run = (action) => {
                 OFF,
               ]),
                 dev
+              );
+              break;
+            }
+            case DEVICE_TYPE_SMART_TOP_A6P:
+            case DEVICE_TYPE_SMART_TOP_G4D: {
+              device.sendTOP(Buffer.from([
+                ACTION_DO, OFF
+              ]),
+                action.id
               );
               break;
             }
@@ -1273,6 +1367,7 @@ const run = (action) => {
           if (v > 100) v = 100;
         }
         const rgb = color.hsv.rgb(h, s, v);
+        const [r, g, b] = rgb || [0, 0, 0];
         set(id, { last: o.bind ? { v } : { r, g, b }, value: !!v });
         bind.forEach((i, c) => {
           if (!o[i]) return;
@@ -1893,10 +1988,20 @@ const run = (action) => {
         break;
       }
       case ACTION_VIBRO: {
+        const { type } = get(action.id) || {};
         const buffer = Buffer.alloc(2);
         buffer.writeUInt8(ACTION_VIBRO, 0);
         buffer.writeUInt8(action.value, 1);
-        device.sendRBUS(buffer, action.id);
+        switch (type) {
+          case DEVICE_TYPE_SMART_TOP_A6P:
+          case DEVICE_TYPE_SMART_TOP_G4D: {
+            device.sendTOP(buffer, action.id);
+            break;
+          }
+          default: {
+            device.sendRBUS(buffer, action.id);
+          }
+        }
         break;
       }
       case ACTION_SET_ADDRESS:
@@ -2012,6 +2117,16 @@ const run = (action) => {
     console.error(action);
     console.error(e);
   }
+};
+
+const compose = (ac = {}, am = 1, bc = {}, bm = 1) => {
+  const s = am + bm;
+  const blend = (a = 0, b = 0) => Math.floor((a * am + b * bm) / s);
+  return ({
+    r: blend(ac.r, bc.r),
+    g: blend(ac.g, bc.g),
+    b: blend(ac.b, bc.b),
+  });
 };
 
 module.exports.run = run;
