@@ -905,6 +905,7 @@ const run = (action) => {
             device.sendTOP(Buffer.from([
               ACTION_IMAGE, ...value
             ]), action.id);
+            set(id, { image: value });
             break;
           }
           default:
