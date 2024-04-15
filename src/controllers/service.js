@@ -897,20 +897,28 @@ const run = (action) => {
       }
       case ACTION_IMAGE: {
         const { id, level, value } = action;
-        const [i2, i1] = Array.isArray(value)
-          ? value
-          : Array.from(String(value).padStart(2, " "))
-            .slice(-2)
-            .map((i) => char2image[i]);
-        const dev = get(id) || {};
-        device.sendRBUS(Buffer.from([
-          ACTION_IMAGE,
-          level || dev.level,
-          i2,
-          i1,
-        ]),
-          action.id
-        );
+        const { type } = get(id) || {};
+        switch (type) {
+          case DEVICE_TYPE_SMART_TOP_G4D: {
+            set(id, value);
+            break;
+          }
+          default:
+            const [i2, i1] = Array.isArray(value)
+              ? value
+              : Array.from(String(value).padStart(2, " "))
+                .slice(-2)
+                .map((i) => char2image[i]);
+            const dev = get(id) || {};
+            device.sendRBUS(Buffer.from([
+              ACTION_IMAGE,
+              level || dev.level,
+              i2,
+              i1,
+            ]),
+              action.id
+            );
+        }
         break;
       }
       case ACTION_ENABLE: {
