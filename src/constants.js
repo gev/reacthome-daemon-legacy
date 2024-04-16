@@ -95,6 +95,7 @@ module.exports.ACTION_ARTNET = 0xd1;
 module.exports.ACTION_DALI = 0xd2;
 module.exports.ACTION_RGB = 0xe0;
 module.exports.ACTION_IMAGE = 0xe1;
+module.exports.ACTION_BLINK = 0xe2;
 module.exports.ACTION_DISCOVERY = 0xf0;
 module.exports.ACTION_READY = 0xf1;
 module.exports.ACTION_INITIALIZE = 0xf2;
