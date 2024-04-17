@@ -78,6 +78,7 @@ const {
   DEVICE_TYPE_SMART_TOP_A6P,
   DEVICE_TYPE_SMART_TOP_G4D,
   DEVICE_TYPE_DIM_4,
+  ACTION_BLINK,
 } = require("../constants");
 const {
   get,
@@ -565,7 +566,18 @@ module.exports.manage = () => {
           }
           break;
         }
-        case ACTION_TEMPERATURE_CORRECT: {
+        case ACTION_BLINK: {
+          const { type } = get(id) || {};
+          switch (type) {
+            case DEVICE_TYPE_SMART_TOP_A6P:
+            case DEVICE_TYPE_SMART_TOP_G4D: {
+              const blink = Array.from(data.slice(7, 15))
+              set(id, { blink });
+              break;
+            }
+          }
+          break;
+        } case ACTION_TEMPERATURE_CORRECT: {
           const correct = data.readInt8(7) / 10;
           set(id, { correct });
           break;

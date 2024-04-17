@@ -167,6 +167,7 @@ const {
   DEVICE_TYPE_SMART_BOTTOM_2,
   DEVICE_TYPE_SMART_TOP_G4D,
   ACTION_GRADIENT,
+  ACTION_BLINK,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -932,7 +933,28 @@ const run = (action) => {
         }
         break;
       }
-      case ACTION_ENABLE: {
+      case ACTION_BLINK: {
+        const { id, level, value } = action;
+        const { type } = get(id) || {};
+        switch (type) {
+          case DEVICE_TYPE_SMART_TOP_A6P:
+            const buff = Buffer.alloc(2);
+            buff[0] = ACTION_BLINK;
+            buff[1] = value[0] || 0;
+            device.sendTOP(buff, action.id);
+            break;
+          case DEVICE_TYPE_SMART_TOP_G4D: {
+            const buff = Buffer.alloc(9);
+            buff[0] = ACTION_BLINK;
+            for (let i = 0; i < 8; i++) {
+              buff[i + 1] = value[i] || 0;
+            }
+            device.sendTOP(buff, action.id);
+            break;
+          }
+        }
+        break;
+      } case ACTION_ENABLE: {
         const { type } = get(action.id) || {};
         switch (type) {
           case AC: {
