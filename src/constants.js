@@ -243,6 +243,7 @@ module.exports.DEVICE_TYPE_PLC = 0xfe;
 module.exports.DEVICE_TYPE_BOOTLOADER = 0xff;
 module.exports.DEVICE_TYPE_IR_RECEIVER = 0x10;
 
+module.exports.DEVICE_TYPE_DI_4 = 0x20;
 module.exports.DEVICE_TYPE_RELAY_2 = 0x23;
 module.exports.DEVICE_TYPE_IR_4 = 0x24;
 module.exports.DEVICE_TYPE_SMART_4G = 0x25;
@@ -250,6 +251,8 @@ module.exports.DEVICE_TYPE_SMART_4GD = 0x26;
 module.exports.DEVICE_TYPE_SMART_4A = 0x27;
 module.exports.DEVICE_TYPE_SMART_4AM = 0x2a;
 module.exports.DEVICE_TYPE_SMART_6_PUSH = 0x2c;
+module.exports.DEVICE_TYPE_DOPPLER_1_DI_4 = 0x2d;
+module.exports.DEVICE_TYPE_DOPPLER_5_DI_4 = 0x2e;
 
 module.exports.DEVICE_TYPE_SMART_TOP_A6P = 0x30;
 module.exports.DEVICE_TYPE_SMART_TOP_G4D = 0x31;
