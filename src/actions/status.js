@@ -12,6 +12,7 @@ const {
   DEVICE_TYPE_DOPPLER_5_DI_4,
   DEVICE_TYPE_SMART_TOP_G4D,
   DEVICE_TYPE_SMART_TOP_A6P,
+  DEVICE_TYPE_DI_4,
 } = require("../constants");
 const { device } = require("../sockets");
 
