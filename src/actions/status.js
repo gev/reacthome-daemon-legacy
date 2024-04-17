@@ -8,6 +8,10 @@ const {
   DEVICE_TYPE_MIX_6x12_RS,
   DEVICE_TYPE_SMART_BOTTOM_1,
   DEVICE_TYPE_SMART_BOTTOM_2,
+  DEVICE_TYPE_DOPPLER_1_DI_4,
+  DEVICE_TYPE_DOPPLER_5_DI_4,
+  DEVICE_TYPE_SMART_TOP_G4D,
+  DEVICE_TYPE_SMART_TOP_A6P,
 } = require("../constants");
 const { device } = require("../sockets");
 
