@@ -961,7 +961,6 @@ const run = (action) => {
         const { type } = get(id) || {};
         switch (type) {
           case DEVICE_TYPE_SMART_TOP_G4D: {
-            console.log(id, type, value)
             const dict = {
               "0": 0b11111_1_0_1_11111,
               "1": 0b00000_0_0_0_11111,
@@ -1004,11 +1003,11 @@ const run = (action) => {
                 }
                 offset -= 13;
               }
-              set(id, { text });
-              device.sendTOP(Buffer.from([
-                ACTION_IMAGE, ...image
-              ]), id)
             }
+            set(id, { text });
+            device.sendTOP(Buffer.from([
+              ACTION_IMAGE, ...image
+            ]), id)
             break;
           }
         }
