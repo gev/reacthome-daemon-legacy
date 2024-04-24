@@ -987,28 +987,28 @@ const run = (action) => {
             let text = '';
             length = value.length;
             if (length > 5) length = 5;
-            for (let i = 0; i < length; i++) {
-              const k = length - i - 1;
-              const c = value[k];
-              if (i === 1 && c === ".") {
-                offset -= 1;
-                setBit(offset, 1);
-                text = '.' + text;
-              } else {
-                if (i === 1) {
-                  offset -= 1;
-                  setBit(offset, 0);
-                }
-                const mask = dict[c] || 0;
-                if (mask) {
-                  text = c + text;
-                }
-                offset -= 13;
-                for (j = 0; j < 13; j++) {
-                  setBit(offset, (mask >> j) & 1);
-                }
-              }
-            }
+            // for (let i = 0; i < length; i++) {
+            //   const k = length - i - 1;
+            //   const c = value[k];
+            //   if (i === 1 && c === ".") {
+            //     offset -= 1;
+            //     setBit(offset, 1);
+            //     text = '.' + text;
+            //   } else {
+            //     if (i === 1) {
+            //       offset -= 1;
+            //       setBit(offset, 0);
+            //     }
+            //     const mask = dict[c] || 0;
+            //     if (mask) {
+            //       text = c + text;
+            //     }
+            //     offset -= 13;
+            //     for (j = 0; j < 13; j++) {
+            //       setBit(offset, (mask >> j) & 1);
+            //     }
+            //   }
+            // }
             console.log(id, text, image);
             set(id, { text });
             // device.sendTOP(Buffer.from([
