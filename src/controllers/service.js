@@ -983,23 +983,30 @@ const run = (action) => {
                 image[i] = image[i] & ~(1 << j);
               }
             }
-            offset = 51;
+            offset = 64;
             let text = '';
-            for (let i = 0; i < 5 && i < value.length && offset > 12; i++) {
-              const k = value.length - i - 1;
-              if (i === k && value[k] === '.') {
-                setBit(offset, 1);
+            length = value.length;
+            if (length > 5) length = 5;
+            for (let i = 0; i < length; i++) {
+              const k = length - i - 1;
+              const c = value[k];
+              if (i === 1 && c === ".") {
                 offset -= 1;
+                setBit(offset, 1);
+                text = '.' + text;
               } else {
-                const c = value[k];
+                if (i === 1) {
+                  offset -= 1;
+                  setBit(offset, 0);
+                }
                 const mask = dict[c] || 0;
                 if (mask) {
                   text = c + text;
                 }
+                offset -= 13;
                 for (j = 0; j < 13; j++) {
                   setBit(offset, (mask >> j) & 1);
                 }
-                offset -= 13;
               }
             }
             console.log(id, text, image);
