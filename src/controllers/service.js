@@ -976,12 +976,10 @@ const run = (action) => {
             const { image = [0, 0, 0, 0, 0, 0, 0, 0] } = get(id) || {};
             const setBit = (offset, v) => {
               i = offset >> 3;
-              j = offset % 7;
-              if (v) {
-                image[i] = image[i] | (1 << j);
-              } else {
-                image[i] = image[i] & ~(1 << j);
-              }
+              j = offset % 8;
+              image[i] = v
+                ? image[i] | (1 << j)
+                : image[i] & ~(1 << j);
             }
             offset = 64;
             let text = '';
