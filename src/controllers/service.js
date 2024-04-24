@@ -168,6 +168,7 @@ const {
   DEVICE_TYPE_SMART_TOP_G4D,
   ACTION_GRADIENT,
   ACTION_BLINK,
+  ACTION_PRINT,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -954,7 +955,63 @@ const run = (action) => {
           }
         }
         break;
-      } case ACTION_ENABLE: {
+      }
+      case ACTION_PRINT: {
+        const { id, value } = action;
+        const { type } = get(id) || {};
+        switch (type) {
+          case DEVICE_TYPE_SMART_TOP_G4D: {
+            const dict = {
+              "0": 0b11111_1_0_1_11111,
+              "1": 0b00000_0_0_0_11111,
+              "2": 0b11101_1_1_1_10111,
+              "3": 0b11111_1_1_1_10101,
+              "4": 0b11111_0_1_0_11100,
+              "5": 0b10111_1_1_1_11101,
+              "6": 0b11111_1_1_1_11101,
+              "7": 0b00001_1_0_0_11111,
+              "8": 0b11111_1_1_1_11111,
+              "9": 0b10111_1_1_1_11111,
+            }
+            const { image = [0, 0, 0, 0, 0, 0, 0, 0] } = get(id) || {};
+            const setBit = (offset, v) => {
+              i = offset >> 3;
+              j = offset % 7;
+              if (v) {
+                image[i] = image[i] | (1 << j);
+              } else {
+                image[i] = image[i] & ~(1 << j);
+              }
+            }
+            offset = 51;
+            let text = value;
+            for (let i = 0; i < 5 && i < value.length && offset > 12; i++) {
+              if (i === 1 || value[i] === '.') {
+                setBit(offset, 1);
+                offset -= 1;
+                text += ' ';
+              } else {
+                const c = value[i];
+                const mask = dict[c] || 0;
+                if (mask) {
+                  text += c;
+                }
+                for (j = 0; j < 13; j++) {
+                  setBit(offset, (mask >> j) & 1);
+                }
+                offset -= 13;
+              }
+              set(id, { text });
+              device.sendTOP(Buffer.from([
+                ACTION_IMAGE, ...image
+              ]), id)
+            }
+            break;
+          }
+        }
+        break;
+      }
+      case ACTION_ENABLE: {
         const { type } = get(action.id) || {};
         switch (type) {
           case AC: {
