@@ -1002,11 +1002,15 @@ const run = (action) => {
                 const mask = dict[c] || 0;
                 if (mask) {
                   text = c + text;
+                  offset -= 13;
+                  // for (j = 0; j < 13; j++) {
+                  //   setBit(offset, (mask >> j) & 1);
+                  // }
+                } else {
+                  if (i === 0 && c === ".") {
+                    text = '.' + text;
+                  }
                 }
-                offset -= 13;
-                // for (j = 0; j < 13; j++) {
-                //   setBit(offset, (mask >> j) & 1);
-                // }
               }
             }
             console.log(id, text, image);
