@@ -961,6 +961,7 @@ const run = (action) => {
         const { type } = get(id) || {};
         switch (type) {
           case DEVICE_TYPE_SMART_TOP_G4D: {
+            console.log('ok')
             const dict = {
               "0": 0b11111_1_0_1_11111,
               "1": 0b00000_0_0_0_11111,
