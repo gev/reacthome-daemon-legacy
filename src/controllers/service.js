@@ -984,7 +984,7 @@ const run = (action) => {
               }
             }
             offset = 51;
-            let text = value;
+            let text = '';
             for (let i = 0; i < 5 && i < value.length && offset > 12; i++) {
               if (i === 1 || value[i] === '.') {
                 setBit(offset, 1);
