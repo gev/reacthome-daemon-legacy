@@ -992,12 +992,12 @@ const run = (action) => {
               const c = value[k];
               if (i === 1 && c === ".") {
                 offset -= 1;
-                // setBit(offset, 1);
+                setBit(offset, 1);
                 text = '.' + text;
               } else {
                 if (i === 1) {
                   offset -= 1;
-                  // setBit(offset, 0);
+                  setBit(offset, 0);
                 }
                 const mask = dict[c] || 0;
                 if (mask) {
