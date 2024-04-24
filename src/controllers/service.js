@@ -1004,6 +1004,7 @@ const run = (action) => {
                 offset -= 13;
               }
             }
+            console.log(id, text, image);
             set(id, { text });
             device.sendTOP(Buffer.from([
               ACTION_IMAGE, ...image
