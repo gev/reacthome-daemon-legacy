@@ -986,17 +986,18 @@ const run = (action) => {
             offset = 51;
             let text = '';
             for (let i = 0; i < 5 && i < value.length && offset > 12; i++) {
-              if (i === 1 && value[i] === '.') {
+              const k = value.length - i - 1;
+              if (i === k && value[k] === '.') {
                 setBit(offset, 1);
                 offset -= 1;
-                text += ' ';
+                text = ' ' + text;
               } else {
-                const c = value[i];
+                const c = value[k];
                 const mask = dict[c] || 0;
                 if (mask) {
-                  text += c;
+                  text = c + text;
                 } else {
-                  text += ' ';
+                  text = ' ' + text;
                 }
                 for (j = 0; j < 13; j++) {
                   setBit(offset, (mask >> j) & 1);
