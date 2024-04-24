@@ -990,14 +990,11 @@ const run = (action) => {
               if (i === k && value[k] === '.') {
                 setBit(offset, 1);
                 offset -= 1;
-                text = ' ' + text;
               } else {
                 const c = value[k];
                 const mask = dict[c] || 0;
                 if (mask) {
                   text = c + text;
-                } else {
-                  text = ' ' + text;
                 }
                 for (j = 0; j < 13; j++) {
                   setBit(offset, (mask >> j) & 1);
