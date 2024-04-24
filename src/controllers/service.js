@@ -995,6 +995,8 @@ const run = (action) => {
                 const mask = dict[c] || 0;
                 if (mask) {
                   text += c;
+                } else {
+                  text += ' ';
                 }
                 for (j = 0; j < 13; j++) {
                   setBit(offset, (mask >> j) & 1);
