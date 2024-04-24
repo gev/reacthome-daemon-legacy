@@ -959,9 +959,9 @@ const run = (action) => {
       case ACTION_PRINT: {
         const { id, value } = action;
         const { type } = get(id) || {};
-        console.log(id, type, value)
         switch (type) {
           case DEVICE_TYPE_SMART_TOP_G4D: {
+            console.log(id, type, value)
             const dict = {
               "0": 0b11111_1_0_1_11111,
               "1": 0b00000_0_0_0_11111,
