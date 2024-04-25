@@ -1033,9 +1033,9 @@ const run = (action) => {
               }
             }
             console.log(id, image);
-            // device.sendTOP(Buffer.from([
-            //   ACTION_IMAGE, ...image
-            // ]), id)
+            device.sendTOP(Buffer.from([
+              ACTION_IMAGE, ...image
+            ]), id)
             break;
           }
         }
