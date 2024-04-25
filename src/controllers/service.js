@@ -1029,7 +1029,7 @@ const run = (action) => {
               if (i === 4) {
               } else {
                 for (let k = 0; k < 13; k++) {
-                  setBit(offset[k], (mask >> (13 - k)) & 1);
+                  setBit(offset[k], (mask >> (12 - k)) & 1);
                 }
               }
             }
