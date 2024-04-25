@@ -1005,7 +1005,7 @@ const run = (action) => {
                 53
               ],
             ]
-            const { image = [] } = get(id) || {};
+            const { image } = get(id) || {};
             const setBit = (offset, v) => {
               const i = offset >> 3;
               const j = offset % 8;
