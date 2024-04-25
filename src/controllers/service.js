@@ -1007,36 +1007,32 @@ const run = (action) => {
             ]
             const { image = [0, 0, 0, 0, 0, 0, 0, 0] } = get(id) || {};
             const setBit = (offset, v) => {
-              i = offset >> 3;
-              j = offset % 8;
+              const i = offset >> 3;
+              const j = offset % 8;
               image[i] = v
                 ? image[i] | (1 << j)
                 : image[i] & ~(1 << j);
             }
-            length = value.length;
-            if (length > 5) length = 5;
-            let j = length - 1;
+            j = value.length;
+            if (j > 5) j = 5;
             for (let i = 0; i < 4; i++) {
-              const c = value[j] || " ";
-              if (i === 1 && c === ".") {
-                setBit(60, 1);
-                j--;
-              } else {
-                if (i === 1) {
+              let c = value[--j] || " ";
+              if (i === 1)
+                if (c === ".") {
+                  c = value[--j] || " ";
+                  setBit(60, 1);
+                } else {
                   setBit(60, 0);
                 }
-                const mask = dict[c] || 0;
-                if (mask) {
-                  const offset = offsets[i];
-                  if (i === 4) {
-                  } else {
-                    for (k = 0; k < 13; k++) {
-                      setBit(offset, (mask >> k) & 1);
-                    }
-                  }
+              setBit(60, 0);
+              const mask = dict[c] || 0;
+              const offset = offsets[i];
+              if (i === 4) {
+              } else {
+                for (k = 0; k < 13; k++) {
+                  setBit(offset, (mask >> k) & 1);
                 }
               }
-              j--;
             }
             console.log(id, image);
             run({ type: ACTION_IMAGE, id, value: image })
