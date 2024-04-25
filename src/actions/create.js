@@ -10,6 +10,7 @@ const apply = (id, payload) => {
   if (!id) return;
   payload.timestamp = Date.now();
   state.set(id, payload);
+  console.log(id, payload);
   broadcast({ type: ACTION_SET, id, payload });
   try {
     db.put(id, state.get(id), (err) => {
