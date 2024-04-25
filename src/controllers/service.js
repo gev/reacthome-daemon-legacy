@@ -1029,7 +1029,7 @@ const run = (action) => {
               const offset = offsets[i];
               if (i === 4) {
               } else {
-                for (k = 0; k < 13; k++) {
+                for (let k = 0; k < 13; k++) {
                   setBit(offset, (mask >> k) & 1);
                 }
               }
