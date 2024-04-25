@@ -148,7 +148,7 @@ module.exports.initialize = (id) => {
       a[1] = vibro;
       a[2] = state;
       a[3] = brightness;
-      a[4] = image[1] || 1;
+      a[4] = image[1] || 0b111111;
       a[5] = blink[1] || 0;
       for (let i = 1; i <= 6; i++) {
         const channel = get(`${id}/rgb/${i}`);
