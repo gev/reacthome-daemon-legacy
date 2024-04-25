@@ -1013,7 +1013,7 @@ const run = (action) => {
                 ? image[i] | (1 << j)
                 : image[i] & ~(1 << j);
             }
-            j = value.length;
+            let j = value.length;
             if (j > 5) j = 5;
             for (let i = 0; i < 4; i++) {
               let c = value[--j] || " ";
