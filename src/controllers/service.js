@@ -1024,13 +1024,12 @@ const run = (action) => {
                 } else {
                   setBit(60, 0);
                 }
-              setBit(60, 0);
               const mask = dict[c] || 0;
               const offset = offsets[i];
               if (i === 4) {
               } else {
                 for (let k = 0; k < 13; k++) {
-                  setBit(offset, (mask >> k) & 1);
+                  setBit(offset[k], (mask >> k) & 1);
                 }
               }
             }
