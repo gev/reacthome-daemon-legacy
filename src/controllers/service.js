@@ -935,7 +935,7 @@ const run = (action) => {
         break;
       }
       case ACTION_BLINK: {
-        const { id, level, value } = action;
+        const { id, value } = action;
         const { type } = get(id) || {};
         switch (type) {
           case DEVICE_TYPE_SMART_TOP_A6P:
@@ -1015,27 +1015,31 @@ const run = (action) => {
             }
             length = value.length;
             if (length > 5) length = 5;
+            let j = length - 1;
             for (let i = 0; i < 4; i++) {
-              const k = length - i - 1;
-              const c = value[k];
+              const c = value[j] || " ";
               if (i === 1 && c === ".") {
                 setBit(60, 1);
+                j--;
               } else {
                 if (i === 1) {
                   setBit(60, 0);
                 }
                 const mask = dict[c] || 0;
                 if (mask) {
-                  // for (j = 0; j < 13; j++) {
-                  //   setBit(offset, (mask >> j) & 1);
-                  // }
+                  const offset = offsets[i];
+                  if (i === 4) {
+                  } else {
+                    for (k = 0; k < 13; k++) {
+                      setBit(offset, (mask >> k) & 1);
+                    }
+                  }
                 }
               }
+              j--;
             }
             console.log(id, image);
-            device.sendTOP(Buffer.from([
-              ACTION_IMAGE, ...image
-            ]), id)
+            run({ type: ACTION_IMAGE, id, value: image })
             break;
           }
         }
