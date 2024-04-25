@@ -958,8 +958,8 @@ const run = (action) => {
       }
       case ACTION_PRINT: {
         const { id, value } = action;
-        const { type } = get(id) || {};
-        switch (type) {
+        const dev = get(id) || {};
+        switch (dev.type) {
           case DEVICE_TYPE_SMART_TOP_G4D: {
             const dict = {
               " ": 0b000_00_000_00_000,
@@ -1005,7 +1005,7 @@ const run = (action) => {
                 53
               ],
             ]
-            const { image } = get(id) || {};
+            const image = [...dev.image];
             const setBit = (offset, v) => {
               const i = offset >> 3;
               const j = offset % 8;
