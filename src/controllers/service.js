@@ -957,12 +957,13 @@ const run = (action) => {
         break;
       }
       case ACTION_PRINT: {
-        const { id } = action;
+        const { id, value } = action;
         const { type } = get(id) || {};
         switch (type) {
           case DEVICE_TYPE_SMART_TOP_G4D: {
             const dict = {
               " ": 0b000_00_000_00_000,
+              "-": 0b000_00_011_00_000,
               "0": 0b111_11_101_11_111,
               "1": 0b001_01_001_01_001,
               "2": 0b111_01_111_10_111,
@@ -974,7 +975,37 @@ const run = (action) => {
               "8": 0b111_11_111_11_111,
               "9": 0b111_11_111_01_111,
             }
-            const value = action.value;
+            const offsets = [
+              [
+                18,
+                28,
+                35, 36,
+                46,
+                53
+              ],
+              [
+                19, 20, 21,
+                29, 30,
+                37, 38, 39,
+                47, 48,
+                54, 55, 56
+              ],
+              [
+                22, 23, 24,
+                31, 32,
+                40, 41, 42,
+                49, 50,
+                57, 58, 59
+              ],
+              [
+                25, 26, 27,
+                33, 34,
+                43, 44, 45,
+                51, 52,
+                61, 62, 63
+              ],
+
+            ]
             const { image = [0, 0, 0, 0, 0, 0, 0, 0] } = get(id) || {};
             const setBit = (offset, v) => {
               i = offset >> 3;
@@ -983,8 +1014,6 @@ const run = (action) => {
                 ? image[i] | (1 << j)
                 : image[i] & ~(1 << j);
             }
-            offset = 64;
-            let text = '';
             length = value.length;
             if (length > 5) length = 5;
             for (let i = 0; i < length; i++) {
@@ -993,7 +1022,6 @@ const run = (action) => {
               if (i === 1 && c === ".") {
                 offset -= 1;
                 setBit(offset, 1);
-                text = '.' + text;
               } else {
                 if (i === 1) {
                   offset -= 1;
@@ -1001,20 +1029,14 @@ const run = (action) => {
                 }
                 const mask = dict[c] || 0;
                 if (mask) {
-                  text = c + text;
                   offset -= 13;
                   // for (j = 0; j < 13; j++) {
                   //   setBit(offset, (mask >> j) & 1);
                   // }
-                } else {
-                  if (i === 0 && c === ".") {
-                    text = '.' + text;
-                  }
                 }
               }
             }
-            console.log(id, text, image);
-            set(id, { text });
+            console.log(id, image);
             // device.sendTOP(Buffer.from([
             //   ACTION_IMAGE, ...image
             // ]), id)
