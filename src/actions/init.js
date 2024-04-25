@@ -144,11 +144,12 @@ module.exports.initialize = (id) => {
     case DEVICE_TYPE_SMART_TOP_A6P: {
       const mac = id.split(":").map((i) => parseInt(i, 16));
       a[0] = ACTION_INITIALIZE;
+      a[1] = 0b111111
       for (let i = 1; i <= 6; i++) {
         const channel = get(`${id}/rgb/${i}`);
-        a[3 * i - 2] = (channel && channel.r) || 0;
-        a[3 * i - 1] = (channel && channel.g) || 0;
-        a[3 * i + 0] = (channel && channel.b) || 0;
+        a[3 * i - 1] = (channel && channel.r) || 0;
+        a[3 * i] = (channel && channel.g) || 0;
+        a[3 * i + 1] = (channel && channel.b) || 0;
       }
       device.sendTOP(Buffer.from(a), id);
       break;
