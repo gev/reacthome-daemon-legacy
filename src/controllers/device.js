@@ -555,6 +555,7 @@ module.exports.manage = () => {
             case DEVICE_TYPE_SMART_TOP_A6P:
             case DEVICE_TYPE_SMART_TOP_G4D: {
               const image = Array.from(data.slice(7, 15))
+              console.log(data, id, image)
               set(id, { image });
               break;
             }
