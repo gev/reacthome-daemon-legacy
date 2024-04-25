@@ -1039,7 +1039,6 @@ const run = (action) => {
                 }
               }
             }
-            console.log(id, image);
             run({ type: ACTION_IMAGE, id, value: image })
             break;
           }
