@@ -977,18 +977,11 @@ const run = (action) => {
             }
             const offsets = [
               [
-                18,
-                28,
-                35, 36,
-                46,
-                53
-              ],
-              [
-                19, 20, 21,
-                29, 30,
-                37, 38, 39,
-                47, 48,
-                54, 55, 56
+                25, 26, 27,
+                33, 34,
+                43, 44, 45,
+                51, 52,
+                61, 62, 63
               ],
               [
                 22, 23, 24,
@@ -998,13 +991,19 @@ const run = (action) => {
                 57, 58, 59
               ],
               [
-                25, 26, 27,
-                33, 34,
-                43, 44, 45,
-                51, 52,
-                61, 62, 63
+                19, 20, 21,
+                29, 30,
+                37, 38, 39,
+                47, 48,
+                54, 55, 56
               ],
-
+              [
+                18,
+                28,
+                35, 36,
+                46,
+                53
+              ],
             ]
             const { image = [0, 0, 0, 0, 0, 0, 0, 0] } = get(id) || {};
             const setBit = (offset, v) => {
@@ -1016,20 +1015,17 @@ const run = (action) => {
             }
             length = value.length;
             if (length > 5) length = 5;
-            for (let i = 0; i < length; i++) {
+            for (let i = 0; i < 4; i++) {
               const k = length - i - 1;
               const c = value[k];
               if (i === 1 && c === ".") {
-                offset -= 1;
-                setBit(offset, 1);
+                setBit(60, 1);
               } else {
                 if (i === 1) {
-                  offset -= 1;
-                  setBit(offset, 0);
+                  setBit(60, 0);
                 }
                 const mask = dict[c] || 0;
                 if (mask) {
-                  offset -= 13;
                   // for (j = 0; j < 13; j++) {
                   //   setBit(offset, (mask >> j) & 1);
                   // }
