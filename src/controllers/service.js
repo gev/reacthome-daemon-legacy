@@ -1618,9 +1618,6 @@ const run = (action) => {
           drivers.run(action);
         } else {
           set(id, { setpoint: value });
-          if (dev.site) {
-            set(dev.site, { setpointTemperature: value });
-          }
         }
         break;
       }
