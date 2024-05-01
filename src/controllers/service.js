@@ -1603,7 +1603,6 @@ const run = (action) => {
         const { id, value } = action;
         const dev = get(id) || {};
         if (dev.type === SITE) {
-          set(id, { setpointTemperature: value });
           if (Array.isArray(dev.thermostat)) {
             dev.thermostat.forEach((t, i) => {
               setTimeout(run, 1000 * i, {
