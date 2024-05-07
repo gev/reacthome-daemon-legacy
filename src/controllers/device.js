@@ -850,6 +850,7 @@ const calcTemperature = site => {
     const dev = get(id) || {};
     if (dev.online) {
       temperature += dev.temperature;
+      if (dev.temperature_correct) temperature += dev.temperature_correct;
       n++;
     }
   });
@@ -867,6 +868,7 @@ const calcHumidity = site => {
     const dev = get(id) || {};
     if (dev.online) {
       humidity += dev.humidity;
+      if (dev.humidity_correct) humidity += dev.humidity_correct;
       n++;
     }
   });
@@ -884,6 +886,7 @@ const calcIllumination = site => {
     const dev = get(id) || {};
     if (dev.online) {
       illumination += dev.illumination;
+      if (dev.illumination_correct) illumination += dev.illumination_correct;
       n++;
     }
   });
@@ -900,7 +903,8 @@ const calcCO2 = site => {
   sensor.forEach(id => {
     const dev = get(id) || {};
     if (dev.online) {
-      co2 += dev.co2;
+      co2 += dev.co2 + dev.co2_correct;
+      if (dev.co2_correct) co2 += dev.co2_correct;
       n++;
     }
   });
