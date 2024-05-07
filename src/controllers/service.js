@@ -1837,7 +1837,8 @@ const run = (action) => {
           onStopHeat,
           onStopCool,
         } = action;
-        const { setpoint, temperature, mode, site } = get(id) || {};
+        const { setpoint, mode, site } = get(id) || {};
+        const { temperature } = get(site) || {};
         const make = (state, script, mode) => () => {
           set(id, { state, mode });
           if (script) {
