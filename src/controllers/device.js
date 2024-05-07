@@ -906,7 +906,7 @@ const calcCO2 = site => {
   sensor.forEach(id => {
     const dev = get(id) || {};
     if (dev.online) {
-      co2 += dev.co2 + dev.co2_correct;
+      co2 += dev.co2;
       n++;
     }
   });
