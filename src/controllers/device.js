@@ -588,10 +588,11 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_TEMPERATURE: {
-          const temperature = data.readUInt16LE(7) / 100;
-          const { onTemperature, site, display } = get(id) || {};
+          const temperature_raw = data.readUInt16LE(7) / 100;
+          const { onTemperature, site, display, temperature_correct = 0 } = get(id) || {};
+          const temperature = temperature_raw + temperature_correct;
           if (site) calcTemperature(site);
-          set(id, { temperature });
+          set(id, { temperature, temperature_raw });
           if (onTemperature) {
             run({ type: ACTION_SCRIPT_RUN, id: onTemperature });
           }
@@ -626,8 +627,10 @@ module.exports.manage = () => {
           if (data.length < 17) {
             return;
           }
-          const temperature = data.readInt16LE(15) / 100;
-          online(dev_id, { temperature, master: id, type: DEVICE_TYPE_TEMPERATURE_EXT, version: '1.0', ready: true });
+          const temperature_raw = data.readInt16LE(15) / 100;
+          const { temperature_correct = 0 } = get(dev_id) || {};
+          const temperature = temperature_raw + temperature_correct;
+          online(dev_id, { temperature, temperature_raw, master: id, type: DEVICE_TYPE_TEMPERATURE_EXT, version: '1.0', ready: true });
           add(id, TEMPERATURE_EXT, dev_id);
           const { onTemperature: onTemperature, display, site } = get(dev_id);
           if (site) calcTemperature(site);
@@ -647,8 +650,9 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_HUMIDITY: {
-          const humidity = data.readUInt16LE(7) / 100;
-          const { onHumidity, site } = get(id);
+          const humidity_raw = data.readUInt16LE(7) / 100;
+          const { onHumidity, site, humidity_correct = 0 } = get(id) || {};
+          const humidity = humidity_raw + humidity_correct;
           if (site) calcHumidity(site);
           set(id, { humidity });
           if (onHumidity) {
@@ -657,8 +661,9 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_ILLUMINATION: {
-          const illumination = data.readUInt32LE(7) / 100;
-          const { onIllumination, site } = get(id);
+          const illumination_raw = data.readUInt32LE(7) / 100;
+          const { onIllumination, illumination_correct = 0, site } = get(id) || {};
+          const illumination = illumination_raw + illumination_correct;
           if (site) calcIllumination(site);
           set(id, { illumination });
           if (onIllumination) {
@@ -667,8 +672,9 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_CO2: {
-          const co2 = data.readUInt16LE(7);
-          const { onCO2, site } = get(id);
+          const co2_raw = data.readUInt16LE(7);
+          const { onCO2, co2_correct = 0, site } = get(id) || {};
+          const co2 = co2_raw + co2_correct;
           if (site) calcCO2(site);
           set(id, { co2 });
           if (onCO2) {
@@ -850,7 +856,6 @@ const calcTemperature = site => {
     const dev = get(id) || {};
     if (dev.online) {
       temperature += dev.temperature;
-      if (dev.temperature_correct) temperature += dev.temperature_correct;
       n++;
     }
   });
@@ -868,7 +873,6 @@ const calcHumidity = site => {
     const dev = get(id) || {};
     if (dev.online) {
       humidity += dev.humidity;
-      if (dev.humidity_correct) humidity += dev.humidity_correct;
       n++;
     }
   });
@@ -886,7 +890,6 @@ const calcIllumination = site => {
     const dev = get(id) || {};
     if (dev.online) {
       illumination += dev.illumination;
-      if (dev.illumination_correct) illumination += dev.illumination_correct;
       n++;
     }
   });
@@ -904,7 +907,6 @@ const calcCO2 = site => {
     const dev = get(id) || {};
     if (dev.online) {
       co2 += dev.co2 + dev.co2_correct;
-      if (dev.co2_correct) co2 += dev.co2_correct;
       n++;
     }
   });

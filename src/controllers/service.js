@@ -1837,8 +1837,7 @@ const run = (action) => {
           onStopHeat,
           onStopCool,
         } = action;
-        const { setpoint, sensor, state, mode, site } = get(id) || {};
-        const { temperature } = get(sensor) || {};
+        const { setpoint, temperature, mode, site } = get(id) || {};
         const make = (state, script, mode) => () => {
           set(id, { state, mode });
           if (script) {
@@ -1850,16 +1849,8 @@ const run = (action) => {
         const startCool = make(COOL, onStartCool, COOL);
         const startHeat = make(HEAT, onStartHeat, HEAT);
         set(site, { temperature });
-        //if (temperature > setpoint - -heat_threshold) {
-        //   stopHeat();
-        //   startCool();
-        // } else if (temperature < setpoint - cool_threshold) {
-        //   stopCool();
-        //   startHeat();
-        // } else {
         switch (mode) {
           case HEAT: {
-            //stopCool();
             if (temperature > setpoint - (- heat_threshold)) {
               stopHeat();
               startCool();
@@ -1871,7 +1862,6 @@ const run = (action) => {
             break;
           }
           case COOL: {
-            //stopHeat();
             if (temperature < setpoint - cool_threshold) {
               stopCool();
               startHeat();
@@ -1895,7 +1885,6 @@ const run = (action) => {
             }
           }
         }
-        //}
         break;
       }
       case ACTION_LIMIT_HEATING_HANDLE: {
