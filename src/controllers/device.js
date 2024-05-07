@@ -79,6 +79,7 @@ const {
   DEVICE_TYPE_SMART_TOP_G4D,
   DEVICE_TYPE_DIM_4,
   ACTION_BLINK,
+  ACTION_THERMOSTAT_HANDLE,
 } = require("../constants");
 const {
   get,
@@ -849,7 +850,7 @@ module.exports.manage = () => {
 
 
 const calcTemperature = site => {
-  const { sensor = [] } = get(site) || {};
+  const { sensor = [], thermostat = [] } = get(site) || {};
   let temperature = 0;
   let n = 0;
   sensor.forEach(id => {
@@ -862,6 +863,12 @@ const calcTemperature = site => {
   if (n > 0) {
     temperature /= n;
     set(site, { temperature });
+    thermostat.forEach(id => {
+      run({
+        type: ACTION_THERMOSTAT_HANDLE,
+        id, ...get(id)
+      });
+    })
   }
 }
 
