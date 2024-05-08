@@ -172,6 +172,7 @@ const {
   ACTION_HYGROSTAT_HANDLE,
   DRY,
   WET,
+  ACTION_CO2_STAT_HANDLE,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -1952,6 +1953,29 @@ const run = (action) => {
         }
         break;
       }
+      case ACTION_CO2_STAT_HANDLE: {
+        const {
+          id,
+          hysteresis,
+          onStartVentilation,
+          onStopVentilation,
+        } = action;
+        const { setpoint, mode, site } = get(id) || {};
+        const { co2 } = get(site) || {};
+        const make = (script) => () => {
+          if (script) {
+            run({ type: ACTION_SCRIPT_RUN, id: script });
+          }
+        };
+        const stopVentilation = make(onStopVentilation);
+        const startVentilation = make(onStartVentilation);
+        if (co2 > setpoint - (- hysteresis)) {
+          stopVentilation();
+        } else if (co2 < setpoint - hysteresis) {
+          startVentilation();
+        }
+        break;
+      }
       case ACTION_LIMIT_HEATING_HANDLE: {
         const { id, hysteresis, onStartHeat, onStopHeat } = action;
         const { min, max, sensor } = get(id) || {};
@@ -1966,7 +1990,7 @@ const run = (action) => {
         const stopHeat = make(onStopHeat);
         const startHeat = make(onStartHeat);
         set(id, { disabled: false });
-        if (temperature > max - -hysteresis) {
+        if (temperature > max - (-hysteresis)) {
           stopHeat();
           set(id, { disabled: true });
         } else if (temperature < min - hysteresis) {
