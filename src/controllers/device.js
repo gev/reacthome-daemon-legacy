@@ -80,6 +80,8 @@ const {
   DEVICE_TYPE_DIM_4,
   ACTION_BLINK,
   ACTION_THERMOSTAT_HANDLE,
+  ACTION_HYGROSTAT_HANDLE,
+  ACTION_CO2_STAT_HANDLE,
 } = require("../constants");
 const {
   get,
@@ -873,7 +875,7 @@ const calcTemperature = site => {
 }
 
 const calcHumidity = site => {
-  const { sensor = [] } = get(site) || {};
+  const { sensor = [], hygrostat = [] } = get(site) || {};
   let humidity = 0;
   let n = 0;
   sensor.forEach(id => {
@@ -886,6 +888,12 @@ const calcHumidity = site => {
   if (n > 0) {
     humidity /= n;
     set(site, { humidity });
+    hygrostat.forEach(id => {
+      run({
+        type: ACTION_HYGROSTAT_HANDLE,
+        id, ...get(id)
+      });
+    })
   }
 }
 
@@ -907,7 +915,7 @@ const calcIllumination = site => {
 }
 
 const calcCO2 = site => {
-  const { sensor = [] } = get(site) || {};
+  const { sensor = [], co2_stat = [] } = get(site) || {};
   let co2 = 0;
   let n = 0;
   sensor.forEach(id => {
@@ -920,5 +928,11 @@ const calcCO2 = site => {
   if (n > 0) {
     co2 /= n;
     set(site, { co2 });
+    co2_stat.forEach(id => {
+      run({
+        type: ACTION_CO2_STAT_HANDLE,
+        id, ...get(id)
+      });
+    })
   }
 }
