@@ -320,6 +320,9 @@ module.exports.OPERATOR_GT = "OPERATOR_GT";
 module.exports.HEAT = "heat";
 module.exports.COOL = "cool";
 module.exports.STOP = "stop";
+module.exports.DRY = "dry";
+module.exports.WET = "wet";
+module.exports.VENTILATION = "ventilation";
 
 module.exports.THERMOSTAT = "thermostat";
 module.exports.CLOSURE = "closure";

@@ -169,6 +169,9 @@ const {
   ACTION_GRADIENT,
   ACTION_BLINK,
   ACTION_PRINT,
+  ACTION_HYGROSTAT_HANDLE,
+  DRY,
+  WET,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -1849,7 +1852,6 @@ const run = (action) => {
         const stopHeat = make(STOP, onStopHeat, HEAT);
         const startCool = make(COOL, onStartCool, COOL);
         const startHeat = make(HEAT, onStartHeat, HEAT);
-        set(site, { temperature });
         switch (mode) {
           case HEAT: {
             if (temperature > setpoint - (- heat_threshold)) {
@@ -1883,6 +1885,68 @@ const run = (action) => {
             } else {
               stopCool();
               stopHeat();
+            }
+          }
+        }
+        break;
+      }
+      case ACTION_HYGROSTAT_HANDLE: {
+        const {
+          id,
+          dry_hysteresis,
+          dry_threshold,
+          wet_hysteresis,
+          wet_threshold,
+          onStartDry,
+          onStartWet,
+          onStopDry,
+          onStopWet,
+        } = action;
+        const { setpoint, mode, site } = get(id) || {};
+        const { humidity } = get(site) || {};
+        const make = (state, script, mode) => () => {
+          set(id, { state, mode });
+          if (script) {
+            run({ type: ACTION_SCRIPT_RUN, id: script });
+          }
+        };
+        const stopDry = make(STOP, onStopDry, DRY);
+        const stopWet = make(STOP, onStopWet, WET);
+        const startDry = make(DRY, onStartDry, DRY);
+        const startWet = make(WET, onStartWet, WET);
+        switch (mode) {
+          case WET: {
+            if (humidity > setpoint - (- wet_threshold)) {
+              stopWet();
+              startDry();
+            } else if (humidity > setpoint - (- wet_hysteresis)) {
+              stopWet();
+            } else if (humidity < setpoint - wet_hysteresis) {
+              startWet();
+            }
+            break;
+          }
+          case DRY: {
+            if (humidity < setpoint - dry_threshold) {
+              stopDry();
+              startWet();
+            } else if (humidity < setpoint - dry_hysteresis) {
+              stopDry();
+            } else if (humidity > setpoint - (- dry_hysteresis)) {
+              startDry();
+            }
+            break;
+          }
+          default: {
+            if (humidity > setpoint) {
+              stopWet();
+              startDry();
+            } else if (humidity < setpoint) {
+              stopDry();
+              startWet();
+            } else {
+              stopDry();
+              stopWet();
             }
           }
         }
