@@ -399,35 +399,6 @@ module.exports.manage = () => {
               if (top) {
                 const mac_ = Buffer.from(top.split(':').map(i => parseInt(i, 16)));
                 handleData(Buffer.concat([mac_, data.slice(7)]), { address }, { hub });
-                // switch (action) {
-                //   case ACTION_INITIALIZE: {
-                //     initialize(top);
-                //     break;
-                //   }
-                //   case ACTION_DI: {
-                //     const index = data[8];
-                //     const value = data[9];
-                //     const channel = `${top}/${DI}/${index}`;
-                //     set(channel, { value });
-                //     break;
-                //   }
-                //   case ACTION_TEMPERATURE: {
-                //     const temperature = data.readUInt16LE(8) / 100;
-                //     set(top, { temperature });
-                //     break;
-                //   }
-                //   case ACTION_HUMIDITY: {
-                //     const humidity = data.readUInt16LE(8) / 100;
-                //     set(top, { humidity });
-                //     break;
-                //   }
-                //   case ACTION_RGB: {
-                //     const [, , , , , , , , index, r, g, b] = data;
-                //     const chan = `${top}/rgb/${index}`;
-                //     set(chan, { r, g, b });
-                //     break;
-                //   }
-                // }
               }
             }
           }
