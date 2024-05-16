@@ -873,7 +873,7 @@ const handleOn = (id, chan) => {
   }
 }
 
-const handleOff = (id, index, chan) => {
+const handleOff = (id, chan) => {
   const onOff = toArr(chan.onOff);
   if (onOff.length > 0) {
     const { onOffCount = 0 } = chan;
@@ -881,8 +881,8 @@ const handleOff = (id, index, chan) => {
   }
 }
 
-const handleClick1 = (id, index, chan) => {
-  console.log("click1", id, index, chan);
+const handleClick1 = (id, chan) => {
+  console.log("click1", id, chan);
   const dev = get(id) || {};
   switch (dev.type) {
     case DEVICE_TYPE_SMART_TOP_G4D: {
@@ -918,7 +918,7 @@ const handleClick1 = (id, index, chan) => {
   }
 }
 
-const handleClick2 = (id, index, chan) => {
+const handleClick2 = (id, chan) => {
   const onClick2 = toArr(chan.onClick2);
   if (onClick2.length > 0) {
     const { onClick2Count = 0 } = chan;
@@ -926,7 +926,7 @@ const handleClick2 = (id, index, chan) => {
   }
 }
 
-const handleClick3 = (id, index, chan) => {
+const handleClick3 = (id, chan) => {
   const onClick3 = toArr(chan.onClick3);
   if (onClick3.length > 0) {
     const { onClick3Count = 0 } = chan;
@@ -934,7 +934,7 @@ const handleClick3 = (id, index, chan) => {
   }
 }
 
-const handleHold = (id, index, chan) => {
+const handleHold = (id, chan) => {
   const onHold = toArr(chan.onHold);
   if (onHold.length > 0) {
     const { onHoldCount = 0 } = chan;
