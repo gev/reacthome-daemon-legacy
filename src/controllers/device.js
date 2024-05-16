@@ -969,5 +969,5 @@ const renderSmartTopModes = (id) => {
     }
   }
   run({ type: ACTION_IMAGE, id, value: image })
-  run({ type: ACTION_BLINK, id, value: blink })
+  // run({ type: ACTION_BLINK, id, value: blink })
 }
