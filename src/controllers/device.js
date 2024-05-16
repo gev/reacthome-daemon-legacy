@@ -897,8 +897,8 @@ const handleClick1 = (id, chan) => {
           image[2] &= 0b1111_1100;
           if (current.indicator > 0 && current.indicator <= 4) {
             image[1] |= 1 << (current.indicator + 3);
-          } else if (current.indicator < 6) {
-            image[2] |= 1 << (current.indicator - 4);
+          } else if (current.indicator <= 6) {
+            image[2] |= 1 << (current.indicator - 5);
           }
           blink[1] &= 0b0000_1111;
           blink[2] &= 0b1111_1100;
