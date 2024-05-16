@@ -882,11 +882,13 @@ const handleOff = (id, index, chan) => {
 }
 
 const handleClick1 = (id, index, chan) => {
+  console.log("click1", id, index, chan);
   const dev = get(id) || {};
   switch (dev.type) {
     case DEVICE_TYPE_SMART_TOP_G4D: {
       if (chan.action === 'menu') {
         const { mode = 0, modes = [] } = dev;
+        console.log("mode", mode, modes);
         if (modes.length > 0) {
           const { image = [0, 0, 0, 0, 0, 0, 0, 0], blink = [0, 0, 0, 0, 0, 0, 0, 0] } = dev;
           const { indicator = 0 } = get(modes[mode % modes.length]) || {};
