@@ -1084,7 +1084,7 @@ const run = (action) => {
         if (o.onOn) {
           run({ type: ACTION_SCRIPT_RUN, id: o.onOn });
         }
-        const { last = {}, type: payloadType } = o;
+        const { last = {} } = o;
         const isOn = last.r > 0 || last.g > 0 || last.b > 0 || last.value > 0;
         bind.forEach((i) => {
           if (!o[i]) return;
@@ -1249,7 +1249,6 @@ const run = (action) => {
         if (o.onOff) {
           run({ type: ACTION_SCRIPT_RUN, id: o.onOff });
         }
-        const { type: payloadType } = o;
         bind.forEach((i) => {
           if (!o[i]) return;
           const { type } = get(o[i]) || {};
