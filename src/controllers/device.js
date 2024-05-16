@@ -910,7 +910,7 @@ const handleOff = (id, index, chan) => {
 }
 
 const handleClick1 = (id, index, chan) => {
-  console.log("Click1", chan);
+  console.log("Click1", id, index);
   const onClick1 = toArr(chan.onClick1 || chan.onClick);
   if (onClick1.length > 0) {
     const { onClick1Count = 0 } = chan;
@@ -919,7 +919,7 @@ const handleClick1 = (id, index, chan) => {
 }
 
 const handleClick2 = (id, index, chan) => {
-  console.log("Click2", chan);
+  console.log("Click2", id, index);
   const onClick2 = toArr(chan.onClick2);
   if (onClick2.length > 0) {
     const { onClick2Count = 0 } = chan;
@@ -928,7 +928,7 @@ const handleClick2 = (id, index, chan) => {
 }
 
 const handleClick3 = (id, index, chan) => {
-  console.log("Click3", chan);
+  console.log("Click3", id, index)
   const onClick3 = toArr(chan.onClick3);
   if (onClick3.length > 0) {
     const { onClick3Count = 0 } = chan;
@@ -937,7 +937,7 @@ const handleClick3 = (id, index, chan) => {
 }
 
 const handleHold = (id, index, chan) => {
-  console.log("Hold", chan);
+  console.log("Hold", id, index);
   const onHold = toArr(chan.onHold);
   if (onHold.length > 0) {
     const { onHoldCount = 0 } = chan;
