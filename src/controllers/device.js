@@ -885,22 +885,9 @@ const handleClick1 = (id, chan) => {
     case DEVICE_TYPE_SMART_TOP_G4D: {
       if (chan.action === 'menu') {
         const { mode = 0, modes = [] } = dev;
-        console.log("mode", mode, modes);
         if (modes.length > 0) {
-          const { image = [0, 0, 0, 0, 0, 0, 0, 0], blink = [0, 0, 0, 0, 0, 0, 0, 0], configuring } = dev;
-          const current = get(modes[mode % modes.length]) || {};
-          image[1] &= 0b0000_1111
-          image[2] &= 0b1111_1100;
-          if (current.indicator > 0 && current.indicator <= 4) {
-            image[1] |= 1 << (current.indicator + 3);
-          } else if (current.indicator <= 6) {
-            image[2] |= 1 << (current.indicator - 5);
-          }
-          blink[1] &= 0b0000_1111;
-          blink[2] &= 0b1111_1100;
-          run({ type: ACTION_IMAGE, id, value: image })
-          run({ type: ACTION_BLINK, id, value: blink })
           set(id, { mode: configuring ? mode : mode + 1, configuring: false });
+          renderSmartTopModes(id);
         }
       }
       break;
@@ -935,25 +922,10 @@ const handleHold = (id, chan) => {
     case DEVICE_TYPE_SMART_TOP_G4D: {
       if (chan.action === 'menu') {
         const { mode = 0, modes = [] } = dev;
-        console.log("mode", mode, modes);
         if (modes.length > 0) {
-          const { image = [0, 0, 0, 0, 0, 0, 0, 0], blink = [0, 0, 0, 0, 0, 0, 0, 0] } = dev;
           const current = get(modes[mode % modes.length]) || {};
-          image[1] &= 0b0000_1111
-          image[2] &= 0b1111_1100;
-          blink[1] &= 0b0000_1111;
-          blink[2] &= 0b1111_1100;
-          if (current.indicator > 0 && current.indicator <= 4) {
-            image[1] |= 1 << (current.indicator + 3);
-            blink[1] |= 1 << (current.indicator + 3);
-
-          } else if (current.indicator <= 6) {
-            image[2] |= 1 << (current.indicator - 5);
-            blink[2] |= 1 << (current.indicator - 5);
-          }
-          run({ type: ACTION_IMAGE, id, value: image })
-          run({ type: ACTION_BLINK, id, value: blink })
-          set(id, { configuring: true });
+          if (current.mode !== 'MODE_SCENE')
+            set(id, { configuring: true });
         }
       }
       return false;
@@ -967,4 +939,29 @@ const handleHold = (id, chan) => {
       return chan.repeat;
     }
   }
-} 
+}
+
+const renderSmartTopMode = (id) => {
+  const dev = get(id) || {};
+  const { mode = 0, modes = [], configuring } = dev;
+  const { image = [0, 0, 0, 0, 0, 0, 0, 0], blink = [0, 0, 0, 0, 0, 0, 0, 0] } = dev;
+  const current = get(modes[mode % modes.length]) || {};
+  image[1] &= 0b0000_1111
+  image[2] &= 0b1111_1100;
+  blink[1] &= 0b0000_1111;
+  blink[2] &= 0b1111_1100;
+  if (current.indicator > 0 && current.indicator <= 4) {
+    image[1] |= 1 << (current.indicator + 3);
+    if (configuring) {
+      blink[1] |= 1 << (current.indicator + 3);
+
+    }
+  } else if (current.indicator <= 6) {
+    image[2] |= 1 << (current.indicator - 5);
+    if (configuring) {
+      blink[2] |= 1 << (current.indicator - 5);
+    }
+  }
+  run({ type: ACTION_IMAGE, id, value: image })
+  run({ type: ACTION_BLINK, id, value: blink })
+}
