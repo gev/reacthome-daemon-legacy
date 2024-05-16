@@ -892,7 +892,7 @@ const calcCO2 = site => {
 const toArr = a => Array.isArray(a) ? a : a ? [a] : [];
 
 const handleOn = (id, index, chan) => {
-  console.log("On", chan);
+  console.log("On", id, index);
   const onOn = toArr(chan.onOn);
   if (onOn.length > 0) {
     const { onOnCount = 0 } = chan;
@@ -901,7 +901,7 @@ const handleOn = (id, index, chan) => {
 }
 
 const handleOff = (id, index, chan) => {
-  console.log("Off", chan);
+  console.log("Off", id, index);
   const onOff = toArr(chan.onOff);
   if (onOff.length > 0) {
     const { onOffCount = 0 } = chan;
