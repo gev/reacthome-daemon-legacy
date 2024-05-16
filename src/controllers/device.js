@@ -177,7 +177,7 @@ module.exports.manage = () => {
               }
               const { onOnCount = 0 } = chan;
               set(channel, { onOnCount: onOnCount + 1 });
-              handleOn(id, chan);
+              handleOn(id, index, chan);
               // const onClick1 = toArr(chan.onClick1 || chan.onClick);
               // const onClick2 = toArr(chan.onClick2);
               // const onClick3 = toArr(chan.onClick3);
@@ -190,20 +190,20 @@ module.exports.manage = () => {
                     if (!chan.value) {
                       const { onClick1Count = 0 } = chan;
                       set(channel, { onClick1Count: onClick1Count + 1 });
-                      handleClick1(id, chan);
+                      handleClick1(id, index, chan);
                     }
                     break;
                   }
                   case 2: {
                     const { onClick2Count = 0 } = chan;
                     set(channel, { onClick2Count: onClick2Count + 1 });
-                    handleClick2(id, chan);
+                    handleClick2(id, index, chan);
                     break;
                   }
                   case 3: {
                     const { onClick3Count = 0 } = chan;
                     set(channel, { onClick3Count: onClick3Count + 1 });
-                    handleClick3(id, chan);
+                    handleClick3(id, index, chan);
                     break;
                   }
                 }
@@ -219,7 +219,7 @@ module.exports.manage = () => {
                   const { onHoldCount = 0 } = chan;
                   set(channel, { onHoldCount: onHoldCount + 1 });
                 }
-                if (handleHold(id, chan)) {
+                if (handleHold(id, index, chan)) {
                   hold[channel] = {
                     count: 0,
                     timeout: setTimeout(
@@ -251,7 +251,7 @@ module.exports.manage = () => {
               // }
               const { onOffCount = 0 } = chan;
               set(channel, { onOffCount: onOffCount + 1 });
-              handleOff(id, chan);
+              handleOff(id, index, chan);
             }
           } else {
             set(channel, { value });
@@ -891,7 +891,7 @@ const calcCO2 = site => {
 
 const toArr = a => Array.isArray(a) ? a : a ? [a] : [];
 
-const handleOn = (id, chan) => {
+const handleOn = (id, index, chan) => {
   console.log("On", chan);
   const onOn = toArr(chan.onOn);
   if (onOn.length > 0) {
@@ -900,7 +900,7 @@ const handleOn = (id, chan) => {
   }
 }
 
-const handleOff = (id, chan) => {
+const handleOff = (id, index, chan) => {
   console.log("Off", chan);
   const onOff = toArr(chan.onOff);
   if (onOff.length > 0) {
@@ -909,7 +909,7 @@ const handleOff = (id, chan) => {
   }
 }
 
-const handleClick1 = (id, chan) => {
+const handleClick1 = (id, index, chan) => {
   console.log("Click1", chan);
   const onClick1 = toArr(chan.onClick1 || chan.onClick);
   if (onClick1.length > 0) {
@@ -918,7 +918,7 @@ const handleClick1 = (id, chan) => {
   }
 }
 
-const handleClick2 = (id, chan) => {
+const handleClick2 = (id, index, chan) => {
   console.log("Click2", chan);
   const onClick2 = toArr(chan.onClick2);
   if (onClick2.length > 0) {
@@ -927,7 +927,7 @@ const handleClick2 = (id, chan) => {
   }
 }
 
-const handleClick3 = (id, chan) => {
+const handleClick3 = (id, index, chan) => {
   console.log("Click3", chan);
   const onClick3 = toArr(chan.onClick3);
   if (onClick3.length > 0) {
@@ -936,7 +936,7 @@ const handleClick3 = (id, chan) => {
   }
 }
 
-const handleHold = (id, chan) => {
+const handleHold = (id, index, chan) => {
   console.log("Hold", chan);
   const onHold = toArr(chan.onHold);
   if (onHold.length > 0) {
