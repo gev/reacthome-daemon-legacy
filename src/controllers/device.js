@@ -166,7 +166,7 @@ module.exports.manage = () => {
           const chan = get(channel);
           if (chan && chan.value !== value) {
             set(channel, { value });
-            const { timeout, timestamp = Date.now(), count = 0 } = hold[channel] || {};
+            const { timeout, count = 0 } = hold[channel] || {};
             if (value) {
               if (!count) {
                 clearTimeout(timeout);
@@ -177,49 +177,40 @@ module.exports.manage = () => {
               }
               const { onOnCount = 0 } = chan;
               set(channel, { onOnCount: onOnCount + 1 });
-              handleOn(id, index, chan);
-              // const onClick1 = toArr(chan.onClick1 || chan.onClick);
-              // const onClick2 = toArr(chan.onClick2);
-              // const onClick3 = toArr(chan.onClick3);
-              // if (onClick1.length > 0 || onClick2.length > 0 || onClick3.length > 0) {
+              handleOn(id, chan);
               hold[channel].count++;
-              // if (onClick2.length > 0 || onClick3.length > 0) {
               setTimeout(() => {
                 switch (hold[channel].count) {
                   case 1: {
                     if (!chan.value) {
                       const { onClick1Count = 0 } = chan;
                       set(channel, { onClick1Count: onClick1Count + 1 });
-                      handleClick1(id, index, chan);
+                      handleClick1(id, chan);
                     }
                     break;
                   }
                   case 2: {
                     const { onClick2Count = 0 } = chan;
                     set(channel, { onClick2Count: onClick2Count + 1 });
-                    handleClick2(id, index, chan);
+                    handleClick2(id, chan);
                     break;
                   }
                   case 3: {
                     const { onClick3Count = 0 } = chan;
                     set(channel, { onClick3Count: onClick3Count + 1 });
-                    handleClick3(id, index, chan);
+                    handleClick3(id, chan);
                     break;
                   }
                 }
                 hold[channel] = { count: 0 };
               }, parseInt(chan.timeout || 1000) / 2);
-              // }
-              // }
-              // const onHold = toArr(chan.onHold);
-              // if (onHold.length > 0) {
               const handleHold_ = (start = false) => {
                 if (!chan.value) return;
                 if (start) {
                   const { onHoldCount = 0 } = chan;
                   set(channel, { onHoldCount: onHoldCount + 1 });
                 }
-                if (handleHold(id, index, chan)) {
+                if (handleHold(id, chan)) {
                   hold[channel] = {
                     count: 0,
                     timeout: setTimeout(
@@ -230,28 +221,11 @@ module.exports.manage = () => {
                 }
               };
               hold[channel].timeout = setTimeout(handleHold_, parseInt(chan.timeout || 1000), true);
-              // }
             } else {
               clearTimeout(timeout);
-              // if (count === 1) {
-              //   // const onClick1 = toArr(chan.onClick1 || chan.onClick);
-              //   // if (onClick1.length > 0) {
-              //   //   // const onClick2 = toArr(chan.onClick2);
-              //   //   // const onClick3 = toArr(chan.onClick3);
-              //   //   // const dt = Date.now() - timestamp;
-              //   //   // if (onClick2.length === 0 && onClick3.length === 0) {
-              //   //   //   if (dt < parseInt(chan.timeout || 1000) / 2) {
-              //   //   //     const { onClick1Count = 0 } = chan;
-              //   //   //     set(channel, { onClick1Count: onClick1Count + 1 });
-              //   //   //     run({ type: ACTION_SCRIPT_RUN, id: onClick1[onClick1Count % onClick1.length] });
-              //   //   //   }
-              //   //   //   hold[channel] = { count: 0 };
-              //   //   // }
-              //   // }
-              // }
               const { onOffCount = 0 } = chan;
               set(channel, { onOffCount: onOffCount + 1 });
-              handleOff(id, index, chan);
+              handleOff(id, chan);
             }
           } else {
             set(channel, { value });
@@ -891,8 +865,7 @@ const calcCO2 = site => {
 
 const toArr = a => Array.isArray(a) ? a : a ? [a] : [];
 
-const handleOn = (id, index, chan) => {
-  console.log("On", id, index);
+const handleOn = (id, chan) => {
   const onOn = toArr(chan.onOn);
   if (onOn.length > 0) {
     const { onOnCount = 0 } = chan;
@@ -901,7 +874,6 @@ const handleOn = (id, index, chan) => {
 }
 
 const handleOff = (id, index, chan) => {
-  console.log("Off", id, index);
   const onOff = toArr(chan.onOff);
   if (onOff.length > 0) {
     const { onOffCount = 0 } = chan;
@@ -910,16 +882,42 @@ const handleOff = (id, index, chan) => {
 }
 
 const handleClick1 = (id, index, chan) => {
-  console.log("Click1", id, index);
-  const onClick1 = toArr(chan.onClick1 || chan.onClick);
-  if (onClick1.length > 0) {
-    const { onClick1Count = 0 } = chan;
-    run({ type: ACTION_SCRIPT_RUN, id: onClick1[onClick1Count % onClick1.length] });
+  const dev = get(id) || {};
+  switch (dev.type) {
+    case DEVICE_TYPE_SMART_TOP_G4D: {
+      if (chan.action === 'menu') {
+        const { mode = 0, modes = [] } = dev;
+        if (modes.length > 0) {
+          const { image = [0, 0, 0, 0, 0, 0, 0, 0], blink = [0, 0, 0, 0, 0, 0, 0, 0] } = dev;
+          const { indicator = 0 } = get(modes[mode % modes.length]) || {};
+          image[1] &= 0b1111_0000;
+          image[2] &= 0b1111_1100;
+          if (indicator > 0 && indicator <= 4) {
+            image[1] |= 1 << (indicator - 1);
+          } else if (indicator < 6) {
+            image[2] |= 1 << (indicator - 4);
+          }
+          blink[1] |= 0b0000_0001;
+          blink[1] &= 0b1111_0000;
+          blink[2] &= 0b1111_1100;
+          run({ type: ACTION_IMAGE, id, image })
+          run({ type: ACTION_BLINK, id, blink })
+          set(id, { mode: mode + 1 });
+        }
+      }
+      break;
+    }
+    default: {
+      const onClick1 = toArr(chan.onClick1 || chan.onClick);
+      if (onClick1.length > 0) {
+        const { onClick1Count = 0 } = chan;
+        run({ type: ACTION_SCRIPT_RUN, id: onClick1[onClick1Count % onClick1.length] });
+      }
+    }
   }
 }
 
 const handleClick2 = (id, index, chan) => {
-  console.log("Click2", id, index);
   const onClick2 = toArr(chan.onClick2);
   if (onClick2.length > 0) {
     const { onClick2Count = 0 } = chan;
@@ -928,7 +926,6 @@ const handleClick2 = (id, index, chan) => {
 }
 
 const handleClick3 = (id, index, chan) => {
-  console.log("Click3", id, index)
   const onClick3 = toArr(chan.onClick3);
   if (onClick3.length > 0) {
     const { onClick3Count = 0 } = chan;
@@ -937,7 +934,6 @@ const handleClick3 = (id, index, chan) => {
 }
 
 const handleHold = (id, index, chan) => {
-  console.log("Hold", id, index);
   const onHold = toArr(chan.onHold);
   if (onHold.length > 0) {
     const { onHoldCount = 0 } = chan;
