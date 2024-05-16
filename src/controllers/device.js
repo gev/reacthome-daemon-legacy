@@ -177,10 +177,7 @@ module.exports.manage = () => {
               }
               const { onOnCount = 0 } = chan;
               set(channel, { onOnCount: onOnCount + 1 });
-              const onOn = toArr(chan.onOn);
-              if (onOn.length > 0) {
-                run({ type: ACTION_SCRIPT_RUN, id: onOn[onOnCount % onOn.length] });
-              }
+              handleOn(id, chan);
               // const onClick1 = toArr(chan.onClick1 || chan.onClick);
               // const onClick2 = toArr(chan.onClick2);
               // const onClick3 = toArr(chan.onClick3);
@@ -193,29 +190,20 @@ module.exports.manage = () => {
                     if (!chan.value) {
                       const { onClick1Count = 0 } = chan;
                       set(channel, { onClick1Count: onClick1Count + 1 });
-                      const onClick1 = toArr(chan.onClick1 || chan.onClick);
-                      if (onClick1.length > 0) {
-                        run({ type: ACTION_SCRIPT_RUN, id: onClick1[onClick1Count % onClick1.length] });
-                      }
+                      handleClick1(id, chan);
                     }
                     break;
                   }
                   case 2: {
                     const { onClick2Count = 0 } = chan;
                     set(channel, { onClick2Count: onClick2Count + 1 });
-                    const onClick2 = toArr(chan.onClick2);
-                    if (onClick2.length > 0) {
-                      run({ type: ACTION_SCRIPT_RUN, id: onClick2[onClick2Count % onClick2.length] });
-                    }
+                    handleClick2(id, chan);
                     break;
                   }
                   case 3: {
                     const { onClick3Count = 0 } = chan;
                     set(channel, { onClick3Count: onClick3Count + 1 });
-                    const onClick3 = toArr(chan.onClick3);
-                    if (onClick3.length > 0) {
-                      run({ type: ACTION_SCRIPT_RUN, id: onClick3[onClick3Count % onClick3.length] });
-                    }
+                    handleClick3(id, chan);
                     break;
                   }
                 }
@@ -225,26 +213,23 @@ module.exports.manage = () => {
               // }
               // const onHold = toArr(chan.onHold);
               // if (onHold.length > 0) {
-              const handleHold = (start = false) => {
+              const handleHold_ = (start = false) => {
                 if (!chan.value) return;
                 if (start) {
-                  set(channel, { onHoldCount: chan.onHoldCount + 1 });
+                  const { onHoldCount = 0 } = chan;
+                  set(channel, { onHoldCount: onHoldCount + 1 });
                 }
-                const onHold = toArr(chan.onHold);
-                if (onHold.length > 0) {
-                  run({ type: ACTION_SCRIPT_RUN, id: onHold[chan.onHoldCount % onHold.length] });
-                  if (chan.repeat) {
-                    hold[channel] = {
-                      count: 0,
-                      timeout: setTimeout(
-                        handleHold,
-                        parseInt(chan.interval || 100)
-                      )
-                    };
-                  }
+                if (handleHold(id, chan)) {
+                  hold[channel] = {
+                    count: 0,
+                    timeout: setTimeout(
+                      handleHold_,
+                      parseInt(chan.interval || 100)
+                    )
+                  };
                 }
               };
-              hold[channel].timeout = setTimeout(handleHold, parseInt(chan.timeout || 1000), true);
+              hold[channel].timeout = setTimeout(handleHold_, parseInt(chan.timeout || 1000), true);
               // }
             } else {
               clearTimeout(timeout);
@@ -265,11 +250,8 @@ module.exports.manage = () => {
               //   // }
               // }
               const { onOffCount = 0 } = chan;
-              set(channel, { onOffCount: (onOffCount || 0) + 1 });
-              const onOff = toArr(chan.onOff);
-              if (onOff.length > 0) {
-                run({ type: ACTION_SCRIPT_RUN, id: onOff[onOffCount % onOff.length] });
-              }
+              set(channel, { onOffCount: onOffCount + 1 });
+              handleOff(id, chan);
             }
           } else {
             set(channel, { value });
@@ -909,14 +891,57 @@ const calcCO2 = site => {
 
 const toArr = a => Array.isArray(a) ? a : a ? [a] : [];
 
-const onOn = (id, chan) => {
+const handleOn = (id, chan) => {
+  console.log("On", chan);
+  const onOn = toArr(chan.onOn);
+  if (onOn.length > 0) {
+    const { onOnCount = 0 } = chan;
+    run({ type: ACTION_SCRIPT_RUN, id: onOn[onOnCount % onOn.length] });
+  }
 }
 
-const onOff = (id, chan) => {
+const handleOff = (id, chan) => {
+  console.log("Off", chan);
+  const onOff = toArr(chan.onOff);
+  if (onOff.length > 0) {
+    const { onOffCount = 0 } = chan;
+    run({ type: ACTION_SCRIPT_RUN, id: onOff[onOffCount % onOff.length] });
+  }
 }
 
-const onClick = (id, chan) => {
+const handleClick1 = (id, chan) => {
+  console.log("Click1", chan);
+  const onClick1 = toArr(chan.onClick1 || chan.onClick);
+  if (onClick1.length > 0) {
+    const { onClick1Count = 0 } = chan;
+    run({ type: ACTION_SCRIPT_RUN, id: onClick1[onClick1Count % onClick1.length] });
+  }
 }
 
-const onHold = (id, chan) => {
+const handleClick2 = (id, chan) => {
+  console.log("Click2", chan);
+  const onClick2 = toArr(chan.onClick2);
+  if (onClick2.length > 0) {
+    const { onClick2Count = 0 } = chan;
+    run({ type: ACTION_SCRIPT_RUN, id: onClick2[onClick2Count % onClick2.length] });
+  }
+}
+
+const handleClick3 = (id, chan) => {
+  console.log("Click3", chan);
+  const onClick3 = toArr(chan.onClick3);
+  if (onClick3.length > 0) {
+    const { onClick3Count = 0 } = chan;
+    run({ type: ACTION_SCRIPT_RUN, id: onClick3[onClick3Count % onClick3.length] });
+  }
+}
+
+const handleHold = (id, chan) => {
+  console.log("Hold", chan);
+  const onHold = toArr(chan.onHold);
+  if (onHold.length > 0) {
+    const { onHoldCount = 0 } = chan;
+    run({ type: ACTION_SCRIPT_RUN, id: onHold[onHoldCount % onHold.length] });
+  }
+  return chan.repeat;
 } 
