@@ -903,7 +903,7 @@ const handleClick1 = (id, chan) => {
           blink[2] &= 0b1111_1100;
           run({ type: ACTION_IMAGE, id, value: image })
           run({ type: ACTION_BLINK, id, value: blink })
-          set(id, { mode: 0 });
+          set(id, { mode: mode + 1 });
         }
       }
       break;
