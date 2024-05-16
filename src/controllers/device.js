@@ -892,14 +892,14 @@ const handleClick1 = (id, index, chan) => {
         if (modes.length > 0) {
           const { image = [0, 0, 0, 0, 0, 0, 0, 0], blink = [0, 0, 0, 0, 0, 0, 0, 0] } = dev;
           const { indicator = 0 } = get(modes[mode % modes.length]) || {};
-          image[1] &= 0b1111_0000;
+          image[1] &= 0b0000_1111
           image[2] &= 0b1111_1100;
           if (indicator > 0 && indicator <= 4) {
-            image[1] |= 1 << (indicator - 1);
+            image[1] |= 1 << (indicator + 3);
           } else if (indicator < 6) {
             image[2] |= 1 << (indicator - 4);
           }
-          blink[1] &= 0b1111_0000;
+          blink[1] &= 0b0000_1111;
           blink[2] &= 0b1111_1100;
           run({ type: ACTION_IMAGE, id, image })
           run({ type: ACTION_BLINK, id, blink })
