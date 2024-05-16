@@ -938,6 +938,7 @@ const handleHold = (id, chan) => {
         console.log("mode", mode, modes);
         if (modes.length > 0) {
           const { image = [0, 0, 0, 0, 0, 0, 0, 0], blink = [0, 0, 0, 0, 0, 0, 0, 0] } = dev;
+          const current = get(modes[mode % modes.length]) || {};
           image[1] &= 0b0000_1111
           image[2] &= 0b1111_1100;
           blink[1] &= 0b0000_1111;
