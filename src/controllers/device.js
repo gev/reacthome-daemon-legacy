@@ -928,8 +928,10 @@ const handleHold = (id, chan) => {
         const { mode = 0, modes = [] } = dev;
         if (modes.length > 0) {
           const current = get(modes[mode % modes.length]) || {};
-          if (current.mode !== 'MODE_SCENE')
+          if (current.mode !== 'MODE_SCENE') {
             set(id, { configuring: true });
+            renderSmartTopModes(id);
+          }
         }
       }
       return false;
@@ -945,7 +947,7 @@ const handleHold = (id, chan) => {
   }
 }
 
-const renderSmartTopMode = (id) => {
+const renderSmartTopModes = (id) => {
   const dev = get(id) || {};
   const { mode = 0, modes = [], configuring } = dev;
   const { image = [0, 0, 0, 0, 0, 0, 0, 0], blink = [0, 0, 0, 0, 0, 0, 0, 0] } = dev;
