@@ -887,7 +887,7 @@ const handleClick1 = (id, chan) => {
         const { mode = 0, modes = [] } = dev;
         console.log("mode", mode, modes);
         if (modes.length > 0) {
-          const { image = [0, 0, 0, 0, 0, 0, 0, 0], blink = [0, 0, 0, 0, 0, 0, 0, 0] } = dev;
+          const { image = [0, 0, 0, 0, 0, 0, 0, 0], blink = [0, 0, 0, 0, 0, 0, 0, 0], configuring } = dev;
           const current = get(modes[mode % modes.length]) || {};
           image[1] &= 0b0000_1111
           image[2] &= 0b1111_1100;
@@ -934,7 +934,7 @@ const handleHold = (id, chan) => {
   switch (dev.type) {
     case DEVICE_TYPE_SMART_TOP_G4D: {
       if (chan.action === 'menu') {
-        const { mode = 0, modes = [], configuring = false } = dev;
+        const { mode = 0, modes = [] } = dev;
         console.log("mode", mode, modes);
         if (modes.length > 0) {
           const { image = [0, 0, 0, 0, 0, 0, 0, 0], blink = [0, 0, 0, 0, 0, 0, 0, 0] } = dev;
