@@ -950,17 +950,17 @@ const handleHold = (id, chan) => {
 const renderSmartTopModes = (id) => {
   const dev = get(id) || {};
   const { mode = 0, modes = [], configuring } = dev;
-  const { image = [0, 0, 0, 0, 0, 0, 0, 0], blink = [0, 0, 0, 0, 0, 0, 0, 0] } = dev;
-  const current = get(modes[mode % modes.length]) || {};
+  const image = [...(dev.image || [0, 0, 0, 0, 0, 0, 0, 0])];
+  const blink = [...(dev.blink || [0, 0, 0, 0, 0, 0, 0, 0])];
   image[1] &= 0b0000_1111
   image[2] &= 0b1111_1100;
   blink[1] &= 0b0000_1111;
   blink[2] &= 0b1111_1100;
+  const current = get(modes[mode % modes.length]) || {};
   if (current.indicator > 0 && current.indicator <= 4) {
     image[1] |= 1 << (current.indicator + 3);
     if (configuring) {
       blink[1] |= 1 << (current.indicator + 3);
-
     }
   } else if (current.indicator <= 6) {
     image[2] |= 1 << (current.indicator - 5);
@@ -969,5 +969,5 @@ const renderSmartTopModes = (id) => {
     }
   }
   run({ type: ACTION_IMAGE, id, value: image })
-  // run({ type: ACTION_BLINK, id, value: blink })
+  run({ type: ACTION_BLINK, id, value: blink })
 }
