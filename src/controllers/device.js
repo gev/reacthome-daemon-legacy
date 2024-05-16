@@ -892,7 +892,7 @@ const handleClick1 = (id, chan) => {
         if (modes.length > 0) {
           const { image = [0, 0, 0, 0, 0, 0, 0, 0], blink = [0, 0, 0, 0, 0, 0, 0, 0] } = dev;
           const current = get(modes[mode % modes.length]) || {};
-          console.log(current);
+          console.log(modes[mode % modes.length], current);
           image[1] &= 0b0000_1111
           image[2] &= 0b1111_1100;
           if (current.indicator > 0 && current.indicator <= 4) {
