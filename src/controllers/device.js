@@ -899,7 +899,6 @@ const handleClick1 = (id, index, chan) => {
           } else if (indicator < 6) {
             image[2] |= 1 << (indicator - 4);
           }
-          blink[1] |= 0b0000_0001;
           blink[1] &= 0b1111_0000;
           blink[2] &= 0b1111_1100;
           run({ type: ACTION_IMAGE, id, image })
