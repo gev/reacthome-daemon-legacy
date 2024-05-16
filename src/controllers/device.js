@@ -866,7 +866,6 @@ const calcCO2 = site => {
 const toArr = a => Array.isArray(a) ? a : a ? [a] : [];
 
 const handleOn = (id, chan) => {
-  const onOn = toArr(chan.onOn);
   if (onOn.length > 0) {
     const { onOnCount = 0 } = chan;
     run({ type: ACTION_SCRIPT_RUN, id: onOn[onOnCount % onOn.length] });
@@ -874,7 +873,6 @@ const handleOn = (id, chan) => {
 }
 
 const handleOff = (id, chan) => {
-  const onOff = toArr(chan.onOff);
   if (onOff.length > 0) {
     const { onOffCount = 0 } = chan;
     run({ type: ACTION_SCRIPT_RUN, id: onOff[onOffCount % onOff.length] });
@@ -882,7 +880,6 @@ const handleOff = (id, chan) => {
 }
 
 const handleClick1 = (id, chan) => {
-  console.log("click1", id, chan);
   const dev = get(id) || {};
   switch (dev.type) {
     case DEVICE_TYPE_SMART_TOP_G4D: {
@@ -892,7 +889,6 @@ const handleClick1 = (id, chan) => {
         if (modes.length > 0) {
           const { image = [0, 0, 0, 0, 0, 0, 0, 0], blink = [0, 0, 0, 0, 0, 0, 0, 0] } = dev;
           const current = get(modes[mode % modes.length]) || {};
-          console.log(modes[mode % modes.length], current);
           image[1] &= 0b0000_1111
           image[2] &= 0b1111_1100;
           if (current.indicator > 0 && current.indicator <= 4) {
@@ -904,7 +900,7 @@ const handleClick1 = (id, chan) => {
           blink[2] &= 0b1111_1100;
           run({ type: ACTION_IMAGE, id, value: image })
           run({ type: ACTION_BLINK, id, value: blink })
-          set(id, { mode: mode + 1 });
+          set(id, { mode: configuring ? mode : mode + 1, configuring: false });
         }
       }
       break;
@@ -920,7 +916,6 @@ const handleClick1 = (id, chan) => {
 }
 
 const handleClick2 = (id, chan) => {
-  const onClick2 = toArr(chan.onClick2);
   if (onClick2.length > 0) {
     const { onClick2Count = 0 } = chan;
     run({ type: ACTION_SCRIPT_RUN, id: onClick2[onClick2Count % onClick2.length] });
@@ -928,7 +923,6 @@ const handleClick2 = (id, chan) => {
 }
 
 const handleClick3 = (id, chan) => {
-  const onClick3 = toArr(chan.onClick3);
   if (onClick3.length > 0) {
     const { onClick3Count = 0 } = chan;
     run({ type: ACTION_SCRIPT_RUN, id: onClick3[onClick3Count % onClick3.length] });
@@ -936,10 +930,40 @@ const handleClick3 = (id, chan) => {
 }
 
 const handleHold = (id, chan) => {
-  const onHold = toArr(chan.onHold);
-  if (onHold.length > 0) {
-    const { onHoldCount = 0 } = chan;
-    run({ type: ACTION_SCRIPT_RUN, id: onHold[onHoldCount % onHold.length] });
+  const dev = get(id) || {};
+  switch (dev.type) {
+    case DEVICE_TYPE_SMART_TOP_G4D: {
+      if (chan.action === 'menu') {
+        const { mode = 0, modes = [], configuring = false } = dev;
+        console.log("mode", mode, modes);
+        if (modes.length > 0) {
+          const { image = [0, 0, 0, 0, 0, 0, 0, 0], blink = [0, 0, 0, 0, 0, 0, 0, 0] } = dev;
+          image[1] &= 0b0000_1111
+          image[2] &= 0b1111_1100;
+          blink[1] &= 0b0000_1111;
+          blink[2] &= 0b1111_1100;
+          if (current.indicator > 0 && current.indicator <= 4) {
+            image[1] |= 1 << (current.indicator + 3);
+            blink[1] |= 1 << (current.indicator + 3);
+
+          } else if (current.indicator <= 6) {
+            image[2] |= 1 << (current.indicator - 5);
+            blink[2] |= 1 << (current.indicator - 5);
+          }
+          run({ type: ACTION_IMAGE, id, value: image })
+          run({ type: ACTION_BLINK, id, value: blink })
+          set(id, { configuring: true });
+        }
+      }
+      return false;
+    }
+    default: {
+      const onHold = toArr(chan.onHold);
+      if (onHold.length > 0) {
+        const { onHoldCount = 0 } = chan;
+        run({ type: ACTION_SCRIPT_RUN, id: onHold[onHoldCount % onHold.length] });
+      }
+      return chan.repeat;
+    }
   }
-  return chan.repeat;
 } 
