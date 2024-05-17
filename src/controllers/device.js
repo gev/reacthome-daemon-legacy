@@ -899,14 +899,6 @@ const handle = (handleSmartTop, handleDefault) => (id, chan) => {
   }
 }
 
-const handleOn = handle(handleSmartTopOn, handleDefaultOn);
-const handleClick1 = handle(handleSmartTopClick1, handleDefaultClick1);
-const handleClick2 = handle(handleSmartTopClick2, handleDefaultClick2);
-const handleClick3 = handle(handleSmartTopClick3, handleDefaultClick3);
-const handleHold = handle(handleSmartTopHold, handleDefaultHold);
-const handleOff = handle(handleSmartTopOff, handleDefaultOff);
-
-
 const handleSmartTop = (handle) => (_, chan, current = {}) => {
   if (chan.action !== 'menu') {
     if (current.mode === "MODE_SCENE") {
@@ -917,9 +909,6 @@ const handleSmartTop = (handle) => (_, chan, current = {}) => {
 }
 
 const handleSmartTopOn = handleSmartTop(handleDefaultOn);
-const handleSmartTopClick2 = handleSmartTop(handleDefaultClick2);
-const handleSmartTopClick3 = handleSmartTop(handleDefaultClick3);
-const handleSmartTopOff = handleSmartTop(handleDefaultOff);
 
 const handleSmartTopClick1 = (dev, chan, current = {}, mode) => {
   if (chan.action === 'menu') {
@@ -934,6 +923,9 @@ const handleSmartTopClick1 = (dev, chan, current = {}, mode) => {
   }
 }
 
+const handleSmartTopClick2 = handleSmartTop(handleDefaultClick2);
+const handleSmartTopClick3 = handleSmartTop(handleDefaultClick3);
+
 const handleSmartTopHold = (_, chan, current = {}) => {
   if (chan.action === 'menu') {
     if (current.mode !== 'MODE_SCENE') {
@@ -946,6 +938,16 @@ const handleSmartTopHold = (_, chan, current = {}) => {
     return handleDefaultHold(chan);
   }
 }
+
+const handleSmartTopOff = handleSmartTop(handleDefaultOff);
+
+const handleOn = handle(handleSmartTopOn, handleDefaultOn);
+const handleClick1 = handle(handleSmartTopClick1, handleDefaultClick1);
+const handleClick2 = handle(handleSmartTopClick2, handleDefaultClick2);
+const handleClick3 = handle(handleSmartTopClick3, handleDefaultClick3);
+const handleHold = handle(handleSmartTopHold, handleDefaultHold);
+const handleOff = handle(handleSmartTopOff, handleDefaultOff);
+
 
 const renderSmartTop = (id) => {
   const dev = get(id) || {};
