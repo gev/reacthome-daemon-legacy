@@ -968,6 +968,7 @@ const renderSmartTop = (id) => {
       blink[2] |= 1 << (current.indicator - 5);
     }
   }
+  console.log(site, get(site));
   if (site) {
     const { temperature, humidity, co2 } = get(site) || {};
     switch (current.mode) {
