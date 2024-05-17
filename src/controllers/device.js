@@ -949,7 +949,7 @@ const handleOff = handle(handleSmartTopOff, handleDefaultOff);
 
 const renderSmartTop = (id, current = {}) => {
   const dev = get(id) || {};
-  const { mode = 0, modes = [], configuring, site } = dev;
+  const { configuring, site } = dev;
   const image = [...(dev.image || [0, 0, 0, 0, 0, 0, 0, 0])];
   const blink = [...(dev.blink || [0, 0, 0, 0, 0, 0, 0, 0])];
   image[1] &= 0b0000_1111
