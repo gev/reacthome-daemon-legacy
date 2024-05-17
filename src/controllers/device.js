@@ -899,7 +899,7 @@ const handle = (handleSmartTop, handleDefault) => (id, chan) => {
   }
 }
 
-const handleSmartTop = (handle) => (_, _, chan, current = {}) => {
+const handleSmartTop = (handle) => (id, dev, chan, current = {}) => {
   if (chan.action !== 'menu') {
     if (current.mode === "MODE_SCENE") {
       return handle(chan);
@@ -924,7 +924,7 @@ const handleSmartTopClick1 = (id, dev, chan, current = {}, mode) => {
 const handleSmartTopClick2 = handleSmartTop(handleDefaultClick2);
 const handleSmartTopClick3 = handleSmartTop(handleDefaultClick3);
 
-const handleSmartTopHold = (id, _, chan, current = {}) => {
+const handleSmartTopHold = (id, dev, chan, current = {}) => {
   if (chan.action === 'menu') {
     if (current.mode !== 'MODE_SCENE') {
       set(id, { configuring: true });
