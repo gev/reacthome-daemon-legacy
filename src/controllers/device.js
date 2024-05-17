@@ -910,9 +910,10 @@ const handleOff = handle(handleSmartTopOff, handleDefaultOff);
 handleSmartTopScene = (handle) => (_, chan, current = {}) => {
   if (chan.action !== 'menu') {
     if (current.mode === "MODE_SCENE") {
-      handle(chan);
+      return handle(chan);
     }
   }
+  return false;
 }
 
 handleSmartTopOn = handleSmartTopScene(handleDefaultOn);
@@ -922,7 +923,6 @@ handleSmartTopOff = handleSmartTopScene(handleDefaultOff);
 
 
 const handleSmartTopClick1 = (dev, chan, current = {}, mode) => {
-  switch (current.mode) { }
   if (chan.action === 'menu') {
     if (modes.length > 0) {
       set(id, { mode: dev.configuring ? mode : mode + 1, configuring: false });
