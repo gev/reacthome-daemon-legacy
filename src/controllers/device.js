@@ -164,7 +164,7 @@ module.exports.manage = () => {
           const index = data[7];
           const value = data[8] ? 1 : 0;
           const channel = `${id}/${DI}/${index}`;
-          const chan = get(channel);
+          const chan = get(channel) || {};
           if (chan && chan.value !== value) {
             set(channel, { value });
             const { timeout, count = 0 } = hold[channel] || {};
@@ -178,7 +178,7 @@ module.exports.manage = () => {
               }
               const { onOnCount = 0 } = chan;
               set(channel, { onOnCount: onOnCount + 1 });
-              handleOn(id, chan);
+              handleOn(id, index, chan);
               hold[channel].count++;
               setTimeout(() => {
                 switch (hold[channel].count) {
@@ -186,20 +186,20 @@ module.exports.manage = () => {
                     if (!chan.value) {
                       const { onClick1Count = 0 } = chan;
                       set(channel, { onClick1Count: onClick1Count + 1 });
-                      handleClick1(id, chan);
+                      handleClick1(id, index, chan);
                     }
                     break;
                   }
                   case 2: {
                     const { onClick2Count = 0 } = chan;
                     set(channel, { onClick2Count: onClick2Count + 1 });
-                    handleClick2(id, chan);
+                    handleClick2(id, index, chan);
                     break;
                   }
                   case 3: {
                     const { onClick3Count = 0 } = chan;
                     set(channel, { onClick3Count: onClick3Count + 1 });
-                    handleClick3(id, chan);
+                    handleClick3(id, index, chan);
                     break;
                   }
                 }
@@ -211,7 +211,7 @@ module.exports.manage = () => {
                   const { onHoldCount = 0 } = chan;
                   set(channel, { onHoldCount: onHoldCount + 1 });
                 }
-                if (handleHold(id, chan)) {
+                if (handleHold(id, index, chan)) {
                   hold[channel] = {
                     count: 0,
                     timeout: setTimeout(
@@ -226,7 +226,7 @@ module.exports.manage = () => {
               clearTimeout(timeout);
               const { onOffCount = 0 } = chan;
               set(channel, { onOffCount: onOffCount + 1 });
-              handleOff(id, chan);
+              handleOff(id, index, chan);
             }
           } else {
             set(channel, { value });
@@ -884,13 +884,18 @@ const handleDefaultHold = handleDefault('onHold', 'onHoldCount');
 const handleDefaultOff = handleDefault('onOff', 'onOffCount');
 
 
-const handle = (handleSmartTop, handleDefault) => (id, chan) => {
+const handle = (handleSmartTop, handleDefault) => (id, index, chan) => {
   const dev = get(id) || {};
   switch (dev.type) {
     case DEVICE_TYPE_SMART_TOP_G4D: {
       const { mode = 0, modes = [] } = dev;
       if (modes.length > 0) {
-        return handleSmartTop(id, dev, chan, get(modes[mode % modes.length]), mode);
+        const cid = modes[mode % modes.length];
+        const current = get(cid);
+        if (current.mode === 'MODE_SCENE' && chan.action !== 'menu') {
+          return handleDefault(get(`${cid}/${DI}/${index}`));
+        }
+        return handleSmartTop(id, dev, chan, get(modes[current]), mode);
       }
       return false;
     }
@@ -900,16 +905,7 @@ const handle = (handleSmartTop, handleDefault) => (id, chan) => {
   }
 }
 
-const handleSmartTop = (handle) => (id, dev, chan, current = {}) => {
-  if (chan.action !== 'menu') {
-    if (current.mode === "MODE_SCENE") {
-      return handle(chan);
-    }
-  }
-  return false;
-}
-
-const handleSmartTopOn = handleSmartTop(handleDefaultOn);
+const handleSmartTop = () => false;
 
 const handleSmartTopClick1 = (id, dev, chan, current = {}, mode) => {
   if (chan.action === 'menu') {
@@ -917,13 +913,7 @@ const handleSmartTopClick1 = (id, dev, chan, current = {}, mode) => {
     renderSmartTop(id);
     return false;
   }
-  if (current.mode === "MODE_SCENE") {
-    return handleDefaultClick1(chan);
-  }
 }
-
-const handleSmartTopClick2 = handleSmartTop(handleDefaultClick2);
-const handleSmartTopClick3 = handleSmartTop(handleDefaultClick3);
 
 const handleSmartTopHold = (id, dev, chan, current = {}) => {
   if (chan.action === 'menu') {
@@ -933,19 +923,14 @@ const handleSmartTopHold = (id, dev, chan, current = {}) => {
     }
     return false;
   }
-  if (current.mode === "MODE_SCENE") {
-    return handleDefaultHold(chan);
-  }
 }
 
-const handleSmartTopOff = handleSmartTop(handleDefaultOff);
-
-const handleOn = handle(handleSmartTopOn, handleDefaultOn);
+const handleOn = handle(handleSmartTop, handleDefaultOn);
 const handleClick1 = handle(handleSmartTopClick1, handleDefaultClick1);
-const handleClick2 = handle(handleSmartTopClick2, handleDefaultClick2);
-const handleClick3 = handle(handleSmartTopClick3, handleDefaultClick3);
+const handleClick2 = handle(handleSmartTop, handleDefaultClick2);
+const handleClick3 = handle(handleSmartTop, handleDefaultClick3);
 const handleHold = handle(handleSmartTopHold, handleDefaultHold);
-const handleOff = handle(handleSmartTopOff, handleDefaultOff);
+const handleOff = handle(handleSmartTop, handleDefaultOff);
 
 
 const renderSmartTop = (id) => {
