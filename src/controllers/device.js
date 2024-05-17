@@ -912,10 +912,8 @@ const handleSmartTopOn = handleSmartTop(handleDefaultOn);
 
 const handleSmartTopClick1 = (dev, chan, current = {}, mode) => {
   if (chan.action === 'menu') {
-    if (modes.length > 0) {
-      set(id, { mode: dev.configuring ? mode : mode + 1, configuring: false });
-      renderSmartTop(id);
-    }
+    set(id, { mode: dev.configuring ? mode : mode + 1, configuring: false });
+    renderSmartTop(id);
     return false;
   }
   if (current.mode === "MODE_SCENE") {
