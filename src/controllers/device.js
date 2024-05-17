@@ -865,85 +865,86 @@ const calcCO2 = site => {
 
 const toArr = a => Array.isArray(a) ? a : a ? [a] : [];
 
-const handleOn = (id, chan) => {
-  const onOn = toArr(chan.onClick2);
-  if (onOn.length > 0) {
-    const { onOnCount = 0 } = chan;
-    run({ type: ACTION_SCRIPT_RUN, id: onOn[onOnCount % onOn.length] });
+
+const handleDefault = (action, actionCount) => (chan) => {
+  const actions = toArr(chan[action]);
+  if (actions.length > 0) {
+    const count = chan[actionCount] || 0;
+    run({ type: ACTION_SCRIPT_RUN, id: actions[count % actions.length] });
   }
+  return chan.repeat;
 }
 
-const handleOff = (id, chan) => {
-  const onOff = toArr(chan.onClick2);
-  if (onOff.length > 0) {
-    const { onOffCount = 0 } = chan;
-    run({ type: ACTION_SCRIPT_RUN, id: onOff[onOffCount % onOff.length] });
-  }
-}
+const handleDefaultOn = handleDefault(chan, 'onOn', 'onOnCount');
+const handleDefaultClick1 = handleDefault(chan, 'onClick1', 'onClick1Count');
+const handleDefaultClick2 = handleDefault(chan, 'onClick2', 'onClick2Count');
+const handleDefaultClick3 = handleDefault(chan, 'onClick3', 'onClick3Count');
+const handleDefaultHold = handleDefault(chan, 'onHold', 'onHoldCount');
+const handleDefaultOff = handleDefault(chan, 'onOff', 'onOffCount');
 
-const handleClick1 = (id, chan) => {
+
+const handle = (handleSmartTop, handleDefault) => (id, chan) => {
   const dev = get(id) || {};
   switch (dev.type) {
     case DEVICE_TYPE_SMART_TOP_G4D: {
-      if (chan.action === 'menu') {
-        const { mode = 0, modes = [], configuring } = dev;
-        if (modes.length > 0) {
-          set(id, { mode: configuring ? mode : mode + 1, configuring: false });
-          renderSmartTop(id);
-        }
-      }
-      break;
-    }
-    default: {
-      const onClick1 = toArr(chan.onClick1 || chan.onClick);
-      if (onClick1.length > 0) {
-        const { onClick1Count = 0 } = chan;
-        run({ type: ACTION_SCRIPT_RUN, id: onClick1[onClick1Count % onClick1.length] });
-      }
-    }
-  }
-}
-
-const handleClick2 = (id, chan) => {
-  const onClick2 = toArr(chan.onClick2);
-  if (onClick2.length > 0) {
-    const { onClick2Count = 0 } = chan;
-    run({ type: ACTION_SCRIPT_RUN, id: onClick2[onClick2Count % onClick2.length] });
-  }
-}
-
-const handleClick3 = (id, chan) => {
-  const onClick3 = toArr(chan.onClick2);
-  if (onClick3.length > 0) {
-    const { onClick3Count = 0 } = chan;
-    run({ type: ACTION_SCRIPT_RUN, id: onClick3[onClick3Count % onClick3.length] });
-  }
-}
-
-const handleHold = (id, chan) => {
-  const dev = get(id) || {};
-  switch (dev.type) {
-    case DEVICE_TYPE_SMART_TOP_G4D: {
-      if (chan.action === 'menu') {
-        const { mode = 0, modes = [] } = dev;
-        if (modes.length > 0) {
-          const current = get(modes[mode % modes.length]) || {};
-          if (current.mode !== 'MODE_SCENE') {
-            set(id, { configuring: true });
-            renderSmartTop(id);
-          }
-        }
+      const { mode = 0, modes = [] } = dev;
+      if (modes.length > 0) {
+        return handleSmartTop(dev, chan, get(modes[mode % modes.length]), mode);
       }
       return false;
     }
     default: {
-      const onHold = toArr(chan.onHold);
-      if (onHold.length > 0) {
-        const { onHoldCount = 0 } = chan;
-        run({ type: ACTION_SCRIPT_RUN, id: onHold[onHoldCount % onHold.length] });
-      }
-      return chan.repeat;
+      return handleDefault(chan);
     }
+  }
+}
+
+const handleOn = handle(handleSmartTopOn, handleDefaultOn);
+const handleClick1 = handle(handleSmartTopClick1, handleDefaultClick1);
+const handleClick2 = handle(handleSmartTopClick2, handleDefaultClick2);
+const handleClick3 = handle(handleSmartTopClick3, handleDefaultClick3);
+const handleHold = handle(handleSmartTopHold, handleDefaultHold);
+const handleOff = handle(handleSmartTopOff, handleDefaultOff);
+
+
+handleSmartTopScene = (handle) => (_, chan, current = {}) => {
+  if (chan.action !== 'menu') {
+    if (current.mode === "MODE_SCENE") {
+      handle(chan);
+    }
+  }
+}
+
+handleSmartTopOn = handleSmartTopScene(handleDefaultOn);
+handleSmartTopClick2 = handleSmartTopScene(handleDefaultClick2);
+handleSmartTopClick3 = handleSmartTopScene(handleDefaultClick3);
+handleSmartTopOff = handleSmartTopScene(handleDefaultOff);
+
+
+const handleSmartTopClick1 = (dev, chan, current = {}, mode) => {
+  switch (current.mode) { }
+  if (chan.action === 'menu') {
+    if (modes.length > 0) {
+      set(id, { mode: dev.configuring ? mode : mode + 1, configuring: false });
+      renderSmartTop(id);
+    }
+    return false;
+  }
+  if (current.mode === "MODE_SCENE") {
+    return handleDefaultClick1(chan);
+  }
+}
+
+const handleSmartTopHold = (_, chan, current = {}) => {
+  if (chan.action === 'menu') {
+    if (current.mode !== 'MODE_SCENE') {
+      set(id, { configuring: true });
+      renderSmartTop(id);
+    }
+    return false;
+  }
+  if (current.mode === "MODE_SCENE") {
+    return handleDefaultHold(chan);
   }
 }
 
