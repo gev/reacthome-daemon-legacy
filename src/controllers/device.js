@@ -889,7 +889,7 @@ const handle = (handleSmartTop, handleDefault) => (id, chan) => {
     case DEVICE_TYPE_SMART_TOP_G4D: {
       const { mode = 0, modes = [] } = dev;
       if (modes.length > 0) {
-        return handleSmartTop(dev, chan, get(modes[mode % modes.length]), mode);
+        return handleSmartTop(id, dev, chan, get(modes[mode % modes.length]), mode);
       }
       return false;
     }
@@ -899,7 +899,7 @@ const handle = (handleSmartTop, handleDefault) => (id, chan) => {
   }
 }
 
-const handleSmartTop = (handle) => (_, chan, current = {}) => {
+const handleSmartTop = (handle) => (_, _, chan, current = {}) => {
   if (chan.action !== 'menu') {
     if (current.mode === "MODE_SCENE") {
       return handle(chan);
@@ -910,7 +910,7 @@ const handleSmartTop = (handle) => (_, chan, current = {}) => {
 
 const handleSmartTopOn = handleSmartTop(handleDefaultOn);
 
-const handleSmartTopClick1 = (dev, chan, current = {}, mode) => {
+const handleSmartTopClick1 = (id, dev, chan, current = {}, mode) => {
   if (chan.action === 'menu') {
     set(id, { mode: dev.configuring ? mode : mode + 1, configuring: false });
     renderSmartTop(id);
@@ -924,7 +924,7 @@ const handleSmartTopClick1 = (dev, chan, current = {}, mode) => {
 const handleSmartTopClick2 = handleSmartTop(handleDefaultClick2);
 const handleSmartTopClick3 = handleSmartTop(handleDefaultClick3);
 
-const handleSmartTopHold = (_, chan, current = {}) => {
+const handleSmartTopHold = (id, _, chan, current = {}) => {
   if (chan.action === 'menu') {
     if (current.mode !== 'MODE_SCENE') {
       set(id, { configuring: true });
