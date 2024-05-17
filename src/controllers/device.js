@@ -972,16 +972,16 @@ const renderSmartTop = (id) => {
   if (site) {
     const { temperature, humidity, co2 } = get(site) || {};
     switch (current.mode) {
-      case 'cool':
-      case 'heat':
+      case 'MODE_COOL':
+      case 'MODE_HEAT':
         value = typeof temperature === 'number' ? temperature.toFixed(1) : "";
         run({ type: ACTION_PRINT, id, image, value });
         break;
-      case 'wet':
+      case 'MODE_WET':
         value = typeof humidity === 'number' ? humidity.toFixed(1) : "";
         run({ type: ACTION_PRINT, id, image, value });
         break;
-      case 'ventilation':
+      case 'MODE_VENTILATION':
         value = typeof co2 === 'number' ? co2.toFixed(1) : "";
         run({ type: ACTION_PRINT, id, image, value });
         break;
