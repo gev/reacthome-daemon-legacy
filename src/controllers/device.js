@@ -913,7 +913,7 @@ const handleSmartTopOn = handleSmartTop(handleDefaultOn);
 const handleSmartTopClick1 = (id, dev, chan, current = {}, mode) => {
   if (chan.action === 'menu') {
     set(id, { mode: dev.configuring ? mode : mode + 1, configuring: false });
-    renderSmartTop(id);
+    renderSmartTop(id, current);
     return false;
   }
   if (current.mode === "MODE_SCENE") {
@@ -928,7 +928,7 @@ const handleSmartTopHold = (id, dev, chan, current = {}) => {
   if (chan.action === 'menu') {
     if (current.mode !== 'MODE_SCENE') {
       set(id, { configuring: true });
-      renderSmartTop(id);
+      renderSmartTop(id, current);
     }
     return false;
   }
@@ -947,9 +947,9 @@ const handleHold = handle(handleSmartTopHold, handleDefaultHold);
 const handleOff = handle(handleSmartTopOff, handleDefaultOff);
 
 
-const renderSmartTop = (id) => {
+const renderSmartTop = (id, current = {}) => {
   const dev = get(id) || {};
-  const { mode = 0, modes = [], configuring } = dev;
+  const { mode = 0, modes = [], configuring, site } = dev;
   const image = [...(dev.image || [0, 0, 0, 0, 0, 0, 0, 0])];
   const blink = [...(dev.blink || [0, 0, 0, 0, 0, 0, 0, 0])];
   image[1] &= 0b0000_1111
@@ -968,6 +968,27 @@ const renderSmartTop = (id) => {
       blink[2] |= 1 << (current.indicator - 5);
     }
   }
-  run({ type: ACTION_IMAGE, id, value: image })
+  if (site) {
+    const { temperature, humidity, co2 } = get(site) || {};
+    switch (current.mode) {
+      case 'cool':
+      case 'heat':
+        value = typeof temperature === 'number' ? temperature.toFixed(1) : "";
+        run({ type: ACTION_PRINT, id, image, value });
+        break;
+      case 'wet':
+        value = typeof humidity === 'number' ? humidity.toFixed(1) : "";
+        run({ type: ACTION_PRINT, id, image, value });
+        break;
+      case 'ventilation':
+        value = typeof co2 === 'number' ? co2.toFixed(1) : "";
+        run({ type: ACTION_PRINT, id, image, value });
+        break;
+      default:
+        run({ type: ACTION_IMAGE, id, value: image })
+    }
+  } else {
+    run({ type: ACTION_IMAGE, id, value: image })
+  }
   run({ type: ACTION_BLINK, id, value: blink })
 }

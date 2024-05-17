@@ -1014,7 +1014,7 @@ const run = (action) => {
                 53
               ],
             ]
-            const image = [...dev.image];
+            const image = action.image ? action.image : [...dev.image];
             const setBit = (offset, v) => {
               const i = offset >> 3;
               const j = offset % 8;
