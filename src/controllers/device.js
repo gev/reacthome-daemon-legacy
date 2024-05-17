@@ -875,12 +875,12 @@ const handleDefault = (action, actionCount) => (chan) => {
   return chan.repeat;
 }
 
-const handleDefaultOn = handleDefault(chan, 'onOn', 'onOnCount');
-const handleDefaultClick1 = handleDefault(chan, 'onClick1', 'onClick1Count');
-const handleDefaultClick2 = handleDefault(chan, 'onClick2', 'onClick2Count');
-const handleDefaultClick3 = handleDefault(chan, 'onClick3', 'onClick3Count');
-const handleDefaultHold = handleDefault(chan, 'onHold', 'onHoldCount');
-const handleDefaultOff = handleDefault(chan, 'onOff', 'onOffCount');
+const handleDefaultOn = handleDefault('onOn', 'onOnCount');
+const handleDefaultClick1 = handleDefault('onClick1', 'onClick1Count');
+const handleDefaultClick2 = handleDefault('onClick2', 'onClick2Count');
+const handleDefaultClick3 = handleDefault('onClick3', 'onClick3Count');
+const handleDefaultHold = handleDefault('onHold', 'onHoldCount');
+const handleDefaultOff = handleDefault('onOff', 'onOffCount');
 
 
 const handle = (handleSmartTop, handleDefault) => (id, chan) => {
