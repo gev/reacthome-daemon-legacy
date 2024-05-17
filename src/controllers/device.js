@@ -82,6 +82,7 @@ const {
   ACTION_THERMOSTAT_HANDLE,
   ACTION_HYGROSTAT_HANDLE,
   ACTION_CO2_STAT_HANDLE,
+  ACTION_PRINT,
 } = require("../constants");
 const {
   get,
