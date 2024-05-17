@@ -921,7 +921,6 @@ const handleSmartTopClick2 = handleSmartTop(handleDefaultClick2);
 const handleSmartTopClick3 = handleSmartTop(handleDefaultClick3);
 const handleSmartTopOff = handleSmartTop(handleDefaultOff);
 
-
 const handleSmartTopClick1 = (dev, chan, current = {}, mode) => {
   if (chan.action === 'menu') {
     if (modes.length > 0) {
