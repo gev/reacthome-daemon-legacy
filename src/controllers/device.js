@@ -907,7 +907,7 @@ const handleHold = handle(handleSmartTopHold, handleDefaultHold);
 const handleOff = handle(handleSmartTopOff, handleDefaultOff);
 
 
-handleSmartTopScene = (handle) => (_, chan, current = {}) => {
+const handleSmartTop = (handle) => (_, chan, current = {}) => {
   if (chan.action !== 'menu') {
     if (current.mode === "MODE_SCENE") {
       return handle(chan);
@@ -916,10 +916,10 @@ handleSmartTopScene = (handle) => (_, chan, current = {}) => {
   return false;
 }
 
-handleSmartTopOn = handleSmartTopScene(handleDefaultOn);
-handleSmartTopClick2 = handleSmartTopScene(handleDefaultClick2);
-handleSmartTopClick3 = handleSmartTopScene(handleDefaultClick3);
-handleSmartTopOff = handleSmartTopScene(handleDefaultOff);
+const handleSmartTopOn = handleSmartTop(handleDefaultOn);
+const handleSmartTopClick2 = handleSmartTop(handleDefaultClick2);
+const handleSmartTopClick3 = handleSmartTop(handleDefaultClick3);
+const handleSmartTopOff = handleSmartTop(handleDefaultOff);
 
 
 const handleSmartTopClick1 = (dev, chan, current = {}, mode) => {
