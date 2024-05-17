@@ -989,7 +989,7 @@ const renderSmartTop = (id) => {
         console.log(current.mode, value)
         break;
       default:
-        run({ type: ACTION_PRINT, id, value: "" })
+        run({ type: ACTION_PRINT, id, image, value: "" })
         console.log(current.mode)
     }
   } else {
