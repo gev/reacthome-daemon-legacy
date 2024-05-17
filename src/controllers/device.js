@@ -984,7 +984,7 @@ const renderSmartTop = (id) => {
         console.log(current.mode, value)
         break;
       case 'MODE_VENTILATION':
-        value = typeof co2 === 'number' ? co2.toFixed(1) : "";
+        value = typeof co2 === 'number' ? Math.round(co2) : "";
         run({ type: ACTION_PRINT, id, image, value });
         console.log(current.mode, value)
         break;
