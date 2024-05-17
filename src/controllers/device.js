@@ -956,7 +956,6 @@ const renderSmartTop = (id, current = {}) => {
   image[2] &= 0b1111_1100;
   blink[1] &= 0b0000_1111;
   blink[2] &= 0b1111_1100;
-  const current = get(modes[mode % modes.length]) || {};
   if (current.indicator > 0 && current.indicator <= 4) {
     image[1] |= 1 << (current.indicator + 3);
     if (configuring) {
