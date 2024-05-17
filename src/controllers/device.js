@@ -969,7 +969,6 @@ const renderSmartTop = (id) => {
       blink[2] |= 1 << (current.indicator - 5);
     }
   }
-  console.log(site, get(site));
   if (site) {
     const { temperature, humidity, co2 } = get(site) || {};
     switch (current.mode) {
@@ -977,17 +976,21 @@ const renderSmartTop = (id) => {
       case 'MODE_HEAT':
         value = typeof temperature === 'number' ? temperature.toFixed(1) : "";
         run({ type: ACTION_PRINT, id, image, value });
+        console.log(current_mode, value)
         break;
       case 'MODE_WET':
         value = typeof humidity === 'number' ? humidity.toFixed(1) : "";
         run({ type: ACTION_PRINT, id, image, value });
+        console.log(current_mode, value)
         break;
       case 'MODE_VENTILATION':
         value = typeof co2 === 'number' ? co2.toFixed(1) : "";
         run({ type: ACTION_PRINT, id, image, value });
+        console.log(current_mode, value)
         break;
       default:
-        run({ type: ACTION_IMAGE, id, value: image })
+        run({ type: ACTION_PRINT, id, value: "" })
+        console.log(current_mode)
     }
   } else {
     run({ type: ACTION_IMAGE, id, value: image })
