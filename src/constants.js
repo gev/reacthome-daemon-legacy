@@ -11,7 +11,7 @@ module.exports.IP_ADDRESS_POOL_START = 0xac100002;
 module.exports.IP_ADDRESS_POOL_END = 0xac1ffffe;
 module.exports.SUB_NET_MASK = 0xfff00000;
 
-module.exports.DISCOVERY_INTERVAL = 1000;
+module.exports.DISCOVERY_INTERVAL = 10000;
 
 module.exports.POOL = "pool";
 module.exports.STATE = "state";
