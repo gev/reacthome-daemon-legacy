@@ -956,6 +956,7 @@ const renderSmartTop = (id) => {
   }
   if (site) {
     const { temperature, humidity, co2 } = get(site) || {};
+    console.log(temperature, humidity, co2)
     switch (current.mode) {
       case 'MODE_COOL':
       case 'MODE_HEAT':
