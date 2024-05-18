@@ -847,6 +847,7 @@ const calcCO2 = site => {
   let n = 0;
   sensor.forEach(id => {
     const dev = get(id) || {};
+    console.log(dev)
     if (dev.online) {
       co2 += dev.co2;
       n++;
