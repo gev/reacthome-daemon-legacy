@@ -584,7 +584,7 @@ module.exports.manage = () => {
           const { onHumidity, site, humidity_correct = 0 } = get(id) || {};
           const humidity = humidity_raw + humidity_correct;
           if (site) calcHumidity(site);
-          set(id, { humidity });
+          set(id, { humidity, humidity_raw });
           if (onHumidity) {
             run({ type: ACTION_SCRIPT_RUN, id: onHumidity });
           }
@@ -595,7 +595,7 @@ module.exports.manage = () => {
           const { onIllumination, illumination_correct = 0, site } = get(id) || {};
           const illumination = illumination_raw + illumination_correct;
           if (site) calcIllumination(site);
-          set(id, { illumination });
+          set(id, { illumination, illumination_raw });
           if (onIllumination) {
             run({ type: ACTION_SCRIPT_RUN, id: onIllumination });
           }
@@ -606,7 +606,7 @@ module.exports.manage = () => {
           const { onCO2, co2_correct = 0, site } = get(id) || {};
           const co2 = co2_raw + co2_correct;
           if (site) calcCO2(site);
-          set(id, { co2 });
+          set(id, { co2, co2_raw });
           if (onCO2) {
             run({ type: ACTION_SCRIPT_RUN, id: onCO2 });
           }
@@ -784,7 +784,7 @@ const calcTemperature = site => {
   let n = 0;
   sensor.forEach(id => {
     const dev = get(id) || {};
-    if (dev.online) {
+    if (dev.online && typeof dev.temperature === 'number') {
       temperature += dev.temperature;
       n++;
     }
@@ -807,7 +807,7 @@ const calcHumidity = site => {
   let n = 0;
   sensor.forEach(id => {
     const dev = get(id) || {};
-    if (dev.online) {
+    if (dev.online && typeof dev.humidity === 'number') {
       humidity += dev.humidity;
       n++;
     }
@@ -830,7 +830,7 @@ const calcIllumination = site => {
   let n = 0;
   sensor.forEach(id => {
     const dev = get(id) || {};
-    if (dev.online) {
+    if (dev.online && typeof dev.illumination === 'number') {
       illumination += dev.illumination;
       n++;
     }
@@ -847,8 +847,7 @@ const calcCO2 = site => {
   let n = 0;
   sensor.forEach(id => {
     const dev = get(id) || {};
-    console.log(dev)
-    if (dev.online) {
+    if (dev.online && typeof dev.co2 === 'number') {
       co2 += dev.co2;
       n++;
     }
