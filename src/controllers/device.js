@@ -908,8 +908,8 @@ const handle = (handleSmartTop, handleDefault) => (id, index, chan) => {
 const handleSmartTop = () => false;
 
 const handleSmartTopClick1 = (id, dev, chan, current = {}, mode) => {
-  if (chan.action === 'menu') {
-    set(id, { mode: dev.configuring ? mode : mode + 1, configuring: false });
+  if (chan.action === 'menu' && !dev.configuring) {
+    set(id, { mode: mode + 1 });
     renderSmartTop(id);
     return false;
   }
@@ -918,7 +918,7 @@ const handleSmartTopClick1 = (id, dev, chan, current = {}, mode) => {
 const handleSmartTopHold = (id, dev, chan, current = {}) => {
   if (chan.action === 'menu') {
     if (current.mode !== 'MODE_SCENE') {
-      set(id, { configuring: true });
+      set(id, { configuring: !dev.configuring });
       renderSmartTop(id);
     }
     return false;
@@ -931,7 +931,6 @@ const handleClick2 = handle(handleSmartTop, handleDefaultClick2);
 const handleClick3 = handle(handleSmartTop, handleDefaultClick3);
 const handleHold = handle(handleSmartTopHold, handleDefaultHold);
 const handleOff = handle(handleSmartTop, handleDefaultOff);
-
 
 const renderSmartTop = (id) => {
   const dev = get(id) || {};
