@@ -961,26 +961,41 @@ const renderSmartTop = (id) => {
       case 'MODE_HEAT':
         if (configuring) {
           const { setpoint } = get(thermostat[0]) || {};
-          value = typeof setpoint === 'number' ? setpoint.toFixed(1) : "";
-          run({ type: ACTION_PRINT, id, image, value });
+          printf(id, setpoint, 1, image);
         } else {
-          value = typeof temperature === 'number' ? temperature.toFixed(1) : "";
-          run({ type: ACTION_PRINT, id, image, value });
+          printf(id, temperature, 1, image);
         }
         break;
       case 'MODE_WET':
-        value = typeof humidity === 'number' ? humidity.toFixed(1) : "";
-        run({ type: ACTION_PRINT, id, image, value });
+        if (configuring) {
+          const { setpoint } = get(hygrostat[0]) || {};
+          printf(id, setpoint, 1, image);
+        } else {
+          printf(id, temperature, 1, image);
+        }
         break;
       case 'MODE_VENTILATION':
-        value = typeof co2 === 'number' ? co2.toFixed(0) : "";
-        run({ type: ACTION_PRINT, id, image, value });
-        break;
+        if (configuring) {
+          const { setpoint } = get(co2_stat[0]) || {};
+          printf(id, setpoint, 1, image);
+        } else {
+          printf(id, co2, 1, image);
+        }
       default:
         run({ type: ACTION_PRINT, id, image, value: "" })
+        print(id, "", image)
     }
   } else {
     run({ type: ACTION_IMAGE, id, value: image })
   }
   run({ type: ACTION_BLINK, id, value: blink })
 }
+
+const print = (id, value, image) =>
+  run({ type: ACTION_PRINT, id, value, image })
+
+printf = (id, value, fixed, image) =>
+  print(id, format(value, fixed), image)
+
+const format = (value, fixed) =>
+  typeof value === 'number' ? v.toFixed(fixed) : ""
