@@ -918,10 +918,12 @@ const handleSmartTopClick1 = (id, dev, chan, current = {}, mode) => {
           const { setpoint = 24 } = get(thermostat[0]) || {};
           switch (chan.action) {
             case 'plus': {
+              console.log(setpoint + 0.1);
               run({ type: ACTION_SETPOINT, id: site, value: setpoint + 0.1 });
               break;
             }
             case 'minus': {
+              console.log(setpoint + 0.1);
               run({ type: ACTION_SETPOINT, id: site, value: setpoint - 0.1 });
               break;
             }
