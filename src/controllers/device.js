@@ -998,4 +998,4 @@ printf = (id, value, fixed, image) =>
   print(id, format(value, fixed), image)
 
 const format = (value, fixed) =>
-  typeof value === 'number' ? v.toFixed(fixed) : ""
+  typeof value === 'number' ? value.toFixed(fixed) : ""
