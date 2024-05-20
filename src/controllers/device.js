@@ -987,12 +987,12 @@ const handleSmartTopHold = (id, dev, chan, current) => {
           const { setpoint = 24 } = get(thermostat[0]) || {};
           switch (chan.action) {
             case 'plus': {
-              run({ type: ACTION_SETPOINT, id: site, temperature: setpoint + 0.1 });
+              run({ type: ACTION_SETPOINT, id: site, temperature: setpoint + 1 });
               renderSmartTop(id);
               return true;
             }
             case 'minus': {
-              run({ type: ACTION_SETPOINT, id: site, temperature: setpoint - 0.1 });
+              run({ type: ACTION_SETPOINT, id: site, temperature: setpoint - 1 });
               renderSmartTop(id);
               return true;
             }
@@ -1003,12 +1003,12 @@ const handleSmartTopHold = (id, dev, chan, current) => {
           const { setpoint = 50 } = get(hygrostat[0]) || {};
           switch (chan.action) {
             case 'plus': {
-              run({ type: ACTION_SETPOINT, id: site, humidity: setpoint + 0.5 });
+              run({ type: ACTION_SETPOINT, id: site, humidity: setpoint + 5 });
               renderSmartTop(id);
               return true;
             }
             case 'minus': {
-              run({ type: ACTION_SETPOINT, id: site, humidity: setpoint - 0.5 });
+              run({ type: ACTION_SETPOINT, id: site, humidity: setpoint - 5 });
               renderSmartTop(id);
               return true;
             }
@@ -1019,12 +1019,12 @@ const handleSmartTopHold = (id, dev, chan, current) => {
           const { setpoint = 400 } = get(co2_stat[0]) || {};
           switch (chan.action) {
             case 'plus': {
-              run({ type: ACTION_SETPOINT, id: site, co2: setpoint + 1 });
+              run({ type: ACTION_SETPOINT, id: site, co2: setpoint + 10 });
               renderSmartTop(id);
               return true;
             }
             case 'minus': {
-              run({ type: ACTION_SETPOINT, id: site, co2: setpoint - 1 });
+              run({ type: ACTION_SETPOINT, id: site, co2: setpoint - 10 });
               renderSmartTop(id);
               return true;
             }
