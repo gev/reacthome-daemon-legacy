@@ -1608,7 +1608,6 @@ const run = (action) => {
         break;
       }
       case ACTION_SETPOINT: {
-        console.log(action);
         const { id, value, temperature, humidity, co2 } = action;
         const dev = get(id) || {};
         if (temperature || value) {

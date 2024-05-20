@@ -341,7 +341,6 @@ module.exports.manage = () => {
 
         }
         case ACTION_SMART_TOP: {
-          // console.log('from top:', data);
           const action = data[7];
           switch (action) {
             case ACTION_DISCOVERY: {
@@ -1067,7 +1066,6 @@ const renderSmartTop = (id) => {
   }
   if (site) {
     const { temperature, humidity, co2, thermostat = [], hygrostat = [], co2_stat = [] } = get(site) || {};
-    console.log(temperature, humidity, co2)
     switch (current.mode) {
       case 'MODE_COOL':
       case 'MODE_HEAT':
