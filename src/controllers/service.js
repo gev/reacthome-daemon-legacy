@@ -1612,9 +1612,7 @@ const run = (action) => {
         const dev = get(id) || {};
         if (dev.type === SITE) {
           if (Array.isArray(dev.thermostat)) {
-            dev.thermostat.forEach(t => {
-              setTimeout(t, { setpoint: value });
-            });
+            dev.thermostat.forEach(t => set(t, { setpoint: value }));
           }
           set(id, { setpoint: value });
         } else if (dev.type === DRIVER_TYPE_INTESIS_BOX || dev.type === DRIVER_TYPE_NOVA || dev.type === DRIVER_TYPE_SWIFT || dev.type === DRIVER_TYPE_ALINK || dev.type === DRIVER_TYPE_COMFOVENT) {
