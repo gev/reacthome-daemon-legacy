@@ -891,11 +891,11 @@ const handle = (handleSmartTop, handleDefault) => (id, index, chan) => {
       const { mode = 0, modes = [] } = dev;
       if (modes.length > 0) {
         const cid = modes[mode % modes.length];
-        const current = get(cid);
+        const current = get(cid) = {};
         if (current.mode === 'MODE_SCENE' && chan.action !== 'menu') {
           return handleDefault(get(`${cid}/${DI}/${index}`));
         }
-        return handleSmartTop(id, dev, chan, get(modes[current]), mode);
+        return handleSmartTop(id, dev, chan, current, mode);
       }
       return false;
     }
@@ -907,7 +907,7 @@ const handle = (handleSmartTop, handleDefault) => (id, index, chan) => {
 
 const handleSmartTop = () => false;
 
-const handleSmartTopClick1 = (id, dev, chan, current = {}, mode) => {
+const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
   if (dev.configuring) {
     const { site } = dev;
     console.log(site)
@@ -942,7 +942,7 @@ const handleSmartTopClick1 = (id, dev, chan, current = {}, mode) => {
   return false;
 }
 
-const handleSmartTopHold = (id, dev, chan, current = {}) => {
+const handleSmartTopHold = (id, dev, chan, current) => {
   if (chan.action === 'menu') {
     if (current.mode !== 'MODE_SCENE') {
       set(id, { configuring: !dev.configuring });
