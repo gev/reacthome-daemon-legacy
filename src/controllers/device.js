@@ -908,11 +908,32 @@ const handle = (handleSmartTop, handleDefault) => (id, index, chan) => {
 const handleSmartTop = () => false;
 
 const handleSmartTopClick1 = (id, dev, chan, current = {}, mode) => {
-  if (chan.action === 'menu' && !dev.configuring) {
+  if (dev.configuring) {
+    if (dev.site) {
+      const { thermostat = [], hygrostat = [], co2_stat = [] } = get(site) || {};
+      switch (current.mode) {
+        case 'MODE_COOL':
+        case 'MODE_HEAT': {
+          const { setpoint = 24 } = get(thermostat[0]) || {};
+          switch (chan.action) {
+            case 'plus': {
+              run({ type: ACTION_SETPOINT, id: site, value: setpoint + 0.1 });
+              break;
+            }
+            case 'minus': {
+              run({ type: ACTION_SETPOINT, id: site, value: setpoint - 0.1 });
+              break;
+            }
+          }
+          break;
+        }
+      }
+    }
+  } else if (chan.action === 'menu') {
     set(id, { mode: mode + 1 });
     renderSmartTop(id);
-    return false;
   }
+  return false;
 }
 
 const handleSmartTopHold = (id, dev, chan, current = {}) => {
@@ -921,8 +942,8 @@ const handleSmartTopHold = (id, dev, chan, current = {}) => {
       set(id, { configuring: !dev.configuring });
       renderSmartTop(id);
     }
-    return false;
   }
+  return false;
 }
 
 const handleOn = handle(handleSmartTop, handleDefaultOn);
