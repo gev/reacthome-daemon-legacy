@@ -891,7 +891,7 @@ const handle = (handleSmartTop, handleDefault) => (id, index, chan) => {
       const { mode = 0, modes = [] } = dev;
       if (modes.length > 0) {
         const cid = modes[mode % modes.length];
-        const current = get(cid) = {};
+        const current = get(cid) || {};
         if (current.mode === 'MODE_SCENE' && chan.action !== 'menu') {
           return handleDefault(get(`${cid}/${DI}/${index}`));
         }
