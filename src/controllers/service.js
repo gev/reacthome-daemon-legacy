@@ -1612,39 +1612,40 @@ const run = (action) => {
         const { id, value, temperature, humidity, co2 } = action;
         const dev = get(id) || {};
         if (temperature || value) {
-          let v = temperature || value;
-          if (v < 10) v = 10;
-          if (v > 40) v = 40;
+          let setpoint = temperature || value;
+          if (setpoint < 10) setpoint = 10;
+          if (setpoint > 40) setpoint = 40;
           if (dev.type === SITE) {
             const { thermostat = [] } = get(dev) || {};
-            thermostat.forEach(t => set(t, { setpoint: v }));
+            thermostat.forEach(t => set(t, { setpoint }));
             set(id, { setpoint: v });
           } else if (dev.type === DRIVER_TYPE_INTESIS_BOX || dev.type === DRIVER_TYPE_NOVA || dev.type === DRIVER_TYPE_SWIFT || dev.type === DRIVER_TYPE_ALINK || dev.type === DRIVER_TYPE_COMFOVENT) {
+            if (temperature) action.value = temperature;
             drivers.run(action);
           } else {
-            set(id, { setpoint: v });
+            set(id, { setpoint });
           }
         }
         if (humidity) {
-          let v = humidity;
-          if (v < 10) v = 10;
-          if (v > 90) v = 90;
+          let setpoint = humidity;
+          if (setpoint < 10) setpoint = 10;
+          if (setpoint > 90) setpoint = 90;
           if (dev.type === SITE) {
             const { hygrostat = [] } = get(dev) || {};
-            hygrostat.forEach(t => set(t, { setpoint: v }));
+            hygrostat.forEach(t => set(t, { setpoint }));
           } else {
-            set(id, { setpoint: v });
+            set(id, { setpoint });
           }
         }
         if (co2) {
-          let v = co2;
-          if (v < 300) v = 10;
-          if (v > 1200) v = 1200;
+          let setpoint = co2;
+          if (setpoint < 300) setpoint = 10;
+          if (setpoint > 1200) setpoint = 1200;
           if (dev.type === SITE) {
             const { co2_stat = [] } = get(dev) || {};
-            co2_stat.forEach(t => set(t, { setpoint: v }));
+            co2_stat.forEach(t => set(t, { setpoint }));
           } else {
-            set(id, { setpoint: v });
+            set(id, { setpoint });
           }
         }
         break;
