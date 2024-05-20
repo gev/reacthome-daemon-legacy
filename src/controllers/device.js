@@ -971,7 +971,7 @@ const renderSmartTop = (id) => {
           const { setpoint = 50 } = get(hygrostat[0]) || {};
           printf(id, setpoint, 1, image);
         } else {
-          printf(id, temperature, 1, image);
+          printf(id, humidity, 1, image);
         }
         break;
       case 'MODE_VENTILATION':
