@@ -1611,13 +1611,12 @@ const run = (action) => {
         console.log(action);
         const { id, value, temperature, humidity, co2 } = action;
         const dev = get(id) || {};
-        console.log(dev);
         if (temperature || value) {
           let setpoint = temperature || value;
           if (setpoint < 10) setpoint = 10;
           if (setpoint > 40) setpoint = 40;
           if (dev.type === SITE) {
-            const { thermostat = [] } = get(dev) || {};
+            const { thermostat = [] } = dev
             thermostat.forEach(t => set(t, { setpoint }));
             set(id, { setpoint });
           } else if (dev.type === DRIVER_TYPE_INTESIS_BOX || dev.type === DRIVER_TYPE_NOVA || dev.type === DRIVER_TYPE_SWIFT || dev.type === DRIVER_TYPE_ALINK || dev.type === DRIVER_TYPE_COMFOVENT) {
@@ -1631,7 +1630,7 @@ const run = (action) => {
           if (setpoint < 10) setpoint = 10;
           if (setpoint > 90) setpoint = 90;
           if (dev.type === SITE) {
-            const { hygrostat = [] } = get(dev) || {};
+            const { hygrostat = [] } = dev;
             hygrostat.forEach(t => set(t, { setpoint }));
           } else {
             set(id, { setpoint });
@@ -1641,7 +1640,7 @@ const run = (action) => {
           if (setpoint < 300) setpoint = 10;
           if (setpoint > 1200) setpoint = 1200;
           if (dev.type === SITE) {
-            const { co2_stat = [] } = get(dev) || {};
+            const { co2_stat = [] } = dev;
             co2_stat.forEach(t => set(t, { setpoint }));
           } else {
             set(id, { setpoint });
