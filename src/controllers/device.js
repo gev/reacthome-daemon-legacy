@@ -954,28 +954,30 @@ const renderSmartTop = (id) => {
     }
   }
   if (site) {
-    const { temperature, humidity, co2 } = get(site) || {};
+    const { temperature, humidity, co2, thermostat = [], hygrostat = [], co2_stat = [] } = get(site) || {};
     console.log(temperature, humidity, co2)
     switch (current.mode) {
       case 'MODE_COOL':
       case 'MODE_HEAT':
-        value = typeof temperature === 'number' ? temperature.toFixed(1) : "";
-        run({ type: ACTION_PRINT, id, image, value });
-        console.log(current.mode, value)
+        if (configuring) {
+          const { setpoint } = get(thermostat[0]) || {};
+          value = typeof setpoint === 'number' ? setpoint.toFixed(1) : "";
+          run({ type: ACTION_PRINT, id, image, value });
+        } else {
+          value = typeof temperature === 'number' ? temperature.toFixed(1) : "";
+          run({ type: ACTION_PRINT, id, image, value });
+        }
         break;
       case 'MODE_WET':
         value = typeof humidity === 'number' ? humidity.toFixed(1) : "";
         run({ type: ACTION_PRINT, id, image, value });
-        console.log(current.mode, value)
         break;
       case 'MODE_VENTILATION':
         value = typeof co2 === 'number' ? co2.toFixed(0) : "";
         run({ type: ACTION_PRINT, id, image, value });
-        console.log(current.mode, value)
         break;
       default:
         run({ type: ACTION_PRINT, id, image, value: "" })
-        console.log(current.mode)
     }
   } else {
     run({ type: ACTION_IMAGE, id, value: image })
