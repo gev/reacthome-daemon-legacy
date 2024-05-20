@@ -1000,6 +1000,37 @@ const handleSmartTopHold = (id, dev, chan, current) => {
           }
           break;
         }
+        case 'MODE_WET': {
+          const { setpoint = 50 } = get(hygrostat[0]) || {};
+          switch (chan.action) {
+            case 'plus': {
+              run({ type: ACTION_SETPOINT, id: site, value: setpoint + 0.5 });
+              renderSmartTop(id);
+              return true;
+            }
+            case 'minus': {
+              run({ type: ACTION_SETPOINT, id: site, value: setpoint - 0.5 });
+              renderSmartTop(id);
+              return true;
+            }
+          }
+          break;
+        }
+        case 'MODE_VENTILATION': {
+          const { setpoint = 400 } = get(co2_stat[0]) || {};
+          switch (chan.action) {
+            case 'plus': {
+              run({ type: ACTION_SETPOINT, id: site, value: setpoint + 1 });
+              renderSmartTop(id);
+              return true;
+            }
+            case 'minus': {
+              run({ type: ACTION_SETPOINT, id: site, value: setpoint - 1 });
+              renderSmartTop(id);
+              return true;
+            }
+          }
+        }
       }
     }
   }
