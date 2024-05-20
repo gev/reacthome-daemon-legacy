@@ -1618,7 +1618,7 @@ const run = (action) => {
           if (dev.type === SITE) {
             const { thermostat = [] } = get(dev) || {};
             thermostat.forEach(t => set(t, { setpoint }));
-            set(id, { setpoint: v });
+            set(id, { setpoint });
           } else if (dev.type === DRIVER_TYPE_INTESIS_BOX || dev.type === DRIVER_TYPE_NOVA || dev.type === DRIVER_TYPE_SWIFT || dev.type === DRIVER_TYPE_ALINK || dev.type === DRIVER_TYPE_COMFOVENT) {
             if (temperature) action.value = temperature;
             drivers.run(action);
