@@ -1611,6 +1611,7 @@ const run = (action) => {
         console.log(action);
         const { id, value, temperature, humidity, co2 } = action;
         const dev = get(id) || {};
+        console.log(site);
         if (temperature || value) {
           let setpoint = temperature || value;
           if (setpoint < 10) setpoint = 10;
@@ -1625,8 +1626,7 @@ const run = (action) => {
           } else {
             set(id, { setpoint });
           }
-        }
-        if (humidity) {
+        } else if (humidity) {
           let setpoint = humidity;
           if (setpoint < 10) setpoint = 10;
           if (setpoint > 90) setpoint = 90;
@@ -1636,8 +1636,7 @@ const run = (action) => {
           } else {
             set(id, { setpoint });
           }
-        }
-        if (co2) {
+        } else if (co2) {
           let setpoint = co2;
           if (setpoint < 300) setpoint = 10;
           if (setpoint > 1200) setpoint = 1200;
