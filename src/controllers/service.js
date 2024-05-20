@@ -1636,7 +1636,7 @@ const run = (action) => {
           }
         } else if (co2) {
           let setpoint = co2;
-          if (setpoint < 300) setpoint = 10;
+          if (setpoint < 300) setpoint = 300;
           if (setpoint > 1200) setpoint = 1200;
           if (dev.type === SITE) {
             const { co2_stat = [] } = dev;
