@@ -83,6 +83,7 @@ const {
   ACTION_HYGROSTAT_HANDLE,
   ACTION_CO2_STAT_HANDLE,
   ACTION_PRINT,
+  ACTION_SETPOINT,
 } = require("../constants");
 const {
   get,
