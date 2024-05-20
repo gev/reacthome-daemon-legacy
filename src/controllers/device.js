@@ -920,10 +920,12 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
           switch (chan.action) {
             case 'plus': {
               run({ type: ACTION_SETPOINT, id: site, value: setpoint + 0.1 });
+              renderSmartTop(id);
               break;
             }
             case 'minus': {
               run({ type: ACTION_SETPOINT, id: site, value: setpoint - 0.1 });
+              renderSmartTop(id);
               break;
             }
           }
