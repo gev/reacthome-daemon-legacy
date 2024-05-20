@@ -960,7 +960,7 @@ const renderSmartTop = (id) => {
       case 'MODE_COOL':
       case 'MODE_HEAT':
         if (configuring) {
-          const { setpoint } = get(thermostat[0]) || {};
+          const { setpoint = 24 } = get(thermostat[0]) || {};
           printf(id, setpoint, 1, image);
         } else {
           printf(id, temperature, 1, image);
@@ -968,7 +968,7 @@ const renderSmartTop = (id) => {
         break;
       case 'MODE_WET':
         if (configuring) {
-          const { setpoint } = get(hygrostat[0]) || {};
+          const { setpoint = 50 } = get(hygrostat[0]) || {};
           printf(id, setpoint, 1, image);
         } else {
           printf(id, temperature, 1, image);
@@ -976,7 +976,7 @@ const renderSmartTop = (id) => {
         break;
       case 'MODE_VENTILATION':
         if (configuring) {
-          const { setpoint } = get(co2_stat[0]) || {};
+          const { setpoint = 400 } = get(co2_stat[0]) || {};
           printf(id, setpoint, 1, image);
         } else {
           printf(id, co2, 1, image);
