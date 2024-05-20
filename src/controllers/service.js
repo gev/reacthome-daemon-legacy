@@ -1608,17 +1608,43 @@ const run = (action) => {
         break;
       }
       case ACTION_SETPOINT: {
-        const { id, value } = action;
+        const { id, value, temperature, humidity, co2 } = action;
         const dev = get(id) || {};
-        if (dev.type === SITE) {
-          if (Array.isArray(dev.thermostat)) {
-            dev.thermostat.forEach(t => set(t, { setpoint: value }));
+        if (temperature || value) {
+          let v = temperature || value;
+          if (v < 10) v = 10;
+          if (v > 40) v = 40;
+          if (dev.type === SITE) {
+            const { thermostat = [] } = get(dev) || {};
+            thermostat.forEach(t => set(t, { setpoint: v }));
+            set(id, { setpoint: v });
+          } else if (dev.type === DRIVER_TYPE_INTESIS_BOX || dev.type === DRIVER_TYPE_NOVA || dev.type === DRIVER_TYPE_SWIFT || dev.type === DRIVER_TYPE_ALINK || dev.type === DRIVER_TYPE_COMFOVENT) {
+            drivers.run(action);
+          } else {
+            set(id, { setpoint: v });
           }
-          set(id, { setpoint: value });
-        } else if (dev.type === DRIVER_TYPE_INTESIS_BOX || dev.type === DRIVER_TYPE_NOVA || dev.type === DRIVER_TYPE_SWIFT || dev.type === DRIVER_TYPE_ALINK || dev.type === DRIVER_TYPE_COMFOVENT) {
-          drivers.run(action);
-        } else {
-          set(id, { setpoint: value });
+        }
+        if (humidity) {
+          let v = humidity;
+          if (v < 10) v = 10;
+          if (v > 90) v = 90;
+          if (dev.type === SITE) {
+            const { hygrostat = [] } = get(dev) || {};
+            hygrostat.forEach(t => set(t, { setpoint: v }));
+          } else {
+            set(id, { setpoint: v });
+          }
+        }
+        if (co2) {
+          let v = co2;
+          if (v < 300) v = 10;
+          if (v > 1200) v = 1200;
+          if (dev.type === SITE) {
+            const { co2_stat = [] } = get(dev) || {};
+            co2_stat.forEach(t => set(t, { setpoint: v }));
+          } else {
+            set(id, { setpoint: v });
+          }
         }
         break;
       }
