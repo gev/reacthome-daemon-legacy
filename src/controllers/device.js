@@ -946,6 +946,30 @@ const handleSmartTopHold = (id, dev, chan, current) => {
       set(id, { configuring: !dev.configuring });
       renderSmartTop(id);
     }
+  } else if (dev.configuring) {
+    const { site } = dev;
+    if (site) {
+      const { thermostat = [], hygrostat = [], co2_stat = [] } = get(site) || {};
+      switch (current.mode) {
+        case 'MODE_COOL':
+        case 'MODE_HEAT': {
+          const { setpoint = 24 } = get(thermostat[0]) || {};
+          switch (chan.action) {
+            case 'plus': {
+              run({ type: ACTION_SETPOINT, id: site, value: setpoint + 0.1 });
+              renderSmartTop(id);
+              return true;
+            }
+            case 'minus': {
+              run({ type: ACTION_SETPOINT, id: site, value: setpoint - 0.1 });
+              renderSmartTop(id);
+              return true;
+            }
+          }
+          break;
+        }
+      }
+    }
   }
   return false;
 }
