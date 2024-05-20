@@ -1613,7 +1613,7 @@ const run = (action) => {
         if (dev.type === SITE) {
           if (Array.isArray(dev.thermostat)) {
             dev.thermostat.forEach(t => {
-              setTimeout(t, { setpoint })
+              setTimeout(t, { setpoint: value });
             });
           }
           set(id, { setpoint: value });
