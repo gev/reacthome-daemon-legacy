@@ -981,6 +981,7 @@ const renderSmartTop = (id) => {
         } else {
           printf(id, co2, 0, image);
         }
+        break;
       default:
         run({ type: ACTION_PRINT, id, image, value: "" })
         print(id, "", image)
