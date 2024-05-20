@@ -977,9 +977,9 @@ const renderSmartTop = (id) => {
       case 'MODE_VENTILATION':
         if (configuring) {
           const { setpoint = 400 } = get(co2_stat[0]) || {};
-          printf(id, setpoint, 1, image);
+          printf(id, setpoint, 0, image);
         } else {
-          printf(id, co2, 1, image);
+          printf(id, co2, 0, image);
         }
       default:
         run({ type: ACTION_PRINT, id, image, value: "" })
