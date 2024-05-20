@@ -1611,7 +1611,7 @@ const run = (action) => {
         console.log(action);
         const { id, value, temperature, humidity, co2 } = action;
         const dev = get(id) || {};
-        console.log(site);
+        console.log(dev);
         if (temperature || value) {
           let setpoint = temperature || value;
           if (setpoint < 10) setpoint = 10;
