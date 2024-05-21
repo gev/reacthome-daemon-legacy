@@ -468,6 +468,7 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_RGB: {
+          console.log(data)
           const { type } = get(id) || {};
           switch (type) {
             case DEVICE_TYPE_SMART_TOP_A6P:
@@ -475,7 +476,7 @@ module.exports.manage = () => {
               const [, , , , , , palette, index] = data;
               for (let i = 0; i < (data.length - 9) / 3; i++) {
                 const chan = `${id}/rgb/${palette}.${index + i}`;
-                console.log(action, chan)
+                console.log(chan)
                 set(chan, {
                   r: data[i * 3 + 8],
                   g: data[i * 3 + 9],
