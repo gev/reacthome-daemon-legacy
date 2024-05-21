@@ -716,7 +716,7 @@ const run = (action) => {
         break;
       }
       case ACTION_RGB_DIM: {
-        const { id, value = {}, index = 0 } = action;
+        const { id, value = {}, index = 0, palette = 1 } = action;
         const { r, g, b } = value;
         const o = get(id) || {};
         const { ip, type } = o;
@@ -745,6 +745,7 @@ const run = (action) => {
           case DEVICE_TYPE_SMART_TOP_G4D: {
             device.sendTOP(Buffer.from([
               ACTION_RGB,
+              palette,
               index,
               r,
               g,
@@ -855,7 +856,6 @@ const run = (action) => {
           }
           case DEVICE_TYPE_SMART_TOP_A6P:
           case DEVICE_TYPE_SMART_TOP_G4D: {
-            console.log([ACTION_RGB, palette, index, r, g, b])
             device.sendTOP(Buffer.from([
               ACTION_RGB,
               palette,
