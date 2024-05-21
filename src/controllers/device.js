@@ -478,9 +478,9 @@ module.exports.manage = () => {
                 const chan = `${id}/rgb/${palette}.${index + i}`;
                 console.log(chan)
                 set(chan, {
-                  r: data[i * 3 + 8],
-                  g: data[i * 3 + 9],
-                  b: data[i * 3 + 10],
+                  r: data[i * 3 + 9],
+                  g: data[i * 3 + 10],
+                  b: data[i * 3 + 11],
                 });
               }
             }
