@@ -855,6 +855,7 @@ const run = (action) => {
           }
           case DEVICE_TYPE_SMART_TOP_A6P:
           case DEVICE_TYPE_SMART_TOP_G4D: {
+            console.log([ACTION_RGB, palette, index, r, g, b])
             device.sendTOP(Buffer.from([
               ACTION_RGB,
               palette,
