@@ -873,7 +873,6 @@ const run = (action) => {
       }
       case ACTION_GRADIENT: {
         const { id, palette, index, value } = action;
-        console.log(action)
         const { type } = get(id) || {};
         switch (type) {
           case DEVICE_TYPE_SMART_TOP_G4D: {
