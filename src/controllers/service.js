@@ -828,7 +828,7 @@ const run = (action) => {
         break;
       }
       case ACTION_RGB_BUTTON_SET: {
-        const { id, value = {}, index = 0 } = action;
+        const { id, value = {}, index = 0, palette = 1 } = action;
         const { r, g, b } = value;
         const o = get(id) || {};
         const { ip, type } = o;
@@ -857,6 +857,7 @@ const run = (action) => {
           case DEVICE_TYPE_SMART_TOP_G4D: {
             device.sendTOP(Buffer.from([
               ACTION_RGB,
+              palette,
               index,
               r,
               g,

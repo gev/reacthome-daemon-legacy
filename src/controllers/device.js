@@ -468,14 +468,30 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_RGB: {
-          const [, , , , , , , index] = data;
-          for (let i = 0; i < (data.length - 8) / 3; i++) {
-            const chan = `${id}/rgb/${index + i}`;
-            set(chan, {
-              r: data[i * 3 + 8],
-              g: data[i * 3 + 9],
-              b: data[i * 3 + 10],
-            });
+          const { type } = get(id) || {};
+          switch (type) {
+            case DEVICE_TYPE_SMART_TOP_A6P:
+            case DEVICE_TYPE_SMART_TOP_G4D: {
+              const [, , , , , , palette, index] = data;
+              for (let i = 0; i < (data.length - 9) / 3; i++) {
+                const chan = `${id}/rgb/${palette}.${index + i}`;
+                set(chan, {
+                  r: data[i * 3 + 8],
+                  g: data[i * 3 + 9],
+                  b: data[i * 3 + 10],
+                });
+              }
+            }
+            default:
+              const [, , , , , , , index] = data;
+              for (let i = 0; i < (data.length - 8) / 3; i++) {
+                const chan = `${id}/rgb/${index + i}`;
+                set(chan, {
+                  r: data[i * 3 + 8],
+                  g: data[i * 3 + 9],
+                  b: data[i * 3 + 10],
+                });
+              }
           }
           break;
         }
@@ -934,12 +950,12 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
           const { setpoint = 50 } = get(hygrostat[0]) || {};
           switch (chan.action) {
             case 'plus': {
-              run({ type: ACTION_SETPOINT, id: site, humidity: setpoint + 0.5 });
+              run({ type: ACTION_SETPOINT, id: site, humidity: setpoint + 0.1 });
               renderSmartTop(id);
               break;
             }
             case 'minus': {
-              run({ type: ACTION_SETPOINT, id: site, humidity: setpoint - 0.5 });
+              run({ type: ACTION_SETPOINT, id: site, humidity: setpoint - 0.1 });
               renderSmartTop(id);
               break;
             }
@@ -987,12 +1003,12 @@ const handleSmartTopHold = (id, dev, chan, current) => {
           const { setpoint = 24 } = get(thermostat[0]) || {};
           switch (chan.action) {
             case 'plus': {
-              run({ type: ACTION_SETPOINT, id: site, temperature: setpoint + 1 });
+              run({ type: ACTION_SETPOINT, id: site, temperature: setpoint + 0.1 });
               renderSmartTop(id);
               return true;
             }
             case 'minus': {
-              run({ type: ACTION_SETPOINT, id: site, temperature: setpoint - 1 });
+              run({ type: ACTION_SETPOINT, id: site, temperature: setpoint - 0.1 });
               renderSmartTop(id);
               return true;
             }
@@ -1003,12 +1019,12 @@ const handleSmartTopHold = (id, dev, chan, current) => {
           const { setpoint = 50 } = get(hygrostat[0]) || {};
           switch (chan.action) {
             case 'plus': {
-              run({ type: ACTION_SETPOINT, id: site, humidity: setpoint + 5 });
+              run({ type: ACTION_SETPOINT, id: site, humidity: setpoint + 0.1 });
               renderSmartTop(id);
               return true;
             }
             case 'minus': {
-              run({ type: ACTION_SETPOINT, id: site, humidity: setpoint - 5 });
+              run({ type: ACTION_SETPOINT, id: site, humidity: setpoint - 0.1 });
               renderSmartTop(id);
               return true;
             }
@@ -1019,12 +1035,12 @@ const handleSmartTopHold = (id, dev, chan, current) => {
           const { setpoint = 400 } = get(co2_stat[0]) || {};
           switch (chan.action) {
             case 'plus': {
-              run({ type: ACTION_SETPOINT, id: site, co2: setpoint + 10 });
+              run({ type: ACTION_SETPOINT, id: site, co2: setpoint + 5 });
               renderSmartTop(id);
               return true;
             }
             case 'minus': {
-              run({ type: ACTION_SETPOINT, id: site, co2: setpoint - 10 });
+              run({ type: ACTION_SETPOINT, id: site, co2: setpoint - 5 });
               renderSmartTop(id);
               return true;
             }
