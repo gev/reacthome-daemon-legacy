@@ -475,6 +475,7 @@ module.exports.manage = () => {
               const [, , , , , , palette, index] = data;
               for (let i = 0; i < (data.length - 9) / 3; i++) {
                 const chan = `${id}/rgb/${palette}.${index + i}`;
+                console.log(action, chan)
                 set(chan, {
                   r: data[i * 3 + 8],
                   g: data[i * 3 + 9],
