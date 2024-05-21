@@ -871,7 +871,7 @@ const run = (action) => {
         break;
       }
       case ACTION_GRADIENT: {
-        const { id, index, value } = action;
+        const { id, palette, index, value } = action;
         const { type } = get(id) || {};
         switch (type) {
           case DEVICE_TYPE_SMART_TOP_G4D: {
@@ -880,7 +880,7 @@ const run = (action) => {
             const topRight = get(`${id}/gradient/2`) || {};
             const bottomLeft = get(`${id}/gradient/3`) || {};
             const bottomRight = get(`${id}/gradient/4`) || {};
-            const cmd = [ACTION_RGB, 19];
+            const cmd = [ACTION_RGB, palette, 19];
             for (let i = 0; i < 5; i++) {
               const left = compose(topLeft, 5 - i, bottomLeft, i);
               const right = compose(topRight, 5 - i, bottomRight, i);
