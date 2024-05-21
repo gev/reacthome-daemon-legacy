@@ -483,6 +483,7 @@ module.exports.manage = () => {
                   b: data[i * 3 + 11],
                 });
               }
+              break;
             }
             default:
               const [, , , , , , , index] = data;
