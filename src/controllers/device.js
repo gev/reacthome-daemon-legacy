@@ -352,7 +352,6 @@ module.exports.manage = () => {
               online(top_id, { type, bottom: id, version: `${data[15]}.${data[16]}`, ip: address, ready: true });
               switch (type) {
                 case DEVICE_TYPE_SMART_TOP_G4D: {
-                  console.log('smart top g4d', top_id);
                   const ts = timestamp[top_id] || 0;
                   const { timeout = 0, mode, defaultMode } = get(top_id) || {};
                   if (Date.now() - ts > (timeout || 10_000)) {
@@ -828,7 +827,6 @@ const calcTemperature = site => {
   if (n > 0) {
     temperature /= n;
     set(site, { temperature });
-    console.log(site, temperature);
     thermostat.forEach(id => {
       run({
         type: ACTION_THERMOSTAT_HANDLE,
@@ -852,7 +850,6 @@ const calcHumidity = site => {
   if (n > 0) {
     humidity /= n;
     set(site, { humidity });
-    console.log(site, humidity);
     hygrostat.forEach(id => {
       run({
         type: ACTION_HYGROSTAT_HANDLE,
@@ -876,7 +873,6 @@ const calcIllumination = site => {
   if (n > 0) {
     illumination /= n;
     set(site, { illumination });
-    console.log(site, illumination);
   }
 }
 
@@ -894,7 +890,6 @@ const calcCO2 = site => {
   if (n > 0) {
     co2 /= n;
     set(site, { co2 });
-    console.log(site, co2);
     co2_stat.forEach(id => {
       run({
         type: ACTION_CO2_STAT_HANDLE,
@@ -1088,8 +1083,6 @@ const handleOff = handle(handleSmartTop, handleDefaultOff);
 const renderSmartTop = (id) => {
 
   timestamp[id] = Date.now();
-
-  console.log('renderSmartTop', id);
 
   const dev = get(id) || {};
 
