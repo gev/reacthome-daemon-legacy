@@ -358,6 +358,7 @@ module.exports.manage = () => {
                   if (Date.now() - ts > timeout || 10_000) {
                     set(top_id, { configuring: false, mode: defaultMode || mode });
                     renderSmartTop(top_id);
+                    console.log(get(top_id));
                   }
                   break;
                 }
