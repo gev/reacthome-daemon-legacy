@@ -759,6 +759,15 @@ module.exports.manage = () => {
         case ACTION_READY:
         case ACTION_DISCOVERY: {
           const type = data[7];
+          switch (type) {
+            case DEVICE_TYPE_SMART_TOP_G4D: {
+              const { online } = get(id) || {};
+              if (!online) {
+                renderSmartTop(id);
+              }
+              break;
+            }
+          }
           const version = `${data[8]}.${data[9]}`;
           online(id, { type, version, ip: address, ready: true });
           add(mac(), DEVICE, id)
