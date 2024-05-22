@@ -354,7 +354,9 @@ module.exports.manage = () => {
                 case DEVICE_TYPE_SMART_TOP_G4D: {
                   console.log('smart top g4d', top_id);
                   const ts = timestamp[top_id] || 0;
-                  if (Date.now() - ts > 10000) {
+                  const { timeout = 0, mode, defaultMode } = get(top_id) || {};
+                  if (Date.now() - ts > timeout || 10_000) {
+                    set(top_id, { configuring: false, mode: defaultMode || mode });
                     renderSmartTop(top_id);
                   }
                   break;
