@@ -894,7 +894,7 @@ const handleDefault = (action, actionCount) => (chan) => {
 }
 
 const handleDefaultOn = handleDefault('onOn', 'onOnCount');
-const handleDefaultClick1 = handleDefault('onClick1', 'onClick1Count');
+const handleDefaultClick1 = handleDefault('onClick', 'onClick1Count');
 const handleDefaultClick2 = handleDefault('onClick2', 'onClick2Count');
 const handleDefaultClick3 = handleDefault('onClick3', 'onClick3Count');
 const handleDefaultHold = handleDefault('onHold', 'onHoldCount');
