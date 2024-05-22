@@ -347,7 +347,7 @@ module.exports.manage = () => {
               const top_mac = Array.from(data.slice(8, 14));
               const top_id = top_mac.map((i) => `0${i.toString(16)}`.slice(-2)).join(":");
               const type = data[14];
-              set(id, { top: top_id, topDetected: true });
+              console.log(get(top_id))
               switch (type) {
                 case DEVICE_TYPE_SMART_TOP_G4D: {
                   const { online } = get(top_id) || {};
@@ -357,6 +357,7 @@ module.exports.manage = () => {
                   break;
                 }
               }
+              set(id, { top: top_id, topDetected: true });
               online(top_id, { type, bottom: id, version: `${data[15]}.${data[16]}`, ip: address, ready: true });
               break;
             }
