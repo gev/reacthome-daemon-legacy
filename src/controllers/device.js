@@ -178,7 +178,7 @@ module.exports.manage = () => {
                 }
               }
               const { onOnCount = 0 } = chan;
-              // set(channel, { onOnCount: onOnCount + 1 });
+              set(channel, { onOnCount: onOnCount + 1 });
               handleOn(id, index, chan);
               hold[channel].count++;
               setTimeout(() => {
@@ -186,20 +186,20 @@ module.exports.manage = () => {
                   case 1: {
                     if (!chan.value) {
                       const { onClick1Count = 0 } = chan;
-                      // set(channel, { onClick1Count: onClick1Count + 1 });
+                      set(channel, { onClick1Count: onClick1Count + 1 });
                       handleClick1(id, index, chan);
                     }
                     break;
                   }
                   case 2: {
                     const { onClick2Count = 0 } = chan;
-                    // set(channel, { onClick2Count: onClick2Count + 1 });
+                    set(channel, { onClick2Count: onClick2Count + 1 });
                     handleClick2(id, index, chan);
                     break;
                   }
                   case 3: {
                     const { onClick3Count = 0 } = chan;
-                    // set(channel, { onClick3Count: onClick3Count + 1 });
+                    set(channel, { onClick3Count: onClick3Count + 1 });
                     handleClick3(id, index, chan);
                     break;
                   }
@@ -210,7 +210,7 @@ module.exports.manage = () => {
                 if (!chan.value) return;
                 if (start) {
                   const { onHoldCount = 0 } = chan;
-                  // set(channel, { onHoldCount: onHoldCount + 1 });
+                  set(channel, { onHoldCount: onHoldCount + 1 });
                 }
                 if (handleHold(id, index, chan)) {
                   hold[channel] = {
@@ -226,7 +226,7 @@ module.exports.manage = () => {
             } else {
               clearTimeout(timeout);
               const { onOffCount = 0 } = chan;
-              // set(channel, { onOffCount: onOffCount + 1 });
+              set(channel, { onOffCount: onOffCount + 1 });
               handleOff(id, index, chan);
             }
           } else {
@@ -884,13 +884,11 @@ const calcCO2 = site => {
 const toArr = a => Array.isArray(a) ? a : a ? [a] : [];
 
 
-const handleDefault = (action, actionCount) => (id) => {
-  const chan = get(id) || {};
+const handleDefault = (action, actionCount) => (chan) => {
   const actions = toArr(chan[action]);
   if (actions.length > 0) {
     const count = chan[actionCount] || 0;
     run({ type: ACTION_SCRIPT_RUN, id: actions[count % actions.length] });
-    set(id, { [actionCount]: count + 1 });
   }
   return chan.repeat;
 }
@@ -912,14 +910,14 @@ const handle = (handleSmartTop, handleDefault) => (id, index, chan) => {
         const cid = modes[mode % modes.length];
         const current = get(cid) || {};
         if (current.mode === 'MODE_SCENE' && chan.action !== 'menu') {
-          return handleDefault(`${cid}/${DI}/${index}`);
+          return handleDefault(get(`${cid}/${DI}/${index}`));
         }
         return handleSmartTop(id, dev, chan, current, mode);
       }
       return false;
     }
     default: {
-      return handleDefault(id);
+      return handleDefault(chan);
     }
   }
 }
