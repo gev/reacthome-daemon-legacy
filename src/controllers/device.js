@@ -1012,57 +1012,67 @@ const handleSmartTopHold = (id, dev, chan, current) => {
       set(id, { configuring: !dev.configuring });
       renderSmartTop(id);
     }
-  } else if (dev.configuring) {
+  } else {
     const { site } = dev;
     if (site) {
-      const { thermostat = [], hygrostat = [], co2_stat = [] } = get(site) || {};
-      switch (current.mode) {
-        case 'MODE_COOL':
-        case 'MODE_HEAT': {
-          const { setpoint = 24 } = get(thermostat[0]) || {};
-          switch (chan.action) {
-            case 'plus': {
-              run({ type: ACTION_SETPOINT, id: site, temperature: setpoint + 0.1 });
-              renderSmartTop(id);
-              return true;
+      const { thermostat = [], hygrostat = [], co2_stat = [], ac = [] } = get(site) || {};
+      if (dev.configuring) {
+        switch (current.mode) {
+          case 'MODE_COOL':
+          case 'MODE_HEAT': {
+            const { setpoint = 24 } = get(thermostat[0]) || {};
+            switch (chan.action) {
+              case 'plus': {
+                run({ type: ACTION_SETPOINT, id: site, temperature: setpoint + 0.1 });
+                renderSmartTop(id);
+                return true;
+              }
+              case 'minus': {
+                run({ type: ACTION_SETPOINT, id: site, temperature: setpoint - 0.1 });
+                renderSmartTop(id);
+                return true;
+              }
             }
-            case 'minus': {
-              run({ type: ACTION_SETPOINT, id: site, temperature: setpoint - 0.1 });
-              renderSmartTop(id);
-              return true;
+            break;
+          }
+          case 'MODE_WET': {
+            const { setpoint = 50 } = get(hygrostat[0]) || {};
+            switch (chan.action) {
+              case 'plus': {
+                run({ type: ACTION_SETPOINT, id: site, humidity: setpoint + 0.1 });
+                renderSmartTop(id);
+                return true;
+              }
+              case 'minus': {
+                run({ type: ACTION_SETPOINT, id: site, humidity: setpoint - 0.1 });
+                renderSmartTop(id);
+                return true;
+              }
+            }
+            break;
+          }
+          case 'MODE_VENTILATION': {
+            const { setpoint = 400 } = get(co2_stat[0]) || {};
+            switch (chan.action) {
+              case 'plus': {
+                run({ type: ACTION_SETPOINT, id: site, co2: setpoint + 5 });
+                renderSmartTop(id);
+                return true;
+              }
+              case 'minus': {
+                run({ type: ACTION_SETPOINT, id: site, co2: setpoint - 5 });
+                renderSmartTop(id);
+                return true;
+              }
             }
           }
-          break;
         }
-        case 'MODE_WET': {
-          const { setpoint = 50 } = get(hygrostat[0]) || {};
-          switch (chan.action) {
-            case 'plus': {
-              run({ type: ACTION_SETPOINT, id: site, humidity: setpoint + 0.1 });
-              renderSmartTop(id);
-              return true;
-            }
-            case 'minus': {
-              run({ type: ACTION_SETPOINT, id: site, humidity: setpoint - 0.1 });
-              renderSmartTop(id);
-              return true;
-            }
-          }
-          break;
-        }
-        case 'MODE_VENTILATION': {
-          const { setpoint = 400 } = get(co2_stat[0]) || {};
-          switch (chan.action) {
-            case 'plus': {
-              run({ type: ACTION_SETPOINT, id: site, co2: setpoint + 5 });
-              renderSmartTop(id);
-              return true;
-            }
-            case 'minus': {
-              run({ type: ACTION_SETPOINT, id: site, co2: setpoint - 5 });
-              renderSmartTop(id);
-              return true;
-            }
+      } else if (chan.action === 'power') {
+        switch (current.mode) {
+          case 'MODE_COOL':
+          case 'MODE_HEAT':
+          case 'MODE_WET':
+          case 'MODE_VENTILATION': {
           }
         }
       }
