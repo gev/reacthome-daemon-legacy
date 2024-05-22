@@ -173,6 +173,7 @@ const {
   DRY,
   WET,
   ACTION_CO2_STAT_HANDLE,
+  ACTION_PALETTE,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -962,6 +963,17 @@ const run = (action) => {
               buff[i + 1] = value[i] || 0;
             }
             device.sendTOP(buff, action.id);
+            break;
+          }
+        }
+        break;
+      }
+      case ACTION_PALETTE: {
+        const { id, value } = action;
+        const dev = get(id) || {};
+        switch (dev.type) {
+          case DEVICE_TYPE_SMART_TOP_G4D: {
+            device.sendTOP(Buffer.from([ACTION_PALETTE, value]), action.id);
             break;
           }
         }
