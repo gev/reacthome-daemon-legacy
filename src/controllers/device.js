@@ -352,7 +352,7 @@ module.exports.manage = () => {
               online(top_id, { type, bottom: id, version: `${data[15]}.${data[16]}`, ip: address, ready: true });
               switch (type) {
                 case DEVICE_TYPE_SMART_TOP_G4D: {
-                  console.log('smart top g4d', top_id;
+                  console.log('smart top g4d', top_id);
                   const count = timeout[top_id] || 0;
                   if (count % 10 === 0) {
                     renderSmartTop(top_id);
