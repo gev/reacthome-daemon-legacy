@@ -112,6 +112,7 @@ const count = [count_off, count_on];
 let last_ip = IP_ADDRESS_POOL_START;
 
 const hold = {};
+const timeout = {}
 
 module.exports.manage = () => {
   ((get(mac()) || {}).device || []).forEach((id) => {
@@ -347,7 +348,8 @@ module.exports.manage = () => {
               const top_mac = Array.from(data.slice(8, 14));
               const top_id = top_mac.map((i) => `0${i.toString(16)}`.slice(-2)).join(":");
               const type = data[14];
-              console.log(get(top_id))
+              set(id, { top: top_id, topDetected: true });
+              online(top_id, { type, bottom: id, version: `${data[15]}.${data[16]}`, ip: address, ready: true });
               switch (type) {
                 case DEVICE_TYPE_SMART_TOP_G4D: {
                   const { online } = get(top_id) || {};
@@ -357,8 +359,6 @@ module.exports.manage = () => {
                   break;
                 }
               }
-              set(id, { top: top_id, topDetected: true });
-              online(top_id, { type, bottom: id, version: `${data[15]}.${data[16]}`, ip: address, ready: true });
               break;
             }
             default: {
@@ -1076,8 +1076,18 @@ const handleClick3 = handle(handleSmartTop, handleDefaultClick3);
 const handleHold = handle(handleSmartTopHold, handleDefaultHold);
 const handleOff = handle(handleSmartTop, handleDefaultOff);
 
+
+
 const renderSmartTop = (id) => {
+
+  clearTimeout(timeout.id);
+
   const dev = get(id) || {};
+
+  if (dev.online) {
+    timeout.id = setTimeout(renderSmartTop, dev.interval || 15000, id);
+  }
+
   const { mode = 0, modes = [], configuring, site } = dev;
   const image = [...(dev.image || [0, 0, 0, 0, 0, 0, 0, 0])];
   const blink = [...(dev.blink || [0, 0, 0, 0, 0, 0, 0, 0])];
