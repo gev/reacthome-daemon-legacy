@@ -884,10 +884,10 @@ const calcCO2 = site => {
 const toArr = a => Array.isArray(a) ? a : a ? [a] : [];
 
 
-const handleDefault = (action, actionCount) => (chan) => {
+const handleDefault = (action, actionCount) => (chan, btn) => {
   const actions = toArr(chan[action]);
   if (actions.length > 0) {
-    const count = chan[actionCount] || 0;
+    const count = btn[actionCount] || 0;
     run({ type: ACTION_SCRIPT_RUN, id: actions[count % actions.length] });
   }
   return chan.repeat;
@@ -910,14 +910,14 @@ const handle = (handleSmartTop, handleDefault) => (id, index, chan) => {
         const cid = modes[mode % modes.length];
         const current = get(cid) || {};
         if (current.mode === 'MODE_SCENE' && chan.action !== 'menu') {
-          return handleDefault(get(`${cid}/${DI}/${index}`));
+          return handleDefault(get(`${cid}/${DI}/${index}`), chan);
         }
         return handleSmartTop(id, dev, chan, current, mode);
       }
       return false;
     }
     default: {
-      return handleDefault(chan);
+      return handleDefault(chan, chan);
     }
   }
 }
