@@ -969,6 +969,7 @@ const run = (action) => {
         break;
       }
       case ACTION_PALETTE: {
+        console.log(action);
         const { id, value } = action;
         const dev = get(id) || {};
         switch (dev.type) {
