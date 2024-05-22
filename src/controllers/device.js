@@ -346,8 +346,18 @@ module.exports.manage = () => {
             case ACTION_DISCOVERY: {
               const top_mac = Array.from(data.slice(8, 14));
               const top_id = top_mac.map((i) => `0${i.toString(16)}`.slice(-2)).join(":");
+              const type = data[14];
               set(id, { top: top_id, topDetected: true });
-              online(top_id, { type: data[14], bottom: id, version: `${data[15]}.${data[16]}`, ip: address, ready: true });
+              switch (type) {
+                case DEVICE_TYPE_SMART_TOP_G4D: {
+                  const { online } = get(top_id) || {};
+                  if (!online) {
+                    renderSmartTop(top_id);
+                  }
+                  break;
+                }
+              }
+              online(top_id, { type, bottom: id, version: `${data[15]}.${data[16]}`, ip: address, ready: true });
               break;
             }
             default: {
@@ -361,7 +371,12 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_SMART_TOP_DETECT: {
-          set(id, { topDetected: data[7] });
+          const topDetected = data[7];
+          const { top } = get(id) || {};
+          if (!topDetected) {
+            offline(top);
+          }
+          set(id, { topDetected });
           break;
         }
         case ACTION_DIMMER: {
@@ -759,15 +774,6 @@ module.exports.manage = () => {
         case ACTION_READY:
         case ACTION_DISCOVERY: {
           const type = data[7];
-          switch (type) {
-            case DEVICE_TYPE_SMART_TOP_G4D: {
-              const { online } = get(id) || {};
-              if (!online) {
-                renderSmartTop(id);
-              }
-              break;
-            }
-          }
           const version = `${data[8]}.${data[9]}`;
           online(id, { type, version, ip: address, ready: true });
           add(mac(), DEVICE, id)
