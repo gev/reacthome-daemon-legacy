@@ -112,7 +112,7 @@ const count = [count_off, count_on];
 let last_ip = IP_ADDRESS_POOL_START;
 
 const hold = {};
-const counters = {}
+const timestamp = {}
 
 module.exports.manage = () => {
   ((get(mac()) || {}).device || []).forEach((id) => {
@@ -353,11 +353,10 @@ module.exports.manage = () => {
               switch (type) {
                 case DEVICE_TYPE_SMART_TOP_G4D: {
                   console.log('smart top g4d', top_id);
-                  const count = counters[top_id] || 0;
-                  if (count % 10 === 0) {
+                  const ts = timestamp[top_id] || 0;
+                  if (Date.now() - ts > 10000) {
                     renderSmartTop(top_id);
                   }
-                  counters[top_id] = count + 1;
                   break;
                 }
               }
@@ -1085,6 +1084,8 @@ const handleOff = handle(handleSmartTop, handleDefaultOff);
 
 
 const renderSmartTop = (id) => {
+
+  timestamp[id] = Date.now();
 
   console.log('renderSmartTop', id);
 
