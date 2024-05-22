@@ -352,10 +352,11 @@ module.exports.manage = () => {
               online(top_id, { type, bottom: id, version: `${data[15]}.${data[16]}`, ip: address, ready: true });
               switch (type) {
                 case DEVICE_TYPE_SMART_TOP_G4D: {
-                  const { online } = get(top_id) || {};
-                  if (!online) {
+                  const count = timeout[top_id] || 0;
+                  if (count % 10 === 0) {
                     renderSmartTop(top_id);
                   }
+                  timeout[top_id] = count + 1;
                   break;
                 }
               }
@@ -1086,18 +1087,12 @@ const renderSmartTop = (id) => {
 
   console.log('renderSmartTop', id);
 
-  clearTimeout(timeout.id);
-
   const dev = get(id) || {};
-
-  if (dev.online) {
-    timeout.id = setTimeout(renderSmartTop, dev.interval || 15000, id);
-  }
 
   const { mode = 0, modes = [], configuring, site } = dev;
   const image = [...(dev.image || [0, 0, 0, 0, 0, 0, 0, 0])];
   const blink = [...(dev.blink || [0, 0, 0, 0, 0, 0, 0, 0])];
-  image[1] &= 0b0000_1111
+  image[1] &= 0b0000_1111;
   image[2] &= 0b1111_1100;
   blink[1] &= 0b0000_1111;
   blink[2] &= 0b1111_1100;
