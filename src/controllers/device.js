@@ -825,6 +825,7 @@ const calcTemperature = site => {
   if (n > 0) {
     temperature /= n;
     set(site, { temperature });
+    console.log(site, temperature);
     thermostat.forEach(id => {
       run({
         type: ACTION_THERMOSTAT_HANDLE,
@@ -848,6 +849,7 @@ const calcHumidity = site => {
   if (n > 0) {
     humidity /= n;
     set(site, { humidity });
+    console.log(site, humidity);
     hygrostat.forEach(id => {
       run({
         type: ACTION_HYGROSTAT_HANDLE,
@@ -871,6 +873,7 @@ const calcIllumination = site => {
   if (n > 0) {
     illumination /= n;
     set(site, { illumination });
+    console.log(site, illumination);
   }
 }
 
@@ -888,6 +891,7 @@ const calcCO2 = site => {
   if (n > 0) {
     co2 /= n;
     set(site, { co2 });
+    console.log(site, co2);
     co2_stat.forEach(id => {
       run({
         type: ACTION_CO2_STAT_HANDLE,
@@ -1079,6 +1083,8 @@ const handleOff = handle(handleSmartTop, handleDefaultOff);
 
 
 const renderSmartTop = (id) => {
+
+  console.log('renderSmartTop', id);
 
   clearTimeout(timeout.id);
 
