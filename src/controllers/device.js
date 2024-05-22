@@ -889,6 +889,7 @@ const handleDefault = (action, actionCount) => (chan) => {
   if (actions.length > 0) {
     const count = chan[actionCount] || 0;
     run({ type: ACTION_SCRIPT_RUN, id: actions[count % actions.length] });
+    set(chan, { [actionCount]: count + 1 });
   }
   return chan.repeat;
 }
