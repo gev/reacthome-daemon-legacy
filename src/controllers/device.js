@@ -355,10 +355,9 @@ module.exports.manage = () => {
                   console.log('smart top g4d', top_id);
                   const ts = timestamp[top_id] || 0;
                   const { timeout = 0, mode, defaultMode } = get(top_id) || {};
-                  if (Date.now() - ts > timeout || 10_000) {
-                    set(top_id, { configuring: false, mode: defaultMode || mode });
+                  if (Date.now() - ts > (timeout || 10_000)) {
+                    set(top_id, { configuring: false, mode: defaultMode ? defaultMode - 1 : mode });
                     renderSmartTop(top_id);
-                    console.log(get(top_id));
                   }
                   break;
                 }
