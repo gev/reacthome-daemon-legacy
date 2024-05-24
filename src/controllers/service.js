@@ -1882,6 +1882,7 @@ const run = (action) => {
         } = action;
         const { setpoint, mode, site } = get(id) || {};
         const { temperature } = get(site) || {};
+        console.log(setpoint, mode, temperature)
         const make = (state, script, mode) => () => {
           set(id, { state, mode });
           if (script) {
