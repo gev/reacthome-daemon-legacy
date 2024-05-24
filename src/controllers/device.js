@@ -827,8 +827,11 @@ const calcTemperature = site => {
   if (n > 0) {
     temperature /= n;
     set(site, { temperature });
-    console.log(thermostat, temperature)
     thermostat.forEach(id => {
+      console.log({
+        type: ACTION_THERMOSTAT_HANDLE,
+        id, ...get(id)
+      })
       run({
         type: ACTION_THERMOSTAT_HANDLE,
         id, ...get(id)
