@@ -90,7 +90,7 @@ module.exports.add = (id) => {
   instance.add(id);
 };
 
-const index = 0;
+let index = 0;
 
 setInterval(() => {
   const arr = Array.from(instance);
