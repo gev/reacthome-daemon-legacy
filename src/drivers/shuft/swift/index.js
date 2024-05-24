@@ -90,8 +90,12 @@ module.exports.add = (id) => {
   instance.add(id);
 };
 
+const index = 0;
+
 setInterval(() => {
-  for (const id of instance) {
-    sync(id);
+  const arr = Array.from(instance);
+  if (arr.length > 0) {
+    sync(arr[index % arr.length]);
+    index++;
   }
 }, TIMEOUT);
