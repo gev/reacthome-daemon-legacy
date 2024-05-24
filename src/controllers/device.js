@@ -828,13 +828,10 @@ const calcTemperature = site => {
     temperature /= n;
     set(site, { temperature });
     thermostat.forEach(id => {
-      console.log({
-        type: ACTION_THERMOSTAT_HANDLE,
-        id, ...get(id)
-      })
       run({
+        ...get(id),
         type: ACTION_THERMOSTAT_HANDLE,
-        id, ...get(id)
+        id
       });
     })
   }
@@ -856,8 +853,9 @@ const calcHumidity = site => {
     set(site, { humidity });
     hygrostat.forEach(id => {
       run({
+        ...get(id),
         type: ACTION_HYGROSTAT_HANDLE,
-        id, ...get(id)
+        id
       });
     })
   }
@@ -896,8 +894,9 @@ const calcCO2 = site => {
     set(site, { co2 });
     co2_stat.forEach(id => {
       run({
+        ...get(id),
         type: ACTION_CO2_STAT_HANDLE,
-        id, ...get(id)
+        id
       });
     })
   }
