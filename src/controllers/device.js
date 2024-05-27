@@ -961,9 +961,8 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
     if (site) {
       const { thermostat = [], hygrostat = [], co2_stat = [] } = get(site) || {};
       switch (current.mode) {
-        case 'MODE_COOL':
-        case 'MODE_HEAT': {
-          const { setpoint = 24 } = get(thermostat[0]) || {};
+        case 'MODE_COOL': {
+          const { setpoint = 24, cool } = get(thermostat[0]) || {};
           switch (chan.action) {
             case 'plus': {
               run({ type: ACTION_SETPOINT, id: site, temperature: setpoint + 0.1 });
@@ -975,11 +974,37 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
               renderSmartTop(id);
               break;
             }
+            case 'power': {
+              run({ type: cool ? ACTION_STOP_COOL : ACTION_START_COOL, id: site });
+              renderSmartTop(id);
+              break;
+            }
+          }
+          break;
+        }
+        case 'MODE_HEAT': {
+          const { setpoint = 24, heat } = get(thermostat[0]) || {};
+          switch (chan.action) {
+            case 'plus': {
+              run({ type: ACTION_SETPOINT, id: site, temperature: setpoint + 0.1 });
+              renderSmartTop(id);
+              break;
+            }
+            case 'minus': {
+              run({ type: ACTION_SETPOINT, id: site, temperature: setpoint - 0.1 });
+              renderSmartTop(id);
+              break;
+            }
+            case 'power': {
+              run({ type: heat ? ACTION_STOP_HEAT : ACTION_START_HEAT, id: site });
+              renderSmartTop(id);
+              break;
+            }
           }
           break;
         }
         case 'MODE_WET': {
-          const { setpoint = 50 } = get(hygrostat[0]) || {};
+          const { setpoint = 50, wet } = get(hygrostat[0]) || {};
           switch (chan.action) {
             case 'plus': {
               run({ type: ACTION_SETPOINT, id: site, humidity: setpoint + 0.1 });
@@ -991,11 +1016,16 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
               renderSmartTop(id);
               break;
             }
+            case 'power': {
+              run({ type: wet ? ACTION_STOP_WET : ACTION_START_WET, id: site });
+              renderSmartTop(id);
+              break;
+            }
           }
           break;
         }
         case 'MODE_VENTILATION': {
-          const { setpoint = 400 } = get(co2_stat[0]) || {};
+          const { setpoint = 400, ventilation } = get(co2_stat[0]) || {};
           switch (chan.action) {
             case 'plus': {
               run({ type: ACTION_SETPOINT, id: site, co2: setpoint + 1 });
@@ -1004,6 +1034,11 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
             }
             case 'minus': {
               run({ type: ACTION_SETPOINT, id: site, co2: setpoint - 1 });
+              renderSmartTop(id);
+              break;
+            }
+            case 'power': {
+              run({ type: ventilation ? ACTION_STOP_VENTILATION : ACTION_START_VENTILATION, id: site });
               renderSmartTop(id);
               break;
             }
