@@ -962,7 +962,7 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
       const { thermostat = [], hygrostat = [], co2_stat = [] } = get(site) || {};
       switch (current.mode) {
         case 'MODE_COOL': {
-          const { setpoint = 24, cool } = get(thermostat[0]) || {};
+          const { setpoint = 24, cool = true } = get(thermostat[0]) || {};
           switch (chan.action) {
             case 'plus': {
               run({ type: ACTION_SETPOINT, id: site, temperature: setpoint + 0.1 });
@@ -983,7 +983,7 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
           break;
         }
         case 'MODE_HEAT': {
-          const { setpoint = 24, heat } = get(thermostat[0]) || {};
+          const { setpoint = 24, heat = true } = get(thermostat[0]) || {};
           switch (chan.action) {
             case 'plus': {
               run({ type: ACTION_SETPOINT, id: site, temperature: setpoint + 0.1 });
@@ -1004,7 +1004,7 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
           break;
         }
         case 'MODE_WET': {
-          const { setpoint = 50, wet } = get(hygrostat[0]) || {};
+          const { setpoint = 50, wet = true } = get(hygrostat[0]) || {};
           switch (chan.action) {
             case 'plus': {
               run({ type: ACTION_SETPOINT, id: site, humidity: setpoint + 0.1 });
@@ -1025,7 +1025,7 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
           break;
         }
         case 'MODE_VENTILATION': {
-          const { setpoint = 400, ventilation } = get(co2_stat[0]) || {};
+          const { setpoint = 400, ventilation = true } = get(co2_stat[0]) || {};
           switch (chan.action) {
             case 'plus': {
               run({ type: ACTION_SETPOINT, id: site, co2: setpoint + 1 });
@@ -1063,7 +1063,7 @@ const handleSmartTopHold = (id, dev, chan, current) => {
   } else {
     const { site } = dev;
     if (site) {
-      const { thermostat = [], hygrostat = [], co2_stat = [], ac = [] } = get(site) || {};
+      const { thermostat = [], hygrostat = [], co2_stat = [] } = get(site) || {};
       if (dev.configuring) {
         switch (current.mode) {
           case 'MODE_COOL':
@@ -1118,25 +1118,25 @@ const handleSmartTopHold = (id, dev, chan, current) => {
       } else if (chan.action === 'power') {
         switch (current.mode) {
           case 'MODE_COOL': {
-            const { cool } = get(thermostat[0]) || {};
+            const { cool = true } = get(thermostat[0]) || {};
             run({ type: cool ? ACTION_STOP_COOL : ACTION_START_COOL, id: site });
             renderSmartTop(id);
             break;
           }
           case 'MODE_HEAT': {
-            const { heat } = get(thermostat[0]) || {};
+            const { heat = true } = get(thermostat[0]) || {};
             run({ type: heat ? ACTION_STOP_HEAT : ACTION_START_HEAT, id: site });
             renderSmartTop(id);
             break;
           }
           case 'MODE_WET': {
-            const { wet } = get(hygrostat[0]) || {};
+            const { wet = true } = get(hygrostat[0]) || {};
             run({ type: wet ? ACTION_STOP_WET : ACTION_START_COOL, id: site });
             renderSmartTop(id);
             break;
           }
           case 'MODE_VENTILATION': {
-            const { ventilation } = get(hygrostat[0]) || {};
+            const { ventilation = true } = get(hygrostat[0]) || {};
             run({ type: ventilation ? ACTION_STOP_WET : ACTION_START_COOL, id: site });
             renderSmartTop(id);
             break;
@@ -1187,7 +1187,7 @@ const renderSmartTop = (id) => {
     switch (current.mode) {
       case 'MODE_COOL':
         if (configuring) {
-          const { setpoint = 24, cool } = get(thermostat[0]) || {};
+          const { setpoint = 24, cool = true } = get(thermostat[0]) || {};
           printf(id, setpoint, 1, cool, image);
         } else {
           const { cool } = get(thermostat[0]) || {};
@@ -1196,7 +1196,7 @@ const renderSmartTop = (id) => {
         break;
       case 'MODE_HEAT':
         if (configuring) {
-          const { setpoint = 24, heat } = get(thermostat[0]) || {};
+          const { setpoint = 24, heat = true } = get(thermostat[0]) || {};
           printf(id, setpoint, 1, heat, image);
         } else {
           const { heat } = get(thermostat[0]) || {};
@@ -1205,7 +1205,7 @@ const renderSmartTop = (id) => {
         break;
       case 'MODE_WET':
         if (configuring) {
-          const { setpoint = 50, wet } = get(hygrostat[0]) || {};
+          const { setpoint = 50, wet = true } = get(hygrostat[0]) || {};
           printf(id, setpoint, 1, wet, image);
         } else {
           const { wet } = get(hygrostat[0]) || {};
@@ -1214,7 +1214,7 @@ const renderSmartTop = (id) => {
         break;
       case 'MODE_VENTILATION':
         if (configuring) {
-          const { setpoint = 400, ventilation } = get(co2_stat[0]) || {};
+          const { setpoint = 400, ventilation = true } = get(co2_stat[0]) || {};
           printf(id, setpoint, 0, ventilation, image);
         } else {
           const { ventilation } = get(co2_stat[0]) || {};
