@@ -1749,7 +1749,7 @@ const run = (action) => {
         switch (type) {
           case SITE: {
             const { co2_stat = [] } = get(id) || {};
-            hygrostat.forEach(i => run({ type: ACTION_START_VENTILATION, id: i }));
+            co2_stat.forEach(i => run({ type: ACTION_START_VENTILATION, id: i }));
             co2_stat;
           }
           case CO2_STAT: {
