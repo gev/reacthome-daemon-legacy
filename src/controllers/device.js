@@ -1222,7 +1222,7 @@ const renderSmartTop = (id) => {
         }
         break;
       default:
-        run({ type: ACTION_PRINT, id, power, image, value: "" })
+        run({ type: ACTION_PRINT, id, power: false, image, value: "" })
         print(id, "", image)
     }
   } else {
