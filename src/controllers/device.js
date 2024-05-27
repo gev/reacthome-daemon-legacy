@@ -84,6 +84,16 @@ const {
   ACTION_CO2_STAT_HANDLE,
   ACTION_PRINT,
   ACTION_SETPOINT,
+  ACTION,
+  ACTION_TOGGLE_COOL,
+  ACTION_TOGGLE_HEAT,
+  ACTION_TOGGLE_WET,
+  ACTION_TOGGLE_VENTILATION,
+  ACTION_STOP_COOL,
+  ACTION_START_COOL,
+  ACTION_STOP_HEAT,
+  ACTION_START_HEAT,
+  ACTION_STOP_WET,
 } = require("../constants");
 const {
   get,
@@ -1072,10 +1082,29 @@ const handleSmartTopHold = (id, dev, chan, current) => {
         }
       } else if (chan.action === 'power') {
         switch (current.mode) {
-          case 'MODE_COOL':
-          case 'MODE_HEAT':
-          case 'MODE_WET':
+          case 'MODE_COOL': {
+            const { cool } = get(thermostat[0]) || {};
+            run({ type: cool ? ACTION_STOP_COOL : ACTION_START_COOL, id: site });
+            renderSmartTop(id);
+            break;
+          }
+          case 'MODE_HEAT': {
+            const { heat } = get(thermostat[0]) || {};
+            run({ type: heat ? ACTION_STOP_HEAT : ACTION_START_HEAT, id: site });
+            renderSmartTop(id);
+            break;
+          }
+          case 'MODE_WET': {
+            const { wet } = get(hygrostat[0]) || {};
+            run({ type: wet ? ACTION_STOP_WET : ACTION_START_COOL, id: site });
+            renderSmartTop(id);
+            break;
+          }
           case 'MODE_VENTILATION': {
+            const { ventilation } = get(hygrostat[0]) || {};
+            run({ type: ventilation ? ACTION_STOP_WET : ACTION_START_COOL, id: site });
+            renderSmartTop(id);
+            break;
           }
         }
       }
@@ -1122,32 +1151,43 @@ const renderSmartTop = (id) => {
     const { temperature, humidity, co2, thermostat = [], hygrostat = [], co2_stat = [] } = get(site) || {};
     switch (current.mode) {
       case 'MODE_COOL':
+        if (configuring) {
+          const { setpoint = 24, cool } = get(thermostat[0]) || {};
+          printf(id, setpoint, 1, cool, image);
+        } else {
+          const { cool } = get(thermostat[0]) || {};
+          printf(id, temperature, 1, cool, image);
+        }
+        break;
       case 'MODE_HEAT':
         if (configuring) {
-          const { setpoint = 24 } = get(thermostat[0]) || {};
-          printf(id, setpoint, 1, image);
+          const { setpoint = 24, heat } = get(thermostat[0]) || {};
+          printf(id, setpoint, 1, heat, image);
         } else {
-          printf(id, temperature, 1, image);
+          const { heat } = get(thermostat[0]) || {};
+          printf(id, temperature, 1, heat, image);
         }
         break;
       case 'MODE_WET':
         if (configuring) {
-          const { setpoint = 50 } = get(hygrostat[0]) || {};
-          printf(id, setpoint, 1, image);
+          const { setpoint = 50, wet } = get(hygrostat[0]) || {};
+          printf(id, setpoint, 1, wet, image);
         } else {
-          printf(id, humidity, 1, image);
+          const { wet } = get(hygrostat[0]) || {};
+          printf(id, humidity, 1, wet, image);
         }
         break;
       case 'MODE_VENTILATION':
         if (configuring) {
-          const { setpoint = 400 } = get(co2_stat[0]) || {};
-          printf(id, setpoint, 0, image);
+          const { setpoint = 400, ventilation } = get(co2_stat[0]) || {};
+          printf(id, setpoint, 0, ventilation, image);
         } else {
-          printf(id, co2, 0, image);
+          const { ventilation } = get(co2_stat[0]) || {};
+          printf(id, co2, 0, ventilation, image);
         }
         break;
       default:
-        run({ type: ACTION_PRINT, id, image, value: "" })
+        run({ type: ACTION_PRINT, id, power, image, value: "" })
         print(id, "", image)
     }
   } else {
@@ -1156,11 +1196,11 @@ const renderSmartTop = (id) => {
   run({ type: ACTION_BLINK, id, value: blink })
 }
 
-const print = (id, value, image) =>
-  run({ type: ACTION_PRINT, id, value, image })
+const print = (id, value, power, image) =>
+  run({ type: ACTION_PRINT, id, value, power, image })
 
-printf = (id, value, fixed, image) =>
-  print(id, format(value, fixed), image)
+printf = (id, value, fixed, power, image) =>
+  print(id, format(value, fixed), power, image)
 
 const format = (value, fixed) =>
   typeof value === 'number' ? value.toFixed(fixed) : ""

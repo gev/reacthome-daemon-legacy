@@ -189,6 +189,18 @@ module.exports.ACTION_SET_DIRECTION = "ACTION_SET_DIRECTION";
 
 module.exports.ACTION_PRINT = "ACTION_PRINT";
 
+module.exports.ACTION_START_COOL = "ACTION_START_COOL";
+module.exports.ACTION_START_HEAT = "ACTION_START_HEAT";
+module.exports.ACTION_START_FAN = "ACTION_START_FAN";
+module.exports.ACTION_START_VENTILATION = "ACTION_START_VENTILATION";
+module.exports.ACTION_START_WET = "ACTION_START_WET";
+
+module.exports.ACTION_STOP_COOL = "ACTION_STOP_COOL";
+module.exports.ACTION_STOP_HEAT = "ACTION_STOP_HEAT";
+module.exports.ACTION_STOP_FAN = "ACTION_STOP_FAN";
+module.exports.ACTION_STOP_VENTILATION = "ACTION_STOP_VENTILATION";
+module.exports.ACTION_STOP_WET = "ACTION_STOP_WET";
+
 module.exports.TEMPERATURE_EXT = "temperature_ext";
 
 module.exports.OFF = 0x0;
@@ -328,6 +340,9 @@ module.exports.WET = "wet";
 module.exports.VENTILATION = "ventilation";
 
 module.exports.THERMOSTAT = "thermostat";
+module.exports.HYGROSTAT = "hygrostat";
+module.exports.CO2_STAT = "co2_stat";
+
 module.exports.CLOSURE = "closure";
 module.exports.OPEN = "open";
 module.exports.CLOSE = "close";

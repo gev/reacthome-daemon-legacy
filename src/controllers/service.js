@@ -174,6 +174,16 @@ const {
   WET,
   ACTION_CO2_STAT_HANDLE,
   ACTION_PALETTE,
+  ACTION_START_COOL,
+  THERMOSTAT,
+  ACTION_STOP_COOL,
+  ACTION_START_WET,
+  ACTION_STOP_HEAT,
+  ACTION_START_HEAT,
+  ACTION_STOP_WET,
+  ACTION_START_VENTILATION,
+  HYGROSTAT,
+  CO2_STAT,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -982,7 +992,7 @@ const run = (action) => {
         break;
       }
       case ACTION_PRINT: {
-        const { id, value } = action;
+        const { id, value, power } = action;
         const dev = get(id) || {};
         switch (dev.type) {
           case DEVICE_TYPE_SMART_TOP_G4D: {
@@ -1064,6 +1074,7 @@ const run = (action) => {
                 }
               }
             }
+            setBit(11, power ? 1 : 0);
             run({ type: ACTION_IMAGE, id, value: image })
             break;
           }
@@ -1623,6 +1634,150 @@ const run = (action) => {
         }
         break;
       }
+      case ACTION_START_COOL: {
+        const { id } = action;
+        const { type } = get(id) || {};
+        switch (type) {
+          case SITE: {
+            const { thermostat = [] } = get(id) || {};
+            thermostat.forEach(i => run({ type: ACTION_START_COOL, id: i }));
+            break;
+          }
+          case THERMOSTAT: {
+            const { onStartCool } = get(id) || {};
+            set(id, { cool: true });
+            if (onStartCool) run({ type: ACTION_SCRIPT_RUN, id: onStartCool });
+            break;
+          }
+        }
+        break;
+      }
+      case ACTION_STOP_COOL: {
+        const { id } = action;
+        const { type } = get(id) || {};
+        switch (type) {
+          case SITE: {
+            const { thermostat = [] } = get(id) || {};
+            thermostat.forEach(i => run({ type: ACTION_STOP_COOL, id: i }));
+            break;
+          }
+          case THERMOSTAT: {
+            const { onStopCool } = get(id) || {};
+            set(id, { cool: false });
+            if (onStopCool) run({ type: ACTION_SCRIPT_RUN, id: onStopCool });
+            break;
+          }
+        }
+        break;
+      }
+      case ACTION_START_HEAT: {
+        const { id } = action;
+        const { type } = get(id) || {};
+        switch (type) {
+          case SITE: {
+            const { thermostat = [] } = get(id) || {};
+            thermostat.forEach(i => run({ type: ACTION_START_HEAT, id: i }));
+            break;
+          }
+          case THERMOSTAT: {
+            const { onStartHeat } = get(id) || {};
+            set(id, { heat: true });
+            if (onStartHeat) run({ type: ACTION_SCRIPT_RUN, id: onStartHeat });
+            break;
+          }
+        }
+        break;
+      }
+      case ACTION_STOP_HEAT: {
+        const { id } = action;
+        const { type } = get(id) || {};
+        switch (type) {
+          case SITE: {
+            const { thermostat = [] } = get(id) || {};
+            thermostat.forEach(i => run({ type: ACTION_STOP_HEAT, id: i }));
+            break;
+          }
+          case THERMOSTAT: {
+            const { onStopHeat } = get(id) || {};
+            set(id, { heat: false });
+            if (onStopHeat) run({ type: ACTION_SCRIPT_RUN, id: onStopHeat });
+            break;
+          }
+        }
+        break;
+      }
+      case ACTION_START_WET: {
+        const { id } = action;
+        const { type } = get(id) || {};
+        switch (type) {
+          case SITE: {
+            const { hygrostat = [] } = get(id) || {};
+            hygrostat.forEach(i => run({ type: ACTION_START_WET, id: i }));
+            break;
+          }
+          case HYGROSTAT: {
+            const { onStartWet } = get(id) || {};
+            set(id, { wet: true });
+            if (onStartWet) run({ type: ACTION_SCRIPT_RUN, id: onStartWet });
+            break;
+          }
+        }
+        break;
+      }
+      case ACTION_STOP_WET: {
+        const { id } = action;
+        const { type } = get(id) || {};
+        switch (type) {
+          case SITE: {
+            const { hygrostat = [] } = get(id) || {};
+            hygrostat.forEach(i => run({ type: ACTION_STOP_WET, id: i }));
+            break;
+          }
+          case HYGROSTAT: {
+            const { onStopWet } = get(id) || {};
+            set(id, { wet: false });
+            if (onStopWet) run({ type: ACTION_SCRIPT_RUN, id: onStopWet });
+            break;
+          }
+        }
+        break;
+      }
+      case ACTION_START_VENTILATION: {
+        const { id } = action;
+        const { type } = get(id) || {};
+        switch (type) {
+          case SITE: {
+            const { co2_stat = [] } = get(id) || {};
+            hygrostat.forEach(i => run({ type: ACTION_START_VENTILATION, id: i }));
+            co2_stat;
+          }
+          case CO2_STAT: {
+            const { onStartVentilation } = get(id) || {};
+            set(id, { ventilation: true });
+            if (onStartVentilation) run({ type: ACTION_SCRIPT_RUN, id: onStartVentilation });
+            break;
+          }
+        }
+        break;
+      }
+      case ACTION_STOP_VENTILATION: {
+        const { id } = action;
+        const { type } = get(id) || {};
+        switch (type) {
+          case SITE: {
+            const { co2_stat = [] } = get(id) || {};
+            co2_stat.forEach(i => run({ type: ACTION_STOP_VENTILATION, id: i }));
+            break;
+          }
+          case CO2_STAT: {
+            const { onStopVentilation } = get(id) || {};
+            set(id, { ventilation: false });
+            if (onStopVentilation) run({ type: ACTION_SCRIPT_RUN, id: onStopVentilation });
+            break;
+          }
+        }
+        break;
+      }
       case ACTION_SETPOINT: {
         const { id, value, temperature, humidity, co2 } = action;
         const dev = get(id) || {};
@@ -1871,6 +2026,8 @@ const run = (action) => {
       case ACTION_THERMOSTAT_HANDLE: {
         const {
           id,
+          cool = true,
+          heat = true,
           cool_hysteresis,
           cool_threshold,
           heat_hysteresis,
@@ -1882,16 +2039,17 @@ const run = (action) => {
         } = action;
         const { setpoint, mode, site } = get(id) || {};
         const { temperature } = get(site) || {};
-        const make = (state, script, mode) => () => {
+        const make = (state, script, mode, enabled) => () => {
+          if (!enabled) return;
           set(id, { state, mode });
           if (script) {
             run({ type: ACTION_SCRIPT_RUN, id: script });
           }
         };
-        const stopCool = make(STOP, onStopCool, COOL);
-        const stopHeat = make(STOP, onStopHeat, HEAT);
-        const startCool = make(COOL, onStartCool, COOL);
-        const startHeat = make(HEAT, onStartHeat, HEAT);
+        const stopCool = make(STOP, onStopCool, COOL, cool);
+        const stopHeat = make(STOP, onStopHeat, HEAT, heat);
+        const startCool = make(COOL, onStartCool, COOL, cool);
+        const startHeat = make(HEAT, onStartHeat, HEAT, heat);
         switch (mode) {
           case HEAT: {
             if (temperature > setpoint - (- heat_threshold)) {
@@ -1933,6 +2091,8 @@ const run = (action) => {
       case ACTION_HYGROSTAT_HANDLE: {
         const {
           id,
+          dry = true,
+          wet = true,
           dry_hysteresis,
           dry_threshold,
           wet_hysteresis,
@@ -1944,16 +2104,17 @@ const run = (action) => {
         } = action;
         const { setpoint, mode, site } = get(id) || {};
         const { humidity } = get(site) || {};
-        const make = (state, script, mode) => () => {
+        const make = (state, script, mode, enabled) => () => {
+          if (!enabled) return;
           set(id, { state, mode });
           if (script) {
             run({ type: ACTION_SCRIPT_RUN, id: script });
           }
         };
-        const stopDry = make(STOP, onStopDry, DRY);
-        const stopWet = make(STOP, onStopWet, WET);
-        const startDry = make(DRY, onStartDry, DRY);
-        const startWet = make(WET, onStartWet, WET);
+        const stopDry = make(STOP, onStopDry, DRY, dry);
+        const stopWet = make(STOP, onStopWet, WET, wet);
+        const startDry = make(DRY, onStartDry, DRY, dry);
+        const startWet = make(WET, onStartWet, WET, wet);
         switch (mode) {
           case WET: {
             if (humidity > setpoint - (- wet_threshold)) {
@@ -1995,6 +2156,7 @@ const run = (action) => {
       case ACTION_CO2_STAT_HANDLE: {
         const {
           id,
+          ventilation = true,
           hysteresis,
           onStartVentilation,
           onStopVentilation,
@@ -2002,6 +2164,7 @@ const run = (action) => {
         const { setpoint, mode, site } = get(id) || {};
         const { co2 } = get(site) || {};
         const make = (script) => () => {
+          if (!ventilation) return;
           if (script) {
             run({ type: ACTION_SCRIPT_RUN, id: script });
           }
@@ -2050,7 +2213,6 @@ const run = (action) => {
               }
             });
           }
-          return o.inverse ? !o.value : o.value;
         });
         if (f) {
           if (onOff) {
