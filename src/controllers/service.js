@@ -184,6 +184,7 @@ const {
   ACTION_START_VENTILATION,
   HYGROSTAT,
   CO2_STAT,
+  ACTION_STOP_VENTILATION,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
