@@ -1188,37 +1188,37 @@ const renderSmartTop = (id) => {
       case 'MODE_COOL':
         if (configuring) {
           const { setpoint = 24, cool = true } = get(thermostat[0]) || {};
-          printf(id, setpoint, 1, cool, image);
+          printf(id, setpoint, -99.9, 99.9, 1, cool, image);
         } else {
           const { cool } = get(thermostat[0]) || {};
-          printf(id, temperature, 1, cool, image);
+          printf(id, temperature, -99.9, 99.9, 1, cool, image);
         }
         break;
       case 'MODE_HEAT':
         if (configuring) {
           const { setpoint = 24, heat = true } = get(thermostat[0]) || {};
-          printf(id, setpoint, 1, heat, image);
+          printf(id, setpoint, -99.9, 99.9, 1, heat, image);
         } else {
           const { heat } = get(thermostat[0]) || {};
-          printf(id, temperature, 1, heat, image);
+          printf(id, temperature, -99.9, 99.9, 1, heat, image);
         }
         break;
       case 'MODE_WET':
         if (configuring) {
           const { setpoint = 50, wet = true } = get(hygrostat[0]) || {};
-          printf(id, setpoint, 1, wet, image);
+          printf(id, setpoint, 0, 99.9, 1, wet, image);
         } else {
           const { wet } = get(hygrostat[0]) || {};
-          printf(id, humidity, 1, wet, image);
+          printf(id, humidity, 0, 99.9, 1, wet, image);
         }
         break;
       case 'MODE_VENTILATION':
         if (configuring) {
           const { setpoint = 400, ventilation = true } = get(co2_stat[0]) || {};
-          printf(id, setpoint, 0, ventilation, image);
+          printf(id, setpoint, 0, 1999, 0, ventilation, image);
         } else {
           const { ventilation } = get(co2_stat[0]) || {};
-          printf(id, co2, 0, ventilation, image);
+          printf(id, co2, 0, 1999, 0, ventilation, image);
         }
         break;
       default:
@@ -1233,8 +1233,8 @@ const renderSmartTop = (id) => {
 const print = (id, value, power, image) =>
   run({ type: ACTION_PRINT, id, value, power, image })
 
-printf = (id, value, fixed, power, image) =>
-  print(id, format(value, fixed), power, image)
+printf = (id, value, min, max, fixed, power, image) =>
+  print(id, format(value, min, max, fixed), power, image)
 
-const format = (value, fixed) =>
-  typeof value === 'number' ? value.toFixed(fixed) : ""
+const format = (value, fixed, min, max) =>
+  typeof value === 'number' ? Math.max(Math.min(value, max), min).toFixed(fixed) : ""
