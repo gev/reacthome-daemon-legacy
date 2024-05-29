@@ -35,3 +35,5 @@ module.exports = ({ chunk, rows, cols }, session) => {
     pty.write(chunk);
   }
 };
+
+module.exports.terminals = terminals;

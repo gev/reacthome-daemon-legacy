@@ -3,6 +3,7 @@ const { isUUID } = require("../uuid");
 const { deleteSession } = require("../notification");
 const { peers } = require("./peer");
 const handle = require("./handle");
+const { terminals } = require("../terminal");
 
 const PROTOCOL = "listen";
 const TIMEOUT = 1000;
@@ -35,6 +36,7 @@ const connect = (id) => {
       deleteSession(session);
       sessions.delete(session);
       peers.delete(session);
+      terminals.delete(session);
     }
   });
   socket.on("close", () => {
@@ -42,6 +44,7 @@ const connect = (id) => {
       deleteSession(session);
       sessions.delete(session);
       peers.delete(session);
+      terminals.delete(session);
     }
     setTimeout(connect, TIMEOUT, id);
   });
