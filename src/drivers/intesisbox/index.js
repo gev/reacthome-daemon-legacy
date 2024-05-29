@@ -88,9 +88,12 @@ module.exports.add = (id) => {
   instance.add(id);
 };
 
-setInterval(async () => {
-  for (const id of instance) {
-    await delay(100);
-    await sync(id);
+let index = 0;
+
+setInterval(() => {
+  const arr = Array.from(instance);
+  if (arr.length > 0) {
+    sync(arr[index % arr.length]);
+    index++;
   }
 }, TIMEOUT);

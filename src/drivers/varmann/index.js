@@ -63,12 +63,12 @@ module.exports.add = (id) => {
   instance.add(id);
 };
 
+let index = 0;
+
 setInterval(() => {
-  let i = 0;
-  for (const id of instance) {
-    setTimeout(() => {
-      sync(id);
-    }, i * 100);
-    i += 1;
+  const arr = Array.from(instance);
+  if (arr.length > 0) {
+    sync(arr[index % arr.length]);
+    index++;
   }
 }, TIMEOUT);
