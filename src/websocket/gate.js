@@ -5,7 +5,7 @@ const { peers } = require("./peer");
 const handle = require("./handle");
 
 const PROTOCOL = "listen";
-const TIMEOUT = 3000;
+const TIMEOUT = 100;
 const gateURL = (id) => `wss://gate.reacthome.net/${id}`;
 
 let t;
