@@ -222,7 +222,7 @@ const ARTNET_VELOCITY = 1;
 const bind = ["r", "g", "b", "bind"];
 const rgb = ["r", "g", "b"];
 
-const run = (action) => {
+const run = (action) => setImmediate(() => {
   try {
     switch (action.type) {
       case ACTION_SET: {
@@ -2508,7 +2508,7 @@ const run = (action) => {
     console.error(action);
     console.error(e);
   }
-};
+});
 
 const compose = (ac = {}, am = 1, bc = {}, bm = 1) => {
   const s = am + bm;
