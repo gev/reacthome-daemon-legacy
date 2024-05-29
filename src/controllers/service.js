@@ -980,12 +980,10 @@ const run = (action) => {
         break;
       }
       case ACTION_PALETTE: {
-        console.log(action);
         const { id, value } = action;
         const dev = get(id) || {};
         switch (dev.type) {
           case DEVICE_TYPE_SMART_TOP_G4D: {
-            console.log("ACTION_PALETTE", id, value);
             device.sendTOP(Buffer.from([ACTION_PALETTE, value]), action.id);
             break;
           }
