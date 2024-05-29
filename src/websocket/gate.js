@@ -5,7 +5,7 @@ const { peers } = require("./peer");
 const handle = require("./handle");
 
 const PROTOCOL = "listen";
-const TIMEOUT = 100;
+const TIMEOUT = 1000;
 const gateURL = (id) => `wss://gate.reacthome.net/${id}`;
 
 let t;
@@ -49,7 +49,7 @@ const connect = (id) => {
     clearInterval(t);
     t = setInterval(() => {
       socket.ping();
-    }, TIMEOUT);
+    }, 10 * TIMEOUT);
   });
   socket.on("error", console.error);
 };
