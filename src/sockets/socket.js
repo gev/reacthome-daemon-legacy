@@ -17,7 +17,7 @@ module.exports = (discovery, interval, port, listen, multicast) => {
       setInterval(discovery(socket), interval);
     } catch (e) {
       // console.error(e);
-      setTimeout(startDiscovery, interval);
+      setTimeout(startDiscovery, 10_000);
     }
   };
 
