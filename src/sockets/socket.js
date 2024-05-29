@@ -1,7 +1,7 @@
 
 const { createSocket } = require('dgram');
 
-module.exports = (discovery, interval, port, listen, multicast, hasQueue, delay = 100) => {
+module.exports = (discovery, interval, port, listen, multicast) => {
 
   const socket = createSocket('udp4');
 
@@ -16,7 +16,7 @@ module.exports = (discovery, interval, port, listen, multicast, hasQueue, delay 
       socket.setMulticastInterface(multicast);
       setInterval(discovery(socket), interval);
     } catch (e) {
-      console.error(e);
+      // console.error(e);
       setTimeout(startDiscovery, interval);
     }
   };
