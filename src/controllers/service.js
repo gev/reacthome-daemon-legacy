@@ -2051,6 +2051,7 @@ const run = (action) => {
         const startHeat = make(HEAT, onStartHeat, HEAT, heat);
         switch (mode) {
           case HEAT: {
+            stopCool();
             if (temperature > setpoint - (- heat_threshold)) {
               stopHeat();
               startCool();
@@ -2062,6 +2063,7 @@ const run = (action) => {
             break;
           }
           case COOL: {
+            stopHeat();
             if (temperature < setpoint - cool_threshold) {
               stopCool();
               startHeat();
@@ -2171,9 +2173,9 @@ const run = (action) => {
         const stopVentilation = make(onStopVentilation);
         const startVentilation = make(onStartVentilation);
         if (co2 > setpoint - (- hysteresis)) {
-          stopVentilation();
-        } else if (co2 < setpoint - hysteresis) {
           startVentilation();
+        } else if (co2 < setpoint - hysteresis) {
+          stopVentilation();
         }
         break;
       }
