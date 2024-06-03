@@ -1,3 +1,3 @@
 
-module.exports.TIMEOUT = 1200;
+module.exports.TIMEOUT = 1000;
 module.exports.BROADCAST_ADDRESS = 254;

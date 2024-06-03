@@ -79,6 +79,21 @@ const {
   DEVICE_TYPE_SMART_TOP_G4D,
   DEVICE_TYPE_DIM_4,
   ACTION_BLINK,
+  ACTION_THERMOSTAT_HANDLE,
+  ACTION_HYGROSTAT_HANDLE,
+  ACTION_CO2_STAT_HANDLE,
+  ACTION_PRINT,
+  ACTION_SETPOINT,
+  ACTION,
+  ACTION_TOGGLE_COOL,
+  ACTION_TOGGLE_HEAT,
+  ACTION_TOGGLE_WET,
+  ACTION_TOGGLE_VENTILATION,
+  ACTION_STOP_COOL,
+  ACTION_START_COOL,
+  ACTION_STOP_HEAT,
+  ACTION_START_HEAT,
+  ACTION_STOP_WET,
 } = require("../constants");
 const {
   get,
@@ -107,6 +122,7 @@ const count = [count_off, count_on];
 let last_ip = IP_ADDRESS_POOL_START;
 
 const hold = {};
+const timestamp = {}
 
 module.exports.manage = () => {
   ((get(mac()) || {}).device || []).forEach((id) => {
@@ -160,11 +176,10 @@ module.exports.manage = () => {
           const index = data[7];
           const value = data[8] ? 1 : 0;
           const channel = `${id}/${DI}/${index}`;
-          const chan = get(channel);
-          const toArr = a => Array.isArray(a) ? a : a ? [a] : [];
+          const chan = get(channel) || {};
           if (chan && chan.value !== value) {
             set(channel, { value });
-            const { timeout, timestamp = Date.now(), count = 0 } = hold[channel] || {};
+            const { timeout, count = 0 } = hold[channel] || {};
             if (value) {
               if (!count) {
                 clearTimeout(timeout);
@@ -173,101 +188,57 @@ module.exports.manage = () => {
                   timestamp: Date.now(),
                 }
               }
-              const onOn = toArr(chan.onOn);
-              if (onOn.length > 0) {
-                const { onOnCount = 0 } = chan;
-                set(channel, { onOnCount: onOnCount + 1 });
-                run({ type: ACTION_SCRIPT_RUN, id: onOn[onOnCount % onOn.length] });
-              }
-              const onClick1 = toArr(chan.onClick1 || chan.onClick);
-              const onClick2 = toArr(chan.onClick2);
-              const onClick3 = toArr(chan.onClick3);
-              if (onClick1.length > 0 || onClick2.length > 0 || onClick3.length > 0) {
-                hold[channel].count++;
-                if (onClick2.length > 0 || onClick3.length > 0) {
-                  setTimeout(() => {
-                    switch (hold[channel].count) {
-                      case 1: {
-                        if (!chan.value) {
-                          const onClick1 = toArr(chan.onClick1 || chan.onClick);
-                          if (onClick1.length > 0) {
-                            const { onClick1Count = 0 } = chan;
-                            set(channel, { onClick1Count: onClick1Count + 1 });
-                            run({ type: ACTION_SCRIPT_RUN, id: onClick1[onClick1Count % onClick1.length] });
-                          }
-                        }
-                        break;
-                      }
-                      case 2: {
-                        const onClick2 = toArr(chan.onClick2);
-                        if (onClick2.length > 0) {
-                          const { onClick2Count = 0 } = chan;
-                          set(channel, { onClick2Count: onClick2Count + 1 });
-                          run({ type: ACTION_SCRIPT_RUN, id: onClick2[onClick2Count % onClick2.length] });
-                        }
-                        break;
-                      }
-                      case 3: {
-                        const onClick3 = toArr(chan.onClick3);
-                        if (onClick3.length > 0) {
-                          const { onClick3Count = 0 } = chan;
-                          set(channel, { onClick3Count: onClick3Count + 1 });
-                          run({ type: ACTION_SCRIPT_RUN, id: onClick3[onClick3Count % onClick3.length] });
-                        }
-                        break;
-                      }
-                    }
-                    hold[channel] = { count: 0 };
-                  }, parseInt(chan.timeout || 1000) / 2);
-                }
-              }
-              const onHold = toArr(chan.onHold);
-              if (onHold.length > 0) {
-                const handleHold = (start = false) => {
-                  if (!chan.value) return;
-                  if (chan.repeat) {
-                    hold[channel] = {
-                      count: 0,
-                      timeout: setTimeout(
-                        handleHold,
-                        parseInt(chan.interval || 100)
-                      )
-                    };
-                  }
-                  const onHold = toArr(chan.onHold);
-                  if (onHold.length > 0) {
-                    if (start) {
-                      set(channel, { onHoldCount: chan.onHoldCount + 1 });
-                    }
-                    run({ type: ACTION_SCRIPT_RUN, id: onHold[chan.onHoldCount % onHold.length] });
-                  }
-                };
-                hold[channel].timeout = setTimeout(handleHold, parseInt(chan.timeout || 1000), true);
-              }
-            } else {
-              clearTimeout(timeout);
-              if (count === 1) {
-                const onClick1 = toArr(chan.onClick1 || chan.onClick);
-                if (onClick1.length > 0) {
-                  const onClick2 = toArr(chan.onClick2);
-                  const onClick3 = toArr(chan.onClick3);
-                  const dt = Date.now() - timestamp;
-                  if (onClick2.length === 0 && onClick3.length === 0) {
-                    if (dt < parseInt(chan.timeout || 1000) / 2) {
+              const { onOnCount = 0 } = chan;
+              set(channel, { onOnCount: onOnCount + 1 });
+              handleOn(id, index, chan);
+              hold[channel].count++;
+              setTimeout(() => {
+                switch (hold[channel].count) {
+                  case 1: {
+                    if (!chan.value) {
                       const { onClick1Count = 0 } = chan;
                       set(channel, { onClick1Count: onClick1Count + 1 });
-                      run({ type: ACTION_SCRIPT_RUN, id: onClick1[onClick1Count % onClick1.length] });
+                      handleClick1(id, index, chan);
                     }
-                    hold[channel] = { count: 0 };
+                    break;
+                  }
+                  case 2: {
+                    const { onClick2Count = 0 } = chan;
+                    set(channel, { onClick2Count: onClick2Count + 1 });
+                    handleClick2(id, index, chan);
+                    break;
+                  }
+                  case 3: {
+                    const { onClick3Count = 0 } = chan;
+                    set(channel, { onClick3Count: onClick3Count + 1 });
+                    handleClick3(id, index, chan);
+                    break;
                   }
                 }
-              }
-              const onOff = toArr(chan.onOff);
-              if (onOff.length > 0) {
-                const { onOffCount = 0 } = chan;
-                set(channel, { onOffCount: (onOffCount || 0) + 1 });
-                run({ type: ACTION_SCRIPT_RUN, id: onOff[onOffCount % onOff.length] });
-              }
+                hold[channel] = { count: 0 };
+              }, parseInt(chan.timeout || 1000) / 2);
+              const handleHold_ = (start = false) => {
+                if (!chan.value) return;
+                if (start) {
+                  const { onHoldCount = 0 } = chan;
+                  set(channel, { onHoldCount: onHoldCount + 1 });
+                }
+                if (handleHold(id, index, chan)) {
+                  hold[channel] = {
+                    count: 0,
+                    timeout: setTimeout(
+                      handleHold_,
+                      parseInt(chan.interval || 100)
+                    )
+                  };
+                }
+              };
+              hold[channel].timeout = setTimeout(handleHold_, parseInt(chan.timeout || 1000), true);
+            } else {
+              clearTimeout(timeout);
+              const { onOffCount = 0 } = chan;
+              set(channel, { onOffCount: onOffCount + 1 });
+              handleOff(id, index, chan);
             }
           } else {
             set(channel, { value });
@@ -381,14 +352,25 @@ module.exports.manage = () => {
 
         }
         case ACTION_SMART_TOP: {
-          // console.log('from top:', data);
           const action = data[7];
           switch (action) {
             case ACTION_DISCOVERY: {
               const top_mac = Array.from(data.slice(8, 14));
               const top_id = top_mac.map((i) => `0${i.toString(16)}`.slice(-2)).join(":");
+              const type = data[14];
               set(id, { top: top_id, topDetected: true });
-              online(top_id, { type: data[14], bottom: id, version: `${data[15]}.${data[16]}`, ip: address, ready: true });
+              online(top_id, { type, bottom: id, version: `${data[15]}.${data[16]}`, ip: address, ready: true });
+              switch (type) {
+                case DEVICE_TYPE_SMART_TOP_G4D: {
+                  const ts = timestamp[top_id] || 0;
+                  const { timeout = 0, mode, defaultMode } = get(top_id) || {};
+                  if (Date.now() - ts > (timeout || 10_000)) {
+                    set(top_id, { configuring: false, mode: defaultMode ? defaultMode - 1 : mode });
+                    renderSmartTop(top_id);
+                  }
+                  break;
+                }
+              }
               break;
             }
             default: {
@@ -396,42 +378,18 @@ module.exports.manage = () => {
               if (top) {
                 const mac_ = Buffer.from(top.split(':').map(i => parseInt(i, 16)));
                 handleData(Buffer.concat([mac_, data.slice(7)]), { address }, { hub });
-                // switch (action) {
-                //   case ACTION_INITIALIZE: {
-                //     initialize(top);
-                //     break;
-                //   }
-                //   case ACTION_DI: {
-                //     const index = data[8];
-                //     const value = data[9];
-                //     const channel = `${top}/${DI}/${index}`;
-                //     set(channel, { value });
-                //     break;
-                //   }
-                //   case ACTION_TEMPERATURE: {
-                //     const temperature = data.readUInt16LE(8) / 100;
-                //     set(top, { temperature });
-                //     break;
-                //   }
-                //   case ACTION_HUMIDITY: {
-                //     const humidity = data.readUInt16LE(8) / 100;
-                //     set(top, { humidity });
-                //     break;
-                //   }
-                //   case ACTION_RGB: {
-                //     const [, , , , , , , , index, r, g, b] = data;
-                //     const chan = `${top}/rgb/${index}`;
-                //     set(chan, { r, g, b });
-                //     break;
-                //   }
-                // }
               }
             }
           }
           break;
         }
         case ACTION_SMART_TOP_DETECT: {
-          set(id, { topDetected: data[7] });
+          const topDetected = data[7];
+          const { top } = get(id) || {};
+          if (!topDetected) {
+            offline(top);
+          }
+          set(id, { topDetected });
           break;
         }
         case ACTION_DIMMER: {
@@ -538,14 +496,31 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_RGB: {
-          const [, , , , , , , index] = data;
-          for (let i = 0; i < (data.length - 8) / 3; i++) {
-            const chan = `${id}/rgb/${index + i}`;
-            set(chan, {
-              r: data[i * 3 + 8],
-              g: data[i * 3 + 9],
-              b: data[i * 3 + 10],
-            });
+          const { type } = get(id) || {};
+          switch (type) {
+            case DEVICE_TYPE_SMART_TOP_A6P:
+            case DEVICE_TYPE_SMART_TOP_G4D: {
+              const [, , , , , , , palette, index] = data;
+              for (let i = 0; i < (data.length - 9) / 3; i++) {
+                const chan = `${id}/rgb/${palette}.${index + i}`;
+                set(chan, {
+                  r: data[i * 3 + 9],
+                  g: data[i * 3 + 10],
+                  b: data[i * 3 + 11],
+                });
+              }
+              break;
+            }
+            default:
+              const [, , , , , , , index] = data;
+              for (let i = 0; i < (data.length - 8) / 3; i++) {
+                const chan = `${id}/rgb/${index + i}`;
+                set(chan, {
+                  r: data[i * 3 + 8],
+                  g: data[i * 3 + 9],
+                  b: data[i * 3 + 10],
+                });
+              }
           }
           break;
         }
@@ -588,10 +563,11 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_TEMPERATURE: {
-          const temperature = data.readUInt16LE(7) / 100;
-          const { onTemperature, site, display } = get(id) || {};
-          if (site) set(site, { temperature });
-          set(id, { temperature });
+          const temperature_raw = data.readUInt16LE(7) / 100;
+          const { onTemperature, site, display, temperature_correct = 0 } = get(id) || {};
+          const temperature = temperature_raw + temperature_correct;
+          if (site) calcTemperature(site);
+          set(id, { temperature, temperature_raw });
           if (onTemperature) {
             run({ type: ACTION_SCRIPT_RUN, id: onTemperature });
           }
@@ -626,11 +602,13 @@ module.exports.manage = () => {
           if (data.length < 17) {
             return;
           }
-          const temperature = data.readInt16LE(15) / 100;
-          online(dev_id, { temperature, master: id, type: DEVICE_TYPE_TEMPERATURE_EXT, version: '1.0', ready: true });
+          const temperature_raw = data.readInt16LE(15) / 100;
+          const { temperature_correct = 0 } = get(dev_id) || {};
+          const temperature = temperature_raw + temperature_correct;
+          online(dev_id, { temperature, temperature_raw, master: id, type: DEVICE_TYPE_TEMPERATURE_EXT, version: '1.0', ready: true });
           add(id, TEMPERATURE_EXT, dev_id);
           const { onTemperature: onTemperature, display, site } = get(dev_id);
-          if (site) set(site, { temperature });
+          if (site) calcTemperature(site);
           if (onTemperature) {
             run({ type: ACTION_SCRIPT_RUN, id: onTemperature });
           }
@@ -647,30 +625,33 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_HUMIDITY: {
-          const humidity = data.readUInt16LE(7) / 100;
-          const { onHumidity, site } = get(id);
-          if (site) set(site, { humidity });
-          set(id, { humidity });
+          const humidity_raw = data.readUInt16LE(7) / 100;
+          const { onHumidity, site, humidity_correct = 0 } = get(id) || {};
+          const humidity = humidity_raw + humidity_correct;
+          if (site) calcHumidity(site);
+          set(id, { humidity, humidity_raw });
           if (onHumidity) {
             run({ type: ACTION_SCRIPT_RUN, id: onHumidity });
           }
           break;
         }
         case ACTION_ILLUMINATION: {
-          const illumination = data.readUInt32LE(7) / 100;
-          const { onIllumination, site } = get(id);
-          if (site) set(site, { illumination });
-          set(id, { illumination });
+          const illumination_raw = data.readUInt32LE(7) / 100;
+          const { onIllumination, illumination_correct = 0, site } = get(id) || {};
+          const illumination = illumination_raw + illumination_correct;
+          if (site) calcIllumination(site);
+          set(id, { illumination, illumination_raw });
           if (onIllumination) {
             run({ type: ACTION_SCRIPT_RUN, id: onIllumination });
           }
           break;
         }
         case ACTION_CO2: {
-          const co2 = data.readUInt16LE(7);
-          const { onCO2, site } = get(id);
-          if (site) set(site, { co2 });
-          set(id, { co2 });
+          const co2_raw = data.readUInt16LE(7);
+          const { onCO2, co2_correct = 0, site } = get(id) || {};
+          const co2 = co2_raw + co2_correct;
+          if (site) calcCO2(site);
+          set(id, { co2, co2_raw });
           if (onCO2) {
             run({ type: ACTION_SCRIPT_RUN, id: onCO2 });
           }
@@ -840,3 +821,420 @@ module.exports.manage = () => {
   };
   device.handle(handleData);
 };
+
+
+const calcTemperature = site => {
+  const { sensor = [], thermostat = [] } = get(site) || {};
+  let temperature = 0;
+  let n = 0;
+  sensor.forEach(id => {
+    const dev = get(id) || {};
+    if (dev.online && typeof dev.temperature === 'number') {
+      temperature += dev.temperature;
+      n++;
+    }
+  });
+  if (n > 0) {
+    temperature /= n;
+    set(site, { temperature });
+    thermostat.forEach(id => {
+      run({
+        ...get(id),
+        type: ACTION_THERMOSTAT_HANDLE,
+        id
+      });
+    })
+  }
+}
+
+const calcHumidity = site => {
+  const { sensor = [], hygrostat = [] } = get(site) || {};
+  let humidity = 0;
+  let n = 0;
+  sensor.forEach(id => {
+    const dev = get(id) || {};
+    if (dev.online && typeof dev.humidity === 'number') {
+      humidity += dev.humidity;
+      n++;
+    }
+  });
+  if (n > 0) {
+    humidity /= n;
+    set(site, { humidity });
+    hygrostat.forEach(id => {
+      run({
+        ...get(id),
+        type: ACTION_HYGROSTAT_HANDLE,
+        id
+      });
+    })
+  }
+}
+
+const calcIllumination = site => {
+  const { sensor = [] } = get(site) || {};
+  let illumination = 0;
+  let n = 0;
+  sensor.forEach(id => {
+    const dev = get(id) || {};
+    if (dev.online && typeof dev.illumination === 'number') {
+      illumination += dev.illumination;
+      n++;
+    }
+  });
+  if (n > 0) {
+    illumination /= n;
+    set(site, { illumination });
+  }
+}
+
+const calcCO2 = site => {
+  const { sensor = [], co2_stat = [] } = get(site) || {};
+  let co2 = 0;
+  let n = 0;
+  sensor.forEach(id => {
+    const dev = get(id) || {};
+    if (dev.online && typeof dev.co2 === 'number') {
+      co2 += dev.co2;
+      n++;
+    }
+  });
+  if (n > 0) {
+    co2 /= n;
+    set(site, { co2 });
+    co2_stat.forEach(id => {
+      run({
+        ...get(id),
+        type: ACTION_CO2_STAT_HANDLE,
+        id
+      });
+    })
+  }
+}
+
+const toArr = a => Array.isArray(a) ? a : a ? [a] : [];
+
+
+const handleDefault = (action, actionCount) => (chan, btn) => {
+  const actions = toArr(chan[action]);
+  if (actions.length > 0) {
+    const count = btn[actionCount] || 0;
+    run({ type: ACTION_SCRIPT_RUN, id: actions[count % actions.length] });
+  }
+  return chan.repeat;
+}
+
+const handleDefaultOn = handleDefault('onOn', 'onOnCount');
+const handleDefaultClick1 = handleDefault('onClick', 'onClick1Count');
+const handleDefaultClick2 = handleDefault('onClick2', 'onClick2Count');
+const handleDefaultClick3 = handleDefault('onClick3', 'onClick3Count');
+const handleDefaultHold = handleDefault('onHold', 'onHoldCount');
+const handleDefaultOff = handleDefault('onOff', 'onOffCount');
+
+
+const handle = (handleSmartTop, handleDefault) => (id, index, chan) => {
+  const dev = get(id) || {};
+  switch (dev.type) {
+    case DEVICE_TYPE_SMART_TOP_G4D: {
+      const { mode = 0, modes = [] } = dev;
+      if (modes.length > 0) {
+        const cid = modes[mode % modes.length];
+        const current = get(cid) || {};
+        if (current.mode === 'MODE_SCENE' && chan.action !== 'menu') {
+          return handleDefault(get(`${cid}/${DI}/${index}`), chan);
+        }
+        return handleSmartTop(id, dev, chan, current, mode);
+      }
+      return false;
+    }
+    default: {
+      return handleDefault(chan, chan);
+    }
+  }
+}
+
+const handleSmartTop = () => false;
+
+const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
+  if (dev.configuring) {
+    const { site } = dev;
+    if (site) {
+      const { thermostat = [], hygrostat = [], co2_stat = [] } = get(site) || {};
+      switch (current.mode) {
+        case 'MODE_COOL': {
+          const { setpoint = 24, cool = true } = get(thermostat[0]) || {};
+          switch (chan.action) {
+            case 'plus': {
+              run({ type: ACTION_SETPOINT, id: site, temperature: setpoint + 0.1 });
+              renderSmartTop(id);
+              break;
+            }
+            case 'minus': {
+              run({ type: ACTION_SETPOINT, id: site, temperature: setpoint - 0.1 });
+              renderSmartTop(id);
+              break;
+            }
+            case 'power': {
+              run({ type: cool ? ACTION_STOP_COOL : ACTION_START_COOL, id: site });
+              renderSmartTop(id);
+              break;
+            }
+          }
+          break;
+        }
+        case 'MODE_HEAT': {
+          const { setpoint = 24, heat = true } = get(thermostat[0]) || {};
+          switch (chan.action) {
+            case 'plus': {
+              run({ type: ACTION_SETPOINT, id: site, temperature: setpoint + 0.1 });
+              renderSmartTop(id);
+              break;
+            }
+            case 'minus': {
+              run({ type: ACTION_SETPOINT, id: site, temperature: setpoint - 0.1 });
+              renderSmartTop(id);
+              break;
+            }
+            case 'power': {
+              run({ type: heat ? ACTION_STOP_HEAT : ACTION_START_HEAT, id: site });
+              renderSmartTop(id);
+              break;
+            }
+          }
+          break;
+        }
+        case 'MODE_WET': {
+          const { setpoint = 50, wet = true } = get(hygrostat[0]) || {};
+          switch (chan.action) {
+            case 'plus': {
+              run({ type: ACTION_SETPOINT, id: site, humidity: setpoint + 0.1 });
+              renderSmartTop(id);
+              break;
+            }
+            case 'minus': {
+              run({ type: ACTION_SETPOINT, id: site, humidity: setpoint - 0.1 });
+              renderSmartTop(id);
+              break;
+            }
+            case 'power': {
+              run({ type: wet ? ACTION_STOP_WET : ACTION_START_WET, id: site });
+              renderSmartTop(id);
+              break;
+            }
+          }
+          break;
+        }
+        case 'MODE_VENTILATION': {
+          const { setpoint = 400, ventilation = true } = get(co2_stat[0]) || {};
+          switch (chan.action) {
+            case 'plus': {
+              run({ type: ACTION_SETPOINT, id: site, co2: setpoint + 1 });
+              renderSmartTop(id);
+              break;
+            }
+            case 'minus': {
+              run({ type: ACTION_SETPOINT, id: site, co2: setpoint - 1 });
+              renderSmartTop(id);
+              break;
+            }
+            case 'power': {
+              run({ type: ventilation ? ACTION_STOP_VENTILATION : ACTION_START_VENTILATION, id: site });
+              renderSmartTop(id);
+              break;
+            }
+          }
+          break;
+        }
+      }
+    }
+  } else if (chan.action === 'menu') {
+    set(id, { mode: mode + 1 });
+    renderSmartTop(id);
+  }
+  return false;
+}
+
+const handleSmartTopHold = (id, dev, chan, current) => {
+  if (chan.action === 'menu') {
+    if (current.mode !== 'MODE_SCENE') {
+      set(id, { configuring: !dev.configuring });
+      renderSmartTop(id);
+    }
+  } else {
+    const { site } = dev;
+    if (site) {
+      const { thermostat = [], hygrostat = [], co2_stat = [] } = get(site) || {};
+      if (dev.configuring) {
+        switch (current.mode) {
+          case 'MODE_COOL':
+          case 'MODE_HEAT': {
+            const { setpoint = 24 } = get(thermostat[0]) || {};
+            switch (chan.action) {
+              case 'plus': {
+                run({ type: ACTION_SETPOINT, id: site, temperature: setpoint + 0.1 });
+                renderSmartTop(id);
+                return true;
+              }
+              case 'minus': {
+                run({ type: ACTION_SETPOINT, id: site, temperature: setpoint - 0.1 });
+                renderSmartTop(id);
+                return true;
+              }
+            }
+            break;
+          }
+          case 'MODE_WET': {
+            const { setpoint = 50 } = get(hygrostat[0]) || {};
+            switch (chan.action) {
+              case 'plus': {
+                run({ type: ACTION_SETPOINT, id: site, humidity: setpoint + 0.1 });
+                renderSmartTop(id);
+                return true;
+              }
+              case 'minus': {
+                run({ type: ACTION_SETPOINT, id: site, humidity: setpoint - 0.1 });
+                renderSmartTop(id);
+                return true;
+              }
+            }
+            break;
+          }
+          case 'MODE_VENTILATION': {
+            const { setpoint = 400 } = get(co2_stat[0]) || {};
+            switch (chan.action) {
+              case 'plus': {
+                run({ type: ACTION_SETPOINT, id: site, co2: setpoint + 5 });
+                renderSmartTop(id);
+                return true;
+              }
+              case 'minus': {
+                run({ type: ACTION_SETPOINT, id: site, co2: setpoint - 5 });
+                renderSmartTop(id);
+                return true;
+              }
+            }
+          }
+        }
+      } else if (chan.action === 'power') {
+        switch (current.mode) {
+          case 'MODE_COOL': {
+            const { cool = true } = get(thermostat[0]) || {};
+            run({ type: cool ? ACTION_STOP_COOL : ACTION_START_COOL, id: site });
+            renderSmartTop(id);
+            break;
+          }
+          case 'MODE_HEAT': {
+            const { heat = true } = get(thermostat[0]) || {};
+            run({ type: heat ? ACTION_STOP_HEAT : ACTION_START_HEAT, id: site });
+            renderSmartTop(id);
+            break;
+          }
+          case 'MODE_WET': {
+            const { wet = true } = get(hygrostat[0]) || {};
+            run({ type: wet ? ACTION_STOP_WET : ACTION_START_COOL, id: site });
+            renderSmartTop(id);
+            break;
+          }
+          case 'MODE_VENTILATION': {
+            const { ventilation = true } = get(hygrostat[0]) || {};
+            run({ type: ventilation ? ACTION_STOP_WET : ACTION_START_COOL, id: site });
+            renderSmartTop(id);
+            break;
+          }
+        }
+      }
+    }
+  }
+  return false;
+}
+
+const handleOn = handle(handleSmartTop, handleDefaultOn);
+const handleClick1 = handle(handleSmartTopClick1, handleDefaultClick1);
+const handleClick2 = handle(handleSmartTop, handleDefaultClick2);
+const handleClick3 = handle(handleSmartTop, handleDefaultClick3);
+const handleHold = handle(handleSmartTopHold, handleDefaultHold);
+const handleOff = handle(handleSmartTop, handleDefaultOff);
+
+
+
+const renderSmartTop = (id) => {
+
+  timestamp[id] = Date.now();
+
+  const dev = get(id) || {};
+
+  const { mode = 0, modes = [], configuring, site } = dev;
+  const image = [...(dev.image || [0, 0, 0, 0, 0, 0, 0, 0])];
+  const blink = [...(dev.blink || [0, 0, 0, 0, 0, 0, 0, 0])];
+  image[1] &= 0b0000_1111;
+  image[2] &= 0b1111_1100;
+  blink[1] &= 0b0000_1111;
+  blink[2] &= 0b1111_1100;
+  const current = get(modes[mode % modes.length]) || {};
+  if (current.indicator > 0 && current.indicator <= 4) {
+    image[1] |= 1 << (current.indicator + 3);
+    if (configuring) {
+      blink[1] |= 1 << (current.indicator + 3);
+    }
+  } else if (current.indicator <= 6) {
+    image[2] |= 1 << (current.indicator - 5);
+    if (configuring) {
+      blink[2] |= 1 << (current.indicator - 5);
+    }
+  }
+  if (site) {
+    const { temperature, humidity, co2, thermostat = [], hygrostat = [], co2_stat = [] } = get(site) || {};
+    switch (current.mode) {
+      case 'MODE_COOL':
+        if (configuring) {
+          const { setpoint = 24, cool = true } = get(thermostat[0]) || {};
+          printf(id, setpoint, -99.9, 100, 1, cool, image);
+        } else {
+          const { cool } = get(thermostat[0]) || {};
+          printf(id, temperature, -99.9, 100, 1, cool, image);
+        }
+        break;
+      case 'MODE_HEAT':
+        if (configuring) {
+          const { setpoint = 24, heat = true } = get(thermostat[0]) || {};
+          printf(id, setpoint, -99.9, 100, 1, heat, image);
+        } else {
+          const { heat } = get(thermostat[0]) || {};
+          printf(id, temperature, -99.9, 100, 1, heat, image);
+        }
+        break;
+      case 'MODE_WET':
+        if (configuring) {
+          const { setpoint = 50, wet = true } = get(hygrostat[0]) || {};
+          printf(id, setpoint, 0, 100, 1, wet, image);
+        } else {
+          const { wet } = get(hygrostat[0]) || {};
+          printf(id, humidity, 0, 100, 1, wet, image);
+        }
+        break;
+      case 'MODE_VENTILATION':
+        if (configuring) {
+          const { setpoint = 400, ventilation = true } = get(co2_stat[0]) || {};
+          printf(id, setpoint, 0, 1999, 0, ventilation, image);
+        } else {
+          const { ventilation } = get(co2_stat[0]) || {};
+          printf(id, co2, 0, 1999, 0, ventilation, image);
+        }
+        break;
+      default:
+        print(id, "", false, image)
+    }
+  } else {
+    run({ type: ACTION_IMAGE, id, value: image })
+  }
+  run({ type: ACTION_BLINK, id, value: blink })
+}
+
+const print = (id, value, power, image) =>
+  run({ type: ACTION_PRINT, id, value, power, image })
+
+printf = (id, value, min, max, fixed, power, image) =>
+  print(id, format(value, min, max, fixed), power, image)
+
+const format = (value, min, max, fixed) =>
+  typeof value === 'number' ? Math.max(Math.min(value, max), min).toFixed(fixed) : ""

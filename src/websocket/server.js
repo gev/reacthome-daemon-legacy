@@ -3,6 +3,7 @@ const uuid = require("uuid").v4;
 const { deleteSession } = require("../notification");
 const { peers } = require("./peer");
 const handle = require("./handle");
+const { terminals } = require("../terminal");
 
 const port = 3000;
 
@@ -26,6 +27,7 @@ module.exports = () => {
     socket.on("close", () => {
       deleteSession(session);
       peers.delete(session);
+      terminals.delete(session);
     });
   });
 };

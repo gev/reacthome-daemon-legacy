@@ -168,6 +168,23 @@ const {
   DEVICE_TYPE_SMART_TOP_G4D,
   ACTION_GRADIENT,
   ACTION_BLINK,
+  ACTION_PRINT,
+  ACTION_HYGROSTAT_HANDLE,
+  DRY,
+  WET,
+  ACTION_CO2_STAT_HANDLE,
+  ACTION_PALETTE,
+  ACTION_START_COOL,
+  THERMOSTAT,
+  ACTION_STOP_COOL,
+  ACTION_START_WET,
+  ACTION_STOP_HEAT,
+  ACTION_START_HEAT,
+  ACTION_STOP_WET,
+  ACTION_START_VENTILATION,
+  HYGROSTAT,
+  CO2_STAT,
+  ACTION_STOP_VENTILATION,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -252,6 +269,11 @@ const run = (action) => {
           case DEVICE_TYPE_DIM_12_AC_RS:
           case DEVICE_TYPE_DIM_12_DC_RS:
           case DEVICE_TYPE_MIX_6x12_RS:
+          case DEVICE_TYPE_SMART_4A:
+          case DEVICE_TYPE_SMART_4AM:
+          case DEVICE_TYPE_SMART_4G:
+          case DEVICE_TYPE_SMART_4GD:
+          case DEVICE_TYPE_SMART_6_PUSH:
           case DEVICE_TYPE_SMART_BOTTOM_1:
           case DEVICE_TYPE_SMART_BOTTOM_2: {
             device.sendRBUS(Buffer.from([
@@ -706,7 +728,7 @@ const run = (action) => {
         break;
       }
       case ACTION_RGB_DIM: {
-        const { id, value = {}, index = 0 } = action;
+        const { id, value = {}, index = 0, palette = 1 } = action;
         const { r, g, b } = value;
         const o = get(id) || {};
         const { ip, type } = o;
@@ -735,6 +757,7 @@ const run = (action) => {
           case DEVICE_TYPE_SMART_TOP_G4D: {
             device.sendTOP(Buffer.from([
               ACTION_RGB,
+              palette,
               index,
               r,
               g,
@@ -818,7 +841,7 @@ const run = (action) => {
         break;
       }
       case ACTION_RGB_BUTTON_SET: {
-        const { id, value = {}, index = 0 } = action;
+        const { id, value = {}, index = 0, palette = 1 } = action;
         const { r, g, b } = value;
         const o = get(id) || {};
         const { ip, type } = o;
@@ -847,6 +870,7 @@ const run = (action) => {
           case DEVICE_TYPE_SMART_TOP_G4D: {
             device.sendTOP(Buffer.from([
               ACTION_RGB,
+              palette,
               index,
               r,
               g,
@@ -860,16 +884,16 @@ const run = (action) => {
         break;
       }
       case ACTION_GRADIENT: {
-        const { id, index, value } = action;
+        const { id, palette, index, value } = action;
         const { type } = get(id) || {};
         switch (type) {
           case DEVICE_TYPE_SMART_TOP_G4D: {
-            set(`${id}/gradient/${index}`, value);
-            const topLeft = get(`${id}/gradient/1`) || {};
-            const topRight = get(`${id}/gradient/2`) || {};
-            const bottomLeft = get(`${id}/gradient/3`) || {};
-            const bottomRight = get(`${id}/gradient/4`) || {};
-            const cmd = [ACTION_RGB, 19];
+            set(`${id}/gradient/${palette}.${index}`, value);
+            const topLeft = get(`${id}/gradient/${palette}.1`) || {};
+            const topRight = get(`${id}/gradient/${palette}.2`) || {};
+            const bottomLeft = get(`${id}/gradient/${palette}.3`) || {};
+            const bottomRight = get(`${id}/gradient/${palette}.4`) || {};
+            const cmd = [ACTION_RGB, palette, 19];
             for (let i = 0; i < 5; i++) {
               const left = compose(topLeft, 5 - i, bottomLeft, i);
               const right = compose(topRight, 5 - i, bottomRight, i);
@@ -934,7 +958,7 @@ const run = (action) => {
         break;
       }
       case ACTION_BLINK: {
-        const { id, level, value } = action;
+        const { id, value } = action;
         const { type } = get(id) || {};
         switch (type) {
           case DEVICE_TYPE_SMART_TOP_A6P:
@@ -954,7 +978,109 @@ const run = (action) => {
           }
         }
         break;
-      } case ACTION_ENABLE: {
+      }
+      case ACTION_PALETTE: {
+        const { id, value } = action;
+        const dev = get(id) || {};
+        switch (dev.type) {
+          case DEVICE_TYPE_SMART_TOP_G4D: {
+            device.sendTOP(Buffer.from([ACTION_PALETTE, value]), action.id);
+            break;
+          }
+        }
+        break;
+      }
+      case ACTION_PRINT: {
+        const { id, value, power } = action;
+        const dev = get(id) || {};
+        switch (dev.type) {
+          case DEVICE_TYPE_SMART_TOP_G4D: {
+            const dict = {
+              " ": 0b000_00_000_00_000,
+              "-": 0b000_00_011_00_000,
+              "0": 0b111_11_101_11_111,
+              "1": 0b001_01_001_01_001,
+              "2": 0b111_01_111_10_111,
+              "3": 0b111_01_111_01_111,
+              "4": 0b101_11_111_01_001,
+              "5": 0b111_10_111_01_111,
+              "6": 0b111_10_111_11_111,
+              "7": 0b111_01_001_01_001,
+              "8": 0b111_11_111_11_111,
+              "9": 0b111_11_111_01_111,
+            }
+            const offsets = [
+              [
+                25, 26, 27,
+                33, 34,
+                43, 44, 45,
+                51, 52,
+                61, 62, 63
+              ],
+              [
+                22, 23, 24,
+                31, 32,
+                40, 41, 42,
+                49, 50,
+                57, 58, 59
+              ],
+              [
+                19, 20, 21,
+                29, 30,
+                37, 38, 39,
+                47, 48,
+                54, 55, 56
+              ],
+              [
+                18,
+                28,
+                35, 36,
+                46,
+                53
+              ],
+            ]
+            const image = action.image ? action.image : [...dev.image];
+            const setBit = (offset, v) => {
+              const i = offset >> 3;
+              const j = offset % 8;
+              image[i] = v
+                ? image[i] | (1 << j)
+                : image[i] & ~(1 << j);
+            }
+            let j = value.length;
+            if (j > 5) j = 5;
+            for (let i = 0; i < 4; i++) {
+              let c = value[--j] || " ";
+              if (i === 1)
+                if (c === ".") {
+                  c = value[--j] || " ";
+                  setBit(60, 1);
+                } else {
+                  setBit(60, 0);
+                }
+              const mask = dict[c] || 0;
+              const offset = offsets[i];
+              if (i === 3) {
+                setBit(offset[0], (mask >> 10) & 1);
+                setBit(offset[1], (mask >> 8) & 1);
+                setBit(offset[2], (mask >> 6) & 1);
+                setBit(offset[3], (mask >> 5) & 1);
+                setBit(offset[4], (mask >> 3) & 1);
+                setBit(offset[5], (mask >> 0) & 1);
+              } else {
+                for (let k = 0; k < 13; k++) {
+                  setBit(offset[k], (mask >> (12 - k)) & 1);
+                }
+              }
+            }
+            setBit(11, power ? 1 : 0);
+            run({ type: ACTION_IMAGE, id, value: image })
+            break;
+          }
+        }
+        break;
+      }
+      case ACTION_ENABLE: {
         const { type } = get(action.id) || {};
         switch (type) {
           case AC: {
@@ -984,7 +1110,7 @@ const run = (action) => {
         if (o.onOn) {
           run({ type: ACTION_SCRIPT_RUN, id: o.onOn });
         }
-        const { last = {}, type: payloadType } = o;
+        const { last = {} } = o;
         const isOn = last.r > 0 || last.g > 0 || last.b > 0 || last.value > 0;
         bind.forEach((i) => {
           if (!o[i]) return;
@@ -1149,7 +1275,6 @@ const run = (action) => {
         if (o.onOff) {
           run({ type: ACTION_SCRIPT_RUN, id: o.onOff });
         }
-        const { type: payloadType } = o;
         bind.forEach((i) => {
           if (!o[i]) return;
           const { type } = get(o[i]) || {};
@@ -1508,24 +1633,187 @@ const run = (action) => {
         }
         break;
       }
-      case ACTION_SETPOINT: {
-        const { id, value } = action;
-        const dev = get(id) || {};
-        if (dev.type === SITE) {
-          if (Array.isArray(dev.thermostat)) {
-            dev.thermostat.forEach((t, i) => {
-              setTimeout(run, 1000 * i, {
-                type: ACTION_SETPOINT,
-                id: t,
-                value,
-              });
-            });
+      case ACTION_START_COOL: {
+        const { id } = action;
+        const { type } = get(id) || {};
+        switch (type) {
+          case SITE: {
+            const { thermostat = [] } = get(id) || {};
+            thermostat.forEach(i => run({ type: ACTION_START_COOL, id: i }));
+            break;
           }
-          set(id, { setpoint: value });
-        } else if (dev.type === DRIVER_TYPE_INTESIS_BOX || dev.type === DRIVER_TYPE_NOVA || dev.type === DRIVER_TYPE_SWIFT || dev.type === DRIVER_TYPE_ALINK || dev.type === DRIVER_TYPE_COMFOVENT) {
-          drivers.run(action);
-        } else {
-          set(id, { setpoint: value });
+          case THERMOSTAT: {
+            const { onStartCool } = get(id) || {};
+            set(id, { cool: true });
+            if (onStartCool) run({ type: ACTION_SCRIPT_RUN, id: onStartCool });
+            break;
+          }
+        }
+        break;
+      }
+      case ACTION_STOP_COOL: {
+        const { id } = action;
+        const { type } = get(id) || {};
+        switch (type) {
+          case SITE: {
+            const { thermostat = [] } = get(id) || {};
+            thermostat.forEach(i => run({ type: ACTION_STOP_COOL, id: i }));
+            break;
+          }
+          case THERMOSTAT: {
+            const { onStopCool } = get(id) || {};
+            set(id, { cool: false });
+            if (onStopCool) run({ type: ACTION_SCRIPT_RUN, id: onStopCool });
+            break;
+          }
+        }
+        break;
+      }
+      case ACTION_START_HEAT: {
+        const { id } = action;
+        const { type } = get(id) || {};
+        switch (type) {
+          case SITE: {
+            const { thermostat = [] } = get(id) || {};
+            thermostat.forEach(i => run({ type: ACTION_START_HEAT, id: i }));
+            break;
+          }
+          case THERMOSTAT: {
+            const { onStartHeat } = get(id) || {};
+            set(id, { heat: true });
+            if (onStartHeat) run({ type: ACTION_SCRIPT_RUN, id: onStartHeat });
+            break;
+          }
+        }
+        break;
+      }
+      case ACTION_STOP_HEAT: {
+        const { id } = action;
+        const { type } = get(id) || {};
+        switch (type) {
+          case SITE: {
+            const { thermostat = [] } = get(id) || {};
+            thermostat.forEach(i => run({ type: ACTION_STOP_HEAT, id: i }));
+            break;
+          }
+          case THERMOSTAT: {
+            const { onStopHeat } = get(id) || {};
+            set(id, { heat: false });
+            if (onStopHeat) run({ type: ACTION_SCRIPT_RUN, id: onStopHeat });
+            break;
+          }
+        }
+        break;
+      }
+      case ACTION_START_WET: {
+        const { id } = action;
+        const { type } = get(id) || {};
+        switch (type) {
+          case SITE: {
+            const { hygrostat = [] } = get(id) || {};
+            hygrostat.forEach(i => run({ type: ACTION_START_WET, id: i }));
+            break;
+          }
+          case HYGROSTAT: {
+            const { onStartWet } = get(id) || {};
+            set(id, { wet: true });
+            if (onStartWet) run({ type: ACTION_SCRIPT_RUN, id: onStartWet });
+            break;
+          }
+        }
+        break;
+      }
+      case ACTION_STOP_WET: {
+        const { id } = action;
+        const { type } = get(id) || {};
+        switch (type) {
+          case SITE: {
+            const { hygrostat = [] } = get(id) || {};
+            hygrostat.forEach(i => run({ type: ACTION_STOP_WET, id: i }));
+            break;
+          }
+          case HYGROSTAT: {
+            const { onStopWet } = get(id) || {};
+            set(id, { wet: false });
+            if (onStopWet) run({ type: ACTION_SCRIPT_RUN, id: onStopWet });
+            break;
+          }
+        }
+        break;
+      }
+      case ACTION_START_VENTILATION: {
+        const { id } = action;
+        const { type } = get(id) || {};
+        switch (type) {
+          case SITE: {
+            const { co2_stat = [] } = get(id) || {};
+            co2_stat.forEach(i => run({ type: ACTION_START_VENTILATION, id: i }));
+            co2_stat;
+          }
+          case CO2_STAT: {
+            const { onStartVentilation } = get(id) || {};
+            set(id, { ventilation: true });
+            if (onStartVentilation) run({ type: ACTION_SCRIPT_RUN, id: onStartVentilation });
+            break;
+          }
+        }
+        break;
+      }
+      case ACTION_STOP_VENTILATION: {
+        const { id } = action;
+        const { type } = get(id) || {};
+        switch (type) {
+          case SITE: {
+            const { co2_stat = [] } = get(id) || {};
+            co2_stat.forEach(i => run({ type: ACTION_STOP_VENTILATION, id: i }));
+            break;
+          }
+          case CO2_STAT: {
+            const { onStopVentilation } = get(id) || {};
+            set(id, { ventilation: false });
+            if (onStopVentilation) run({ type: ACTION_SCRIPT_RUN, id: onStopVentilation });
+            break;
+          }
+        }
+        break;
+      }
+      case ACTION_SETPOINT: {
+        const { id, value, temperature, humidity, co2 } = action;
+        const dev = get(id) || {};
+        if (temperature || value) {
+          let setpoint = temperature || value;
+          if (setpoint < 10) setpoint = 10;
+          if (setpoint > 40) setpoint = 40;
+          if (dev.type === SITE) {
+            const { thermostat = [] } = dev
+            thermostat.forEach(t => set(t, { setpoint }));
+            set(id, { setpoint });
+          } else if (dev.type === DRIVER_TYPE_INTESIS_BOX || dev.type === DRIVER_TYPE_NOVA || dev.type === DRIVER_TYPE_SWIFT || dev.type === DRIVER_TYPE_ALINK || dev.type === DRIVER_TYPE_COMFOVENT) {
+            if (temperature) action.value = temperature;
+            drivers.run(action);
+          } else {
+            set(id, { setpoint });
+          }
+        } else if (humidity) {
+          let setpoint = humidity;
+          if (setpoint < 10) setpoint = 10;
+          if (setpoint > 90) setpoint = 90;
+          if (dev.type === SITE) {
+            const { hygrostat = [] } = dev;
+            hygrostat.forEach(t => set(t, { setpoint }));
+          } else {
+            set(id, { setpoint });
+          }
+        } else if (co2) {
+          let setpoint = co2;
+          if (setpoint < 200) setpoint = 200;
+          if (setpoint > 1200) setpoint = 1200;
+          if (dev.type === SITE) {
+            const { co2_stat = [] } = dev;
+            co2_stat.forEach(t => set(t, { setpoint }));
+          } else {
+            set(id, { setpoint });
+          }
         }
         break;
       }
@@ -1737,6 +2025,8 @@ const run = (action) => {
       case ACTION_THERMOSTAT_HANDLE: {
         const {
           id,
+          cool = true,
+          heat = true,
           cool_hysteresis,
           cool_threshold,
           heat_hysteresis,
@@ -1746,29 +2036,22 @@ const run = (action) => {
           onStopHeat,
           onStopCool,
         } = action;
-        const { setpoint, sensor, state, mode, site } = get(id) || {};
-        const { temperature } = get(sensor) || {};
-        const make = (state, script, mode) => () => {
+        const { setpoint, mode, site } = get(id) || {};
+        const { temperature } = get(site) || {};
+        const make = (state, script, mode, enabled) => () => {
+          if (!enabled) return;
           set(id, { state, mode });
           if (script) {
             run({ type: ACTION_SCRIPT_RUN, id: script });
           }
         };
-        const stopCool = make(STOP, onStopCool, COOL);
-        const stopHeat = make(STOP, onStopHeat, HEAT);
-        const startCool = make(COOL, onStartCool, COOL);
-        const startHeat = make(HEAT, onStartHeat, HEAT);
-        set(site, { temperature });
-        //if (temperature > setpoint - -heat_threshold) {
-        //   stopHeat();
-        //   startCool();
-        // } else if (temperature < setpoint - cool_threshold) {
-        //   stopCool();
-        //   startHeat();
-        // } else {
+        const stopCool = make(STOP, onStopCool, COOL, cool);
+        const stopHeat = make(STOP, onStopHeat, HEAT, heat);
+        const startCool = make(COOL, onStartCool, COOL, cool);
+        const startHeat = make(HEAT, onStartHeat, HEAT, heat);
         switch (mode) {
           case HEAT: {
-            //stopCool();
+            stopCool();
             if (temperature > setpoint - (- heat_threshold)) {
               stopHeat();
               startCool();
@@ -1780,7 +2063,7 @@ const run = (action) => {
             break;
           }
           case COOL: {
-            //stopHeat();
+            stopHeat();
             if (temperature < setpoint - cool_threshold) {
               stopCool();
               startHeat();
@@ -1804,7 +2087,96 @@ const run = (action) => {
             }
           }
         }
-        //}
+        break;
+      }
+      case ACTION_HYGROSTAT_HANDLE: {
+        const {
+          id,
+          dry = true,
+          wet = true,
+          dry_hysteresis,
+          dry_threshold,
+          wet_hysteresis,
+          wet_threshold,
+          onStartDry,
+          onStartWet,
+          onStopDry,
+          onStopWet,
+        } = action;
+        const { setpoint, mode, site } = get(id) || {};
+        const { humidity } = get(site) || {};
+        const make = (state, script, mode, enabled) => () => {
+          if (!enabled) return;
+          set(id, { state, mode });
+          if (script) {
+            run({ type: ACTION_SCRIPT_RUN, id: script });
+          }
+        };
+        const stopDry = make(STOP, onStopDry, DRY, dry);
+        const stopWet = make(STOP, onStopWet, WET, wet);
+        const startDry = make(DRY, onStartDry, DRY, dry);
+        const startWet = make(WET, onStartWet, WET, wet);
+        switch (mode) {
+          case WET: {
+            if (humidity > setpoint - (- wet_threshold)) {
+              stopWet();
+              startDry();
+            } else if (humidity > setpoint - (- wet_hysteresis)) {
+              stopWet();
+            } else if (humidity < setpoint - wet_hysteresis) {
+              startWet();
+            }
+            break;
+          }
+          case DRY: {
+            if (humidity < setpoint - dry_threshold) {
+              stopDry();
+              startWet();
+            } else if (humidity < setpoint - dry_hysteresis) {
+              stopDry();
+            } else if (humidity > setpoint - (- dry_hysteresis)) {
+              startDry();
+            }
+            break;
+          }
+          default: {
+            if (humidity > setpoint) {
+              stopWet();
+              startDry();
+            } else if (humidity < setpoint) {
+              stopDry();
+              startWet();
+            } else {
+              stopDry();
+              stopWet();
+            }
+          }
+        }
+        break;
+      }
+      case ACTION_CO2_STAT_HANDLE: {
+        const {
+          id,
+          ventilation = true,
+          hysteresis,
+          onStartVentilation,
+          onStopVentilation,
+        } = action;
+        const { setpoint, mode, site } = get(id) || {};
+        const { co2 } = get(site) || {};
+        const make = (script) => () => {
+          if (!ventilation) return;
+          if (script) {
+            run({ type: ACTION_SCRIPT_RUN, id: script });
+          }
+        };
+        const stopVentilation = make(onStopVentilation);
+        const startVentilation = make(onStartVentilation);
+        if (co2 > setpoint - (- hysteresis)) {
+          startVentilation();
+        } else if (co2 < setpoint - hysteresis) {
+          stopVentilation();
+        }
         break;
       }
       case ACTION_LIMIT_HEATING_HANDLE: {
@@ -1821,7 +2193,7 @@ const run = (action) => {
         const stopHeat = make(onStopHeat);
         const startHeat = make(onStartHeat);
         set(id, { disabled: false });
-        if (temperature > max - -hysteresis) {
+        if (temperature > max - (-hysteresis)) {
           stopHeat();
           set(id, { disabled: true });
         } else if (temperature < min - hysteresis) {
@@ -1842,7 +2214,6 @@ const run = (action) => {
               }
             });
           }
-          return o.inverse ? !o.value : o.value;
         });
         if (f) {
           if (onOff) {

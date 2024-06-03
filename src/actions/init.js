@@ -143,12 +143,18 @@ module.exports.initialize = (id) => {
     }
     case DEVICE_TYPE_SMART_TOP_A6P: {
       const mac = id.split(":").map((i) => parseInt(i, 16));
+      const { state = 1, brightness = 128, image = [], blink = [], vibro = 0 } = get(id);
       a[0] = ACTION_INITIALIZE;
+      a[1] = vibro;
+      a[2] = state;
+      a[3] = brightness;
+      a[4] = image[1] || 0b111111;
+      a[5] = blink[1] || 0;
       for (let i = 1; i <= 6; i++) {
         const channel = get(`${id}/rgb/${i}`);
-        a[3 * i - 2] = (channel && channel.r) || 0;
-        a[3 * i - 1] = (channel && channel.g) || 0;
-        a[3 * i + 0] = (channel && channel.b) || 0;
+        a[3 * i + 3] = (channel && channel.r) || 0;
+        a[3 * i + 4] = (channel && channel.g) || 0;
+        a[3 * i + 5] = (channel && channel.b) || 0;
       }
       device.sendTOP(Buffer.from(a), id);
       break;

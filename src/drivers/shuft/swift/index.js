@@ -30,6 +30,9 @@ const sync = (id) => {
     setTimeout(() => {
       writeRegister(modbus, address, 0x20, dev.fan_speed);
     }, 100);
+    // setTimeout(() => {
+    //   writeRegister(modbus, address, 0x21, dev.fan_speed);
+    // }, 200);
   }
   // writeRegister(modbus, address, 0x1, dev.setpoint * 10);
   set(id, { synced: true });
@@ -90,8 +93,12 @@ module.exports.add = (id) => {
   instance.add(id);
 };
 
+let index = 0;
+
 setInterval(() => {
-  for (const id of instance) {
-    sync(id);
+  const arr = Array.from(instance);
+  if (arr.length > 0) {
+    sync(arr[index % arr.length]);
+    index++;
   }
 }, TIMEOUT);

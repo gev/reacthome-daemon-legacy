@@ -11,7 +11,7 @@ module.exports.IP_ADDRESS_POOL_START = 0xac100002;
 module.exports.IP_ADDRESS_POOL_END = 0xac1ffffe;
 module.exports.SUB_NET_MASK = 0xfff00000;
 
-module.exports.DISCOVERY_INTERVAL = 1000;
+module.exports.DISCOVERY_INTERVAL = 10000;
 
 module.exports.POOL = "pool";
 module.exports.STATE = "state";
@@ -96,6 +96,7 @@ module.exports.ACTION_DALI = 0xd2;
 module.exports.ACTION_RGB = 0xe0;
 module.exports.ACTION_IMAGE = 0xe1;
 module.exports.ACTION_BLINK = 0xe2;
+module.exports.ACTION_PALETTE = 0xe3;
 module.exports.ACTION_DISCOVERY = 0xf0;
 module.exports.ACTION_READY = 0xf1;
 module.exports.ACTION_INITIALIZE = 0xf2;
@@ -143,6 +144,8 @@ module.exports.ACTION_RGB_BUTTON_SET = "ACTION_RGB_BUTTON_SET";
 module.exports.ACTION_GRADIENT = "ACTION_GRADIENT";
 module.exports.ACTION_ON = "ACTION_ON";
 module.exports.ACTION_OFF = "ACTION_OFF";
+module.exports.ACTION_CLICK = "ACTION_CLICK";
+module.exports.ACTION_HOLD = "ACTION_HOLD";
 module.exports.ACTION_DIM = "ACTION_DIM";
 module.exports.ACTION_ENABLE = "ACTION_ENABLE";
 module.exports.ACTION_DISABLE = "ACTION_DISABLE";
@@ -165,6 +168,8 @@ module.exports.ACTION_NIGHT_TEST = "ACTION_NIGHT_TEST";
 module.exports.ACTION_DAY_TEST = "ACTION_DAY_TEST";
 module.exports.ACTION_DOPPLER_HANDLE = "ACTION_DOPPLER_HANDLE";
 module.exports.ACTION_THERMOSTAT_HANDLE = "ACTION_THERMOSTAT_HANDLE";
+module.exports.ACTION_HYGROSTAT_HANDLE = "ACTION_HYGROSTAT_HANDLE";
+module.exports.ACTION_CO2_STAT_HANDLE = "ACTION_CO2_STAT_HANDLE";
 module.exports.ACTION_LIMIT_HEATING_HANDLE = "ACTION_LIMIT_HEATING_HANDLE";
 module.exports.ACTION_TOGGLE = "ACTION_TOGGLE";
 module.exports.ACTION_SCREEN = "ACTION_SCREEN";
@@ -181,6 +186,20 @@ module.exports.ACTION_SET_ADDRESS = "ACTION_SET_ADDRESS";
 module.exports.ACTION_SET_FAN_SPEED = "ACTION_SET_FAN_SPEED";
 module.exports.ACTION_SET_MODE = "ACTION_SET_MODE";
 module.exports.ACTION_SET_DIRECTION = "ACTION_SET_DIRECTION";
+
+module.exports.ACTION_PRINT = "ACTION_PRINT";
+
+module.exports.ACTION_START_COOL = "ACTION_START_COOL";
+module.exports.ACTION_START_HEAT = "ACTION_START_HEAT";
+module.exports.ACTION_START_FAN = "ACTION_START_FAN";
+module.exports.ACTION_START_VENTILATION = "ACTION_START_VENTILATION";
+module.exports.ACTION_START_WET = "ACTION_START_WET";
+
+module.exports.ACTION_STOP_COOL = "ACTION_STOP_COOL";
+module.exports.ACTION_STOP_HEAT = "ACTION_STOP_HEAT";
+module.exports.ACTION_STOP_FAN = "ACTION_STOP_FAN";
+module.exports.ACTION_STOP_VENTILATION = "ACTION_STOP_VENTILATION";
+module.exports.ACTION_STOP_WET = "ACTION_STOP_WET";
 
 module.exports.TEMPERATURE_EXT = "temperature_ext";
 
@@ -316,8 +335,14 @@ module.exports.OPERATOR_GT = "OPERATOR_GT";
 module.exports.HEAT = "heat";
 module.exports.COOL = "cool";
 module.exports.STOP = "stop";
+module.exports.DRY = "dry";
+module.exports.WET = "wet";
+module.exports.VENTILATION = "ventilation";
 
 module.exports.THERMOSTAT = "thermostat";
+module.exports.HYGROSTAT = "hygrostat";
+module.exports.CO2_STAT = "co2_stat";
+
 module.exports.CLOSURE = "closure";
 module.exports.OPEN = "open";
 module.exports.CLOSE = "close";

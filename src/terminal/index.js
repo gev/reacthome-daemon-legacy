@@ -1,7 +1,7 @@
 
 const os = require('os');
 const terminal = require('node-pty');
-const {send} = require('../websocket/peer');
+const { send } = require('../websocket/peer');
 const { PTY } = require('./constants');
 
 const shell = os.platform() === 'win32' ? 'powershell.exe' : 'bash';
@@ -20,16 +20,20 @@ const getPTY = (session) => {
     env: process.env
   });
   pty.on('data', (chunk) => {
-    send(session, {type: PTY, chunk});
+    send(session, { type: PTY, chunk });
   });
   terminals.set(session, pty);
   return pty;
 }
 
-module.exports = ({chunk, rows, cols}, session) => {
+module.exports = ({ chunk, rows, cols }, session) => {
   const pty = getPTY(session);
-  pty.resize(cols, rows);
+  if (cols > 0 && rows > 0) {
+    pty.resize(cols, rows);
+  }
   if (chunk !== undefined) {
     pty.write(chunk);
   }
 };
+
+module.exports.terminals = terminals;
