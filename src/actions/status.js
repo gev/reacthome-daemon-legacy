@@ -13,6 +13,7 @@ const {
   DEVICE_TYPE_SMART_TOP_G4D,
   DEVICE_TYPE_SMART_TOP_A6P,
   DEVICE_TYPE_DI_4,
+  DEVICE_TYPE_DI_4_RSM,
 } = require("../constants");
 const { device } = require("../sockets");
 
@@ -28,6 +29,7 @@ const online = (id, props) => {
   if (!dev.online) {
     switch (props.type) {
       case DEVICE_TYPE_DI_4:
+      case DEVICE_TYPE_DI_4_RSM:
       case DEVICE_TYPE_RELAY_2:
       case DEVICE_TYPE_MIX_1_RS:
       case DEVICE_TYPE_MIX_6x12_RS:

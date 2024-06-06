@@ -94,6 +94,7 @@ const {
   ACTION_STOP_HEAT,
   ACTION_START_HEAT,
   ACTION_STOP_WET,
+  DEVICE_TYPE_DI_4_RSM,
 } = require("../constants");
 const {
   get,
@@ -395,6 +396,7 @@ module.exports.manage = () => {
         case ACTION_DIMMER: {
           const device = get(id) || {};
           switch (device.type) {
+            case DEVICE_TYPE_DI_4_RSM:
             case DEVICE_TYPE_AO_4_DIN: {
               const [, , , , , , , index, value, velocity] = data;
               const channel = `${id}/${AO}/${index}`;

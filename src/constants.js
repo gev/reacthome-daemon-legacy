@@ -272,6 +272,7 @@ module.exports.DEVICE_TYPE_SMART_4AM = 0x2a;
 module.exports.DEVICE_TYPE_SMART_6_PUSH = 0x2c;
 module.exports.DEVICE_TYPE_DOPPLER_1_DI_4 = 0x2d;
 module.exports.DEVICE_TYPE_DOPPLER_5_DI_4 = 0x2e;
+module.exports.DEVICE_TYPE_DI_4_RSM = 0x2f;
 
 module.exports.DEVICE_TYPE_SMART_TOP_A6P = 0x30;
 module.exports.DEVICE_TYPE_SMART_TOP_G4D = 0x31;

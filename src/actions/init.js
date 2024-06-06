@@ -51,6 +51,7 @@ const {
   DEVICE_TYPE_MIX_6x12_RS,
   DEVICE_TYPE_SMART_TOP_A6P,
   DEVICE_TYPE_SMART_TOP_G4D,
+  DEVICE_TYPE_DI_4_RSM,
 } = require("../constants");
 const { get, set, add } = require("./create");
 const { device } = require("../sockets");
@@ -688,6 +689,14 @@ module.exports.initialize = (id) => {
         const channel = get(`${id}/${AO}/${i}`) || {};
         a[i] = channel.value || 0;
       }
+      device.sendRBUS(Buffer.from(a), id);
+      break;
+    }
+    case DEVICE_TYPE_DI_4_RSM: {
+      const mac = id.split(":").map((i) => parseInt(i, 16));
+      a[0] = ACTION_INITIALIZE;
+      const channel = get(`${id}/${AO}/1`) || {};
+      a[1] = channel.value || 0;
       device.sendRBUS(Buffer.from(a), id);
       break;
     }

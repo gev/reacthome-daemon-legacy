@@ -185,6 +185,7 @@ const {
   HYGROSTAT,
   CO2_STAT,
   ACTION_STOP_VENTILATION,
+  DEVICE_TYPE_DI_4_RSM,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -312,6 +313,7 @@ const run = (action) => {
             drivers.run(action);
             break;
           }
+          case DEVICE_TYPE_DI_4_RSM:
           case DEVICE_TYPE_AO_4_DIN:
           case DEVICE_TYPE_MIX_1_RS:
           case DEVICE_TYPE_MIX_6x12_RS:
@@ -495,6 +497,7 @@ const run = (action) => {
             }
             break;
           }
+          case DEVICE_TYPE_DI_4_RSM:
           case DEVICE_TYPE_AO_4_DIN: {
             device.sendRBUS(Buffer.from([
               ACTION_DO,
@@ -609,6 +612,7 @@ const run = (action) => {
           case DEVICE_TYPE_DIM_12_LED_RS:
           case DEVICE_TYPE_DIM_12_AC_RS:
           case DEVICE_TYPE_DIM_12_DC_RS:
+          case DEVICE_TYPE_DI_4_RSM:
           case DEVICE_TYPE_AO_4_DIN: {
             const velocity =
               dev.type === DEVICE_TYPE_DIM_12_LED_RS ||
@@ -620,7 +624,7 @@ const run = (action) => {
             switch (action.action) {
               case DIM_TYPE:
               case DIM_GROUP: {
-                if (dev.type === DEVICE_TYPE_AO_4_DIN) {
+                if (dev.type === DEVICE_TYPE_AO_4_DIN || dev.type === DEVICE_TYPE_DI_4_RSM) {
                   break;
                 }
               }
@@ -793,6 +797,7 @@ const run = (action) => {
                   );
                   break;
                 }
+                case DEVICE_TYPE_DI_4_RSM:
                 case DEVICE_TYPE_AO_4_DIN:
                 case DEVICE_TYPE_DIM_8_RS:
                 case DEVICE_TYPE_DIM_12_LED_RS:
@@ -1178,6 +1183,7 @@ const run = (action) => {
               }
               break;
             }
+            case DEVICE_TYPE_DI_4_RSM:
             case DEVICE_TYPE_AO_4_DIN:
             case DEVICE_TYPE_MIX_1_RS:
             case DEVICE_TYPE_MIX_6x12_RS:
@@ -1336,6 +1342,7 @@ const run = (action) => {
               }
               break;
             }
+            case DEVICE_TYPE_DI_4_RSM:
             case DEVICE_TYPE_AO_4_DIN:
             case DEVICE_TYPE_MIX_1_RS:
             case DEVICE_TYPE_MIX_6x12_RS:
@@ -1441,6 +1448,7 @@ const run = (action) => {
             case DEVICE_TYPE_DIM_12_LED_RS:
             case DEVICE_TYPE_DIM_12_AC_RS:
             case DEVICE_TYPE_DIM_12_DC_RS:
+            case DEVICE_TYPE_DI_4_RSM:
             case DEVICE_TYPE_AO_4_DIN: {
               device.sendRBUS(Buffer.from([
                 ACTION_DIMMER,
@@ -1540,6 +1548,7 @@ const run = (action) => {
             case DEVICE_TYPE_DIM_12_LED_RS:
             case DEVICE_TYPE_DIM_12_AC_RS:
             case DEVICE_TYPE_DIM_12_DC_RS:
+            case DEVICE_TYPE_DI_4_RSM:
             case DEVICE_TYPE_AO_4_DIN: {
               device.sendRBUS(Buffer.from([
                 ACTION_DIMMER,
