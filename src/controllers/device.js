@@ -505,7 +505,7 @@ module.exports.manage = () => {
             case DEVICE_TYPE_SMART_TOP_G4D: {
               const [, , , , , , , palette, index] = data;
               for (let i = 0; i < (data.length - 9) / 3; i++) {
-                const chan = `${id}/rgb/${palette}.${index + i}`;
+                const chan = `${id}/rgb/${palette}.${index}`;
                 set(chan, {
                   r: data[i * 3 + 9],
                   g: data[i * 3 + 10],
