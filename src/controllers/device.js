@@ -95,6 +95,7 @@ const {
   ACTION_START_HEAT,
   ACTION_STOP_WET,
   DEVICE_TYPE_DI_4_RSM,
+  ACTION_PALETTE,
 } = require("../constants");
 const {
   get,
@@ -1230,6 +1231,10 @@ const renderSmartTop = (id) => {
     run({ type: ACTION_IMAGE, id, value: image })
   }
   run({ type: ACTION_BLINK, id, value: blink })
+  if (current.palette > 0 && current.palette <= 12) {
+    run({ type: ACTION_PALETTE, id, value: current.palette })
+  }
+
 }
 
 const print = (id, value, power, image) =>
