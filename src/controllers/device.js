@@ -960,7 +960,7 @@ const handleSmartTop = () => false;
 
 const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
   if (dev.configuring) {
-    const { site } = dev;
+    const site = current.site || dev.site;
     if (site) {
       const { thermostat = [], hygrostat = [], co2_stat = [] } = get(site) || {};
       switch (current.mode) {
@@ -1064,7 +1064,7 @@ const handleSmartTopHold = (id, dev, chan, current) => {
       renderSmartTop(id);
     }
   } else {
-    const { site } = dev;
+    const site = current.site || dev.site;
     if (site) {
       const { thermostat = [], hygrostat = [], co2_stat = [] } = get(site) || {};
       if (dev.configuring) {
@@ -1166,7 +1166,7 @@ const renderSmartTop = (id) => {
 
   const dev = get(id) || {};
 
-  const { mode = 0, modes = [], configuring, site } = dev;
+  const { mode = 0, modes = [], configuring } = dev;
   const image = [...(dev.image || [0, 0, 0, 0, 0, 0, 0, 0])];
   const blink = [...(dev.blink || [0, 0, 0, 0, 0, 0, 0, 0])];
   image[1] &= 0b0000_1111;
@@ -1185,6 +1185,7 @@ const renderSmartTop = (id) => {
       blink[2] |= 1 << (current.indicator - 5);
     }
   }
+  const site = current.site || dev.site;
   if (site) {
     const { temperature, humidity, co2, thermostat = [], hygrostat = [], co2_stat = [] } = get(site) || {};
     switch (current.mode) {
