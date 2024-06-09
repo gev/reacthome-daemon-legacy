@@ -1137,13 +1137,13 @@ const handleSmartTopHold = (id, dev, chan, current) => {
           }
           case 'MODE_WET': {
             const { wet = true } = get(hygrostat[0]) || {};
-            run({ type: wet ? ACTION_STOP_WET : ACTION_START_COOL, id: site });
+            run({ type: wet ? ACTION_STOP_WET : ACTION_START_WET, id: site });
             renderSmartTop(id);
             break;
           }
           case 'MODE_VENTILATION': {
             const { ventilation = true } = get(hygrostat[0]) || {};
-            run({ type: ventilation ? ACTION_STOP_WET : ACTION_START_COOL, id: site });
+            run({ type: ventilation ? ACTION_STOP_VENTILATION : ACTION_START_VENTILATION, id: site });
             renderSmartTop(id);
             break;
           }
