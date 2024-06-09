@@ -1142,7 +1142,7 @@ const handleSmartTopHold = (id, dev, chan, current) => {
             break;
           }
           case 'MODE_VENTILATION': {
-            const { ventilation = true } = get(hygrostat[0]) || {};
+            const { ventilation = true } = get(co2_stat[0]) || {};
             run({ type: ventilation ? ACTION_STOP_VENTILATION : ACTION_START_VENTILATION, id: site });
             renderSmartTop(id);
             break;
