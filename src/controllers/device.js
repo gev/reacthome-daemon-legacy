@@ -96,6 +96,9 @@ const {
   ACTION_STOP_WET,
   DEVICE_TYPE_DI_4_RSM,
   ACTION_PALETTE,
+  ACTION_STOP_VENTILATION,
+  ACTION_START_VENTILATION,
+  ACTION_START_WET,
 } = require("../constants");
 const {
   get,
