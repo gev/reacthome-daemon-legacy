@@ -925,9 +925,9 @@ const calcWarmFloorTemperature = site => {
   warm_floor.forEach(id => {
     const dev = get(id) || {};
     if (dev.sensor) {
-      const { online, temperature } = get(dev.sensor) || {};
-      if (online && typeof temperature === 'number') {
-        temperature += dev.temperature;
+      const sensor = get(dev.sensor) || {};
+      if (sensor.online && typeof sensor.temperature === 'number') {
+        temperature += sensor.temperature;
         n++;
       }
     }
