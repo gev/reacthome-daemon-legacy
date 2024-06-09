@@ -918,6 +918,25 @@ const calcCO2 = site => {
   }
 }
 
+const calcWarmFloorTemperature = site => {
+  const { warm_floor = [] } = get(site) || {};
+  let temperature = 0;
+  let n = 0;
+  warm_floor.forEach(id => {
+    const dev = get(id) || {};
+    if (dev.sensor) {
+      const { online, temperature } = get(dev.sensor) || {};
+      if (online && typeof temperature === 'number') {
+        temperature += dev.temperature;
+        n++;
+      }
+    }
+  });
+  if (n > 0) {
+    return temperature /= n;
+  }
+}
+
 const toArr = a => Array.isArray(a) ? a : a ? [a] : [];
 
 
@@ -1190,7 +1209,7 @@ const renderSmartTop = (id) => {
   }
   const site = current.site || dev.site;
   if (site) {
-    const { temperature, humidity, co2, thermostat = [], hygrostat = [], co2_stat = [] } = get(site) || {};
+    const { temperature, humidity, co2, thermostat = [], hygrostat = [], co2_stat = [], warm_floor = [] } = get(site) || {};
     switch (current.mode) {
       case 'MODE_COOL':
         if (configuring) {
@@ -1210,6 +1229,22 @@ const renderSmartTop = (id) => {
           printf(id, temperature, -99.9, 100, 1, heat, image);
         }
         break;
+      case 'MODE_WARM_FLOOR': {
+        if (configuring) {
+          // const { setpoint = 50, warm = true } = get(hygrostat[0]) || {};
+          // printf(id, setpoint, 0, 100, 1, warm, image);
+        } else {
+          const temperature = calcWarmFloorTemperature(site);
+          let on = false;
+          warm_floor.forEach((id) => {
+            const { bind, inverse } = get(id) || {};
+            const { value } = get(bind) || {};
+            on ||= inverse ? !value : value;
+          })
+          printf(id, temperature, -99.9, 100, 1, on, image);
+        }
+        break;
+      }
       case 'MODE_WET':
         if (configuring) {
           const { setpoint = 50, wet = true } = get(hygrostat[0]) || {};
