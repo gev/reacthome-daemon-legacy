@@ -1194,7 +1194,7 @@ const renderSmartTop = (id) => {
           const { setpoint = 24, cool = true } = get(thermostat[0]) || {};
           printf(id, setpoint, -99.9, 100, 1, cool, image);
         } else {
-          const { cool } = get(thermostat[0]) || {};
+          const { cool = true } = get(thermostat[0]) || {};
           printf(id, temperature, -99.9, 100, 1, cool, image);
         }
         break;
@@ -1203,7 +1203,7 @@ const renderSmartTop = (id) => {
           const { setpoint = 24, heat = true } = get(thermostat[0]) || {};
           printf(id, setpoint, -99.9, 100, 1, heat, image);
         } else {
-          const { heat } = get(thermostat[0]) || {};
+          const { heat = true } = get(thermostat[0]) || {};
           printf(id, temperature, -99.9, 100, 1, heat, image);
         }
         break;
@@ -1212,7 +1212,7 @@ const renderSmartTop = (id) => {
           const { setpoint = 50, wet = true } = get(hygrostat[0]) || {};
           printf(id, setpoint, 0, 100, 1, wet, image);
         } else {
-          const { wet } = get(hygrostat[0]) || {};
+          const { wet = true } = get(hygrostat[0]) || {};
           printf(id, humidity, 0, 100, 1, wet, image);
         }
         break;
@@ -1221,7 +1221,7 @@ const renderSmartTop = (id) => {
           const { setpoint = 400, ventilation = true } = get(co2_stat[0]) || {};
           printf(id, setpoint, 0, 1999, 0, ventilation, image);
         } else {
-          const { ventilation } = get(co2_stat[0]) || {};
+          const { ventilation = true } = get(co2_stat[0]) || {};
           printf(id, co2, 0, 1999, 0, ventilation, image);
         }
         break;
