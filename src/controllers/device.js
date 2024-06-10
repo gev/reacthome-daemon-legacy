@@ -507,8 +507,9 @@ module.exports.manage = () => {
             case DEVICE_TYPE_SMART_TOP_A6P:
             case DEVICE_TYPE_SMART_TOP_G4D: {
               const [, , , , , , , palette, index] = data;
+              console.log(palette);
               for (let i = 0; i < (data.length - 9) / 3; i++) {
-                console.log(palette, index + i);
+                console.log(index + i);
                 const chan = `${id}/rgb/${palette}.${index + i}`;
                 set(chan, {
                   r: data[i * 3 + 9],
@@ -516,6 +517,7 @@ module.exports.manage = () => {
                   b: data[i * 3 + 11],
                 });
               }
+              console.log('----')
               break;
             }
             default:
