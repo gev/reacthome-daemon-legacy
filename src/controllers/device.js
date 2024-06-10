@@ -1449,8 +1449,16 @@ const renderSmartTop = (id) => {
       case 'MODE_HEAT':
       case 'MODE_WET':
       case 'MODE_VENTILATION': {
-        run({ type: ACTION_PALETTE, id, value: current.palette_setpoint })
-        break;
+        switch (configuring) {
+          case 1: {
+            run({ type: ACTION_PALETTE, id, value: current.palette_setpoint })
+            break;
+          }
+          case 2: {
+            run({ type: ACTION_PALETTE, id, value: current.palette_intensity })
+            break;
+          }
+        }
       }
       case 'MODE_WARM_FLOOR': {
         switch (configuring) {
