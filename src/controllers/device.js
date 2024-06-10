@@ -1131,12 +1131,7 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
               break;
             }
             case 'power': {
-              let on = false;
-              warm_floor.forEach((id) => {
-                const { bind, inverse } = get(id) || {};
-                const { value } = get(bind) || {};
-                on ||= inverse ? !value : value;
-              })
+              const on = isWarmFloorOn(warm_floor);
               warm_floor.forEach(id => {
                 const { inverse } = get(id) || {};
                 if (inverse) {
@@ -1395,12 +1390,7 @@ const renderSmartTop = (id) => {
         }
         break;
       case 'MODE_WARM_FLOOR': {
-        let on = false;
-        warm_floor.forEach((id) => {
-          const { bind, inverse } = get(id) || {};
-          const { value } = get(bind) || {};
-          on ||= inverse ? !value : value;
-        })
+        const on = isWarmFloorOn(warm_floor);
         if (configuring) {
           const { min = 5, max = 40 } = get(warm_floor[0]) || {};
           switch (configuring) {
@@ -1482,3 +1472,13 @@ printf = (id, value, min, max, fixed, power, image) =>
 
 const format = (value, min, max, fixed) =>
   typeof value === 'number' ? Math.max(Math.min(value, max), min).toFixed(fixed) : ""
+
+isWarmFloorOn = (warm_floor = []) => {
+  let on = false;
+  warm_floor.forEach((id) => {
+    const { bind, inverse } = get(id) || {};
+    const { value } = get(bind) || {};
+    on ||= inverse ? !value : value;
+  })
+  return on;
+}
