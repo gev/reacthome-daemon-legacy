@@ -1076,7 +1076,7 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
               break;
             }
             case 'menu': {
-              const max = maxVentilationIntensity(thermostat)
+              const max = maxVentilationIntensity(co2_stat)
               if (max > 0) {
                 set(id, { configuring: dev.configuring < 2 ? dev.configuring + 1 : 1 });
                 renderSmartTop(id);
