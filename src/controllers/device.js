@@ -1128,7 +1128,7 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
                 on ||= inverse ? !value : value;
               })
               warm_floor.forEach(id => {
-                const { bind, inverse } = get(id) || {};
+                const { inverse } = get(id) || {};
                 if (inverse) {
                   run({ type: on ? ACTION_ON : ACTION_OFF, id });
                 } else {
