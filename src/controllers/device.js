@@ -971,7 +971,7 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
   if (dev.configuring) {
     const site = current.site || dev.site;
     if (site) {
-      const { thermostat = [], hygrostat = [], co2_stat = [] } = get(site) || {};
+      const { thermostat = [], hygrostat = [], co2_stat = [], warm_floor = [] } = get(site) || {};
       switch (current.mode) {
         case 'MODE_COOL': {
           const { setpoint = 24, cool = true } = get(thermostat[0]) || {};
