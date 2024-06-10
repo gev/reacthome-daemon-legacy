@@ -511,7 +511,6 @@ module.exports.manage = () => {
                 index = 1;
               }
               for (let i = 0; i < (data.length - 9) / 3; i++) {
-                console.log(index + i);
                 const chan = `${id}/rgb/${palette}.${index + i}`;
                 set(chan, {
                   r: data[i * 3 + 9],
@@ -519,7 +518,6 @@ module.exports.manage = () => {
                   b: data[i * 3 + 11],
                 });
               }
-              console.log('----')
               break;
             }
             default:
