@@ -1073,6 +1073,29 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
           }
           break;
         }
+        case 'MODE_WARM_FLOOR': {
+          const { min = 5, max = 40, } = get(warm_floor[0]) || {};
+          switch (chan.action) {
+            case 'plus': {
+              break;
+            }
+            case 'minus': {
+              break;
+            }
+            case 'power': {
+              break;
+            }
+            case 'menu': {
+              set(id, { configuring: dev.configuring + 1 })
+              break;
+            }
+          }
+          // switch (dev.configuring % 2) { 
+          //   case 1: 
+          // }
+          break;
+        }
+
       }
     }
   } else if (chan.action === 'menu') {
