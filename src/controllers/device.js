@@ -1240,6 +1240,7 @@ const handleSmartTopHold = (id, dev, chan, current) => {
                         set(id, { min: value })
                       })
                       renderSmartTop(id);
+                      return true;
                     }
                     break;
                   }
@@ -1250,6 +1251,7 @@ const handleSmartTopHold = (id, dev, chan, current) => {
                         set(id, { max: value })
                       })
                       renderSmartTop(id);
+                      return true;
                     }
                     break;
                   }
@@ -1265,6 +1267,7 @@ const handleSmartTopHold = (id, dev, chan, current) => {
                         set(id, { min: min - 0.1 })
                       })
                       renderSmartTop(id);
+                      return true;
                     }
                     break;
                   }
@@ -1275,6 +1278,7 @@ const handleSmartTopHold = (id, dev, chan, current) => {
                         set(id, { max: max - 0.1 })
                       })
                       renderSmartTop(id);
+                      return true;
                     }
                     break;
                   }
