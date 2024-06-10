@@ -1080,7 +1080,9 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
           break;
         }
         case 'MODE_WARM_FLOOR': {
-          const { min = 5, max = 40, } = get(warm_floor[0]) || {};
+          const { min = 5, max = 40, bind, inverse } = get(warm_floor[0]) || {};
+          const { value } = get(bind) || {};
+          const on = inverse ? !value : value;
           switch (chan.action) {
             case 'plus': {
               switch (dev.configuring) {
@@ -1122,9 +1124,12 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
             }
             case 'power': {
               warm_floor.forEach(id => {
-                const { bind } = get(id) || {};
-                const { value } = get(bind) || {};
-                run({ type: value ? ACTION_OFF : ACTION_ON, id });
+                const { bind, inverse } = get(id) || {};
+                if (inverse) {
+                  run({ type: on ? ACTION_ON : ACTION_OFF, id });
+                } else {
+                  run({ type: on ? ACTION_OFF : ACTION_ON, id });
+                }
               })
               renderSmartTop(id);
               break;
