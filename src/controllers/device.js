@@ -992,8 +992,8 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
               break;
             }
             case 'menu': {
-              set(id, { configuring: dev.configuring + 1 })
-              renderSmartTop(id);
+              // set(id, { configuring: dev.configuring + 1 })
+              // renderSmartTop(id);
               break;
             }
           }
@@ -1018,8 +1018,8 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
               break;
             }
             case 'menu': {
-              set(id, { configuring: dev.configuring + 1 })
-              renderSmartTop(id);
+              // set(id, { configuring: dev.configuring + 1 })
+              // renderSmartTop(id);
               break;
             }
           }
@@ -1044,8 +1044,8 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
               break;
             }
             case 'menu': {
-              set(id, { configuring: dev.configuring + 1 })
-              renderSmartTop(id);
+              // set(id, { configuring: dev.configuring + 1 })
+              // renderSmartTop(id);
               break;
             }
           }
@@ -1070,8 +1070,8 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
               break;
             }
             case 'menu': {
-              set(id, { configuring: dev.configuring + 1 })
-              renderSmartTop(id);
+              // set(id, { configuring: dev.configuring + 1 })
+              // renderSmartTop(id);
               break;
             }
           }
@@ -1090,7 +1090,7 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
               break;
             }
             case 'menu': {
-              set(id, { configuring: dev.configuring + 1 })
+              set(id, { configuring: dev.configuring < 2 ? dev.configuring + 1 : 1 });
               renderSmartTop(id);
               break;
             }
@@ -1320,7 +1320,7 @@ const renderSmartTop = (id) => {
         break;
       }
       case 'MODE_WARM_FLOOR': {
-        switch ((configuring - 1) % 2) {
+        switch (configuring) {
           case 1: {
             run({ type: ACTION_PALETTE, id, value: current.palette_setpoint_min })
             break;
