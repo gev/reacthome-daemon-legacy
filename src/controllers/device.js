@@ -1156,9 +1156,6 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
               break;
             }
           }
-          // switch (dev.configuring % 2) { 
-          //   case 1: 
-          // }
           break;
         }
       }
@@ -1229,6 +1226,63 @@ const handleSmartTopHold = (id, dev, chan, current) => {
                 return true;
               }
             }
+            break;
+          }
+          case 'MODE_WARM_FLOOR': {
+            const { min = 5, max = 40 } = get(warm_floor[0]) || {};
+            switch (chan.action) {
+              case 'plus': {
+                switch (dev.configuring) {
+                  case 1: {
+                    const value = min + 0.1;
+                    if (value < 40 && value > 5 && value < max) {
+                      warm_floor.forEach(id => {
+                        set(id, { min: value })
+                      })
+                      renderSmartTop(id);
+                    }
+                    break;
+                  }
+                  case 2: {
+                    const value = max + 0.1;
+                    if (value < 40 && value > 5 && value > min) {
+                      warm_floor.forEach(id => {
+                        set(id, { max: value })
+                      })
+                      renderSmartTop(id);
+                    }
+                    break;
+                  }
+                }
+                break;
+              }
+              case 'minus': {
+                switch (dev.configuring) {
+                  case 1: {
+                    const value = min - 0.1;
+                    if (value < 40 && value > 5 && value < max) {
+                      warm_floor.forEach(id => {
+                        set(id, { min: min - 0.1 })
+                      })
+                      renderSmartTop(id);
+                    }
+                    break;
+                  }
+                  case 2: {
+                    const value = max - 0.1;
+                    if (value < 40 && value > 5 && value > min) {
+                      warm_floor.forEach(id => {
+                        set(id, { max: max - 0.1 })
+                      })
+                      renderSmartTop(id);
+                    }
+                    break;
+                  }
+                }
+                break;
+              }
+            }
+            break;
           }
         }
       } else if (chan.action === 'power') {
@@ -1255,6 +1309,24 @@ const handleSmartTopHold = (id, dev, chan, current) => {
             const { ventilation = true } = get(co2_stat[0]) || {};
             run({ type: ventilation ? ACTION_STOP_VENTILATION : ACTION_START_VENTILATION, id: site });
             renderSmartTop(id);
+            break;
+          }
+          case 'MODE_WARM_FLOOR': {
+            let on = false;
+            warm_floor.forEach((id) => {
+              const { bind, inverse } = get(id) || {};
+              const { value } = get(bind) || {};
+              on ||= inverse ? !value : value;
+            })
+            warm_floor.forEach(id => {
+              const { inverse } = get(id) || {};
+              if (inverse) {
+                run({ type: on ? ACTION_ON : ACTION_OFF, id });
+              } else {
+                run({ type: on ? ACTION_OFF : ACTION_ON, id });
+              }
+            })
+            setTimeout(renderSmartTop, 300, id);
             break;
           }
         }
