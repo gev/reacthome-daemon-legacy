@@ -1268,7 +1268,7 @@ const renderSmartTop = (id) => {
           on ||= inverse ? !value : value;
         })
         if (configuring) {
-          console.log(warm_floor)
+          console.log(get(warm_floor[0]))
           const { min = 5, max = 40 } = get(warm_floor[0]) || {};
           switch (configuring) {
             case 1: {
