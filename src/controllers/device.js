@@ -507,7 +507,8 @@ module.exports.manage = () => {
             case DEVICE_TYPE_SMART_TOP_A6P:
             case DEVICE_TYPE_SMART_TOP_G4D: {
               const [, , , , , , , palette, index] = data;
-              console.log(palette);
+              console.warn(data);
+              console.warn(palette, index);
               for (let i = 0; i < (data.length - 9) / 3; i++) {
                 console.log(index + i);
                 const chan = `${id}/rgb/${palette}.${index + i}`;
