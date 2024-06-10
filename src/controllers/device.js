@@ -807,8 +807,6 @@ module.exports.manage = () => {
             }
           }
         }
-        // default: {
-        // }
       }
     } catch (e) {
       console.error(e);
