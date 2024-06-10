@@ -506,6 +506,7 @@ module.exports.manage = () => {
           switch (type) {
             case DEVICE_TYPE_SMART_TOP_A6P:
             case DEVICE_TYPE_SMART_TOP_G4D: {
+              console.log(data)
               const [, , , , , , , palette, index] = data;
               for (let i = 0; i < (data.length - 9) / 3; i++) {
                 const chan = `${id}/rgb/${palette}.${index}`;
