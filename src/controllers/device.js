@@ -1085,17 +1085,23 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
             case 'plus': {
               switch (dev.configuring) {
                 case 1: {
-                  warm_floor.forEach(id => {
-                    set(id, { min: min + 0.1 })
-                  })
-                  renderSmartTop(id);
+                  const value = min + 0.1;
+                  if (value < 40 && value > 5 && value < max) {
+                    warm_floor.forEach(id => {
+                      set(id, { min: value })
+                    })
+                    renderSmartTop(id);
+                  }
                   break;
                 }
                 case 2: {
-                  warm_floor.forEach(id => {
-                    set(id, { max: max + 0.1 })
-                  })
-                  renderSmartTop(id);
+                  const value = max + 0.1;
+                  if (value < 40 && value > 5 && value > min) {
+                    warm_floor.forEach(id => {
+                      set(id, { max: value })
+                    })
+                    renderSmartTop(id);
+                  }
                   break;
                 }
               }
@@ -1104,17 +1110,23 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
             case 'minus': {
               switch (dev.configuring) {
                 case 1: {
-                  warm_floor.forEach(id => {
-                    set(id, { min: min - 0.1 })
-                  })
-                  renderSmartTop(id);
+                  const value = min - 0.1;
+                  if (value < 40 && value > 5 && value < max) {
+                    warm_floor.forEach(id => {
+                      set(id, { min: min - 0.1 })
+                    })
+                    renderSmartTop(id);
+                  }
                   break;
                 }
                 case 2: {
-                  warm_floor.forEach(id => {
-                    set(id, { max: max - 0.1 })
-                  })
-                  renderSmartTop(id);
+                  const value = max - 0.1;
+                  if (value < 40 && value > 5 && value > min) {
+                    warm_floor.forEach(id => {
+                      set(id, { max: max - 0.1 })
+                    })
+                    renderSmartTop(id);
+                  }
                   break;
                 }
               }
