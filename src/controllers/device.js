@@ -992,8 +992,11 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
               break;
             }
             case 'menu': {
-              // set(id, { configuring: dev.configuring + 1 })
-              // renderSmartTop(id);
+              const max = maxCoolIntensity(thermostat)
+              if (max > 0) {
+                set(id, { configuring: dev.configuring < 2 ? dev.configuring + 1 : 1 });
+                renderSmartTop(id);
+              }
               break;
             }
           }
@@ -1018,8 +1021,11 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
               break;
             }
             case 'menu': {
-              // set(id, { configuring: dev.configuring + 1 })
-              // renderSmartTop(id);
+              const max = maxHeatIntensity(thermostat)
+              if (max > 0) {
+                set(id, { configuring: dev.configuring < 2 ? dev.configuring + 1 : 1 });
+                renderSmartTop(id);
+              }
               break;
             }
           }
@@ -1070,8 +1076,11 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
               break;
             }
             case 'menu': {
-              // set(id, { configuring: dev.configuring + 1 })
-              // renderSmartTop(id);
+              const max = maxVentilationIntensity(thermostat)
+              if (max > 0) {
+                set(id, { configuring: dev.configuring < 2 ? dev.configuring + 1 : 1 });
+                renderSmartTop(id);
+              }
               break;
             }
           }
@@ -1371,24 +1380,24 @@ const renderSmartTop = (id) => {
   if (site) {
     const { temperature, humidity, co2, thermostat = [], hygrostat = [], co2_stat = [], warm_floor = [] } = get(site) || {};
     switch (current.mode) {
-      case 'MODE_COOL':
+      case 'MODE_COOL': {
+        const { setpoint = 24, cool = true } = get(thermostat[0]) || {};
         if (configuring) {
-          const { setpoint = 24, cool = true } = get(thermostat[0]) || {};
           printf(id, setpoint, -99.9, 100, 1, cool, image);
         } else {
-          const { cool = true } = get(thermostat[0]) || {};
           printf(id, temperature, -99.9, 100, 1, cool, image);
         }
         break;
-      case 'MODE_HEAT':
+      }
+      case 'MODE_HEAT': {
+        const { setpoint = 24, heat = true } = get(thermostat[0]) || {};
         if (configuring) {
-          const { setpoint = 24, heat = true } = get(thermostat[0]) || {};
           printf(id, setpoint, -99.9, 100, 1, heat, image);
         } else {
-          const { heat = true } = get(thermostat[0]) || {};
           printf(id, temperature, -99.9, 100, 1, heat, image);
         }
         break;
+      }
       case 'MODE_WARM_FLOOR': {
         const on = isWarmFloorOn(warm_floor);
         if (configuring) {
@@ -1409,24 +1418,24 @@ const renderSmartTop = (id) => {
         }
         break;
       }
-      case 'MODE_WET':
+      case 'MODE_WET': {
+        const { setpoint = 50, wet = true } = get(hygrostat[0]) || {};
         if (configuring) {
-          const { setpoint = 50, wet = true } = get(hygrostat[0]) || {};
           printf(id, setpoint, 0, 100, 1, wet, image);
         } else {
-          const { wet = true } = get(hygrostat[0]) || {};
           printf(id, humidity, 0, 100, 1, wet, image);
         }
         break;
-      case 'MODE_VENTILATION':
+      }
+      case 'MODE_VENTILATION': {
+        const { setpoint = 400, ventilation = true } = get(co2_stat[0]) || {};
         if (configuring) {
-          const { setpoint = 400, ventilation = true } = get(co2_stat[0]) || {};
           printf(id, setpoint, 0, 1999, 0, ventilation, image);
         } else {
-          const { ventilation = true } = get(co2_stat[0]) || {};
           printf(id, co2, 0, 1999, 0, ventilation, image);
         }
         break;
+      }
       default:
         print(id, "", false, image)
     }
@@ -1473,7 +1482,7 @@ printf = (id, value, min, max, fixed, power, image) =>
 const format = (value, min, max, fixed) =>
   typeof value === 'number' ? Math.max(Math.min(value, max), min).toFixed(fixed) : ""
 
-isWarmFloorOn = (warm_floor = []) => {
+const isWarmFloorOn = (warm_floor = []) => {
   let on = false;
   warm_floor.forEach((id) => {
     const { bind, inverse } = get(id) || {};
@@ -1481,4 +1490,31 @@ isWarmFloorOn = (warm_floor = []) => {
     on ||= inverse ? !value : value;
   })
   return on;
+}
+
+const maxCoolIntensity = (thermostat = []) => {
+  let max = 0;
+  thermostat.forEach((id) => {
+    const { onCoolIntensity = [] } = get(id) || {};
+    max = Math.max(max, onCoolIntensity.length);
+  })
+  return max;
+}
+
+const maxHeatIntensity = (thermostat = []) => {
+  let max = 0;
+  thermostat.forEach((id) => {
+    const { onHeatIntensity = [] } = get(id) || {};
+    max = Math.max(max, onHeatIntensity.length);
+  })
+  return max;
+}
+
+const maxVentilationIntensity = (co2_stat = []) => {
+  let max = 0;
+  co2_stat.forEach((id) => {
+    const { onVentilationIntensity = [] } = get(id) || {};
+    max = Math.max(max, onVentilationIntensity.length);
+  })
+  return max;
 }
