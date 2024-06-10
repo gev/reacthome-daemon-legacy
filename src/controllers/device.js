@@ -1233,17 +1233,26 @@ const renderSmartTop = (id) => {
         }
         break;
       case 'MODE_WARM_FLOOR': {
+        let on = false;
+        warm_floor.forEach((id) => {
+          const { bind, inverse } = get(id) || {};
+          const { value } = get(bind) || {};
+          on ||= inverse ? !value : value;
+        })
         if (configuring) {
-          // const { setpoint = 50, warm = true } = get(hygrostat[0]) || {};
-          // printf(id, setpoint, 0, 100, 1, warm, image);
+          const { min = 5, max = 40 } = get(warm_floor[0]) || {};
+          switch (dev.configuring % 2) {
+            case 1: {
+              printf(id, min, -99.9, 100, 1, on, image);
+              break;
+            }
+            case 2: {
+              printf(id, max, -99.9, 100, 1, on, image);
+              break;
+            }
+          }
         } else {
           const temperature = calcWarmFloorTemperature(site);
-          let on = false;
-          warm_floor.forEach((id) => {
-            const { bind, inverse } = get(id) || {};
-            const { value } = get(bind) || {};
-            on ||= inverse ? !value : value;
-          })
           printf(id, temperature, -99.9, 100, 1, on, image);
         }
         break;
@@ -1278,8 +1287,23 @@ const renderSmartTop = (id) => {
       case 'MODE_COOL':
       case 'MODE_HEAT':
       case 'MODE_WET':
-      case 'MODE_VENTILATION':
+      case 'MODE_VENTILATION': {
         run({ type: ACTION_PALETTE, id, value: current.palette_setpoint })
+        break;
+      }
+      case 'MODE_WARM_FLOOR': {
+        switch (dev.configuring % 2) {
+          case 1: {
+            run({ type: ACTION_PALETTE, id, value: current.palette_setpoint_min })
+            break;
+          }
+          case 2: {
+            run({ type: ACTION_PALETTE, id, value: current.palette_setpoint_max })
+            break;
+          }
+        }
+        break;
+      }
     }
   } else {
     if (current.palette > 0 && current.palette <= 12) {
