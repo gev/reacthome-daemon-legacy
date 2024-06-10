@@ -1310,7 +1310,7 @@ const renderSmartTop = (id) => {
     run({ type: ACTION_IMAGE, id, value: image })
   }
   run({ type: ACTION_BLINK, id, value: blink })
-  if (dev.configuring) {
+  if (configuring) {
     switch (current.mode) {
       case 'MODE_COOL':
       case 'MODE_HEAT':
@@ -1320,7 +1320,7 @@ const renderSmartTop = (id) => {
         break;
       }
       case 'MODE_WARM_FLOOR': {
-        switch (dev.configuring % 2) {
+        switch ((configuring - 1) % 2) {
           case 1: {
             run({ type: ACTION_PALETTE, id, value: current.palette_setpoint_min })
             break;
