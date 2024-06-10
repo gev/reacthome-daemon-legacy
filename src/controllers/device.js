@@ -1176,7 +1176,7 @@ const handleSmartTopHold = (id, dev, chan, current) => {
   } else {
     const site = current.site || dev.site;
     if (site) {
-      const { thermostat = [], hygrostat = [], co2_stat = [] } = get(site) || {};
+      const { thermostat = [], hygrostat = [], co2_stat = [], warm_floor = [] } = get(site) || {};
       if (dev.configuring) {
         switch (current.mode) {
           case 'MODE_COOL':
