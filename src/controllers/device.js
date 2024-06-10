@@ -1078,15 +1078,53 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
           break;
         }
         case 'MODE_WARM_FLOOR': {
+          console.log(get(warm_floor[0]))
           const { min = 5, max = 40, } = get(warm_floor[0]) || {};
           switch (chan.action) {
             case 'plus': {
+              switch (dev.configuring) {
+                case 1: {
+                  warm_floor.forEach(id => {
+                    set(id, { min: min + 0.1 })
+                  })
+                  renderSmartTop(id);
+                  break;
+                }
+                case 2: {
+                  warm_floor.forEach(id => {
+                    set(id, { max: max + 0.1 })
+                  })
+                  renderSmartTop(id);
+                  break;
+                }
+              }
               break;
             }
             case 'minus': {
+              switch (dev.configuring) {
+                case 1: {
+                  warm_floor.forEach(id => {
+                    set(id, { min: min - 0.1 })
+                  })
+                  renderSmartTop(id);
+                  break;
+                }
+                case 2: {
+                  warm_floor.forEach(id => {
+                    set(id, { max: max - 0.1 })
+                  })
+                  renderSmartTop(id);
+                  break;
+                }
+              }
               break;
             }
             case 'power': {
+              warm_floor.forEach(id => {
+                const { inverse } = get(id) || {};
+                run({ type: inverse ? ACTION_ON : ACTION_OFF, id });
+              })
+              renderSmartTop(id);
               break;
             }
             case 'menu': {
@@ -1100,7 +1138,6 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
           // }
           break;
         }
-
       }
     }
   } else if (chan.action === 'menu') {
@@ -1268,7 +1305,6 @@ const renderSmartTop = (id) => {
           on ||= inverse ? !value : value;
         })
         if (configuring) {
-          console.log(get(warm_floor[0]))
           const { min = 5, max = 40 } = get(warm_floor[0]) || {};
           switch (configuring) {
             case 1: {
