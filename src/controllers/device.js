@@ -1135,7 +1135,7 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
                   run({ type: on ? ACTION_OFF : ACTION_ON, id });
                 }
               })
-              renderSmartTop(id);
+              setTimeout(renderSmartTop, 300, id);
               break;
             }
             case 'menu': {
