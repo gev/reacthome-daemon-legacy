@@ -991,6 +991,10 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
               renderSmartTop(id);
               break;
             }
+            case 'menu': {
+              set(id, { configuring: dev.configuring + 1 })
+              break;
+            }
           }
           break;
         }
@@ -1010,6 +1014,10 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
             case 'power': {
               run({ type: heat ? ACTION_STOP_HEAT : ACTION_START_HEAT, id: site });
               renderSmartTop(id);
+              break;
+            }
+            case 'menu': {
+              set(id, { configuring: dev.configuring + 1 })
               break;
             }
           }
@@ -1033,6 +1041,10 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
               renderSmartTop(id);
               break;
             }
+            case 'menu': {
+              set(id, { configuring: dev.configuring + 1 })
+              break;
+            }
           }
           break;
         }
@@ -1054,6 +1066,10 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
               renderSmartTop(id);
               break;
             }
+            case 'menu': {
+              set(id, { configuring: dev.configuring + 1 })
+              break;
+            }
           }
           break;
         }
@@ -1069,7 +1085,7 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
 const handleSmartTopHold = (id, dev, chan, current) => {
   if (chan.action === 'menu') {
     if (current.mode !== 'MODE_SCENE') {
-      set(id, { configuring: !dev.configuring });
+      set(id, { configuring: dev.configuring ? 0 : 1 });
       renderSmartTop(id);
     }
   } else {
