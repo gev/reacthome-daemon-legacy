@@ -996,7 +996,7 @@ const run = (action) => {
         break;
       }
       case ACTION_PRINT: {
-        const { id, value, power } = action;
+        const { id, value, power, intensity = 0 } = action;
         const dev = get(id) || {};
         switch (dev.type) {
           case DEVICE_TYPE_SMART_TOP_G4D: {
@@ -1079,6 +1079,27 @@ const run = (action) => {
               }
             }
             setBit(11, power ? 1 : 0);
+            switch (Math.round(3 * intensity)) {
+              case 0:
+                setBit(8, 0);
+                setBit(9, 0);
+                setBit(10, 0);
+                break;
+              case 1:
+                setBit(8, 0);
+                setBit(9, 0);
+                setBit(10, 1);
+                break;
+              case 2:
+                setBit(8, 0);
+                setBit(9, 1);
+                setBit(10, 1);
+                break;
+              default:
+                setBit(8, 1);
+                setBit(9, 1);
+                setBit(10, 1);
+            }
             run({ type: ACTION_IMAGE, id, value: image })
             break;
           }

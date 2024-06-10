@@ -1381,20 +1381,40 @@ const renderSmartTop = (id) => {
     const { temperature, humidity, co2, thermostat = [], hygrostat = [], co2_stat = [], warm_floor = [] } = get(site) || {};
     switch (current.mode) {
       case 'MODE_COOL': {
-        const { setpoint = 24, cool = true } = get(thermostat[0]) || {};
+        const max = maxCoolIntensity(thermostat);
+        const { setpoint = 24, cool = true, intensity_cool = 0 } = get(thermostat[0]) || {};
         if (configuring) {
-          printf(id, setpoint, -99.9, 100, 1, cool, image);
+          switch (configuring) {
+            case 1: {
+              printf(id, setpoint, -99.9, 199.9, 1, cool, intensity_cool, max, image);
+              break;
+            }
+            case 2: {
+              printf(id, intensity_cool, 0, 1999, 0, cool, intensity_cool, max, image);
+              break;
+            }
+          }
         } else {
-          printf(id, temperature, -99.9, 100, 1, cool, image);
+          printf(id, temperature, -99.9, 199.9, 1, cool, intensity_cool, max, image);
         }
         break;
       }
       case 'MODE_HEAT': {
-        const { setpoint = 24, heat = true } = get(thermostat[0]) || {};
+        const max = maxHeatIntensity(thermostat);
+        const { setpoint = 24, heat = true, intensity_heat = 0 } = get(thermostat[0]) || {};
         if (configuring) {
-          printf(id, setpoint, -99.9, 100, 1, heat, image);
+          switch (configuring) {
+            case 1: {
+              printf(id, setpoint, -99.9, 199.9, 1, heat, intensity_heat, max, image);
+              break;
+            }
+            case 2: {
+              printf(id, intensity_heat, 0, 1999, 0, heat, intensity_heat, max, image);
+              break;
+            }
+          }
         } else {
-          printf(id, temperature, -99.9, 100, 1, heat, image);
+          printf(id, temperature, -99.9, 199.9, 1, heat, intensity_heat, max, image);
         }
         break;
       }
@@ -1404,40 +1424,50 @@ const renderSmartTop = (id) => {
           const { min = 5, max = 40 } = get(warm_floor[0]) || {};
           switch (configuring) {
             case 1: {
-              printf(id, min, -99.9, 100, 1, on, image);
+              printf(id, min, -99.9, 199.9, 1, on, 0, 0, image);
               break;
             }
             case 2: {
-              printf(id, max, -99.9, 100, 1, on, image);
+              printf(id, max, -99.9, 199.9, 1, on, 0, 0, image);
               break;
             }
           }
         } else {
           const temperature = calcWarmFloorTemperature(site);
-          printf(id, temperature, -99.9, 100, 1, on, image);
+          printf(id, temperature, -99.9, 100, 1, on, 0, 0, image);
         }
         break;
       }
       case 'MODE_WET': {
         const { setpoint = 50, wet = true } = get(hygrostat[0]) || {};
         if (configuring) {
-          printf(id, setpoint, 0, 100, 1, wet, image);
+          printf(id, setpoint, 0, 100, 1, wet, 0, 0, image);
         } else {
-          printf(id, humidity, 0, 100, 1, wet, image);
+          printf(id, humidity, 0, 100, 1, wet, 0, 0, image);
         }
         break;
       }
       case 'MODE_VENTILATION': {
-        const { setpoint = 400, ventilation = true } = get(co2_stat[0]) || {};
+        const max = maxVentilationIntensity(co2_stat);
+        const { setpoint = 400, ventilation = true, intensity_ventilation = 0 } = get(co2_stat[0]) || {};
         if (configuring) {
-          printf(id, setpoint, 0, 1999, 0, ventilation, image);
+          switch (configuring) {
+            case 1: {
+              printf(id, setpoint, 0, 1999, 0, ventilation, intensity_ventilation, max, image);
+              break;
+            }
+            case 2: {
+              printf(id, intensity_ventilation, 0, 1999, 0, ventilation, intensity_ventilation, max, image);
+              break;
+            }
+          }
         } else {
-          printf(id, co2, 0, 1999, 0, ventilation, image);
+          printf(id, co2, 0, 1999, 0, ventilation, intensity_ventilation, max, image);
         }
         break;
       }
       default:
-        print(id, "", false, image)
+        print(id, "", false, 0, image)
     }
   } else {
     run({ type: ACTION_IMAGE, id, value: image })
@@ -1481,11 +1511,11 @@ const renderSmartTop = (id) => {
   }
 }
 
-const print = (id, value, power, image) =>
-  run({ type: ACTION_PRINT, id, value, power, image })
+const print = (id, value, power, intensity, image) =>
+  run({ type: ACTION_PRINT, id, value, power, intensity, image })
 
-printf = (id, value, min, max, fixed, power, image) =>
-  print(id, format(value, min, max, fixed), power, image)
+printf = (id, value, min, max, fixed, power, intensity, max_intensity, image) =>
+  print(id, format(value, min, max, fixed), power, max_intensity > 0 ? intensity / max_intensity : 0, image)
 
 const format = (value, min, max, fixed) =>
   typeof value === 'number' ? Math.max(Math.min(value, max), min).toFixed(fixed) : ""
