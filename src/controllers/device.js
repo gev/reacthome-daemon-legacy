@@ -1273,10 +1273,19 @@ const renderSmartTop = (id) => {
     run({ type: ACTION_IMAGE, id, value: image })
   }
   run({ type: ACTION_BLINK, id, value: blink })
-  if (current.palette > 0 && current.palette <= 12) {
-    run({ type: ACTION_PALETTE, id, value: current.palette })
+  if (dev.configuring) {
+    switch (current.mode) {
+      case 'MODE_COOL':
+      case 'MODE_HEAT':
+      case 'MODE_WET':
+      case 'MODE_VENTILATION':
+        run({ type: ACTION_PALETTE, id, value: current.palette_setpoint })
+    }
+  } else {
+    if (current.palette > 0 && current.palette <= 12) {
+      run({ type: ACTION_PALETTE, id, value: current.palette })
+    }
   }
-
 }
 
 const print = (id, value, power, image) =>
