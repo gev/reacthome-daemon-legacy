@@ -83,6 +83,8 @@ const {
   ACTION_STOP_VENTILATION,
   ACTION_START_VENTILATION,
   ACTION_START_WET,
+  ACTION_ON,
+  ACTION_OFF,
 } = require("../constants");
 const {
   get,
