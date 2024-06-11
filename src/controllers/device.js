@@ -1670,7 +1670,7 @@ const maxCoolIntensity = (thermostat = []) => {
   let max = 0;
   thermostat.forEach((id) => {
     const { onCoolIntensity = [] } = get(id) || {};
-    max = Math.max(max, onCoolIntensity.length);
+    max = Math.max(max, onCoolIntensity.length - 1);
   })
   return max;
 }
@@ -1679,7 +1679,7 @@ const maxHeatIntensity = (thermostat = []) => {
   let max = 0;
   thermostat.forEach((id) => {
     const { onHeatIntensity = [] } = get(id) || {};
-    max = Math.max(max, onHeatIntensity.length);
+    max = Math.max(max, onHeatIntensity.length - 1);
   })
   return max;
 }
@@ -1688,7 +1688,7 @@ const maxVentilationIntensity = (co2_stat = []) => {
   let max = 0;
   co2_stat.forEach((id) => {
     const { onVentilationIntensity = [] } = get(id) || {};
-    max = Math.max(max, onVentilationIntensity.length);
+    max = Math.max(max, onVentilationIntensity.length - 1);
   })
   return max;
 }
