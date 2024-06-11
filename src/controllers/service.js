@@ -2586,7 +2586,6 @@ const run = (action) => {
         }
         break;
       }
-
     }
   } catch (e) {
     console.error(action);
