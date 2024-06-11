@@ -186,6 +186,7 @@ const {
   CO2_STAT,
   ACTION_STOP_VENTILATION,
   DEVICE_TYPE_DI_4_RSM,
+  ACTION_INTENSITY,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -1879,6 +1880,57 @@ const run = (action) => {
             set(display, { lock: true });
             run({ type: ACTION_IMAGE, id: display, value: setpoint });
             setTimeout(set, 5000, display, { lock: false });
+          }
+        }
+        break;
+      }
+      case ACTION_INTENSITY: {
+        const { id, cool, heat, ventilation } = action;
+        const dev = get(id) || {};
+        if (cool >= 0) {
+          if (dev.type === SITE) {
+            const { thermostat = [] } = dev
+            thermostat.forEach(id => {
+              run({ type: ACTION_INTENSITY, id, cool });
+            });
+          } else {
+            const { onCoolIntensity = [] } = get(id) || {};
+            if (cool < onCoolIntensity.length) {
+              set(id, { intensity_cool: cool });
+              if (onCoolIntensity[cool]) {
+                run({ type: ACTION_SCRIPT_RUN, id: onCoolIntensity[cool] });
+              }
+            }
+          }
+        } else if (heat >= 0) {
+          if (dev.type === SITE) {
+            const { thermostat = [] } = dev
+            thermostat.forEach(id => {
+              run({ type: ACTION_INTENSITY, id, heat });
+            });
+          } else {
+            const { onHeatIntensity = [] } = get(id) || {};
+            if (heat < onHeatIntensity.length) {
+              set(id, { intensity_heat: heat });
+              if (onHeatIntensity[heat]) {
+                run({ type: ACTION_SCRIPT_RUN, id: onHeatIntensity[heat] });
+              }
+            }
+          }
+        } else if (ventilation >= 0) {
+          if (dev.type === SITE) {
+            const { co2_stat = [] } = dev
+            co2_stat.forEach(id => {
+              run({ type: ACTION_INTENSITY, id, ventilation });
+            });
+          } else {
+            const { onVentilationIntensity = [] } = get(id) || {};
+            if (ventilation < onVentilationIntensity.length) {
+              set(id, { intensity_ventilation: ventilation });
+              if (onVentilationIntensity[ventilation]) {
+                run({ type: ACTION_SCRIPT_RUN, id: onVentilationIntensity[ventilation] });
+              }
+            }
           }
         }
         break;
