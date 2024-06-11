@@ -1898,6 +1898,8 @@ const run = (action) => {
             if (onCoolIntensity.length > 0) {
               const cool_intensity = Math.min(onCoolIntensity.length - 1, cool);
               set(id, { cool_intensity });
+              const { state } = get(id) || {};
+              if (state === STOP) return;
               if (onCoolIntensity[cool_intensity]) {
                 run({ type: ACTION_SCRIPT_RUN, id: onCoolIntensity[cool_intensity] });
               }
@@ -1916,6 +1918,8 @@ const run = (action) => {
             if (onHeatIntensity.length > 0) {
               const heat_intensity = Math.min(onHeatIntensity.length - 1, heat);
               set(id, { heat_intensity });
+              const { state } = get(id) || {};
+              if (state === STOP) return;
               if (onHeatIntensity[heat_intensity]) {
                 run({ type: ACTION_SCRIPT_RUN, id: onHeatIntensity[heat_intensity] });
               }
@@ -1934,6 +1938,8 @@ const run = (action) => {
             if (onVentilationIntensity.length > 0) {
               const ventilation_intensity = Math.min(onVentilationIntensity.length - 1, ventilation);
               set(id, { ventilation_intensity });
+              const { state } = get(id) || {};
+              if (state === STOP) return;
               if (onVentilationIntensity[ventilation_intensity]) {
                 run({ type: ACTION_SCRIPT_RUN, id: onVentilationIntensity[ventilation_intensity] });
               }
@@ -2134,8 +2140,8 @@ const run = (action) => {
         const { setpoint, mode, site } = get(id) || {};
         const { temperature } = get(site) || {};
         const make = (state, script, mode, enabled, intensity, onIntensity = []) => () => {
-          if (!enabled) return;
           set(id, { state, mode });
+          if (!enabled) return;
           if (script) {
             run({ type: ACTION_SCRIPT_RUN, id: script });
           }
@@ -2204,8 +2210,8 @@ const run = (action) => {
         const { setpoint, mode, site } = get(id) || {};
         const { humidity } = get(site) || {};
         const make = (state, script, mode, enabled) => () => {
-          if (!enabled) return;
           set(id, { state, mode });
+          if (!enabled) return;
           if (script) {
             run({ type: ACTION_SCRIPT_RUN, id: script });
           }
@@ -2262,9 +2268,10 @@ const run = (action) => {
           onStopVentilation,
           onVentilationIntensity,
         } = action;
-        const { setpoint, mode, site } = get(id) || {};
+        const { setpoint, site } = get(id) || {};
         const { co2 } = get(site) || {};
-        const make = (script, intensity, onIntensity = []) => () => {
+        const make = (state, script, intensity, onIntensity = []) => () => {
+          set(id, { state });
           if (!ventilation) return;
           if (script) {
             run({ type: ACTION_SCRIPT_RUN, id: script });
@@ -2273,8 +2280,8 @@ const run = (action) => {
             run({ type: ACTION_SCRIPT_RUN, id: onIntensity[intensity] });
           }
         };
-        const stopVentilation = make(onStopVentilation);
-        const startVentilation = make(onStartVentilation, ventilation_intensity, onVentilationIntensity);
+        const stopVentilation = make(STOP, onStopVentilation);
+        const startVentilation = make(VENTILATION, onStartVentilation, ventilation_intensity, onVentilationIntensity);
         if (co2 > setpoint - (- hysteresis)) {
           startVentilation();
         } else if (co2 < setpoint - hysteresis) {
