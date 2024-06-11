@@ -187,6 +187,7 @@ const {
   ACTION_STOP_VENTILATION,
   DEVICE_TYPE_DI_4_RSM,
   ACTION_INTENSITY,
+  VENTILATION,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -1899,8 +1900,7 @@ const run = (action) => {
               const cool_intensity = Math.min(onCoolIntensity.length - 1, cool);
               set(id, { cool_intensity });
               const { cool, state } = get(id) || {};
-              if (!cool || state === STOP) return;
-              if (onCoolIntensity[cool_intensity]) {
+              if (cool && state === COOL && onCoolIntensity[cool_intensity]) {
                 run({ type: ACTION_SCRIPT_RUN, id: onCoolIntensity[cool_intensity] });
               }
             } else {
@@ -1919,8 +1919,7 @@ const run = (action) => {
               const heat_intensity = Math.min(onHeatIntensity.length - 1, heat);
               set(id, { heat_intensity });
               const { heat, state } = get(id) || {};
-              if (!heat || state === STOP) return;
-              if (onHeatIntensity[heat_intensity]) {
+              if (heat && state === HEAT && onHeatIntensity[heat_intensity]) {
                 run({ type: ACTION_SCRIPT_RUN, id: onHeatIntensity[heat_intensity] });
               }
             } else {
@@ -1939,8 +1938,7 @@ const run = (action) => {
               const ventilation_intensity = Math.min(onVentilationIntensity.length - 1, ventilation);
               set(id, { ventilation_intensity });
               const { ventilation, state } = get(id) || {};
-              if (!ventilation || state === STOP) return;
-              if (onVentilationIntensity[ventilation_intensity]) {
+              if (ventilation && state === VENTILATION && onVentilationIntensity[ventilation_intensity]) {
                 run({ type: ACTION_SCRIPT_RUN, id: onVentilationIntensity[ventilation_intensity] });
               }
             } else {
