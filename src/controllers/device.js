@@ -219,7 +219,7 @@ module.exports.manage = () => {
                     count: 0,
                     timeout: setTimeout(
                       handleHold_,
-                      parseInt(chan.interval || 100)
+                      parseInt(chan.interval || 300)
                     )
                   };
                 }
@@ -977,12 +977,12 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
           const { setpoint = 24, cool = true } = get(thermostat[0]) || {};
           switch (chan.action) {
             case 'plus': {
-              run({ type: ACTION_SETPOINT, id: site, temperature: setpoint + 0.1 });
+              run({ type: ACTION_SETPOINT, id: site, temperature: setpoint + 0.5 });
               renderSmartTop(id);
               break;
             }
             case 'minus': {
-              run({ type: ACTION_SETPOINT, id: site, temperature: setpoint - 0.1 });
+              run({ type: ACTION_SETPOINT, id: site, temperature: setpoint - 0.5 });
               renderSmartTop(id);
               break;
             }
@@ -1006,12 +1006,12 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
           const { setpoint = 24, heat = true } = get(thermostat[0]) || {};
           switch (chan.action) {
             case 'plus': {
-              run({ type: ACTION_SETPOINT, id: site, temperature: setpoint + 0.1 });
+              run({ type: ACTION_SETPOINT, id: site, temperature: setpoint + 0.5 });
               renderSmartTop(id);
               break;
             }
             case 'minus': {
-              run({ type: ACTION_SETPOINT, id: site, temperature: setpoint - 0.1 });
+              run({ type: ACTION_SETPOINT, id: site, temperature: setpoint - 0.5 });
               renderSmartTop(id);
               break;
             }
@@ -1035,12 +1035,12 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
           const { setpoint = 50, wet = true } = get(hygrostat[0]) || {};
           switch (chan.action) {
             case 'plus': {
-              run({ type: ACTION_SETPOINT, id: site, humidity: setpoint + 0.1 });
+              run({ type: ACTION_SETPOINT, id: site, humidity: setpoint + 0.5 });
               renderSmartTop(id);
               break;
             }
             case 'minus': {
-              run({ type: ACTION_SETPOINT, id: site, humidity: setpoint - 0.1 });
+              run({ type: ACTION_SETPOINT, id: site, humidity: setpoint - 0.5 });
               renderSmartTop(id);
               break;
             }
@@ -1092,7 +1092,7 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
             case 'plus': {
               switch (dev.configuring) {
                 case 1: {
-                  const value = min + 0.1;
+                  const value = min + 0.5;
                   if (value < 40 && value > 5 && value < max) {
                     warm_floor.forEach(id => {
                       set(id, { min: value })
@@ -1102,7 +1102,7 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
                   break;
                 }
                 case 2: {
-                  const value = max + 0.1;
+                  const value = max + 0.5;
                   if (value < 40 && value > 5 && value > min) {
                     warm_floor.forEach(id => {
                       set(id, { max: value })
@@ -1117,20 +1117,20 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
             case 'minus': {
               switch (dev.configuring) {
                 case 1: {
-                  const value = min - 0.1;
+                  const value = min - 0.5;
                   if (value < 40 && value > 5 && value < max) {
                     warm_floor.forEach(id => {
-                      set(id, { min: min - 0.1 })
+                      set(id, { min: min - 0.5 })
                     })
                     renderSmartTop(id);
                   }
                   break;
                 }
                 case 2: {
-                  const value = max - 0.1;
+                  const value = max - 0.5;
                   if (value < 40 && value > 5 && value > min) {
                     warm_floor.forEach(id => {
-                      set(id, { max: max - 0.1 })
+                      set(id, { max: max - 0.5 })
                     })
                     renderSmartTop(id);
                   }
@@ -1186,12 +1186,12 @@ const handleSmartTopHold = (id, dev, chan, current) => {
             const { setpoint = 24 } = get(thermostat[0]) || {};
             switch (chan.action) {
               case 'plus': {
-                run({ type: ACTION_SETPOINT, id: site, temperature: setpoint + 0.1 });
+                run({ type: ACTION_SETPOINT, id: site, temperature: setpoint + 0.5 });
                 renderSmartTop(id);
                 return true;
               }
               case 'minus': {
-                run({ type: ACTION_SETPOINT, id: site, temperature: setpoint - 0.1 });
+                run({ type: ACTION_SETPOINT, id: site, temperature: setpoint - 0.5 });
                 renderSmartTop(id);
                 return true;
               }
@@ -1202,12 +1202,12 @@ const handleSmartTopHold = (id, dev, chan, current) => {
             const { setpoint = 50 } = get(hygrostat[0]) || {};
             switch (chan.action) {
               case 'plus': {
-                run({ type: ACTION_SETPOINT, id: site, humidity: setpoint + 0.1 });
+                run({ type: ACTION_SETPOINT, id: site, humidity: setpoint + 0.5 });
                 renderSmartTop(id);
                 return true;
               }
               case 'minus': {
-                run({ type: ACTION_SETPOINT, id: site, humidity: setpoint - 0.1 });
+                run({ type: ACTION_SETPOINT, id: site, humidity: setpoint - 0.5 });
                 renderSmartTop(id);
                 return true;
               }
@@ -1218,12 +1218,12 @@ const handleSmartTopHold = (id, dev, chan, current) => {
             const { setpoint = 400 } = get(co2_stat[0]) || {};
             switch (chan.action) {
               case 'plus': {
-                run({ type: ACTION_SETPOINT, id: site, co2: setpoint + 5 });
+                run({ type: ACTION_SETPOINT, id: site, co2: setpoint + 10 });
                 renderSmartTop(id);
                 return true;
               }
               case 'minus': {
-                run({ type: ACTION_SETPOINT, id: site, co2: setpoint - 5 });
+                run({ type: ACTION_SETPOINT, id: site, co2: setpoint - 10 });
                 renderSmartTop(id);
                 return true;
               }
@@ -1236,7 +1236,7 @@ const handleSmartTopHold = (id, dev, chan, current) => {
               case 'plus': {
                 switch (dev.configuring) {
                   case 1: {
-                    const value = min + 0.1;
+                    const value = min + 0.5;
                     if (value < 40 && value > 5 && value < max) {
                       warm_floor.forEach(id => {
                         set(id, { min: value })
@@ -1247,7 +1247,7 @@ const handleSmartTopHold = (id, dev, chan, current) => {
                     break;
                   }
                   case 2: {
-                    const value = max + 0.1;
+                    const value = max + 0.5;
                     if (value < 40 && value > 5 && value > min) {
                       warm_floor.forEach(id => {
                         set(id, { max: value })
@@ -1263,10 +1263,10 @@ const handleSmartTopHold = (id, dev, chan, current) => {
               case 'minus': {
                 switch (dev.configuring) {
                   case 1: {
-                    const value = min - 0.1;
+                    const value = min - 0.5;
                     if (value < 40 && value > 5 && value < max) {
                       warm_floor.forEach(id => {
-                        set(id, { min: min - 0.1 })
+                        set(id, { min: min - 0.5 })
                       })
                       renderSmartTop(id);
                       return true;
@@ -1274,10 +1274,10 @@ const handleSmartTopHold = (id, dev, chan, current) => {
                     break;
                   }
                   case 2: {
-                    const value = max - 0.1;
+                    const value = max - 0.5;
                     if (value < 40 && value > 5 && value > min) {
                       warm_floor.forEach(id => {
-                        set(id, { max: max - 0.1 })
+                        set(id, { max: max - 0.5 })
                       })
                       renderSmartTop(id);
                       return true;
