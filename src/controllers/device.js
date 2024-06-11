@@ -975,7 +975,7 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
       const { thermostat = [], hygrostat = [], co2_stat = [], warm_floor = [] } = get(site) || {};
       switch (current.mode) {
         case 'MODE_COOL': {
-          const { setpoint = 24, cool = true, intensity_cool = 0 } = get(thermostat[0]) || {};
+          const { setpoint = 24, cool = true, cool_intensity = 0 } = get(thermostat[0]) || {};
           switch (chan.action) {
             case 'plus': {
               switch (dev.configuring) {
@@ -985,7 +985,7 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
                   break;
                 }
                 case 2: {
-                  run({ type: ACTION_INTENSITY, id: site, cool: intensity_cool + 1 });
+                  run({ type: ACTION_INTENSITY, id: site, cool: cool_intensity + 1 });
                   renderSmartTop(id);
                   break;
                 }
@@ -1000,7 +1000,7 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
                   break;
                 }
                 case 2: {
-                  run({ type: ACTION_INTENSITY, id: site, cool: intensity_cool - 1 });
+                  run({ type: ACTION_INTENSITY, id: site, cool: cool_intensity - 1 });
                   renderSmartTop(id);
                   break;
                 }
@@ -1024,7 +1024,7 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
           break;
         }
         case 'MODE_HEAT': {
-          const { setpoint = 24, heat = true, intensity_heat = 0 } = get(thermostat[0]) || {};
+          const { setpoint = 24, heat = true, heat_intensity = 0 } = get(thermostat[0]) || {};
           switch (chan.action) {
             case 'plus': {
               switch (dev.configuring) {
@@ -1034,7 +1034,7 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
                   break;
                 }
                 case 2: {
-                  run({ type: ACTION_INTENSITY, id: site, heat: intensity_heat + 1 });
+                  run({ type: ACTION_INTENSITY, id: site, heat: heat_intensity + 1 });
                   renderSmartTop(id);
                   break;
                 }
@@ -1049,7 +1049,7 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
                   break;
                 }
                 case 2: {
-                  run({ type: ACTION_INTENSITY, id: site, heat: intensity_heat - 1 });
+                  run({ type: ACTION_INTENSITY, id: site, heat: heat_intensity - 1 });
                   renderSmartTop(id);
                   break;
                 }
@@ -1099,7 +1099,7 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
           break;
         }
         case 'MODE_VENTILATION': {
-          const { setpoint = 400, ventilation = true, intensity_ventilation = 0 } = get(co2_stat[0]) || {};
+          const { setpoint = 400, ventilation = true, ventilation_intensity = 0 } = get(co2_stat[0]) || {};
           switch (chan.action) {
             case 'plus': {
               switch (dev.configuring) {
@@ -1109,7 +1109,7 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
                   break;
                 }
                 case 2: {
-                  run({ type: ACTION_INTENSITY, id: site, ventilation: intensity_ventilation + 1 });
+                  run({ type: ACTION_INTENSITY, id: site, ventilation: ventilation_intensity + 1 });
                   renderSmartTop(id);
                   break;
                 }
@@ -1124,7 +1124,7 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
                   break;
                 }
                 case 2: {
-                  run({ type: ACTION_INTENSITY, id: site, ventilation: intensity_ventilation - 1 });
+                  run({ type: ACTION_INTENSITY, id: site, ventilation: ventilation_intensity - 1 });
                   renderSmartTop(id);
                   break;
                 }
@@ -1243,7 +1243,7 @@ const handleSmartTopHold = (id, dev, chan, current) => {
       if (dev.configuring) {
         switch (current.mode) {
           case 'MODE_COOL': {
-            const { setpoint = 24, intensity_cool = 0 } = get(thermostat[0]) || {};
+            const { setpoint = 24, cool_intensity = 0 } = get(thermostat[0]) || {};
             switch (chan.action) {
               case 'plus': {
                 switch (dev.configuring) {
@@ -1253,7 +1253,7 @@ const handleSmartTopHold = (id, dev, chan, current) => {
                     return true;
                   }
                   case 2: {
-                    run({ type: ACTION_INTENSITY, id: site, cool: intensity_cool + 1 });
+                    run({ type: ACTION_INTENSITY, id: site, cool: cool_intensity + 1 });
                     renderSmartTop(id);
                     return true;
                   }
@@ -1268,7 +1268,7 @@ const handleSmartTopHold = (id, dev, chan, current) => {
                     return true;
                   }
                   case 2: {
-                    run({ type: ACTION_INTENSITY, id: site, cool: intensity_cool - 1 });
+                    run({ type: ACTION_INTENSITY, id: site, cool: cool_intensity - 1 });
                     renderSmartTop(id);
                     return true;
                   }
@@ -1279,7 +1279,7 @@ const handleSmartTopHold = (id, dev, chan, current) => {
             break;
           }
           case 'MODE_HEAT': {
-            const { setpoint = 24, intensity_heat = 0 } = get(thermostat[0]) || {};
+            const { setpoint = 24, heat_intensity = 0 } = get(thermostat[0]) || {};
             switch (chan.action) {
               case 'plus': {
                 switch (dev.configuring) {
@@ -1289,7 +1289,7 @@ const handleSmartTopHold = (id, dev, chan, current) => {
                     return true;
                   }
                   case 2: {
-                    run({ type: ACTION_INTENSITY, id: site, heat: intensity_heat + 1 });
+                    run({ type: ACTION_INTENSITY, id: site, heat: heat_intensity + 1 });
                     renderSmartTop(id);
                     return true;
                   }
@@ -1304,7 +1304,7 @@ const handleSmartTopHold = (id, dev, chan, current) => {
                     return true;
                   }
                   case 2: {
-                    run({ type: ACTION_INTENSITY, id: site, heat: intensity_heat - 1 });
+                    run({ type: ACTION_INTENSITY, id: site, heat: heat_intensity - 1 });
                     renderSmartTop(id);
                     return true;
                   }
@@ -1331,7 +1331,7 @@ const handleSmartTopHold = (id, dev, chan, current) => {
             break;
           }
           case 'MODE_VENTILATION': {
-            const { setpoint = 400, intensity_ventilation = 0 } = get(co2_stat[0]) || {};
+            const { setpoint = 400, ventilation_intensity = 0 } = get(co2_stat[0]) || {};
             switch (chan.action) {
               case 'plus': {
                 switch (dev.configuring) {
@@ -1341,7 +1341,7 @@ const handleSmartTopHold = (id, dev, chan, current) => {
                     return true;
                   }
                   case 2: {
-                    run({ type: ACTION_INTENSITY, id: site, ventilation: intensity_ventilation + 1 });
+                    run({ type: ACTION_INTENSITY, id: site, ventilation: ventilation_intensity + 1 });
                     renderSmartTop(id);
                     return true;
                   }
@@ -1356,7 +1356,7 @@ const handleSmartTopHold = (id, dev, chan, current) => {
                     return true;
                   }
                   case 2: {
-                    run({ type: ACTION_INTENSITY, id: site, ventilation: intensity_ventilation - 1 });
+                    run({ type: ACTION_INTENSITY, id: site, ventilation: ventilation_intensity - 1 });
                     renderSmartTop(id);
                     return true;
                   }
@@ -1518,39 +1518,39 @@ const renderSmartTop = (id) => {
     switch (current.mode) {
       case 'MODE_COOL': {
         const max = maxCoolIntensity(thermostat);
-        const { setpoint = 24, cool = true, intensity_cool = 0 } = get(thermostat[0]) || {};
+        const { setpoint = 24, cool = true, cool_intensity = 0 } = get(thermostat[0]) || {};
         if (configuring) {
           switch (configuring) {
             case 1: {
-              printf(id, setpoint, -99.9, 199.9, 1, cool, intensity_cool, max, image);
+              printf(id, setpoint, -99.9, 199.9, 1, cool, cool_intensity, max, image);
               break;
             }
             case 2: {
-              printf(id, intensity_cool, 0, 1999, 0, cool, intensity_cool, max, image);
+              printf(id, cool_intensity, 0, 1999, 0, cool, cool_intensity, max, image);
               break;
             }
           }
         } else {
-          printf(id, temperature, -99.9, 199.9, 1, cool, intensity_cool, max, image);
+          printf(id, temperature, -99.9, 199.9, 1, cool, cool_intensity, max, image);
         }
         break;
       }
       case 'MODE_HEAT': {
         const max = maxHeatIntensity(thermostat);
-        const { setpoint = 24, heat = true, intensity_heat = 0 } = get(thermostat[0]) || {};
+        const { setpoint = 24, heat = true, heat_intensity = 0 } = get(thermostat[0]) || {};
         if (configuring) {
           switch (configuring) {
             case 1: {
-              printf(id, setpoint, -99.9, 199.9, 1, heat, intensity_heat, max, image);
+              printf(id, setpoint, -99.9, 199.9, 1, heat, heat_intensity, max, image);
               break;
             }
             case 2: {
-              printf(id, intensity_heat, 0, 1999, 0, heat, intensity_heat, max, image);
+              printf(id, heat_intensity, 0, 1999, 0, heat, heat_intensity, max, image);
               break;
             }
           }
         } else {
-          printf(id, temperature, -99.9, 199.9, 1, heat, intensity_heat, max, image);
+          printf(id, temperature, -99.9, 199.9, 1, heat, heat_intensity, max, image);
         }
         break;
       }
@@ -1585,20 +1585,20 @@ const renderSmartTop = (id) => {
       }
       case 'MODE_VENTILATION': {
         const max = maxVentilationIntensity(co2_stat);
-        const { setpoint = 400, ventilation = true, intensity_ventilation = 0 } = get(co2_stat[0]) || {};
+        const { setpoint = 400, ventilation = true, ventilation_intensity = 0 } = get(co2_stat[0]) || {};
         if (configuring) {
           switch (configuring) {
             case 1: {
-              printf(id, setpoint, 0, 1999, 0, ventilation, intensity_ventilation, max, image);
+              printf(id, setpoint, 0, 1999, 0, ventilation, ventilation_intensity, max, image);
               break;
             }
             case 2: {
-              printf(id, intensity_ventilation, 0, 1999, 0, ventilation, intensity_ventilation, max, image);
+              printf(id, ventilation_intensity, 0, 1999, 0, ventilation, ventilation_intensity, max, image);
               break;
             }
           }
         } else {
-          printf(id, co2, 0, 1999, 0, ventilation, intensity_ventilation, max, image);
+          printf(id, co2, 0, 1999, 0, ventilation, ventilation_intensity, max, image);
         }
         break;
       }

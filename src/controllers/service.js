@@ -1896,13 +1896,13 @@ const run = (action) => {
           } else {
             const { onCoolIntensity = [] } = get(id) || {};
             if (onCoolIntensity.length > 0) {
-              const intensity_cool = Math.min(onCoolIntensity.length - 1, cool);
-              set(id, { intensity_cool });
-              if (onCoolIntensity[intensity_cool]) {
-                run({ type: ACTION_SCRIPT_RUN, id: onCoolIntensity[intensity_cool] });
+              const cool_intensity = Math.min(onCoolIntensity.length - 1, cool);
+              set(id, { cool_intensity });
+              if (onCoolIntensity[cool_intensity]) {
+                run({ type: ACTION_SCRIPT_RUN, id: onCoolIntensity[cool_intensity] });
               }
             } else {
-              set(id, { intensity_cool: 0 });
+              set(id, { cool_intensity: 0 });
             }
           }
         } else if (heat >= 0) {
@@ -1914,13 +1914,13 @@ const run = (action) => {
           } else {
             const { onHeatIntensity = [] } = get(id) || {};
             if (onHeatIntensity.length > 0) {
-              const intensity_heat = Math.min(onHeatIntensity.length - 1, heat);
-              set(id, { intensity_heat });
-              if (onHeatIntensity[intensity_heat]) {
-                run({ type: ACTION_SCRIPT_RUN, id: onHeatIntensity[intensity_heat] });
+              const heat_intensity = Math.min(onHeatIntensity.length - 1, heat);
+              set(id, { heat_intensity });
+              if (onHeatIntensity[heat_intensity]) {
+                run({ type: ACTION_SCRIPT_RUN, id: onHeatIntensity[heat_intensity] });
               }
             } else {
-              set(id, { intensity_heat: 0 });
+              set(id, { heat_intensity: 0 });
             }
           }
         } else if (ventilation >= 0) {
@@ -1932,13 +1932,13 @@ const run = (action) => {
           } else {
             const { onVentilationIntensity = [] } = get(id) || {};
             if (onVentilationIntensity.length > 0) {
-              const intensity_ventilation = Math.min(onVentilationIntensity.length - 1, ventilation);
-              set(id, { intensity_ventilation });
-              if (onVentilationIntensity[intensity_ventilation]) {
-                run({ type: ACTION_SCRIPT_RUN, id: onVentilationIntensity[intensity_ventilation] });
+              const ventilation_intensity = Math.min(onVentilationIntensity.length - 1, ventilation);
+              set(id, { ventilation_intensity });
+              if (onVentilationIntensity[ventilation_intensity]) {
+                run({ type: ACTION_SCRIPT_RUN, id: onVentilationIntensity[ventilation_intensity] });
               }
             } else {
-              set(id, { intensity_ventilation: 0 });
+              set(id, { ventilation_intensity: 0 });
             }
           }
         }
@@ -2120,26 +2120,33 @@ const run = (action) => {
           heat = true,
           cool_hysteresis,
           cool_threshold,
+          cool_intensity,
           heat_hysteresis,
           heat_threshold,
+          heat_intensity,
           onStartHeat,
           onStartCool,
           onStopHeat,
           onStopCool,
+          onCoolIntensity,
+          onHeatIntensity,
         } = action;
         const { setpoint, mode, site } = get(id) || {};
         const { temperature } = get(site) || {};
-        const make = (state, script, mode, enabled) => () => {
+        const make = (state, script, mode, enabled, intensity, onIntensity = []) => () => {
           if (!enabled) return;
           set(id, { state, mode });
           if (script) {
             run({ type: ACTION_SCRIPT_RUN, id: script });
           }
+          if (intensity >= 0 && onIntensity[intensity]) {
+            run({ type: ACTION_SCRIPT_RUN, id: onIntensity[intensity] });
+          }
         };
         const stopCool = make(STOP, onStopCool, COOL, cool);
         const stopHeat = make(STOP, onStopHeat, HEAT, heat);
-        const startCool = make(COOL, onStartCool, COOL, cool);
-        const startHeat = make(HEAT, onStartHeat, HEAT, heat);
+        const startCool = make(COOL, onStartCool, COOL, cool, cool_intensity, onCoolIntensity);
+        const startHeat = make(HEAT, onStartHeat, HEAT, heat, heat_intensity, onHeatIntensity);
         switch (mode) {
           case HEAT: {
             stopCool();
@@ -2250,19 +2257,24 @@ const run = (action) => {
           id,
           ventilation = true,
           hysteresis,
+          ventilation_intensity,
           onStartVentilation,
           onStopVentilation,
+          onVentilationIntensity,
         } = action;
         const { setpoint, mode, site } = get(id) || {};
         const { co2 } = get(site) || {};
-        const make = (script) => () => {
+        const make = (script, intensity, onIntensity = []) => () => {
           if (!ventilation) return;
           if (script) {
             run({ type: ACTION_SCRIPT_RUN, id: script });
           }
+          if (intensity >= 0 && onIntensity[intensity]) {
+            run({ type: ACTION_SCRIPT_RUN, id: onIntensity[intensity] });
+          }
         };
         const stopVentilation = make(onStopVentilation);
-        const startVentilation = make(onStartVentilation);
+        const startVentilation = make(onStartVentilation, ventilation_intensity, onVentilationIntensity);
         if (co2 > setpoint - (- hysteresis)) {
           startVentilation();
         } else if (co2 < setpoint - hysteresis) {
