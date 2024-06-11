@@ -1898,8 +1898,8 @@ const run = (action) => {
             if (onCoolIntensity.length > 0) {
               const cool_intensity = Math.min(onCoolIntensity.length - 1, cool);
               set(id, { cool_intensity });
-              const { state } = get(id) || {};
-              if (state === STOP) return;
+              const { cool, state } = get(id) || {};
+              if (!cool || state === STOP) return;
               if (onCoolIntensity[cool_intensity]) {
                 run({ type: ACTION_SCRIPT_RUN, id: onCoolIntensity[cool_intensity] });
               }
@@ -1918,8 +1918,8 @@ const run = (action) => {
             if (onHeatIntensity.length > 0) {
               const heat_intensity = Math.min(onHeatIntensity.length - 1, heat);
               set(id, { heat_intensity });
-              const { state } = get(id) || {};
-              if (state === STOP) return;
+              const { heat, state } = get(id) || {};
+              if (!heat || state === STOP) return;
               if (onHeatIntensity[heat_intensity]) {
                 run({ type: ACTION_SCRIPT_RUN, id: onHeatIntensity[heat_intensity] });
               }
@@ -1938,8 +1938,8 @@ const run = (action) => {
             if (onVentilationIntensity.length > 0) {
               const ventilation_intensity = Math.min(onVentilationIntensity.length - 1, ventilation);
               set(id, { ventilation_intensity });
-              const { state } = get(id) || {};
-              if (state === STOP) return;
+              const { ventilation, state } = get(id) || {};
+              if (!ventilation || state === STOP) return;
               if (onVentilationIntensity[ventilation_intensity]) {
                 run({ type: ACTION_SCRIPT_RUN, id: onVentilationIntensity[ventilation_intensity] });
               }
