@@ -819,7 +819,7 @@ const run = (action) => {
                     id: dev,
                     index,
                     action: ARTNET_FADE,
-                    v,
+                    value: v,
                     velocity: ARTNET_VELOCITY,
                   });
                   break;
@@ -1463,7 +1463,7 @@ const run = (action) => {
                 id: dev,
                 index,
                 action: ARTNET_FADE,
-                v,
+                value: v,
                 velocity: ARTNET_VELOCITY,
               });
               break;
@@ -1562,7 +1562,7 @@ const run = (action) => {
                 id: dev,
                 index,
                 action: ARTNET_FADE,
-                v,
+                value: v,
                 velocity: ARTNET_VELOCITY,
               });
               break;
