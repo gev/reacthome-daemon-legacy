@@ -46,7 +46,7 @@ module.exports = class {
 
   pool = [];
   handle = ({ id, data }) => {
-    clearTimeout(this.t);
+    // clearTimeout(this.t);
     this.pool.push(data);
     this.t = setTimeout(() => {
       const buff = Buffer.concat(this.pool);
