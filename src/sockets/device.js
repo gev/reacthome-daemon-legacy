@@ -20,7 +20,7 @@ const device = socket((socket) => {
   return () => {
     device.send(data, DEVICE_GROUP);
   };
-}, DISCOVERY_INTERVAL, DEVICE_PORT, DEVICE_SERVER_PORT, '172.16.0.1');
+}, DISCOVERY_INTERVAL, DEVICE_PORT, DEVICE_SERVER_PORT, '192.168.18.2');
 
 
 device.sendRBUS = (data, id) => {
