@@ -28,7 +28,8 @@ module.exports = class {
     // this.socket
     //     .on('data', this.process)
     //     .on('error', console.error);
-    this.request();
+    // this.request();
+    this.t = setInterval(this.request, period);
   }
 
   stop() {
@@ -61,7 +62,7 @@ module.exports = class {
           v[i] = ((buff.readUInt16LE(i * 16 + 1) << 16) | buff.readUInt16LE(i * 16 + 3)) / 100;
         }
         set(id, { value: [v[0], v[1]], total: v[4] });
-        this.t = setTimeout(this.request, period);
+        // this.t = setTimeout(this.request, period);
       }
     }, delay);
   };
@@ -80,12 +81,8 @@ module.exports = class {
     const [dev, , index] = bind.split('/');
     const { ip, type } = get(dev);
     const header = Buffer.from([ACTION_RS485_TRANSMIT, index]);
-    const payload = Buffer.alloc(5, 0);
-    payload.writeUInt32BE(address, 0);
-    payload.writeUInt8(cmd, 4);
-    const crc = Buffer.alloc(2);
-    crc.writeUInt16LE(crc16(payload), 0);
-    const buffer = Buffer.concat([header, payload, crc]);
+    const payload = this.query(cmd);
+    const buffer = Buffer.concat([header, payload]);
     switch (type) {
       case DEVICE_TYPE_RS_HUB1_RS: {
         device.sendRBUS(buffer, dev);
