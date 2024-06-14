@@ -1,6 +1,6 @@
 'use strict';
 
-const crc = require('crc').crc16modbus;
+const crc16 = require('crc').crc16modbus;
 const { get, set } = require('../../actions');
 const { device } = require('../../sockets');
 const { ACTION_RS485_TRANSMIT, DEVICE_TYPE_RS_HUB1_RS } = require('../../constants');
@@ -104,7 +104,7 @@ module.exports = class {
     buff.writeUInt8(address & 0xff, 0);
     cmd.forEach((b, i) => { buff.writeUInt8(b, i + 1) });
     const req = Buffer.alloc(buff.length + 2, buff);
-    req.writeUInt16LE(crc(buff), buff.length);
+    req.writeUInt16LE(crc16(buff), buff.length);
     return req;
   }
 
