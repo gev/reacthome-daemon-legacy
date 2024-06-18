@@ -1655,6 +1655,7 @@ const run = (action) => {
         buffer.writeUInt32LE(baud, 3);
         buffer[7] = line_control;
         switch (type) {
+          case DEVICE_TYPE_DI_4_RSM:
           case DEVICE_TYPE_RS_HUB1_RS: {
             device.sendRBUS(buffer, action.id);
             break;

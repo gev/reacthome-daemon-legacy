@@ -3,7 +3,7 @@
 const crc16 = require('crc').crc16modbus;
 const { get, set } = require('../../actions');
 const { device } = require('../../sockets');
-const { ACTION_RS485_TRANSMIT, DEVICE_TYPE_RS_HUB1_RS } = require('../../constants');
+const { ACTION_RS485_TRANSMIT, DEVICE_TYPE_RS_HUB1_RS, DEVICE_TYPE_DI_4_RSM } = require('../../constants');
 
 const address = 0x46;
 // const device = '/dev/ttyUSB0';
@@ -84,6 +84,7 @@ module.exports = class {
     const payload = this.query(cmd);
     const buffer = Buffer.concat([header, payload]);
     switch (type) {
+      case DEVICE_TYPE_DI_4_RSM:
       case DEVICE_TYPE_RS_HUB1_RS: {
         device.sendRBUS(buffer, dev);
         break;
