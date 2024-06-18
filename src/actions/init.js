@@ -617,7 +617,8 @@ module.exports.initialize = (id) => {
       }
       device.sendRBUS(Buffer.from(a), dev.ip);
       break;
-    } case DEVICE_TYPE_DIM4: {
+    }
+    case DEVICE_TYPE_DIM4: {
       for (let i = 1; i <= 4; i++) {
         const channel = get(`${id}/${DIM}/${i}`);
         a[2 * i - 1] = (channel && channel.type) || 0;
