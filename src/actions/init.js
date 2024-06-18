@@ -604,18 +604,6 @@ module.exports.initialize = (id) => {
       device.send(Buffer.from(a), dev.ip);
       break;
     }
-    case DEVICE_TYPE_DI_4_RSM: {
-      const { baud, line_control } = get(`${id}/${RS485}/1`) || {};
-      const channel = get(`${id}/${AO}/${1}`);
-      a[1] = baud & 0xff;
-      a[2] = (baud >> 8) & 0xff;
-      a[3] = (baud >> 16) & 0xff;
-      a[4] = (baud >> 24) & 0xff;
-      a[5] = line_control;
-      a[6] = (channel && channel.value) || 0;
-      device.sendRBUS(Buffer.from(a), dev.ip);
-      break;
-    }
     case DEVICE_TYPE_DIM4: {
       for (let i = 1; i <= 4; i++) {
         const channel = get(`${id}/${DIM}/${i}`);
@@ -706,10 +694,26 @@ module.exports.initialize = (id) => {
     }
     case DEVICE_TYPE_DI_4_RSM: {
       const mac = id.split(":").map((i) => parseInt(i, 16));
-      a[0] = ACTION_INITIALIZE;
-      const channel = get(`${id}/${AO}/1`) || {};
-      a[1] = channel.value || 0;
-      device.sendRBUS(Buffer.from(a), id);
+
+      const { version } = get(id) || {};
+      const major = parseInt(version.split(".")[0], 10);
+      const channel = get(`${id}/${AO}/${1}`);
+      switch (major) {
+        case 1:
+          a[1] = channel.value || 0;
+          break;
+        case 2: {
+          const { baud, line_control } = get(`${id}/${RS485}/1`) || {};
+          a[1] = baud & 0xff;
+          a[2] = (baud >> 8) & 0xff;
+          a[3] = (baud >> 16) & 0xff;
+          a[4] = (baud >> 24) & 0xff;
+          a[5] = line_control;
+          a[6] = (channel && channel.value) || 0;
+          break;
+        }
+      }
+      device.sendRBUS(Buffer.from(a), dev.ip);
       break;
     }
     case DEVICE_TYPE_LANAMP: {
