@@ -606,15 +606,13 @@ module.exports.initialize = (id) => {
     }
     case DEVICE_TYPE_DI_4_RSM: {
       const { baud, line_control } = get(`${id}/${RS485}/1`) || {};
+      const channel = get(`${id}/${AO}/${1}`);
       a[1] = baud & 0xff;
       a[2] = (baud >> 8) & 0xff;
       a[3] = (baud >> 16) & 0xff;
       a[4] = (baud >> 24) & 0xff;
       a[5] = line_control;
-      for (let i = 1; i <= 4; i++) {
-        const channel = get(`${id}/${AO}/${i}`);
-        a[i + 5] = (channel && channel.value) || 0;
-      }
+      a[6] = (channel && channel.value) || 0;
       device.sendRBUS(Buffer.from(a), dev.ip);
       break;
     }
