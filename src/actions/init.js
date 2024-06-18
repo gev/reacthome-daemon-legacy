@@ -712,7 +712,6 @@ module.exports.initialize = (id) => {
           break;
         }
       }
-      console.log(a)
       device.sendRBUS(Buffer.from(a), id);
       break;
     }
