@@ -51,6 +51,7 @@ const {
   DEVICE_TYPE_MIX_6x12_RS,
   DEVICE_TYPE_SMART_TOP_A6P,
   DEVICE_TYPE_SMART_TOP_G4D,
+  DEVICE_TYPE_DI_4_RSM,
 } = require("../constants");
 const { get, set, add } = require("./create");
 const { device } = require("../sockets");
@@ -603,7 +604,20 @@ module.exports.initialize = (id) => {
       device.send(Buffer.from(a), dev.ip);
       break;
     }
-    case DEVICE_TYPE_DIM4: {
+    case DEVICE_TYPE_DI_4_RSM: {
+      const { baud, line_control } = get(`${id}/${RS485}/1`) || {};
+      a[1] = baud & 0xff;
+      a[2] = (baud >> 8) & 0xff;
+      a[3] = (baud >> 16) & 0xff;
+      a[4] = (baud >> 24) & 0xff;
+      a[5] = line_control;
+      for (let i = 1; i <= 4; i++) {
+        const channel = get(`${id}/${AO}/${i}`);
+        a[i + 5] = (channel && channel.value) || 0;
+      }
+      device.sendRBUS(Buffer.from(a), dev.ip);
+      break;
+    } case DEVICE_TYPE_DIM4: {
       for (let i = 1; i <= 4; i++) {
         const channel = get(`${id}/${DIM}/${i}`);
         a[2 * i - 1] = (channel && channel.type) || 0;
