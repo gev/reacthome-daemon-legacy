@@ -694,7 +694,6 @@ module.exports.initialize = (id) => {
     }
     case DEVICE_TYPE_DI_4_RSM: {
       const mac = id.split(":").map((i) => parseInt(i, 16));
-
       const { version } = get(id) || {};
       const major = parseInt(version.split(".")[0], 10);
       const channel = get(`${id}/${AO}/${1}`);
@@ -703,7 +702,7 @@ module.exports.initialize = (id) => {
           a[1] = channel.value || 0;
           break;
         case 2: {
-          const { baud, line_control } = get(`${id}/${RS485}/1`) || {};
+          const { baud = 0, line_control = 0 } = get(`${id}/${RS485}/1`) || {};
           a[1] = baud & 0xff;
           a[2] = (baud >> 8) & 0xff;
           a[3] = (baud >> 16) & 0xff;
