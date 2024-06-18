@@ -713,7 +713,7 @@ module.exports.initialize = (id) => {
         }
       }
       console.log(a)
-      device.sendRBUS(Buffer.from(a), dev.ip);
+      device.sendRBUS(Buffer.from(a), id);
       break;
     }
     case DEVICE_TYPE_LANAMP: {
