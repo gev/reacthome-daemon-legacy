@@ -1,6 +1,6 @@
 const { crc16modbus } = require("crc");
 const { get } = require("../../../actions");
-const { ACTION_RS485_TRANSMIT, DEVICE_TYPE_RS_HUB1_RS } = require("../../../constants");
+const { ACTION_RS485_TRANSMIT, DEVICE_TYPE_RS_HUB1_RS, DEVICE_TYPE_DI_4_RSM } = require("../../../constants");
 const {
   READ_INPUT_REGISTERS,
   READ_HOLDING_REGISTERS,
@@ -31,6 +31,7 @@ const request = (getSize, fill) => (code) => (id, address, register, data) => {
     fill(buffer, data);
     buffer.writeUInt16LE(crc16modbus(buffer.slice(2, size)), size);
     switch (type) {
+      case DEVICE_TYPE_DI_4_RSM:
       case DEVICE_TYPE_RS_HUB1_RS: {
         device.sendRBUS(buffer, dev);
         break;

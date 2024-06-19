@@ -141,7 +141,7 @@ module.exports = class {
         }
       });
       const { project } = get(mac()) || {};
-      const { weather: { main : { temp } = {} } = {} } = get(project) || {};
+      const { weather: { main: { temp } = {} } = {} } = get(project) || {};
       if (temp !== undefined) {
         this.master.writeSingleOutputRegister(82, temp * 100);
       }
@@ -176,7 +176,7 @@ module.exports = class {
         break;
       default:
         set(this.channel(id), { value });
-      }
+    }
   }
 
   setWaterCounter(id, amount) {
@@ -188,7 +188,7 @@ module.exports = class {
     set(id, { value: amount });
   };
 
-  handle({ type, index, value }) {
+  run({ type, index, value }) {
     switch (type) {
       default: {
         if (index < 1 || index > 15) return;
@@ -311,7 +311,7 @@ module.exports = class {
           }
           default: {
             const value = data.readUInt16BE(offset);
-            this.set(id, value );
+            this.set(id, value);
             const { bind } = get(this.channel(id)) || {};
             if (bind) {
               if (value) {
@@ -319,7 +319,7 @@ module.exports = class {
               } else {
                 count_off(bind);
               }
-              }
+            }
             offset += 2;
           }
         }

@@ -51,6 +51,7 @@ const {
   DEVICE_TYPE_MIX_6x12_RS,
   DEVICE_TYPE_SMART_TOP_A6P,
   DEVICE_TYPE_SMART_TOP_G4D,
+  DEVICE_TYPE_DI_4_RSM,
 } = require("../constants");
 const { get, set, add } = require("./create");
 const { device } = require("../sockets");
@@ -159,26 +160,26 @@ module.exports.initialize = (id) => {
       device.sendTOP(Buffer.from(a), id);
       break;
     }
-    case DEVICE_TYPE_SMART_TOP_G4D: {
-      const mac = id.split(":").map((i) => parseInt(i, 16));
-      const { state = 1, brightness = 128, image = [], blink = [], vibro = 100 } = get(id);
-      a[0] = ACTION_INITIALIZE;
-      a[1] = vibro;
-      a[2] = state;
-      a[3] = brightness;
-      for (let i = 0; i < 8; i++) {
-        a[i + 4] = image[i] || 0;
-        a[i + 12] = blink[i] || 0;
-      }
-      for (let i = 1; i <= 64; i++) {
-        const channel = get(`${id}/rgb/${i}`);
-        a[3 * i + 17] = (channel && channel.r) || 0;
-        a[3 * i + 18] = (channel && channel.g) || 0;
-        a[3 * i + 19] = (channel && channel.b) || 0;
-      }
-      device.sendTOP(Buffer.from(a), id);
-      break;
-    }
+    // case DEVICE_TYPE_SMART_TOP_G4D: {
+    //   const mac = id.split(":").map((i) => parseInt(i, 16));
+    //   const { state = 1, brightness = 128, image = [], blink = [], vibro = 100 } = get(id);
+    //   a[0] = ACTION_INITIALIZE;
+    //   a[1] = vibro;
+    //   a[2] = state;
+    //   a[3] = brightness;
+    //   for (let i = 0; i < 8; i++) {
+    //     a[i + 4] = image[i] || 0;
+    //     a[i + 12] = blink[i] || 0;
+    //   }
+    //   for (let i = 1; i <= 64; i++) {
+    //     const channel = get(`${id}/rgb/${i}`);
+    //     a[3 * i + 17] = (channel && channel.r) || 0;
+    //     a[3 * i + 18] = (channel && channel.g) || 0;
+    //     a[3 * i + 19] = (channel && channel.b) || 0;
+    //   }
+    //   device.sendTOP(Buffer.from(a), id);
+    //   break;
+    // }
     case DEVICE_TYPE_DI24: {
       for (let i = 1; i <= 24; i++) {
         const channel = get(`${id}/${DI}/${i}`);
@@ -687,6 +688,29 @@ module.exports.initialize = (id) => {
       for (let i = 1; i <= 4; i++) {
         const channel = get(`${id}/${AO}/${i}`) || {};
         a[i] = channel.value || 0;
+      }
+      device.sendRBUS(Buffer.from(a), id);
+      break;
+    }
+    case DEVICE_TYPE_DI_4_RSM: {
+      const mac = id.split(":").map((i) => parseInt(i, 16));
+      const { version } = get(id) || {};
+      const major = parseInt(version.split(".")[0], 10);
+      const channel = get(`${id}/${AO}/${1}`);
+      switch (major) {
+        case 1:
+          a[1] = channel.value || 0;
+          break;
+        case 2: {
+          const { baud = 0, line_control = 0 } = get(`${id}/${RS485}/1`) || {};
+          a[1] = baud & 0xff;
+          a[2] = (baud >> 8) & 0xff;
+          a[3] = (baud >> 16) & 0xff;
+          a[4] = (baud >> 24) & 0xff;
+          a[5] = line_control;
+          a[6] = (channel && channel.value) || 0;
+          break;
+        }
       }
       device.sendRBUS(Buffer.from(a), id);
       break;

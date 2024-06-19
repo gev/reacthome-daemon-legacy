@@ -6,6 +6,11 @@ module.exports.DEVICE_PORT = 2017;
 module.exports.DEVICE_SERVER_PORT = 2016;
 module.exports.DEVICE_GROUP = "224.0.0.1";
 
+// module.exports.IP_ADDRESS = 0xc0a81202;
+// module.exports.IP_ADDRESS_POOL_START = 0xc0a81264;
+// module.exports.IP_ADDRESS_POOL_END = 0xc0a812fe;
+// module.exports.SUB_NET_MASK = 0xffffff00;
+
 module.exports.IP_ADDRESS = 0xac100001;
 module.exports.IP_ADDRESS_POOL_START = 0xac100002;
 module.exports.IP_ADDRESS_POOL_END = 0xac1ffffe;
@@ -153,6 +158,7 @@ module.exports.ACTION_DIM_RELATIVE = "ACTION_DIM_RELATIVE";
 module.exports.ACTION_SITE_LIGHT_DIM_RELATIVE = "ACTION_SITE_LIGHT_DIM_RELATIVE";
 module.exports.ACTION_SITE_LIGHT_OFF = "ACTION_SITE_LIGHT_OFF";
 module.exports.ACTION_SITE_LIGHT_ON = "ACTION_SITE_LIGHT_ON";
+module.exports.ACTION_INTENSITY = "ACTION_INTENSITY";
 module.exports.ACTION_SETPOINT = "ACTION_SETPOINT";
 module.exports.ACTION_SETPOINT_MIN_MAX = "ACTION_SETPOINT_MIN_MAX";
 module.exports.ACTION_INC_SETPOINT = "ACTION_INC_SETPOINT";
@@ -272,6 +278,7 @@ module.exports.DEVICE_TYPE_SMART_4AM = 0x2a;
 module.exports.DEVICE_TYPE_SMART_6_PUSH = 0x2c;
 module.exports.DEVICE_TYPE_DOPPLER_1_DI_4 = 0x2d;
 module.exports.DEVICE_TYPE_DOPPLER_5_DI_4 = 0x2e;
+module.exports.DEVICE_TYPE_DI_4_RSM = 0x2f;
 
 module.exports.DEVICE_TYPE_SMART_TOP_A6P = 0x30;
 module.exports.DEVICE_TYPE_SMART_TOP_G4D = 0x31;

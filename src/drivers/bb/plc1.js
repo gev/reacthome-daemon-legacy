@@ -9,7 +9,7 @@ const TIMEOUT = 1000;
 const DI_N = 85;
 const DO_N = 7;
 
-function bit (buff, n) {
+function bit(buff, n) {
   n += 4;
   const offset = n >> 3;
   const shift = n - (offset << 3);
@@ -31,7 +31,7 @@ module.exports = class {
     this.master.on('data', (event) => {
       this.masterHandle(event);
     });
-    this.slave= new Slave({ port: 2502 });
+    this.slave = new Slave({ port: 2502 });
     this.slave.on('error', console.error);
     this.slave.on('data', (event) => {
       this.slaveHandle(event);
@@ -48,15 +48,15 @@ module.exports = class {
     this.slave.close();
   }
 
-  channelDI (i) {
-    return `${this.id}/${DI}/${i+1}`;
+  channelDI(i) {
+    return `${this.id}/${DI}/${i + 1}`;
   }
 
-  channelDO (i) {
-    return `${this.id}/${DO}/${i+1}`;
+  channelDO(i) {
+    return `${this.id}/${DO}/${i + 1}`;
   }
 
-  handle({ index, value }) {
+  run({ index, value }) {
     if (index < 1 || index > DO_N) return;
     const i = index - 1;
     if (i >= 1) value = 1 - value;
@@ -72,7 +72,7 @@ module.exports = class {
         const t = i < 3 ? 1 : 0;
         const f = 1 - t;
         let v;
-        switch(i) {
+        switch (i) {
           case 1:
             v = (get(this.channelDI(71)).value || get(this.channelDI(72)).value || get(this.channelDI(73)).value) ? 1 : 0;
             const { leakage1 } = get(this.id);
@@ -136,22 +136,22 @@ module.exports = class {
       } catch (e) {
         console.error(w);
       }
-    }
+  }
 
-    timeout() {
-      const now = Date.now() + TIMEOUT;
-      for (let i = 0; i < DI_N; i++) {
-        const channel = this.channelDI(i);
-        const { value, onHold } = get(channel) || {};
-        if (value === 1) {
-          if (now > this.timestamp[i]) {
-            set(channel, { value: 2})
-            if (onHold) {
-              service.run({ type: ACTION_SCRIPT_RUN, id: onHold });
-            }
+  timeout() {
+    const now = Date.now() + TIMEOUT;
+    for (let i = 0; i < DI_N; i++) {
+      const channel = this.channelDI(i);
+      const { value, onHold } = get(channel) || {};
+      if (value === 1) {
+        if (now > this.timestamp[i]) {
+          set(channel, { value: 2 })
+          if (onHold) {
+            service.run({ type: ACTION_SCRIPT_RUN, id: onHold });
           }
         }
       }
+    }
   }
 
 }

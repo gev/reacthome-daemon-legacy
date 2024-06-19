@@ -185,6 +185,9 @@ const {
   HYGROSTAT,
   CO2_STAT,
   ACTION_STOP_VENTILATION,
+  DEVICE_TYPE_DI_4_RSM,
+  ACTION_INTENSITY,
+  VENTILATION,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -312,6 +315,7 @@ const run = (action) => {
             drivers.run(action);
             break;
           }
+          case DEVICE_TYPE_DI_4_RSM:
           case DEVICE_TYPE_AO_4_DIN:
           case DEVICE_TYPE_MIX_1_RS:
           case DEVICE_TYPE_MIX_6x12_RS:
@@ -495,6 +499,7 @@ const run = (action) => {
             }
             break;
           }
+          case DEVICE_TYPE_DI_4_RSM:
           case DEVICE_TYPE_AO_4_DIN: {
             device.sendRBUS(Buffer.from([
               ACTION_DO,
@@ -609,6 +614,7 @@ const run = (action) => {
           case DEVICE_TYPE_DIM_12_LED_RS:
           case DEVICE_TYPE_DIM_12_AC_RS:
           case DEVICE_TYPE_DIM_12_DC_RS:
+          case DEVICE_TYPE_DI_4_RSM:
           case DEVICE_TYPE_AO_4_DIN: {
             const velocity =
               dev.type === DEVICE_TYPE_DIM_12_LED_RS ||
@@ -620,7 +626,7 @@ const run = (action) => {
             switch (action.action) {
               case DIM_TYPE:
               case DIM_GROUP: {
-                if (dev.type === DEVICE_TYPE_AO_4_DIN) {
+                if (dev.type === DEVICE_TYPE_AO_4_DIN || dev.type === DEVICE_TYPE_DI_4_RSM) {
                   break;
                 }
               }
@@ -793,6 +799,7 @@ const run = (action) => {
                   );
                   break;
                 }
+                case DEVICE_TYPE_DI_4_RSM:
                 case DEVICE_TYPE_AO_4_DIN:
                 case DEVICE_TYPE_DIM_8_RS:
                 case DEVICE_TYPE_DIM_12_LED_RS:
@@ -819,7 +826,7 @@ const run = (action) => {
                     id: dev,
                     index,
                     action: ARTNET_FADE,
-                    v,
+                    value: v,
                     velocity: ARTNET_VELOCITY,
                   });
                   break;
@@ -991,7 +998,7 @@ const run = (action) => {
         break;
       }
       case ACTION_PRINT: {
-        const { id, value, power } = action;
+        const { id, value, power, intensity = 0 } = action;
         const dev = get(id) || {};
         switch (dev.type) {
           case DEVICE_TYPE_SMART_TOP_G4D: {
@@ -1074,6 +1081,27 @@ const run = (action) => {
               }
             }
             setBit(11, power ? 1 : 0);
+            switch (Math.round(3 * intensity)) {
+              case 0:
+                setBit(8, 0);
+                setBit(9, 0);
+                setBit(10, 0);
+                break;
+              case 1:
+                setBit(8, 0);
+                setBit(9, 0);
+                setBit(10, 1);
+                break;
+              case 2:
+                setBit(8, 0);
+                setBit(9, 1);
+                setBit(10, 1);
+                break;
+              default:
+                setBit(8, 1);
+                setBit(9, 1);
+                setBit(10, 1);
+            }
             run({ type: ACTION_IMAGE, id, value: image })
             break;
           }
@@ -1178,6 +1206,7 @@ const run = (action) => {
               }
               break;
             }
+            case DEVICE_TYPE_DI_4_RSM:
             case DEVICE_TYPE_AO_4_DIN:
             case DEVICE_TYPE_MIX_1_RS:
             case DEVICE_TYPE_MIX_6x12_RS:
@@ -1336,6 +1365,7 @@ const run = (action) => {
               }
               break;
             }
+            case DEVICE_TYPE_DI_4_RSM:
             case DEVICE_TYPE_AO_4_DIN:
             case DEVICE_TYPE_MIX_1_RS:
             case DEVICE_TYPE_MIX_6x12_RS:
@@ -1441,6 +1471,7 @@ const run = (action) => {
             case DEVICE_TYPE_DIM_12_LED_RS:
             case DEVICE_TYPE_DIM_12_AC_RS:
             case DEVICE_TYPE_DIM_12_DC_RS:
+            case DEVICE_TYPE_DI_4_RSM:
             case DEVICE_TYPE_AO_4_DIN: {
               device.sendRBUS(Buffer.from([
                 ACTION_DIMMER,
@@ -1463,7 +1494,7 @@ const run = (action) => {
                 id: dev,
                 index,
                 action: ARTNET_FADE,
-                v,
+                value: v,
                 velocity: ARTNET_VELOCITY,
               });
               break;
@@ -1540,6 +1571,7 @@ const run = (action) => {
             case DEVICE_TYPE_DIM_12_LED_RS:
             case DEVICE_TYPE_DIM_12_AC_RS:
             case DEVICE_TYPE_DIM_12_DC_RS:
+            case DEVICE_TYPE_DI_4_RSM:
             case DEVICE_TYPE_AO_4_DIN: {
               device.sendRBUS(Buffer.from([
                 ACTION_DIMMER,
@@ -1562,7 +1594,7 @@ const run = (action) => {
                 id: dev,
                 index,
                 action: ARTNET_FADE,
-                v,
+                value: v,
                 velocity: ARTNET_VELOCITY,
               });
               break;
@@ -1623,6 +1655,7 @@ const run = (action) => {
         buffer.writeUInt32LE(baud, 3);
         buffer[7] = line_control;
         switch (type) {
+          case DEVICE_TYPE_DI_4_RSM:
           case DEVICE_TYPE_RS_HUB1_RS: {
             device.sendRBUS(buffer, action.id);
             break;
@@ -1853,6 +1886,69 @@ const run = (action) => {
         }
         break;
       }
+      case ACTION_INTENSITY: {
+        const { id, cool, heat, ventilation } = action;
+        const dev = get(id) || {};
+        if (cool >= 0) {
+          if (dev.type === SITE) {
+            const { thermostat = [] } = dev
+            thermostat.forEach(id => {
+              run({ type: ACTION_INTENSITY, id, cool });
+            });
+          } else {
+            const { onCoolIntensity = [] } = get(id) || {};
+            if (onCoolIntensity.length > 0) {
+              const cool_intensity = Math.min(onCoolIntensity.length - 1, cool);
+              set(id, { cool_intensity });
+              const dev = get(id) || {};
+              if (dev.cool && dev.state === COOL && onCoolIntensity[cool_intensity]) {
+                run({ type: ACTION_SCRIPT_RUN, id: onCoolIntensity[cool_intensity] });
+              }
+            } else {
+              set(id, { cool_intensity: 0 });
+            }
+          }
+        } else if (heat >= 0) {
+          if (dev.type === SITE) {
+            const { thermostat = [] } = dev
+            thermostat.forEach(id => {
+              run({ type: ACTION_INTENSITY, id, heat });
+            });
+          } else {
+            const { onHeatIntensity = [] } = get(id) || {};
+            if (onHeatIntensity.length > 0) {
+              const heat_intensity = Math.min(onHeatIntensity.length - 1, heat);
+              set(id, { heat_intensity });
+              const dev = get(id) || {};
+              if (dev.heat && dev.state === HEAT && onHeatIntensity[heat_intensity]) {
+                run({ type: ACTION_SCRIPT_RUN, id: onHeatIntensity[heat_intensity] });
+              }
+            } else {
+              set(id, { heat_intensity: 0 });
+            }
+          }
+        } else if (ventilation >= 0) {
+          if (dev.type === SITE) {
+            const { co2_stat = [] } = dev
+            co2_stat.forEach(id => {
+              run({ type: ACTION_INTENSITY, id, ventilation });
+            });
+          } else {
+            const { onVentilationIntensity = [] } = get(id) || {};
+            if (onVentilationIntensity.length > 0) {
+              const ventilation_intensity = Math.min(onVentilationIntensity.length - 1, ventilation);
+              set(id, { ventilation_intensity });
+              const dev = get(id) || {};
+              if (dev.ventilation && dev.state === VENTILATION && onVentilationIntensity[ventilation_intensity]) {
+                run({ type: ACTION_SCRIPT_RUN, id: onVentilationIntensity[ventilation_intensity] });
+              }
+            } else {
+              set(id, { ventilation_intensity: 0 });
+            }
+          }
+        }
+        break;
+      }
       case ACTION_TIMER_START: {
         const { id, script, time } = action;
         clearTimeout(timers[id]);
@@ -2029,26 +2125,33 @@ const run = (action) => {
           heat = true,
           cool_hysteresis,
           cool_threshold,
+          cool_intensity,
           heat_hysteresis,
           heat_threshold,
+          heat_intensity,
           onStartHeat,
           onStartCool,
           onStopHeat,
           onStopCool,
+          onCoolIntensity,
+          onHeatIntensity,
         } = action;
         const { setpoint, mode, site } = get(id) || {};
         const { temperature } = get(site) || {};
-        const make = (state, script, mode, enabled) => () => {
-          if (!enabled) return;
+        const make = (state, script, mode, enabled, intensity, onIntensity = []) => () => {
           set(id, { state, mode });
+          if (!enabled) return;
           if (script) {
             run({ type: ACTION_SCRIPT_RUN, id: script });
+          }
+          if (intensity >= 0 && onIntensity[intensity]) {
+            run({ type: ACTION_SCRIPT_RUN, id: onIntensity[intensity] });
           }
         };
         const stopCool = make(STOP, onStopCool, COOL, cool);
         const stopHeat = make(STOP, onStopHeat, HEAT, heat);
-        const startCool = make(COOL, onStartCool, COOL, cool);
-        const startHeat = make(HEAT, onStartHeat, HEAT, heat);
+        const startCool = make(COOL, onStartCool, COOL, cool, cool_intensity, onCoolIntensity);
+        const startHeat = make(HEAT, onStartHeat, HEAT, heat, heat_intensity, onHeatIntensity);
         switch (mode) {
           case HEAT: {
             stopCool();
@@ -2106,8 +2209,8 @@ const run = (action) => {
         const { setpoint, mode, site } = get(id) || {};
         const { humidity } = get(site) || {};
         const make = (state, script, mode, enabled) => () => {
-          if (!enabled) return;
           set(id, { state, mode });
+          if (!enabled) return;
           if (script) {
             run({ type: ACTION_SCRIPT_RUN, id: script });
           }
@@ -2159,19 +2262,25 @@ const run = (action) => {
           id,
           ventilation = true,
           hysteresis,
+          ventilation_intensity,
           onStartVentilation,
           onStopVentilation,
+          onVentilationIntensity,
         } = action;
-        const { setpoint, mode, site } = get(id) || {};
+        const { setpoint, site } = get(id) || {};
         const { co2 } = get(site) || {};
-        const make = (script) => () => {
+        const make = (state, script, intensity, onIntensity = []) => () => {
+          set(id, { state });
           if (!ventilation) return;
           if (script) {
             run({ type: ACTION_SCRIPT_RUN, id: script });
           }
+          if (intensity >= 0 && onIntensity[intensity]) {
+            run({ type: ACTION_SCRIPT_RUN, id: onIntensity[intensity] });
+          }
         };
-        const stopVentilation = make(onStopVentilation);
-        const startVentilation = make(onStartVentilation);
+        const stopVentilation = make(STOP, onStopVentilation);
+        const startVentilation = make(VENTILATION, onStartVentilation, ventilation_intensity, onVentilationIntensity);
         if (co2 > setpoint - (- hysteresis)) {
           startVentilation();
         } else if (co2 < setpoint - hysteresis) {
@@ -2504,7 +2613,6 @@ const run = (action) => {
         }
         break;
       }
-
     }
   } catch (e) {
     console.error(action);
