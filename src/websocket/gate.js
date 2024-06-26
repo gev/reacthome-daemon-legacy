@@ -43,7 +43,7 @@ const connect = (id) => {
     clearTimeout(timeout);
   });
   socket.on("close", () => {
-    console.log("websocket closed");
+    // console.log("websocket closed");
     for (const session of sessions) {
       deleteSession(session);
       sessions.delete(session);
@@ -54,7 +54,7 @@ const connect = (id) => {
     setTimeout(connect, TIMEOUT, id);
   });
   socket.on("open", () => {
-    console.log("websocket opened");
+    // console.log("websocket opened");
     clearTimeout(timeout);
     clearInterval(interval);
     interval = setInterval(() => {
