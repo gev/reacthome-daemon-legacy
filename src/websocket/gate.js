@@ -9,7 +9,7 @@ const PROTOCOL = "listen";
 const TIMEOUT = 1000;
 const gateURL = (id) => `wss://gate.reacthome.net/${id}`;
 
-let t;
+let interval, timeout;
 const sessions = new Set();
 
 const connect = (id) => {
@@ -39,20 +39,28 @@ const connect = (id) => {
       terminals.delete(session);
     }
   });
+  socket.on("pong", () => {
+    clearTimeout(timeout);
+  });
   socket.on("close", () => {
+    // console.log("websocket closed");
     for (const session of sessions) {
       deleteSession(session);
       sessions.delete(session);
       peers.delete(session);
       terminals.delete(session);
     }
+    clearInterval(interval);
     setTimeout(connect, TIMEOUT, id);
   });
   socket.on("open", () => {
-    clearInterval(t);
-    t = setInterval(() => {
+    // console.log("websocket opened");
+    clearTimeout(timeout);
+    clearInterval(interval);
+    interval = setInterval(() => {
+      timeout = setTimeout(() => socket.close(), 2 * TIMEOUT);
       socket.ping();
-    }, 10 * TIMEOUT);
+    }, TIMEOUT);
   });
   socket.on("error", console.error);
 };
