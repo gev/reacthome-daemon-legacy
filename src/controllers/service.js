@@ -2315,14 +2315,15 @@ const run = (action) => {
         const { test = [], onOn, onOff } = action;
         const f = test.find((i) => {
           const o = get(i);
-          if (true || o.value === undefined || o.value === null) {
-            return bind.find((j) => {
-              if (o[j]) {
-                const { value } = get(o[j]) || {}
-                return o.inverse ? !value : value
-              }
-            });
-          }
+          // if (true || o.value === undefined || o.value === null) {
+          const b = bind.find((j) => {
+            if (o[j]) {
+              const { value } = get(o[j]) || {}
+              return o.inverse ? !value : value
+            }
+          });
+          return b !== undefined ? b : o.value;
+          // }
         });
         if (f) {
           if (onOff) {
