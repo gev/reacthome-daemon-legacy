@@ -2154,25 +2154,29 @@ const run = (action) => {
         const startHeat = make(HEAT, onStartHeat, HEAT, heat, heat_intensity, onHeatIntensity);
         switch (mode) {
           case HEAT: {
-            stopCool();
+            // stopCool();
             if (temperature > setpoint - (- heat_threshold)) {
               stopHeat();
               startCool();
             } else if (temperature > setpoint - (- heat_hysteresis)) {
+              stopCool();
               stopHeat();
             } else if (temperature < setpoint - heat_hysteresis) {
+              stopCool();
               startHeat();
             }
             break;
           }
           case COOL: {
-            stopHeat();
+            // stopHeat();
             if (temperature < setpoint - cool_threshold) {
               stopCool();
               startHeat();
             } else if (temperature < setpoint - cool_hysteresis) {
+              stopHeat();
               stopCool();
             } else if (temperature > setpoint - (- cool_hysteresis)) {
+              stopHeat();
               startCool();
             }
             break;
