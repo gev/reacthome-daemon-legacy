@@ -24,7 +24,7 @@ const loop = (id) => async () => {
   const [modbus, , address] = bind.split('/');
   await sync(id, DALI_GROUP, modbus, address, 2000, 16);
   await sync(id, DALI_LIGHT, modbus, address, 3000, 64);
-  instance.set(id, setTimeout(loop(id), 100));
+  instance.set(id, setTimeout(loop(id), 50));
 }
 
 module.exports.run = (a) => {
@@ -46,5 +46,5 @@ module.exports.add = (id) => {
   if (instance.has(id)) {
     clearTimeout(instance.get(id))
   }
-  instance.set(id, setTimeout(loop(id), 100));
+  instance.set(id, setTimeout(loop(id), 50));
 };
