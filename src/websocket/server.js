@@ -29,5 +29,9 @@ module.exports = () => {
       peers.delete(session);
       terminals.delete(session);
     });
+    socket.on("ping", () => {
+      console.log("ping-pong");
+      socket.pong();
+    });
   });
 };

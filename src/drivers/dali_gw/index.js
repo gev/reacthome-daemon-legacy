@@ -2,6 +2,7 @@
 const { get, set } = require('../../actions');
 const { DALI_GROUP, DALI_LIGHT } = require('../../constants');
 const { writeRegister } = require('../modbus');
+const { delay } = require('../../util');
 
 const instance = new Map();
 
@@ -12,7 +13,7 @@ const sync = async (id, kind, modbus, address, r, n) => {
     if (!synced) {
       writeRegister(modbus, address, r + i * 5, value > 254 ? 254 : value);
       set(ch, { synced: true });
-      await (50);
+      await delay(50);
     }
   }
 }
@@ -23,7 +24,7 @@ const loop = (id) => async () => {
   const [modbus, , address] = bind.split('/');
   await sync(id, DALI_GROUP, modbus, address, 2000, 16);
   await sync(id, DALI_LIGHT, modbus, address, 3000, 64);
-  instance.set(id, setImmediate(loop(id)));
+  instance.set(id, setTimeout(loop(id), 100));
 }
 
 module.exports.run = (a) => {
@@ -43,7 +44,7 @@ module.exports.clear = () => {
 
 module.exports.add = (id) => {
   if (instance.has(id)) {
-    clearImmediate(instance.get(id))
+    clearTimeout(instance.get(id))
   }
-  instance.set(id, setImmediate(loop(id)));
+  instance.set(id, setTimeout(loop(id), 100));
 };
