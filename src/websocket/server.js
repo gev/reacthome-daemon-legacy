@@ -24,14 +24,5 @@ module.exports = () => {
         socket.send(JSON.stringify(message), cb);
       },
     });
-    socket.on("close", () => {
-      deleteSession(session);
-      peers.delete(session);
-      terminals.delete(session);
-    });
-    socket.on("ping", () => {
-      console.log("ping-pong");
-      socket.pong();
-    });
   });
 };
