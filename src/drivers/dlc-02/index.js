@@ -1,17 +1,17 @@
 
 const { get, set } = require('../../actions');
 const { DALI_GROUP, DALI_LIGHT } = require('../../constants');
-const { writeRegister } = require('../modbus');
+const { writeRegister, writeRegisters } = require('../modbus');
 const { delay } = require('../../util');
 
 const instance = new Map();
 
-const sync = async (id, kind, modbus, address, r, n) => {
+const sync = async (id, kind, modbus, address, port, n, mask) => {
   for (let i = 0; i < n; i += 1) {
     const ch = `${id}/${kind}/${i}`
     const { synced, value } = get(ch) || {};
     if (!synced) {
-      // writeRegister(modbus, address, r + i * 5, value > 254 ? 254 : value);
+      writeRegisters(modbus, address, 41001, [port, mask || i, 2, value, 0, 0]);
       set(ch, { synced: true });
       await delay(50);
     }
@@ -20,10 +20,10 @@ const sync = async (id, kind, modbus, address, r, n) => {
 
 const loop = (id) => async () => {
   const dev = get(id) || {};
-  const { bind } = dev;
+  const { bind, port } = dev;
   const [modbus, , address] = bind.split('/');
-  await sync(id, DALI_GROUP, modbus, address, 2000, 16);
-  await sync(id, DALI_LIGHT, modbus, address, 3000, 64);
+  await sync(id, DALI_GROUP, modbus, address, port, 16, 0b1000_0000);
+  await sync(id, DALI_LIGHT, modbus, address, port, 64, 0b0000_0000);
   instance.set(id, setTimeout(loop(id), 50));
 }
 
