@@ -188,6 +188,7 @@ const {
   DEVICE_TYPE_DI_4_RSM,
   ACTION_INTENSITY,
   VENTILATION,
+  DRIVER_TYPE_DLC_02,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -831,7 +832,8 @@ const run = (action) => {
                   });
                   break;
                 }
-                case DRIVER_TYPE_DALI_GW: {
+                case DRIVER_TYPE_DALI_GW:
+                case DRIVER_TYPE_DLC_02: {
                   drivers.run({
                     id: dev,
                     kind,
@@ -1253,7 +1255,8 @@ const run = (action) => {
               }
               break;
             }
-            case DRIVER_TYPE_DALI_GW: {
+            case DRIVER_TYPE_DALI_GW:
+            case DRIVER_TYPE_DLC_02: {
               drivers.run({
                 id: dev,
                 kind,
@@ -1412,7 +1415,8 @@ const run = (action) => {
               }
               break;
             }
-            case DRIVER_TYPE_DALI_GW: {
+            case DRIVER_TYPE_DALI_GW:
+            case DRIVER_TYPE_DLC_02: {
               drivers.run({
                 id: dev,
                 kind,
@@ -1499,7 +1503,8 @@ const run = (action) => {
               });
               break;
             }
-            case DRIVER_TYPE_DALI_GW: {
+            case DRIVER_TYPE_DALI_GW:
+            case DRIVER_TYPE_DLC_02: {
               drivers.run({
                 id: dev,
                 kind,
@@ -1599,7 +1604,8 @@ const run = (action) => {
               });
               break;
             }
-            case DRIVER_TYPE_DALI_GW: {
+            case DRIVER_TYPE_DALI_GW:
+            case DRIVER_TYPE_DLC_02: {
               drivers.run({
                 id: dev,
                 kind,

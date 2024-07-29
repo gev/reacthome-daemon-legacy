@@ -361,6 +361,7 @@ module.exports.BIND = "BIND";
 module.exports.DRIVER_TYPE_RS21 = "RS21";
 module.exports.DRIVER_TYPE_ARTNET = "ARTNET";
 module.exports.DRIVER_TYPE_DALI_GW = "DALI_GW";
+module.exports.DRIVER_TYPE_DLC_02 = "DLC_02";
 module.exports.DRIVER_TYPE_BB_PLC1 = "BB_PLC1";
 module.exports.DRIVER_TYPE_BB_PLC2 = "BB_PLC2";
 module.exports.DRIVER_TYPE_M206 = "M206";
@@ -379,3 +380,4 @@ module.exports.DRIVER_TYPE_ME210_701 = "ME210_710";
 
 module.exports.DALI_LIGHT = 'dali_light';
 module.exports.DALI_GROUP = 'dali_group';
+module.exports.DALI_SCENE = 'dali_scene';
