@@ -57,6 +57,7 @@ const request = (getSize, fill) => (code) => (id, address, register, data) => {
     buffer.writeUInt8(code, 7);
     buffer.writeUInt16BE(register, 8);
     fill(buffer, data);
+    console.log("sended", buffer);
     send(buffer, port, host, handle(id));
   }
 }
@@ -86,6 +87,7 @@ module.exports.writeRegisters = request(
 )(WRITE_REGISTERS);
 
 const handle = (id) => (data) => {
+  console.log("received", data);
   const address = data[6];
   const { bind } = get(`${id}/${MODBUS}/${address}`) || {};
   if (bind) {
