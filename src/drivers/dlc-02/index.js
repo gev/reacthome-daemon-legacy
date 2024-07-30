@@ -12,11 +12,11 @@ const sync = async (id, kind, modbus, address, port, n, mask) => {
     const { synced, value } = get(ch) || {};
     if (!synced) {
       addr = (port << 8) | (mask | i)
-      // writeRegisters(modbus, address, 41001, [addr, (1 << 8) | (value ? 1 : 0), 0, 0]);
-      // await delay(30);
       writeRegisters(modbus, address, 41001, [addr, (2 << 8) | value, 0, 0]);
       set(ch, { synced: true });
-      await delay(50);
+      await delay(20);
+    } else {
+      writeRegisters(modbus, address, 41001, [addr, (2 << 8) | value, 0, 0]);
     }
   }
 }
@@ -27,7 +27,7 @@ const loop = (id) => async () => {
   const [modbus, , address] = bind.split('/');
   await sync(id, DALI_GROUP, modbus, address, port, 16, 0b1000_0000);
   await sync(id, DALI_LIGHT, modbus, address, port, 64, 0b0000_0000);
-  instance.set(id, setTimeout(loop(id), 50));
+  instance.set(id, setTimeout(loop(id), 20));
 }
 
 module.exports.run = (a) => {
@@ -49,5 +49,5 @@ module.exports.add = (id) => {
   if (instance.has(id)) {
     clearTimeout(instance.get(id))
   }
-  instance.set(id, setTimeout(loop(id), 50));
+  instance.set(id, setTimeout(loop(id), 20));
 };
