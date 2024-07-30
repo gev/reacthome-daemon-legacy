@@ -13,7 +13,7 @@ const sync = async (id, kind, modbus, address, port, n, mask) => {
     if (!synced) {
       const data = [[port, mask || i, 1, value ? 1 : 0, 0, 0, 0, 0]];
       console.log("set", i, data);
-      writeRegisters(modbus, address, 41000, data);
+      writeRegisters(modbus, address, 41001, data);
       set(ch, { synced: true });
       await delay(50);
     }
