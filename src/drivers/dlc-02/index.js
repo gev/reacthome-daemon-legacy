@@ -11,7 +11,7 @@ const sync = async (id, kind, modbus, address, port, n, mask) => {
     const ch = `${id}/${kind}/${i}`
     const { synced, value } = get(ch) || {};
     if (!synced) {
-      const data = [(port << 8) | (mask | i), (1 << 8) | (value ? 1 : 0), 0, 0];
+      const data = [port | ((mask | i) << 8), 1 | ((value ? 1 : 0) << 8), 0, 0];
       console.log("set", i, data);
       writeRegisters(modbus, address, 41001, data);
       set(ch, { synced: true });
