@@ -11,7 +11,7 @@ const sync = async (id, kind, modbus, address, port, n, mask) => {
     const ch = `${id}/${kind}/${i}`
     const { synced, value } = get(ch) || {};
     if (!synced) {
-      writeRegisters(modbus, address, 41001, [port, mask || i, 2, value, 0, 0]);
+      writeRegisters(modbus, address, 41001, [port, mask || i, 2, value, 0, 0, 0, 0]);
       set(ch, { synced: true });
       await delay(50);
     }
