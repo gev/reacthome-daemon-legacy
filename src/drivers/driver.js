@@ -17,7 +17,7 @@ const {
   DRIVER_TYPE_MODBUS_RBUS,
   DRIVER_TYPE_MODBUS_TCP,
   DRIVER_TYPE_COMFOVENT,
-  DRIVER_TYPE_DLC_02
+  DRIVER_TYPE_DLC
 } = require("../constants");
 const { get } = require("../actions");
 const RS21 = require("./RS21");
@@ -36,7 +36,7 @@ const rtdra = require("./RTD-RA");
 const alink = require("./alink");
 // const me210_701 = require("./owen/me210_701");
 const dali_gw = require("./dali_gw");
-const dlc_02 = require("./dlc-02");
+const dali_dlc = require("./dali-dlc-02");
 
 const mac = require("../mac");
 
@@ -123,9 +123,9 @@ module.exports.manage = () => {
         instances.add(id, dali_gw);
         dali_gw.add(id);
         break;
-      case DRIVER_TYPE_DLC_02:
-        instances.add(id, dlc_02);
-        dlc_02.add(id);
+      case DRIVER_TYPE_DALI_DLC:
+        instances.add(id, dali_dlc);
+        dali_dlc.add(id);
         break;
     }
   });

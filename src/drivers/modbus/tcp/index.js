@@ -10,6 +10,7 @@ const {
   READ_COILS,
   READ_INPUTS,
   WRITE_COIL,
+  READ_WRITE_REGISTERS,
 } = require('../constants');
 const driver = require('../../driver');
 
@@ -84,6 +85,16 @@ module.exports.writeRegisters = request(
     }
   }
 )(WRITE_REGISTERS);
+module.exports.writeRegisters = request(
+  (data) => 13 + 2 * data.length,
+  (buffer, data) => {
+    buffer.writeUInt16BE(data.length, 10);
+    buffer.writeUInt8(2 * data.length, 12);
+    for (let i = 0; i < data.length; i++) {
+      buffer.writeUInt16BE(data[i], 2 * i + 13);
+    }
+  }
+)(READ_WRITE_REGISTERS);
 
 const handle = (id) => (data) => {
   const address = data[6];

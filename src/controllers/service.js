@@ -188,7 +188,7 @@ const {
   DEVICE_TYPE_DI_4_RSM,
   ACTION_INTENSITY,
   VENTILATION,
-  DRIVER_TYPE_DLC_02,
+  DRIVER_TYPE_DLC: DRIVER_TYPE_DLC_02,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");

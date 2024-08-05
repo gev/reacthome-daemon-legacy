@@ -7,4 +7,5 @@ module.exports.WRITE_COIL = 0x05;
 module.exports.WRITE_REGISTER = 0x06;
 module.exports.WRITE_COILS = 0x0f;
 module.exports.WRITE_REGISTERS = 0x10;
+module.exports.READ_WRITE_REGISTERS = 0x17;
 module.exports.MODBUS = 'modbus';
