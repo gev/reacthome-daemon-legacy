@@ -52,7 +52,7 @@ module.exports.handle = (data) => {
     case 0x17:
       const port = data[3];
       const index = data[4];
-      const value = data[5];
+      const value = data[6];
       set(`${current}/${DALI_LIGHT}/${port}.${index}`, { value });
       break;
   }
