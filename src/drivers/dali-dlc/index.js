@@ -11,7 +11,6 @@ const sync = async (id, kind, modbus, address, port, n, mask) => {
     const ch = `${id}/${kind}/${port}.${i}`
     const { synced, value } = get(ch) || {};
     if (!synced) {
-      console.log(n, ch, value);
       addr = (port << 8) | (mask | i)
       writeRegisters(modbus, address, 41001, [addr, (2 << 8) | value, 0, 0]);
       set(ch, { synced: true });
@@ -38,13 +37,12 @@ const loop = (id) => async () => {
 }
 
 module.exports.run = (a) => {
-  console.log(a)
   const { id, kind, port, index, value } = a;
   set(`${id}/${kind}/${port}.${index}`, { value, synced: false, dimmable: true })
 }
 
 module.exports.handle = (data) => {
-  // console.log(data);
+  console.log(data);
 }
 
 
