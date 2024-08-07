@@ -19,23 +19,23 @@ const sync = async (id, modbus, address, n) => {
       await delay(50);
     }
   }
-  const dev = get(id) || {};
-  const { bind, synced } = dev;
-  const [modbus, , address] = bind.split('/');
-  if (synced) {
-    readHoldingRegisters(modbus, address, 0x0, 12);
-  } else {
-    writeRegister(modbus, address, 0x0, dev.value);
-    await delay(100);
-    writeRegister(modbus, address, 0x1, dev.mode);
-    await delay(100);
-    writeRegister(modbus, address, 0x2, dev.fan_speed);
-    await delay(100);
-    writeRegister(modbus, address, 0x3, dev.direction);
-    await delay(100);
-    writeRegister(modbus, address, 0x4, dev.setpoint);
-    set(id, { synced: true });
-  }
+  // const dev = get(id) || {};
+  // const { bind, synced } = dev;
+  // const [modbus, , address] = bind.split('/');
+  // if (synced) {
+  //   readHoldingRegisters(modbus, address, 0x0, 12);
+  // } else {
+  //   writeRegister(modbus, address, 0x0, dev.value);
+  //   await delay(100);
+  //   writeRegister(modbus, address, 0x1, dev.mode);
+  //   await delay(100);
+  //   writeRegister(modbus, address, 0x2, dev.fan_speed);
+  //   await delay(100);
+  //   writeRegister(modbus, address, 0x3, dev.direction);
+  //   await delay(100);
+  //   writeRegister(modbus, address, 0x4, dev.setpoint);
+  //   set(id, { synced: true });
+  // }
 };
 
 
