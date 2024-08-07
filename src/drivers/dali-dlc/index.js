@@ -11,7 +11,7 @@ const sync = async (id, kind, modbus, address, port, n, mask) => {
     const ch = `${id}/${kind}/${port}.${i}`
     const { synced, value } = get(ch) || {};
     if (!synced) {
-      console.log(id, kind, modbus, address, port, n, ch);
+      console.log(id, kind, modbus, address, port, ch);
       addr = (port << 8) | (mask | i)
       writeRegisters(modbus, address, 41001, [addr, (2 << 8) | value, 0, 0]);
       set(ch, { synced: true });
@@ -23,9 +23,9 @@ const sync = async (id, kind, modbus, address, port, n, mask) => {
 }
 
 const syncPort = async (id, port, modbus, address) => {
-  const { numberGroup = 16, numberLight = 64 } = get(`${id}/port/${port}`) || {};
-  await sync(id, DALI_GROUP, modbus, address, port, numberGroup, 0b1000_0000);
-  await sync(id, DALI_LIGHT, modbus, address, port, numberLight, 0b0000_0000);
+  const { numberGroups = 16, numberLights = 64 } = get(`${id}/port/${port}`) || {};
+  await sync(id, DALI_GROUP, modbus, address, port, numberGroups, 0b1000_0000);
+  await sync(id, DALI_LIGHT, modbus, address, port, numberLights, 0b0000_0000);
 }
 
 const loop = (id) => async () => {
