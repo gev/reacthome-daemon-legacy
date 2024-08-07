@@ -22,7 +22,7 @@ const sync = async (id, kind, modbus, address, port, n, mask) => {
   }
 }
 
-syncPort = (id, port, modbus, address) => async () => {
+const syncPort = (id, port, modbus, address) => async () => {
   const { numberGroup = 16, numberLight = 64 } = get(`${id}/port/${port}`) || {};
   console.log(numberGroup, numberLight);
   await sync(id, DALI_GROUP, modbus, address, port, numberGroup, 0b1000_0000);
@@ -33,7 +33,6 @@ const loop = (id) => async () => {
   const dev = get(id) || {};
   const { bind } = dev;
   const [modbus, , address] = bind.split('/');
-  console.log(dev, bind);
   await syncPort(id, 1, modbus, address);
   await syncPort(id, 2, modbus, address);
   instance.set(id, setTimeout(loop(id), 20));
