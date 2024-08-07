@@ -11,6 +11,7 @@ const {
   WRITE_COIL,
   WRITE_COILS,
   READ_COILS,
+  READ_WRITE_REGISTERS,
 } = require("../constants");
 const driver = require("../../driver");
 const device = require("../../../sockets/device");
@@ -91,6 +92,19 @@ module.exports.writeRegisters = request(
     }
   }
 )(WRITE_REGISTERS);
+
+module.exports.readWriteRegisters = (id, address, readRegister, readRegistersNumber, writeRegister, data) => request(
+  (data) => 13 + 2 * data.length,
+  (buffer, data) => {
+    buffer.writeUInt16BE(readRegister, 6);
+    buffer.writeUInt16BE(readRegistersNumber, 8);
+    buffer.writeUInt16BE(data.length, 10);
+    buffer.writeUInt8(2 * data.length, 12);
+    for (let i = 0; i < data.length; i++) {
+      buffer.writeUInt16BE(data[i], 2 * i + 13);
+    }
+  }
+)(READ_WRITE_REGISTERS)(id, address, writeRegister, data);
 
 module.exports.handle = ({ id, data }) => {
   // console.log(id, data);
