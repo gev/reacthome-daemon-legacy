@@ -49,6 +49,7 @@ module.exports.run = (a) => {
 }
 
 module.exports.handle = (data) => {
+  console.log(data);
   switch (data[0]) {
     case READ_WRITE_REGISTERS:
       const port = data[3];
