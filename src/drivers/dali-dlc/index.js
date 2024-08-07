@@ -9,22 +9,21 @@ const instance = new Map();
 const sync = async (id, kind, modbus, address, port, n, mask) => {
   for (let i = 0; i < n; i += 1) {
     const ch = `${id}/${kind}/${port}.${i}`
-    console.log(ch);
     const { synced, value } = get(ch) || {};
     if (!synced) {
+      console.log(id, kind, modbus, address, port, ch);
       addr = (port << 8) | (mask | i)
       writeRegisters(modbus, address, 41001, [addr, (2 << 8) | value, 0, 0]);
       set(ch, { synced: true });
       await delay(20);
     } else {
-      writeRegisters(modbus, address, 41001, [addr, (2 << 8) | value, 0, 0]);
+      // writeRegisters(modbus, address, 41001, [addr, (2 << 8) | value, 0, 0]);
     }
   }
 }
 
 const syncPort = async (id, port, modbus, address) => {
   const { numberGroup = 16, numberLight = 64 } = get(`${id}/port/${port}`) || {};
-  console.log(id, port, modbus, address, numberGroup, numberLight);
   await sync(id, DALI_GROUP, modbus, address, port, numberGroup, 0b1000_0000);
   await sync(id, DALI_LIGHT, modbus, address, port, numberLight, 0b0000_0000);
 }
