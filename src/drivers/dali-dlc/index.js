@@ -8,7 +8,6 @@ const { READ_WRITE_REGISTERS } = require('../modbus/constants');
 const instance = new Map();
 
 let tid = 0;
-let current;
 
 const sync = async (id, kind, modbus, address, port, n, mask) => {
   for (let i = 0; i < n; i += 1) {
@@ -19,7 +18,6 @@ const sync = async (id, kind, modbus, address, port, n, mask) => {
       set(ch, { synced: true });
       await delay(20);
     } else if (mask === 0) {
-      current = id;
       readWriteRegisters(modbus, address, 32001, 4, 42001, [(tid << 8) | port, (i << 8) | 1]);
       tid += 1;
       tid %= 0xff;
@@ -48,14 +46,14 @@ module.exports.run = (a) => {
   set(`${id}/${kind}/${port}.${index}`, { value, synced: false, dimmable: true })
 }
 
-module.exports.handle = (data) => {
+module.exports.handle = ({ id, data }) => {
   console.log(data);
   switch (data[0]) {
     case READ_WRITE_REGISTERS:
       const port = data[3];
       const index = data[4];
       const value = data[6];
-      set(`${current}/${DALI_LIGHT}/${port}.${index}`, { value });
+      set(`${id}/${DALI_LIGHT}/${port}.${index}`, { value });
       console.log(data);
       console.log(current, port, index, value);
       break;
