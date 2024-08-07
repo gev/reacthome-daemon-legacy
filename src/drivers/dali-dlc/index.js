@@ -53,8 +53,6 @@ module.exports.handle = ({ id, data }) => {
       const index = data[4];
       const value = data[6];
       set(`${id}/${DALI_LIGHT}/${port}.${index}`, { value });
-      console.log(data);
-      console.log(id, port, index, value);
       break;
   }
 }
