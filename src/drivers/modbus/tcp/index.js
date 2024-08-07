@@ -58,7 +58,6 @@ const request = (getSize, fill) => (code) => (id, address, register, data) => {
     buffer.writeUInt8(code, 7);
     buffer.writeUInt16BE(register, 8);
     fill(buffer, data);
-    console.log(host, port, buffer);
     send(buffer, port, host, handle(id));
   }
 }
@@ -101,7 +100,6 @@ module.exports.readWriteRegisters = (id, address, readRegister, readRegistersNum
 
 const handle = (id) => (data) => {
   const address = data[6];
-  console.log(data)
   const { bind } = get(`${id}/${MODBUS}/${address}`) || {};
   if (bind) {
     driver.handle({ id: bind, data: data.slice(7) });

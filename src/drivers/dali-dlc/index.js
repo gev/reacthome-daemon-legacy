@@ -45,7 +45,14 @@ module.exports.run = (a) => {
 }
 
 module.exports.handle = (data) => {
-  console.log(data);
+  switch (data[0]) {
+    case 0x17:
+      const port = data[3];
+      const index = data[4];
+      const value = data[5];
+      set(`${id}/${DALI_LIGHT}/${port}.${index}`, { value });
+      break;
+  }
 }
 
 
