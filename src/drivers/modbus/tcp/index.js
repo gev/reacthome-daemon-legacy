@@ -86,7 +86,7 @@ module.exports.writeRegisters = request(
     }
   }
 )(WRITE_REGISTERS);
-module.exports.writeRegisters = request(
+module.exports.readWriteRegisters = request(
   (data) => 13 + 2 * data.length,
   (buffer, data) => {
     buffer.writeUInt16BE(data.length, 10);
