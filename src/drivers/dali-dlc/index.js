@@ -7,6 +7,7 @@ const { delay } = require('../../util');
 const instance = new Map();
 
 let tid = 0;
+let current;
 
 const sync = async (id, kind, modbus, address, port, n, mask) => {
   for (let i = 0; i < n; i += 1) {
@@ -16,11 +17,12 @@ const sync = async (id, kind, modbus, address, port, n, mask) => {
       writeRegisters(modbus, address, 41001, [(port << 8) | (mask | i), (2 << 8) | value, 0, 0]);
       set(ch, { synced: true });
     } else if (mask === 0) {
+      current = id;
       readWriteRegisters(modbus, address, 32001, 4, 42001, [(tid << 8) | port, (i << 8) | 1]);
       tid += 1;
       tid %= 0xff;
     }
-    await delay(20);
+    await delay(100);
   }
 }
 
@@ -50,7 +52,7 @@ module.exports.handle = (data) => {
       const port = data[3];
       const index = data[4];
       const value = data[5];
-      set(`${id}/${DALI_LIGHT}/${port}.${index}`, { value });
+      set(`${current}/${DALI_LIGHT}/${port}.${index}`, { value });
       break;
   }
 }
