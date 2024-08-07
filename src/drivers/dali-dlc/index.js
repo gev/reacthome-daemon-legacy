@@ -17,7 +17,7 @@ const sync = async (id, kind, modbus, address, port, n, mask) => {
       set(ch, { synced: true });
       await delay(20);
     } else {
-      readWriteRegisters(modbus, address, 32001, 4, 42001[(tid << 8) | port, ((mask | i) << 8) | 1]);
+      readWriteRegisters(modbus, address, 32001, 4, 42001, [(tid << 8) | port, ((mask | i) << 8) | 1]);
       tid += 1;
       tid %= 0xff;
     }
