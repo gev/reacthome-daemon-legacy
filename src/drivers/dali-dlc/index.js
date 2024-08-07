@@ -23,6 +23,7 @@ const sync = async (id, kind, modbus, address, port, n, mask) => {
 
 syncPort = (id, port, modbus, address) => async () => {
   const { numberGroup = 16, numberLight = 64 } = get(`${id}/port/${port}`) || {};
+  console.log(numberGroup, numberLight);
   await sync(id, DALI_GROUP, modbus, address, port, numberGroup, 0b1000_0000);
   await sync(id, DALI_LIGHT, modbus, address, port, numberLight, 0b0000_0000);
 }
