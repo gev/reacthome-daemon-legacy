@@ -1,22 +1,25 @@
 
 const { get, set } = require('../../actions');
 const { DALI_GROUP, DALI_LIGHT } = require('../../constants');
-const { writeRegister, writeRegisters } = require('../modbus');
+const { writeRegisters, readWriteRegisters } = require('../modbus');
 const { delay } = require('../../util');
 
 const instance = new Map();
+
+let tid = 0;
 
 const sync = async (id, kind, modbus, address, port, n, mask) => {
   for (let i = 0; i < n; i += 1) {
     const ch = `${id}/${kind}/${port}.${i}`
     const { synced, value } = get(ch) || {};
     if (!synced) {
-      addr = (port << 8) | (mask | i)
-      writeRegisters(modbus, address, 41001, [addr, (2 << 8) | value, 0, 0]);
+      writeRegisters(modbus, address, 41001, [(port << 8) | (mask | i), (2 << 8) | value, 0, 0]);
       set(ch, { synced: true });
       await delay(20);
     } else {
-      // writeRegisters(modbus, address, 41001, [addr, (2 << 8) | value, 0, 0]);
+      readWriteRegisters(modbus, address, 32001, 4, 42001[(tid << 8) | port, ((mask | i) << 8) | 1]);
+      tid += 1;
+      tid %= 0xff;
     }
   }
 }
