@@ -8,7 +8,7 @@ const instance = new Map();
 
 const sync = async (id, kind, modbus, address, port, n, mask) => {
   for (let i = 0; i < n; i += 1) {
-    const ch = `${id}/${kind}/${i}`
+    const ch = `${id}/${kind}/${port}.${i}`
     const { synced, value } = get(ch) || {};
     if (!synced) {
       addr = (port << 8) | (mask | i)
@@ -21,12 +21,18 @@ const sync = async (id, kind, modbus, address, port, n, mask) => {
   }
 }
 
+syncPort = (id, port, modbus, address) => async () => {
+  const { numberGroup = 16, numberLight = 64 } = get(`${id}/port/${port}`) || {};
+  await sync(id, DALI_GROUP, modbus, address, port, numberGroup, 0b1000_0000);
+  await sync(id, DALI_LIGHT, modbus, address, port, numberLight, 0b0000_0000);
+}
+
 const loop = (id) => async () => {
   const dev = get(id) || {};
-  const { bind, port } = dev;
+  const { bind } = dev;
   const [modbus, , address] = bind.split('/');
-  await sync(id, DALI_GROUP, modbus, address, port, 16, 0b1000_0000);
-  await sync(id, DALI_LIGHT, modbus, address, port, 64, 0b0000_0000);
+  await syncPort(id, 1, modbus, address);
+  await syncPort(id, 2, modbus, address);
   instance.set(id, setTimeout(loop(id), 20));
 }
 

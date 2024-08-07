@@ -189,6 +189,7 @@ const {
   ACTION_INTENSITY,
   VENTILATION,
   DRIVER_TYPE_DLC: DRIVER_TYPE_DLC_02,
+  DRIVER_TYPE_MD_CCM18_AN_E,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -1128,7 +1129,7 @@ const run = (action) => {
         const { id } = action;
         const o = get(id) || {};
         if (o.disabled) return;
-        if (o.type === DRIVER_TYPE_INTESIS_BOX || o.type === DRIVER_TYPE_NOVA || o.type === DRIVER_TYPE_SWIFT || o.type === DRIVER_TYPE_ALINK || o.type === DRIVER_TYPE_COMFOVENT) {
+        if (o.type === DRIVER_TYPE_INTESIS_BOX || o.type === DRIVER_TYPE_MD_CCM18_AN_E || o.type === DRIVER_TYPE_NOVA || o.type === DRIVER_TYPE_SWIFT || o.type === DRIVER_TYPE_ALINK || o.type === DRIVER_TYPE_COMFOVENT) {
           drivers.run(action);
           return;
         }
@@ -1295,7 +1296,7 @@ const run = (action) => {
         const { id } = action;
         const o = get(id) || {};
         if (o.disabled) return;
-        if (o.type === DRIVER_TYPE_INTESIS_BOX || o.type === DRIVER_TYPE_NOVA || o.type === DRIVER_TYPE_SWIFT || o.type === DRIVER_TYPE_ALINK || o.type === DRIVER_TYPE_COMFOVENT) {
+        if (o.type ===  || o.type === DRIVER_TYPE_MD_CCM18_AN_E || o.type === DRIVER_TYPE_NOVA || o.type === DRIVER_TYPE_SWIFT || o.type === DRIVER_TYPE_ALINK || o.type === DRIVER_TYPE_COMFOVENT) {
           drivers.run(action);
           return;
         }
@@ -1827,7 +1828,7 @@ const run = (action) => {
             const { thermostat = [] } = dev
             thermostat.forEach(t => set(t, { setpoint }));
             set(id, { setpoint });
-          } else if (dev.type === DRIVER_TYPE_INTESIS_BOX || dev.type === DRIVER_TYPE_NOVA || dev.type === DRIVER_TYPE_SWIFT || dev.type === DRIVER_TYPE_ALINK || dev.type === DRIVER_TYPE_COMFOVENT) {
+          } else if (dev.type === DRIVER_TYPE_INTESIS_BOX || o.type === DRIVER_TYPE_MD_CCM18_AN_E || dev.type === DRIVER_TYPE_NOVA || dev.type === DRIVER_TYPE_SWIFT || dev.type === DRIVER_TYPE_ALINK || dev.type === DRIVER_TYPE_COMFOVENT) {
             if (temperature) action.value = temperature;
             drivers.run(action);
           } else {

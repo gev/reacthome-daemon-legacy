@@ -20,10 +20,10 @@ const sync = async (id, kind, modbus, address, r, n) => {
 
 const loop = (id) => async () => {
   const dev = get(id) || {};
-  const { bind } = dev;
+  const { bind, numberGroup = 16, numberLight = 64 } = dev;
   const [modbus, , address] = bind.split('/');
-  await sync(id, DALI_GROUP, modbus, address, 2000, 16);
-  await sync(id, DALI_LIGHT, modbus, address, 3000, 64);
+  await sync(id, DALI_GROUP, modbus, address, 2000, numberGroup);
+  await sync(id, DALI_LIGHT, modbus, address, 3000, numberLight);
   instance.set(id, setTimeout(loop(id), 50));
 }
 
