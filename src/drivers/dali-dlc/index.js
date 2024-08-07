@@ -9,6 +9,7 @@ const instance = new Map();
 const sync = async (id, kind, modbus, address, port, n, mask) => {
   for (let i = 0; i < n; i += 1) {
     const ch = `${id}/${kind}/${port}.${i}`
+    console.log(ch);
     const { synced, value } = get(ch) || {};
     if (!synced) {
       addr = (port << 8) | (mask | i)
