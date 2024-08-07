@@ -3,6 +3,7 @@ const { get, set } = require('../../actions');
 const { DALI_GROUP, DALI_LIGHT } = require('../../constants');
 const { writeRegisters, readWriteRegisters } = require('../modbus');
 const { delay } = require('../../util');
+const { READ_WRITE_REGISTERS } = require('../modbus/constants');
 
 const instance = new Map();
 
@@ -49,11 +50,13 @@ module.exports.run = (a) => {
 
 module.exports.handle = (data) => {
   switch (data[0]) {
-    case 0x17:
+    case READ_WRITE_REGISTERS:
       const port = data[3];
       const index = data[4];
       const value = data[6];
       set(`${current}/${DALI_LIGHT}/${port}.${index}`, { value });
+      console.log(data);
+      console.log(current, port, index, value);
       break;
   }
 }
