@@ -89,15 +89,15 @@ module.exports.writeRegisters = request(
 module.exports.readWriteRegisters = (id, address, readRegister, readRegistersNumber, writeRegister, data) => request(
   (data) => 17 + 2 * data.length,
   (buffer, data) => {
-    buffer.writeUInt16BE(readRegister, 10);
-    buffer.writeUInt16BE(readRegistersNumber, 12);
+    buffer.writeUInt16BE(readRegistersNumber, 10);
+    buffer.writeUInt16BE(writeRegister, 12);
     buffer.writeUInt16BE(data.length, 14);
     buffer.writeUInt8(2 * data.length, 16);
     for (let i = 0; i < data.length; i++) {
       buffer.writeUInt16BE(data[i], 2 * i + 17);
     }
   }
-)(READ_WRITE_REGISTERS)(id, address, writeRegister, data);
+)(READ_WRITE_REGISTERS)(id, address, readRegister, data);
 
 const handle = (id) => (data) => {
   const address = data[6];
