@@ -21,7 +21,7 @@ const sync = async (id, kind, modbus, address, port, n, mask) => {
       //   readWriteRegisters(modbus, address, 32001, 4, 42001, [(tid << 8) | port, (i << 8) | 1]);
       //   tid += 1;
       //   tid %= 0xff;
-      //   await delay(100);2
+      //   await delay(100)
     }
   }
 }
