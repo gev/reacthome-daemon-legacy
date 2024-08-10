@@ -7,7 +7,7 @@ const { BROADCAST_ADDRESS, TIMEOUT } = require('./constants');
 const { del } = require('../../db');
 const { delay } = require('../../util');
 
-const instance = new Set();
+const instance = new Map();
 
 const sync = async (id, modbus, address, n) => {
   for (let i = 1; i <= n; i += 1) {

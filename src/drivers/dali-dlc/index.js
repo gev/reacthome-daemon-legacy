@@ -37,9 +37,11 @@ const syncPort = async (id, port, modbus, address) => {
 const loop = (id) => async () => {
   const dev = get(id) || {};
   const { bind } = dev;
-  const [modbus, , address] = bind.split('/');
-  await syncPort(id, 1, modbus, address);
-  await syncPort(id, 2, modbus, address);
+  if (bind) {
+    const [modbus, , address] = bind.split('/');
+    await syncPort(id, 1, modbus, address);
+    await syncPort(id, 2, modbus, address);
+  }
   instance.set(id, setTimeout(loop(id), 20));
 }
 
