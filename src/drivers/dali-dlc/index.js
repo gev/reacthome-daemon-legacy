@@ -17,11 +17,11 @@ const sync = async (id, kind, modbus, address, port, n, mask) => {
       writeRegisters(modbus, address, 41001, [(port << 8) | (mask | i), (2 << 8) | value, 0, 0]);
       set(ch, { synced: true });
       await delay(20);
-    } else if (mask === 0) {
-      readWriteRegisters(modbus, address, 32001, 4, 42001, [(tid << 8) | port, (i << 8) | 1]);
-      tid += 1;
-      tid %= 0xff;
-      await delay(100);
+      // } else if (mask === 0) {
+      //   readWriteRegisters(modbus, address, 32001, 4, 42001, [(tid << 8) | port, (i << 8) | 1]);
+      //   tid += 1;
+      //   tid %= 0xff;
+      //   await delay(100);2
     }
   }
 }
