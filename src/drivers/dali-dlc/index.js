@@ -44,8 +44,10 @@ const loop = (id) => async () => {
 }
 
 module.exports.run = (a) => {
-  const { id, kind, port, index, value } = a;
-  set(`${id}/${kind}/${port}.${index}`, { value, synced: false, dimmable: true })
+  console.log(a);
+  const { id, kind, index, value } = a;
+  const [port, idx] = index.split('.');
+  set(`${id}/${kind}/${port}.${idx}`, { value, synced: false, dimmable: true })
 }
 
 module.exports.handle = ({ id, data }) => {
