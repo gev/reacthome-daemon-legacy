@@ -1828,7 +1828,7 @@ const run = (action) => {
             const { thermostat = [] } = dev
             thermostat.forEach(t => set(t, { setpoint }));
             set(id, { setpoint });
-          } else if (dev.type === DRIVER_TYPE_INTESIS_BOX || o.type === DRIVER_TYPE_MD_CCM18_AN_E || dev.type === DRIVER_TYPE_NOVA || dev.type === DRIVER_TYPE_SWIFT || dev.type === DRIVER_TYPE_ALINK || dev.type === DRIVER_TYPE_COMFOVENT) {
+          } else if (dev.type === DRIVER_TYPE_INTESIS_BOX || dev.type === DRIVER_TYPE_MD_CCM18_AN_E || dev.type === DRIVER_TYPE_NOVA || dev.type === DRIVER_TYPE_SWIFT || dev.type === DRIVER_TYPE_ALINK || dev.type === DRIVER_TYPE_COMFOVENT) {
             if (temperature) action.value = temperature;
             drivers.run(action);
           } else {
