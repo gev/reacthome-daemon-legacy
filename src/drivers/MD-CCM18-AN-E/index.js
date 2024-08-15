@@ -85,7 +85,7 @@ module.exports.handle = (action) => {
   switch (data[0]) {
     case READ_COILS: {
       let value = data[2] >> 7;
-      let mode = 0;
+      let mode = 4;
       switch (data[2] & 0b11111) {
         case 0b00001:
           mode = 0;
@@ -105,13 +105,13 @@ module.exports.handle = (action) => {
       }
       let fan_speed = 0;
       switch (data[3] & 0b111) {
-        case 0b001:
+        case 0b100:
           fan_speed = 1;
           break;
         case 0b010:
           fan_speed = 2;
           break;
-        case 0b100:
+        case 0b001:
           fan_speed = 3;
           break;
       }
