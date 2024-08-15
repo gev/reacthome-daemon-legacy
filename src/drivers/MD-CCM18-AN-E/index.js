@@ -53,7 +53,6 @@ const loop = (id) => async () => {
 
 
 module.exports.run = (action) => {
-  console.log(action);
   const { id, type, index } = action;
   const ch = `${id}/ac/${index}`;
   switch (type) {
