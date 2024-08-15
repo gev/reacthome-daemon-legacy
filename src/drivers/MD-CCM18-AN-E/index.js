@@ -53,6 +53,7 @@ const loop = (id) => async () => {
 
 
 module.exports.run = (action) => {
+  console.log(action);
   const { id, type } = action;
   switch (type) {
     case ACTION_ON: {
@@ -83,6 +84,7 @@ module.exports.run = (action) => {
 };
 
 module.exports.handle = (action) => {
+  console.log(index, action);
   const { id, data } = action;
   console.log(data);
   let value = data[0] >> 7;
