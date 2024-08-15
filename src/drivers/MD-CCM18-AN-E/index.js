@@ -117,7 +117,7 @@ module.exports.handle = (action) => {
       fan_speed = 3;
       break;
   }
-  set(`${id}/ac/${index}`, id, { value, mode, fan_speed });
+  // set(`${id}/ac/${index}`, id, { value, mode, fan_speed });
 };
 
 
