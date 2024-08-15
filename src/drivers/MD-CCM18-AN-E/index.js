@@ -36,7 +36,7 @@ const sync = async (id, modbus, address, n) => {
       set(ch, { synced: true });
     } else {
       index = i + 1;
-      readCoils(modbus, address, i * 32, 16);
+      readCoils(modbus, address, i * 128, 16);
       await delay(300);
       readHoldingRegisters(modbus, 3 + address, i * 32, 1);
     }
