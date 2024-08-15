@@ -104,7 +104,7 @@ module.exports.handle = (action) => {
           break;
       }
       let fan_speed = 0;
-      switch (data[4] & 0b111) {
+      switch (data[3] & 0b111) {
         case 0b001:
           fan_speed = 1;
           break;
