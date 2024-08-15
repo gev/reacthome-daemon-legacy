@@ -84,9 +84,8 @@ module.exports.run = (action) => {
 };
 
 module.exports.handle = (action) => {
-  console.log(index, action);
+  // console.log(index, action);
   const { id, data } = action;
-  console.log(data);
   let value = data[0] >> 7;
   let mode = 4;
   switch (data[0] & 0b11111) {
