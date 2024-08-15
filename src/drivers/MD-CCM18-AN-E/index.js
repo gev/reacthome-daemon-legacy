@@ -55,29 +55,26 @@ const loop = (id) => async () => {
 module.exports.run = (action) => {
   console.log(action);
   const { id, type } = action;
+  const ch = `${id}/ac/${index}`;
   switch (type) {
     case ACTION_ON: {
-      set(id, { value: true, synced: false });
+      set(ch, { value: true, synced: false });
       break;
     }
     case ACTION_OFF: {
-      set(id, { value: false, synced: false });
+      set(ch, { value: false, synced: false });
       break;
     }
     case ACTION_SET_MODE: {
-      set(id, { mode: action.value, synced: false });
+      set(ch, { mode: action.value, synced: false });
       break;
     }
     case ACTION_SET_FAN_SPEED: {
-      set(id, { fan_speed: action.value, synced: false });
-      break;
-    }
-    case ACTION_SET_DIRECTION: {
-      set(id, { direction: action.value, synced: false });
+      set(ch, { fan_speed: action.value, synced: false });
       break;
     }
     case ACTION_SETPOINT: {
-      set(id, { setpoint: action.value, synced: false });
+      set(ch, { setpoint: action.value, synced: false });
       break;
     }
   }
