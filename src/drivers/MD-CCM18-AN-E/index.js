@@ -38,7 +38,7 @@ const sync = async (id, modbus, address, n) => {
       index = i + 1;
       readCoils(modbus, address, i * 128, 16);
     }
-    await delay(100);
+    await delay(1000);
   }
 };
 
@@ -80,7 +80,7 @@ module.exports.run = (action) => {
 };
 
 module.exports.handle = (action) => {
-  // console.log(index, action);
+  console.log(index, action);
   const { id, data } = action;
   let value = data[0] >> 7;
   let mode = 4;
