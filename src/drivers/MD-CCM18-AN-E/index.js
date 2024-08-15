@@ -82,7 +82,6 @@ module.exports.run = (action) => {
 };
 
 module.exports.handle = (action) => {
-  console.log(index, action);
   const { id, data } = action;
   switch (data[0]) {
     case READ_COILS: {
