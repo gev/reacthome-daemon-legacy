@@ -82,38 +82,44 @@ module.exports.run = (action) => {
 module.exports.handle = (action) => {
   console.log(index, action);
   const { id, data } = action;
-  let value = data[0] >> 7;
-  let mode = 4;
-  switch (data[0] & 0b11111) {
-    case 0b00001:
-      mode = 0;
+  switch (data[0]) {
+    case READ_COILS: {
+      let value = data[2] >> 7;
+      let mode = 4;
+      switch (data[0] & 0b11111) {
+        case 0b00001:
+          mode = 0;
+          break;
+        case 0b0010:
+          mode = 1;
+          break;
+        case 0b00100:
+          mode = 2;
+          break;
+        case 0b01000:
+          mode = 3;
+          break;
+        case 0b10000:
+          mode = 4;
+          break;
+      }
+      let fan_speed = 0;
+      switch (data[3] & 0b111) {
+        case 0b001:
+          fan_speed = 1;
+          break;
+        case 0b010:
+          fan_speed = 2;
+          break;
+        case 0b100:
+          fan_speed = 3;
+          break;
+      }
+      set(`${id}/ac/${index}`, id, { value, mode, fan_speed });
       break;
-    case 0b0010:
-      mode = 1;
-      break;
-    case 0b00100:
-      mode = 2;
-      break;
-    case 0b01000:
-      mode = 3;
-      break;
-    case 0b10000:
-      mode = 4;
-      break;
+    }
   }
-  let fan_speed = 0;
-  switch (data[1] & 0b111) {
-    case 0b001:
-      fan_speed = 1;
-      break;
-    case 0b010:
-      fan_speed = 2;
-      break;
-    case 0b100:
-      fan_speed = 3;
-      break;
-  }
-  set(`${id}/ac/${index}`, id, { value, mode, fan_speed });
+
 };
 
 
