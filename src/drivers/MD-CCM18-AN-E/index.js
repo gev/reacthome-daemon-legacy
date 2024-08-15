@@ -36,7 +36,7 @@ const sync = async (id, modbus, address, n) => {
       set(ch, { synced: true });
     } else {
       index = i + 1;
-      readCoils(modbus, address, 1 + i * 128, 128);
+      readCoils(modbus, address, i * 128, 128);
     }
     await delay(1000);
   }
@@ -85,8 +85,8 @@ module.exports.handle = (action) => {
   switch (data[0]) {
     case READ_COILS: {
       let value = data[2] >> 7;
-      let mode = 4;
-      switch (data[0] & 0b11111) {
+      let mode = 0;
+      switch (data[2] & 0b11111) {
         case 0b00001:
           mode = 0;
           break;
@@ -104,7 +104,7 @@ module.exports.handle = (action) => {
           break;
       }
       let fan_speed = 0;
-      switch (data[3] & 0b111) {
+      switch (data[4] & 0b111) {
         case 0b001:
           fan_speed = 1;
           break;
