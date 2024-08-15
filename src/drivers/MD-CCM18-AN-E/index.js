@@ -13,7 +13,7 @@ let index = 0
 
 const sync = async (id, modbus, address, n) => {
   for (let i = 0; i < n; i += 1) {
-    const ch = `${id}/${ac}/${i + 1}`
+    const ch = `${id}/ac/${i + 1}`
     const { synced, value, mode, fan_speed, setpoint } = get(ch) || {};
     if (!synced) {
       const dataMode = (value ? 1 : 0) << 7 | 1 << mode;
