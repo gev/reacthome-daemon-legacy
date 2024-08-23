@@ -802,7 +802,7 @@ module.exports.manage = () => {
         case ACTION_ALED_ON: {
           console.log(data);
           const index = data[7];
-          set(`${id}/group/${index}`, { value: true });
+          set(`${id}/group/${index}`, { value: 1 });
           break;
         }
         case ACTION_ALED_OFF: {
