@@ -2648,9 +2648,9 @@ const run = (action) => {
         console.log(action)
         const { id, index } = action;
         const { type } = get(id) || {};
-        let { segments = [], colors = 0 } = get(`${id}/group/${index}`) || {};
-        segments = action.segments || segments;
-        colors = action.colors || colors;
+        let { segments, colors } = get(`${id}/group/${index}`) || {};
+        segments = action.segments || segments || [];
+        colors = action.colors || colors || 0;
         const cmd = [action.type, index, colors, segments.length & 0xff];
         segments.forEach(({ direction, size }) => {
           cmd.push(direction);
