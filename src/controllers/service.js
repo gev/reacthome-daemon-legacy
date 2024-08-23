@@ -2649,7 +2649,7 @@ const run = (action) => {
         const { id, index } = action;
         const { type } = get(id) || {};
         let { segments, colors } = get(`${id}/group/${index}`) || {};
-        segments = action.segments || segments || [];
+        segments = action.segments || (Array.isArray(segments) ? segments : []);
         colors = action.colors || colors || 0;
         const cmd = [action.type, index, colors, segments.length & 0xff];
         segments.forEach(({ direction, size }) => {
