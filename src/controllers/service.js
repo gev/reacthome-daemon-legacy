@@ -2634,6 +2634,7 @@ const run = (action) => {
         const { id, index, value } = action;
         const { type } = get(id) || {};
         const buff = Buffer.from([action.type, index, value && 0xff]);
+        console.log(buff)
         switch (type) {
           case DEVICE_TYPE_SMART_BOTTOM_1:
           case DEVICE_TYPE_SMART_BOTTOM_2: {
