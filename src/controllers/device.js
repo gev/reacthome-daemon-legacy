@@ -87,6 +87,8 @@ const {
   ACTION_OFF,
   ACTION_INTENSITY,
   ACTION_ALED_BRIGHTNESS,
+  ACTION_ALED_ON,
+  ACTION_ALED_OFF,
 } = require("../constants");
 const {
   get,
