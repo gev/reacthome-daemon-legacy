@@ -86,6 +86,7 @@ const {
   ACTION_ON,
   ACTION_OFF,
   ACTION_INTENSITY,
+  ACTION_ALED_BRIGHTNESS,
 } = require("../constants");
 const {
   get,
@@ -794,6 +795,22 @@ module.exports.manage = () => {
         }
         case ACTION_BOOTLOAD: {
           updateFirmware(id);
+          break;
+        }
+        case ACTION_ALED_ON: {
+          const index = data[7];
+          set(`${id}/group/${index}`, { value: true });
+          break;
+        }
+        case ACTION_ALED_OFF: {
+          const index = data[7];
+          set(`${id}/group/${index}`, { value: false });
+          break;
+        }
+        case ACTION_ALED_BRIGHTNESS: {
+          const index = data[7];
+          const brightness = data[8];
+          set(`${id}/group/${index}`, { brightness });
           break;
         }
         case ACTION_ERROR: {

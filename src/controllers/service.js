@@ -190,6 +190,8 @@ const {
   VENTILATION,
   DRIVER_TYPE_DLC,
   DRIVER_TYPE_MD_CCM18_AN_E,
+  ACTION_ALED_ON,
+  ACTION_ALED_BRIGHTNESS,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -2608,6 +2610,33 @@ const run = (action) => {
               run(a);
             }
           });
+        }
+        break;
+      }
+      case ACTION_ALED_ON:
+      case ACTION_ALED_OFF: {
+        const { id, index } = action;
+        const { type } = get(id) || {};
+        const buff = Buffer.from([action.type, index]);
+        switch (type) {
+          case DEVICE_TYPE_SMART_BOTTOM_1:
+          case DEVICE_TYPE_SMART_BOTTOM_2: {
+            device.sendRBUS(buff, id);
+            break;
+          }
+        }
+        break;
+      }
+      case ACTION_ALED_BRIGHTNESS: {
+        const { id, index, value } = action;
+        const { type } = get(id) || {};
+        const buff = Buffer.from([action.type, index, value && 0xff]);
+        switch (type) {
+          case DEVICE_TYPE_SMART_BOTTOM_1:
+          case DEVICE_TYPE_SMART_BOTTOM_2: {
+            device.sendRBUS(buff, id);
+            break;
+          }
         }
         break;
       }
