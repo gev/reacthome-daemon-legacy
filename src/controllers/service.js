@@ -2657,6 +2657,7 @@ const run = (action) => {
           cmd.push(size);
         });
         const buff = Buffer.from(cmd);
+        console.log(buff)
         switch (type) {
           case DEVICE_TYPE_SMART_BOTTOM_1:
           case DEVICE_TYPE_SMART_BOTTOM_2: {
