@@ -89,6 +89,7 @@ const {
   ACTION_ALED_BRIGHTNESS,
   ACTION_ALED_ON,
   ACTION_ALED_OFF,
+  ACTION_ALED_CONFIG_GROUP,
 } = require("../constants");
 const {
   get,
@@ -816,6 +817,20 @@ module.exports.manage = () => {
           const index = data[7];
           const brightness = data[8];
           set(`${id}/group/${index}`, { brightness });
+          break;
+        }
+        case ACTION_ALED_CONFIG_GROUP: {
+          console.log(data);
+          const index = data[7];
+          const colors = data[8];
+          const segments = Array(data[9]);
+          for (let i = 0; i < segments.length; i++) {
+            segments[i] = {
+              direction: data[10 + i * 2],
+              size: data[11 + i * 2],
+            };
+          }
+          set(`${id}/group/${index}`, { colors, segments });
           break;
         }
         case ACTION_ERROR: {

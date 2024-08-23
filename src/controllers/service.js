@@ -193,6 +193,7 @@ const {
   ACTION_ALED_ON,
   ACTION_ALED_BRIGHTNESS,
   ACTION_ALED_OFF,
+  ACTION_ALED_CONFIG_GROUP,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -2634,6 +2635,28 @@ const run = (action) => {
         const { id, index, value } = action;
         const { type } = get(id) || {};
         const buff = Buffer.from([action.type, index, value & 0xff]);
+        switch (type) {
+          case DEVICE_TYPE_SMART_BOTTOM_1:
+          case DEVICE_TYPE_SMART_BOTTOM_2: {
+            device.sendRBUS(buff, id);
+            break;
+          }
+        }
+        break;
+      }
+      case ACTION_ALED_CONFIG_GROUP: {
+        console.log(action)
+        const { id, index } = action;
+        const { type } = get(id) || {};
+        let { segments = [], colors = 0 } = get(`${id}/group/${index}`) || {};
+        segments = action.segments || segments;
+        colors = action.colors || colors;
+        const cmd = [action.type, index, colors, segments.length & 0xff];
+        segments.forEach(({ direction, size }) => {
+          cmd.push(direction);
+          cmd.push(size);
+        });
+        const buff = Buffer.from(cmd);
         switch (type) {
           case DEVICE_TYPE_SMART_BOTTOM_1:
           case DEVICE_TYPE_SMART_BOTTOM_2: {
