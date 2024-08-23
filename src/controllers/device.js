@@ -800,16 +800,19 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_ALED_ON: {
+          console.log(data);
           const index = data[7];
           set(`${id}/group/${index}`, { value: true });
           break;
         }
         case ACTION_ALED_OFF: {
+          console.log(data);
           const index = data[7];
           set(`${id}/group/${index}`, { value: false });
           break;
         }
         case ACTION_ALED_BRIGHTNESS: {
+          console.log(data);
           const index = data[7];
           const brightness = data[8];
           set(`${id}/group/${index}`, { brightness });
