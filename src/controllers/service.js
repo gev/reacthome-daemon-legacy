@@ -2615,6 +2615,7 @@ const run = (action) => {
       }
       case ACTION_ALED_ON:
       case ACTION_ALED_OFF: {
+        console.log(action)
         const { id, index } = action;
         const { type } = get(id) || {};
         const buff = Buffer.from([action.type, index]);
@@ -2628,6 +2629,7 @@ const run = (action) => {
         break;
       }
       case ACTION_ALED_BRIGHTNESS: {
+        console.log(action)
         const { id, index, value } = action;
         const { type } = get(id) || {};
         const buff = Buffer.from([action.type, index, value && 0xff]);
