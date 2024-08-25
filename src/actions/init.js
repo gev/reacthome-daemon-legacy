@@ -52,6 +52,8 @@ const {
   DEVICE_TYPE_SMART_TOP_A6P,
   DEVICE_TYPE_SMART_TOP_G4D,
   DEVICE_TYPE_DI_4_RSM,
+  DEVICE_TYPE_SMART_BOTTOM_1,
+  DEVICE_TYPE_SMART_BOTTOM_2,
 } = require("../constants");
 const { get, set, add } = require("./create");
 const { device } = require("../sockets");
@@ -815,6 +817,15 @@ module.exports.initialize = (id) => {
         Buffer.concat([Buffer.from(a), Buffer.from(JSON.stringify(config))]),
         dev.ip
       );
+      break;
+    }
+    case DEVICE_TYPE_SMART_BOTTOM_1:
+    case DEVICE_TYPE_SMART_BOTTOM_2: {
+      for (let i = 0; i < 10; i++) {
+        const { value = false, brightness = 0 } = get(`${id}/group/${i + 1}`) || {};
+        a.push(brightness, value ? 1 : 0);
+      }
+      device.sendRBUS(Buffer.from(a), id);
       break;
     }
     default: {
