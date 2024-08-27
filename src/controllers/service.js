@@ -188,12 +188,12 @@ const {
   DEVICE_TYPE_DI_4_RSM,
   ACTION_INTENSITY,
   VENTILATION,
-  DRIVER_TYPE_DLC,
   DRIVER_TYPE_MD_CCM18_AN_E,
   ACTION_ALED_ON,
   ACTION_ALED_BRIGHTNESS,
   ACTION_ALED_OFF,
   ACTION_ALED_CONFIG_GROUP,
+  DRIVER_TYPE_DALI_DLC,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -838,7 +838,7 @@ const run = (action) => {
                   break;
                 }
                 case DRIVER_TYPE_DALI_GW:
-                case DRIVER_TYPE_DLC: {
+                case DRIVER_TYPE_DALI_DLC: {
                   drivers.run({
                     id: dev,
                     kind,
@@ -1261,7 +1261,7 @@ const run = (action) => {
               break;
             }
             case DRIVER_TYPE_DALI_GW:
-            case DRIVER_TYPE_DLC: {
+            case DRIVER_TYPE_DALI_DLC: {
               drivers.run({
                 id: dev,
                 kind,
@@ -1421,7 +1421,7 @@ const run = (action) => {
               break;
             }
             case DRIVER_TYPE_DALI_GW:
-            case DRIVER_TYPE_DLC_02: {
+            case DRIVER_TYPE_DALI_DLC: {
               drivers.run({
                 id: dev,
                 kind,
@@ -1509,7 +1509,7 @@ const run = (action) => {
               break;
             }
             case DRIVER_TYPE_DALI_GW:
-            case DRIVER_TYPE_DLC: {
+            case DRIVER_TYPE_DALI_DLC: {
               drivers.run({
                 id: dev,
                 kind,
@@ -1610,7 +1610,7 @@ const run = (action) => {
               break;
             }
             case DRIVER_TYPE_DALI_GW:
-            case DRIVER_TYPE_DLC: {
+            case DRIVER_TYPE_DALI_DLC: {
               drivers.run({
                 id: dev,
                 kind,
