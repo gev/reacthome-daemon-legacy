@@ -2333,11 +2333,10 @@ const run = (action) => {
           // if (true || o.value === undefined || o.value === null) {
           const b = bind.find((j) => {
             if (o[j]) {
-              const { value } = get(o[j]) || {}
-              return o.inverse ? !value : value
+              return o.inverse ? !o.value : o.value
             }
           });
-          return b !== undefined ? b : o.value;
+          return b !== undefined ? b : o.inverse ? !o.value : o.value;
           // }
         });
         if (f) {
