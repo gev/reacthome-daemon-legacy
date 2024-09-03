@@ -2618,6 +2618,7 @@ const run = (action) => {
       case ACTION_ALED_ON:
       case ACTION_ALED_OFF: {
         console.log(action)
+        const dev = get(action.id);
         const { id, index } = action;
         const { type } = get(id) || {};
         const buff = Buffer.from([action.type, index]);
@@ -2627,11 +2628,16 @@ const run = (action) => {
             device.sendRBUS(buff, id);
             break;
           }
+          case DEVICE_TYPE_SERVER: {
+            device.send(buff, dev.ip);
+            break;
+          }
         }
         break;
       }
       case ACTION_ALED_BRIGHTNESS: {
         console.log(action)
+        const dev = get(action.id);
         const { id, index, value } = action;
         const { type } = get(id) || {};
         const buff = Buffer.from([action.type, index, value & 0xff]);
@@ -2641,11 +2647,16 @@ const run = (action) => {
             device.sendRBUS(buff, id);
             break;
           }
+          case DEVICE_TYPE_SERVER: {
+            device.send(buff, dev.ip);
+            break;
+          }
         }
         break;
       }
       case ACTION_ALED_CONFIG_GROUP: {
         console.log(action)
+        const dev = get(action.id);
         const { id, index } = action;
         const { type } = get(id) || {};
         let { segments, colors } = get(`${id}/group/${index}`) || {};
@@ -2662,6 +2673,10 @@ const run = (action) => {
           case DEVICE_TYPE_SMART_BOTTOM_1:
           case DEVICE_TYPE_SMART_BOTTOM_2: {
             device.sendRBUS(buff, id);
+            break;
+          }
+          case DEVICE_TYPE_SERVER: {
+            device.send(buff, dev.ip);
             break;
           }
         }
