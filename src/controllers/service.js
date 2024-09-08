@@ -2615,26 +2615,6 @@ const run = (action) => {
         }
         break;
       }
-      case ACTION_ALED_ON:
-      case ACTION_ALED_OFF: {
-        console.log(action)
-        const dev = get(action.id);
-        const { id, index } = action;
-        const { type } = get(id) || {};
-        const buff = Buffer.from([action.type, index]);
-        switch (type) {
-          case DEVICE_TYPE_SMART_BOTTOM_1:
-          case DEVICE_TYPE_SMART_BOTTOM_2: {
-            device.sendRBUS(buff, id);
-            break;
-          }
-          case DEVICE_TYPE_SERVER: {
-            device.send(buff, dev.ip);
-            break;
-          }
-        }
-        break;
-      }
       case ACTION_ALED_BRIGHTNESS: {
         console.log(action)
         const dev = get(action.id);
