@@ -822,7 +822,7 @@ module.exports.initialize = (id) => {
     case DEVICE_TYPE_SMART_BOTTOM_1:
     case DEVICE_TYPE_SMART_BOTTOM_2: {
       for (let i = 0; i < 10; i++) {
-        const { brightness = 0 } = get(`${id}/group/${i + 1}`) || {};
+        const { brightness = 0 } = get(`${id}/LA/${i + 1}`) || {};
         a.push(brightness);
       }
       device.sendRBUS(Buffer.from(a), id);

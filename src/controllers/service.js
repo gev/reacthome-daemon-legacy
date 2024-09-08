@@ -2659,7 +2659,7 @@ const run = (action) => {
         const dev = get(action.id);
         const { id, index } = action;
         const { type } = get(id) || {};
-        let { segments, colors } = get(`${id}/group/${index}`) || {};
+        let { segments, colors } = get(`${id}/LA/${index}`) || {};
         segments = action.segments || (Array.isArray(segments) ? segments : []);
         colors = action.colors || colors || 0;
         const cmd = [action.type, index, colors, segments.length & 0xff];

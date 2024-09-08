@@ -803,20 +803,20 @@ module.exports.manage = () => {
         case ACTION_ALED_ON: {
           console.log(data);
           const index = data[7];
-          set(`${id}/group/${index}`, { value: true });
+          set(`${id}/LA/${index}`, { value: true });
           break;
         }
         case ACTION_ALED_OFF: {
           console.log(data);
           const index = data[7];
-          set(`${id}/group/${index}`, { value: false });
+          set(`${id}/LA/${index}`, { value: false });
           break;
         }
         case ACTION_ALED_BRIGHTNESS: {
           console.log(data);
           const index = data[7];
           const brightness = data[8];
-          set(`${id}/group/${index}`, { brightness });
+          set(`${id}/LA/${index}`, { brightness });
           break;
         }
         case ACTION_ALED_CONFIG_GROUP: {
@@ -830,7 +830,7 @@ module.exports.manage = () => {
               size: data[11 + i * 2],
             };
           }
-          set(`${id}/group/${index}`, { colors, segments });
+          set(`${id}/LA/${index}`, { colors, segments });
           break;
         }
         case ACTION_ERROR: {
