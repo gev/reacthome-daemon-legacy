@@ -2675,6 +2675,7 @@ const run = (action) => {
           const buff = Buffer.from([
             ACTION_ALED_MASK_ANIMATION_PLAY,
             parseInt(index, 10),
+            action.action,
             action.duration,
             action.phase,
             action.split,
