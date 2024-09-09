@@ -2619,14 +2619,15 @@ const run = (action) => {
       case ACTION_ALED_ON:
       case ACTION_ALED_OFF: {
         console.log(action)
-        const dev = get(action.id);
-        const { id, index } = action;
-        const { type } = get(id) || {};
-        const buff = Buffer.from([action.type, index]);
-        switch (type) {
+        const dev = get(action.id) || {};
+        const buff = Buffer.from([
+          action.type,
+          action.index
+        ]);
+        switch (dev.type) {
           case DEVICE_TYPE_SMART_BOTTOM_1:
           case DEVICE_TYPE_SMART_BOTTOM_2: {
-            device.sendRBUS(buff, id);
+            device.sendRBUS(buff, action.id);
             break;
           }
           case DEVICE_TYPE_SERVER: {
@@ -2638,14 +2639,16 @@ const run = (action) => {
       }
       case ACTION_ALED_BRIGHTNESS: {
         console.log(action)
-        const dev = get(action.id);
-        const { id, index, value } = action;
-        const { type } = get(id) || {};
-        const buff = Buffer.from([action.type, index, value & 0xff]);
-        switch (type) {
+        const dev = get(action.id) || {};
+        const buff = Buffer.from([
+          action.type,
+          action.index,
+          action.value
+        ]);
+        switch (dev.type) {
           case DEVICE_TYPE_SMART_BOTTOM_1:
           case DEVICE_TYPE_SMART_BOTTOM_2: {
-            device.sendRBUS(buff, id);
+            device.sendRBUS(buff, action.id);
             break;
           }
           case DEVICE_TYPE_SERVER: {
@@ -2664,16 +2667,21 @@ const run = (action) => {
       }
       case 'ACTION_ALED_CLIP': {
         console.log(action)
-        const { id, start, end, inverse } = action.payload
-        const { bind } = get(id) || {};
+        const { bind } = get(action.id) || {};
         if (bind) {
-          const [dev, , index] = bind.split('/');
-          const { type } = get() || {};
-          const buff = Buffer.from([ACTION_ALED_CLIP, parseInt(index, 10) & 0xff, start & 0xff, end & 0xff, inverse ? 1 : 0]);
-          switch (type) {
+          const [id, , index] = bind.split('/');
+          const dev = get(id) || {};
+          const buff = Buffer.from([
+            ACTION_ALED_CLIP,
+            parseInt(index, 10),
+            action.start || 0,
+            action.end || 255,
+            action.inverse
+          ]);
+          switch (dev.type) {
             case DEVICE_TYPE_SMART_BOTTOM_1:
             case DEVICE_TYPE_SMART_BOTTOM_2: {
-              device.sendRBUS(buff, dev);
+              device.sendRBUS(buff, id);
               break;
             }
             case DEVICE_TYPE_SERVER: {
@@ -2686,23 +2694,26 @@ const run = (action) => {
       }
       case ACTION_ALED_CONFIG_GROUP: {
         console.log(action)
-        const dev = get(action.id);
-        const { id, index } = action;
-        const { type } = get(id) || {};
-        let { segments, colors } = get(`${id}/LA/${index}`) || {};
+        const dev = get(action.id) || {};
+        let { segments, colors } = get(`${action.id}/LA/${action.index}`) || {};
         segments = action.segments || (Array.isArray(segments) ? segments : []);
         colors = action.colors || colors || 0;
-        const cmd = [action.type, index, colors, segments.length & 0xff];
+        const cmd = [
+          action.type,
+          action.index,
+          colors,
+          segments.length
+        ];
         segments.forEach(({ direction, size }) => {
           cmd.push(direction);
           cmd.push(size);
         });
         const buff = Buffer.from(cmd);
         console.log(buff)
-        switch (type) {
+        switch (dev.type) {
           case DEVICE_TYPE_SMART_BOTTOM_1:
           case DEVICE_TYPE_SMART_BOTTOM_2: {
-            device.sendRBUS(buff, id);
+            device.sendRBUS(buff, action.id);
             break;
           }
           case DEVICE_TYPE_SERVER: {
