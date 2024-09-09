@@ -194,6 +194,7 @@ const {
   ACTION_ALED_OFF,
   ACTION_ALED_CONFIG_GROUP,
   DRIVER_TYPE_DALI_DLC,
+  ACTION_ALED_CLIP,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -2652,6 +2653,33 @@ const run = (action) => {
             break;
           }
         }
+        break;
+      }
+      case 'ACTION_ALED_COLOR_ANIMATION_PLAY':
+      case 'ACTION_ALED_COLOR_ANIMATION_STOP':
+      case 'ACTION_ALED_MASK_ANIMATION_PLAY':
+      case 'ACTION_ALED_MASK_ANIMATION_STOP':
+      case 'ACTION_ALED_CLIP': {
+        console.log(action)
+        // const { id, start, end, inverse } = action.payload
+        // const { bind } = get(id) || {};
+        // if (bind) {
+        //   const [dev, , index] = bind.split('/');
+        //   const { type } = get() || {};
+        //   const buff = Buffer.from([action.type, index, value & 0xff]);
+        //   switch (type) {
+        //     case DEVICE_TYPE_SMART_BOTTOM_1:
+        //     case DEVICE_TYPE_SMART_BOTTOM_2: {
+        //       device.sendRBUS(buff, id);
+        //       break;
+        //     }
+        //     case DEVICE_TYPE_SERVER: {
+        //       device.send(buff, dev.ip);
+        //       break;
+        //     }
+        //   }
+
+        // }
         break;
       }
       case ACTION_ALED_CONFIG_GROUP: {
