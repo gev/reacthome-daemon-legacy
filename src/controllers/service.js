@@ -2668,9 +2668,11 @@ const run = (action) => {
       case 'ACTION_ALED_CLIP': {
         console.log(action)
         const { bind } = get(action.id) || {};
+        console.log(bind)
         if (bind) {
           const [id, , index] = bind.split('/');
           const dev = get(id) || {};
+          console.log(dev)
           const buff = Buffer.from([
             ACTION_ALED_CLIP,
             parseInt(index, 10),
