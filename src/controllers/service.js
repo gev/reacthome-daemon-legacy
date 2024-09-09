@@ -195,6 +195,8 @@ const {
   ACTION_ALED_CONFIG_GROUP,
   DRIVER_TYPE_DALI_DLC,
   ACTION_ALED_CLIP,
+  ACTION_ALED_MASK_ANIMATION_STOP,
+  ACTION_ALED_MASK_ANIMATION_PLAY,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -2630,6 +2632,7 @@ const run = (action) => {
             device.sendRBUS(buff, action.id);
             break;
           }
+          case DEVICE_TYPE_RS_HUB4:
           case DEVICE_TYPE_SERVER: {
             device.send(buff, dev.ip);
             break;
@@ -2651,6 +2654,7 @@ const run = (action) => {
             device.sendRBUS(buff, action.id);
             break;
           }
+          case DEVICE_TYPE_RS_HUB4:
           case DEVICE_TYPE_SERVER: {
             device.send(buff, dev.ip);
             break;
@@ -2660,9 +2664,63 @@ const run = (action) => {
       }
       case 'ACTION_ALED_COLOR_ANIMATION_PLAY':
       case 'ACTION_ALED_COLOR_ANIMATION_STOP':
-      case 'ACTION_ALED_MASK_ANIMATION_PLAY':
+      case 'ACTION_ALED_MASK_ANIMATION_PLAY': {
+        console.log(action)
+        const { bind } = get(action.id) || {};
+        console.log(bind)
+        if (bind) {
+          const [id, , index] = bind.split('/');
+          const dev = get(id) || {};
+          console.log(dev)
+          const buff = Buffer.from([
+            ACTION_ALED_MASK_ANIMATION_PLAY,
+            parseInt(index, 10),
+            action.duration,
+            action.phase,
+            action.split,
+            action.loop,
+            ...action.params || []
+          ]);
+          switch (dev.type) {
+            case DEVICE_TYPE_SMART_BOTTOM_1:
+            case DEVICE_TYPE_SMART_BOTTOM_2: {
+              device.sendRBUS(buff, id);
+              break;
+            }
+            case DEVICE_TYPE_RS_HUB4:
+            case DEVICE_TYPE_SERVER: {
+              device.send(buff, dev.ip);
+              break;
+            }
+          }
+        }
+        break;
+      }
       case 'ACTION_ALED_MASK_ANIMATION_STOP': {
         console.log(action)
+        const { bind } = get(action.id) || {};
+        console.log(bind)
+        if (bind) {
+          const [id, , index] = bind.split('/');
+          const dev = get(id) || {};
+          console.log(dev)
+          const buff = Buffer.from([
+            ACTION_ALED_MASK_ANIMATION_STOP,
+            parseInt(index, 10),
+          ]);
+          switch (dev.type) {
+            case DEVICE_TYPE_SMART_BOTTOM_1:
+            case DEVICE_TYPE_SMART_BOTTOM_2: {
+              device.sendRBUS(buff, id);
+              break;
+            }
+            case DEVICE_TYPE_RS_HUB4:
+            case DEVICE_TYPE_SERVER: {
+              device.send(buff, dev.ip);
+              break;
+            }
+          }
+        }
         break;
       }
       case 'ACTION_ALED_CLIP': {
@@ -2676,8 +2734,8 @@ const run = (action) => {
           const buff = Buffer.from([
             ACTION_ALED_CLIP,
             parseInt(index, 10),
-            action.start || 0,
-            action.end || 255,
+            action.start,
+            action.end,
             action.inverse
           ]);
           switch (dev.type) {
@@ -2686,6 +2744,7 @@ const run = (action) => {
               device.sendRBUS(buff, id);
               break;
             }
+            case DEVICE_TYPE_RS_HUB4:
             case DEVICE_TYPE_SERVER: {
               device.send(buff, dev.ip);
               break;
@@ -2718,6 +2777,7 @@ const run = (action) => {
             device.sendRBUS(buff, action.id);
             break;
           }
+          case DEVICE_TYPE_RS_HUB4:
           case DEVICE_TYPE_SERVER: {
             device.send(buff, dev.ip);
             break;
