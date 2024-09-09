@@ -198,6 +198,7 @@ const {
   ACTION_ALED_MASK_ANIMATION_STOP,
   ACTION_ALED_MASK_ANIMATION_PLAY,
   ACTION_ALED_COLOR_ANIMATION_STOP,
+  ACTION_ALED_COLOR_ANIMATION_PLAY,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
