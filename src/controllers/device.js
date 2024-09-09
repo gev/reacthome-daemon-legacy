@@ -90,6 +90,11 @@ const {
   ACTION_ALED_ON,
   ACTION_ALED_OFF,
   ACTION_ALED_CONFIG_GROUP,
+  ACTION_ALED_COLOR_ANIMATION_PLAY,
+  ACTION_ALED_MASK_ANIMATION_PLAY,
+  ACTION_ALED_COLOR_ANIMATION_STOP,
+  ACTION_ALED_MASK_ANIMATION_STOP,
+  ACTION_ALED_CLIP,
 } = require("../constants");
 const {
   get,
@@ -817,6 +822,14 @@ module.exports.manage = () => {
           const index = data[7];
           const brightness = data[8];
           set(`${id}/LA/${index}`, { brightness });
+          break;
+        }
+        case ACTION_ALED_COLOR_ANIMATION_PLAY:
+        case ACTION_ALED_MASK_ANIMATION_PLAY:
+        case ACTION_ALED_COLOR_ANIMATION_STOP:
+        case ACTION_ALED_MASK_ANIMATION_STOP:
+        case ACTION_ALED_CLIP: {
+          console.log(data);
           break;
         }
         case ACTION_ALED_CONFIG_GROUP: {
