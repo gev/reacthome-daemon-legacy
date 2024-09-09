@@ -2663,7 +2663,6 @@ const run = (action) => {
         break;
       }
       case 'ACTION_ALED_COLOR_ANIMATION_PLAY':
-      case 'ACTION_ALED_COLOR_ANIMATION_STOP':
       case 'ACTION_ALED_MASK_ANIMATION_PLAY': {
         console.log(action)
         const { bind } = get(action.id) || {};
@@ -2673,7 +2672,9 @@ const run = (action) => {
           const dev = get(id) || {};
           console.log(dev)
           const buff = Buffer.from([
-            ACTION_ALED_MASK_ANIMATION_PLAY,
+            animation.type === 'ACTION_ALED_MASK_ANIMATION_PLAY'
+              ? ACTION_ALED_MASK_ANIMATION_PLAY
+              : ACTION_ALED_MASK_ANIMATION_PLAY,
             parseInt(index, 10),
             action.action,
             action.duration,
@@ -2697,6 +2698,7 @@ const run = (action) => {
         }
         break;
       }
+      case 'ACTION_ALED_COLOR_ANIMATION_STOP':
       case 'ACTION_ALED_MASK_ANIMATION_STOP': {
         console.log(action)
         const { bind } = get(action.id) || {};
@@ -2706,7 +2708,9 @@ const run = (action) => {
           const dev = get(id) || {};
           console.log(dev)
           const buff = Buffer.from([
-            ACTION_ALED_MASK_ANIMATION_STOP,
+            animation.type === 'ACTION_ALED_COLOR_ANIMATION_STOP'
+              ? ACTION_ALED_COLOR_ANIMATION_STOP
+              : ACTION_ALED_MASK_ANIMATION_STOP,
             parseInt(index, 10),
           ]);
           switch (dev.type) {
