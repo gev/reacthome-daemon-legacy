@@ -2673,8 +2673,8 @@ const run = (action) => {
           const dev = get(id) || {};
           console.log(dev)
           const buff = Buffer.from([
-            action.type === 'ACTION_ALED_MASK_ANIMATION_PLAY'
-              ? ACTION_ALED_MASK_ANIMATION_PLAY
+            action.type === 'ACTION_ALED_COLOR_ANIMATION_PLAY'
+              ? ACTION_ALED_COLOR_ANIMATION_PLAY
               : ACTION_ALED_MASK_ANIMATION_PLAY,
             parseInt(index, 10),
             action.animation,
