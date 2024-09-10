@@ -584,6 +584,8 @@ module.exports.initialize = (id) => {
     }
     case DEVICE_TYPE_SERVER:
     case DEVICE_TYPE_RS_HUB4: {
+      const { version = "" } = get(id) || {};
+      const [major] = version.split(".");
       for (i = 1; i <= 4; i++) {
         const {
           is_rbus = true,
@@ -602,6 +604,12 @@ module.exports.initialize = (id) => {
         a[3 * i + 22] = (channel && channel.group) || i;
         a[3 * i + 23] = (channel && channel.type) || 0;
         a[3 * i + 24] = (channel && channel.value) || 0;
+      }
+      if (major >= 5) {
+        for (let i = 0; i < 10; i++) {
+          const { brightness = 0 } = get(`${id}/LA/${i + 1}`) || {};
+          a.push(brightness);
+        }
       }
       device.send(Buffer.from(a), dev.ip);
       break;
