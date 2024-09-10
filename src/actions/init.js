@@ -60,7 +60,6 @@ const { device } = require("../sockets");
 const mac = require("../mac");
 const { codes } = require("reacthome-ircodes");
 const { ip2int } = require("../util");
-const { forEach } = require("../sip/calls");
 
 module.exports.initialized = (id) => {
   set(id, { initialized: true });
@@ -585,7 +584,7 @@ module.exports.initialize = (id) => {
     case DEVICE_TYPE_SERVER:
     case DEVICE_TYPE_RS_HUB4: {
       const { version = "" } = get(id) || {};
-      const [major] = version.split(".");
+      const major = parseInt(version.split(".")[0], 10);
       for (i = 1; i <= 4; i++) {
         const {
           is_rbus = true,
