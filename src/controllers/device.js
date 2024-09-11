@@ -806,19 +806,16 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_ALED_ON: {
-          console.log(data);
           const index = data[7];
           set(`${id}/LA/${index}`, { value: true });
           break;
         }
         case ACTION_ALED_OFF: {
-          console.log(data);
           const index = data[7];
           set(`${id}/LA/${index}`, { value: false });
           break;
         }
         case ACTION_ALED_BRIGHTNESS: {
-          console.log(data);
           const index = data[7];
           const brightness = data[8];
           set(`${id}/LA/${index}`, { brightness });
@@ -829,11 +826,9 @@ module.exports.manage = () => {
         case ACTION_ALED_COLOR_ANIMATION_STOP:
         case ACTION_ALED_MASK_ANIMATION_STOP:
         case ACTION_ALED_CLIP: {
-          console.log(data);
           break;
         }
         case ACTION_ALED_CONFIG_GROUP: {
-          console.log(data);
           const index = data[7];
           const colors = data[8];
           const segments = Array(data[9]);

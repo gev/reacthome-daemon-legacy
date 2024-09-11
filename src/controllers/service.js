@@ -2622,7 +2622,6 @@ const run = (action) => {
       }
       case ACTION_ALED_ON:
       case ACTION_ALED_OFF: {
-        console.log(action)
         const dev = get(action.id) || {};
         const buff = Buffer.from([
           action.type,
@@ -2643,7 +2642,6 @@ const run = (action) => {
         break;
       }
       case ACTION_ALED_BRIGHTNESS: {
-        console.log(action)
         const dev = get(action.id) || {};
         const buff = Buffer.from([
           action.type,
@@ -2666,13 +2664,10 @@ const run = (action) => {
       }
       case 'ACTION_ALED_COLOR_ANIMATION_PLAY':
       case 'ACTION_ALED_MASK_ANIMATION_PLAY': {
-        console.log(action)
         const { bind } = get(action.id) || {};
-        console.log(bind)
         if (bind) {
           const [id, , index] = bind.split('/');
           const dev = get(id) || {};
-          console.log(dev)
           const buff = Buffer.from([
             action.type === 'ACTION_ALED_COLOR_ANIMATION_PLAY'
               ? ACTION_ALED_COLOR_ANIMATION_PLAY
@@ -2702,13 +2697,10 @@ const run = (action) => {
       }
       case 'ACTION_ALED_COLOR_ANIMATION_STOP':
       case 'ACTION_ALED_MASK_ANIMATION_STOP': {
-        console.log(action)
         const { bind } = get(action.id) || {};
-        console.log(bind)
         if (bind) {
           const [id, , index] = bind.split('/');
           const dev = get(id) || {};
-          console.log(dev)
           const buff = Buffer.from([
             action.type === 'ACTION_ALED_COLOR_ANIMATION_STOP'
               ? ACTION_ALED_COLOR_ANIMATION_STOP
@@ -2731,13 +2723,10 @@ const run = (action) => {
         break;
       }
       case 'ACTION_ALED_CLIP': {
-        console.log(action)
         const { bind } = get(action.id) || {};
-        console.log(bind)
         if (bind) {
           const [id, , index] = bind.split('/');
           const dev = get(id) || {};
-          console.log(dev)
           const buff = Buffer.from([
             ACTION_ALED_CLIP,
             parseInt(index, 10),
@@ -2761,7 +2750,6 @@ const run = (action) => {
         break;
       }
       case ACTION_ALED_CONFIG_GROUP: {
-        console.log(action)
         const dev = get(action.id) || {};
         let { segments, colors } = get(`${action.id}/LA/${action.index}`) || {};
         segments = action.segments || (Array.isArray(segments) ? segments : []);
@@ -2777,7 +2765,6 @@ const run = (action) => {
           cmd.push(size);
         });
         const buff = Buffer.from(cmd);
-        console.log(buff)
         switch (dev.type) {
           case DEVICE_TYPE_SMART_BOTTOM_1:
           case DEVICE_TYPE_SMART_BOTTOM_2: {

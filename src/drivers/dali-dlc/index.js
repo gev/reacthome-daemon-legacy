@@ -46,7 +46,6 @@ const loop = (id) => async () => {
 }
 
 module.exports.run = (a) => {
-  console.log(a);
   const { id, kind, index, value } = a;
   const [port, idx] = index.split('.');
   set(`${id}/${kind}/${port}.${idx}`, { value, synced: false, dimmable: true })

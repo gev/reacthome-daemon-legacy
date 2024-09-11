@@ -38,7 +38,6 @@ const online = (id, props) => {
       case DEVICE_TYPE_SMART_BOTTOM_2:
       case DEVICE_TYPE_DOPPLER_1_DI_4:
       case DEVICE_TYPE_DOPPLER_5_DI_4: {
-        console.log('get state', id);
         device.sendRBUS(
           Buffer.from([
             ACTION_GET_STATE,
