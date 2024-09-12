@@ -64,7 +64,7 @@ module.exports.handle = ({ id, data }) => {
 
 
 module.exports.clear = () => {
-  instance.forEach(i => clearImmediate(i))
+  instance.forEach(i => clearTimeout(i))
   instance.clear();
 }
 

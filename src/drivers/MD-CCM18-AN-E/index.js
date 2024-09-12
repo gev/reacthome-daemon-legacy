@@ -47,7 +47,7 @@ const sync = async (id, modbus, address, n) => {
 
 const loop = (id) => async () => {
   const dev = get(id) || {};
-  const { bind, numberAC } = dev;
+  const { bind = "", numberAC } = dev;
   const [modbus, , address] = bind.split('/');
   await sync(id, modbus, address, numberAC);
   instance.set(id, setTimeout(loop(id), 100));

@@ -93,7 +93,6 @@ module.exports = class {
         device.send(buffer, ip);
       }
     }
-
   };
 
 
