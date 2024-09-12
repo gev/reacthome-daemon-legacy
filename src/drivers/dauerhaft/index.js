@@ -95,6 +95,7 @@ const loop = (id) => async () => {
 }
 
 module.exports.run = (action) => {
+  console.log(action);
   const { id, address } = action;
   const ch = `${id}/curtain/${address}`;
   switch (action.type) {
@@ -153,7 +154,7 @@ send = (id, payload) => {
 
 query = (address, channel, a, b) => {
   const buffer = Buffer.alloc(7);
-  buffer.writeUint8(0xda, 0);
+  buffer.writeUint8(0x9a, 0);
   buffer.writeUInt8(address, 1);
   buffer.writeInt16LE(1 << channel, 2);
   buffer.writeUInt8(a, 4);
