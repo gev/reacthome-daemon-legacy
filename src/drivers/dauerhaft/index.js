@@ -89,6 +89,7 @@ const sync = (id, index) => {
   } else if (shouldDown) {
     cmd = query(address, channel, 0x0a, 0xee)
     set(ch, { shouldDown: false });
+    send(id, cmd);
   } else if (shouldStop) {
     cmd = query(address, channel, 0x0a, 0xcc)
     set(ch, { shouldStop: false });
