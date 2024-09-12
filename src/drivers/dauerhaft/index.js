@@ -78,7 +78,7 @@ const sync = (id, index) => {
   const ch = `${id}/curtain/${index}`;
   const { shouldSetAddress, shouldSetPosition, address, channel } = get(ch) || {};
   if (shouldSetAddress) {
-    query(id, address, channel, 0x0a, 0xdd);
+    send(id, query(id, address, channel, 0x0a, 0xdd));
     set(ch, { shouldSetAddress: false });
   }
 }
@@ -86,7 +86,7 @@ const sync = (id, index) => {
 const loop = (id) => async () => {
   const { numberCurtain = 0 } = get(id) || {};
   for (let i = 1; i <= numberCurtain; i += 1) {
-    send(id, sync(id, i));
+    sync(id, i);
     await delay(20);
   }
   timers.set(id, setTimeout(loop(id), numberCurtain * 25));
