@@ -203,6 +203,8 @@ const {
   ACTION_UP,
   DRIVER_TYPE_DAUERHAFT,
   ACTION_DOWN,
+  ACTION_LIMIT_UP,
+  ACTION_LIMIT_DOWN,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -2538,6 +2540,8 @@ const run = (action) => {
       case ACTION_SET_ADDRESS:
       case ACTION_UP:
       case ACTION_DOWN:
+      case ACTION_LIMIT_UP:
+      case ACTION_LIMIT_DOWN:
       case ACTION_SET_POSITION:
       case ACTION_SET_MODE:
       case ACTION_SET_DIRECTION:

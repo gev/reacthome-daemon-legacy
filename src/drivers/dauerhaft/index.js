@@ -66,7 +66,7 @@
 
 
 const { get, set } = require('../../actions');
-const { ACTION_SET_ADDRESS, ACTION_SET_POSITION, DEVICE_TYPE_DI_4_RSM, DEVICE_TYPE_RS_HUB1_RS, ACTION_RS485_TRANSMIT, ACTION_UP, ACTION_DOWN, ACTION_STOP } = require('../../constants');
+const { ACTION_SET_ADDRESS, ACTION_SET_POSITION, DEVICE_TYPE_DI_4_RSM, DEVICE_TYPE_RS_HUB1_RS, ACTION_RS485_TRANSMIT, ACTION_UP, ACTION_DOWN, ACTION_STOP, ACTION_LIMIT_UP, ACTION_LIMIT_DOWN } = require('../../constants');
 const { device } = require('../../sockets');
 const { delay } = require('../../util');
 
@@ -76,7 +76,10 @@ let tid = 0;
 
 const sync = (id, index) => {
   const ch = `${id}/curtain/${index}`;
-  const { shouldSetAddress, shouldSetPosition, shouldUp, shouldDown, shouldStop, address, channel } = get(ch) || {};
+  const { shouldSetAddress, shouldSetPosition
+    , shouldUp, shouldDown, shouldStop
+    , shouldLimitUp, shouldLimitDown
+    , address, channel } = get(ch) || {};
   let cmd;
   if (shouldSetAddress) {
     cmd = query(address, channel, 0xaa, 0xaa)
@@ -93,6 +96,14 @@ const sync = (id, index) => {
   } else if (shouldStop) {
     cmd = query(address, channel, 0x0a, 0xcc)
     set(ch, { shouldStop: false });
+    send(id, cmd);
+  } else if (shouldLimitUp) {
+    cmd = query(address, channel, 0xda, 0xdd)
+    set(ch, { shouldLimitUp: false });
+    send(id, cmd);
+  } else if (shouldLimitDown) {
+    cmd = query(address, channel, 0xda, 0xee)
+    set(ch, { shouldLimitDown: false });
     send(id, cmd);
   }
 }
@@ -125,6 +136,14 @@ module.exports.run = (action) => {
     }
     case ACTION_STOP: {
       set(ch, { shouldStop: true });
+      break;
+    }
+    case ACTION_LIMIT_UP: {
+      set(ch, { shouldLimitUp: true });
+      break;
+    }
+    case ACTION_LIMIT_DOWN: {
+      set(ch, { shouldLimitDown: true });
       break;
     }
     case ACTION_SET_POSITION: {

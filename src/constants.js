@@ -143,6 +143,10 @@ module.exports.ACTION_CLOSE = "ACTION_CLOSE";
 module.exports.ACTION_UP = "ACTION_UP";
 module.exports.ACTION_DOWN = "ACTION_DOWN";
 
+module.exports.ACTION_LIMIT_UP = 'ACTION_LIMIT_UP';
+module.exports.ACTION_LIMIT_DOWN = 'ACTION_LIMIT_DOWN';
+
+
 module.exports.OPEN_CLOSE = "open_close";
 module.exports.CLOSE_OPEN = "close_open";
 
