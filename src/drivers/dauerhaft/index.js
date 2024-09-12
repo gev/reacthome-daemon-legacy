@@ -66,7 +66,7 @@
 
 
 const { get, set } = require('../../actions');
-const { ACTION_SET_ADDRESS, ACTION_SET_POSITION, DEVICE_TYPE_DI_4_RSM, DEVICE_TYPE_RS_HUB1_RS, ACTION_RS485_TRANSMIT } = require('../../constants');
+const { ACTION_SET_ADDRESS, ACTION_SET_POSITION, DEVICE_TYPE_DI_4_RSM, DEVICE_TYPE_RS_HUB1_RS, ACTION_RS485_TRANSMIT, ACTION_UP, ACTION_DOWN, ACTION_STOP } = require('../../constants');
 const { device } = require('../../sockets');
 const { delay } = require('../../util');
 
@@ -76,12 +76,23 @@ let tid = 0;
 
 const sync = (id, index) => {
   const ch = `${id}/curtain/${index}`;
-  const { shouldSetAddress, shouldSetPosition, address, channel } = get(ch) || {};
+  const { shouldSetAddress, shouldSetPosition, shouldUp, shouldDown, shouldStop, address, channel } = get(ch) || {};
+  let cmd;
   if (shouldSetAddress) {
-    const cmd = query(address, channel, 0xaa, 0xaa)
-    console.log(cmd);
-    send(id, cmd);
+    cmd = query(address, channel, 0xaa, 0xaa)
     set(ch, { shouldSetAddress: false });
+    send(id, cmd);
+  } else if (shouldUp) {
+    cmd = query(address, channel, 0x0a, 0xdd)
+    set(ch, { shouldUp: false });
+    send(id, cmd);
+  } else if (shouldDown) {
+    cmd = query(address, channel, 0x0a, 0xee)
+    set(ch, { shouldDown: false });
+  } else if (shouldStop) {
+    cmd = query(address, channel, 0x0a, 0xcc)
+    set(ch, { shouldStop: false });
+    send(id, cmd);
   }
 }
 
@@ -101,6 +112,18 @@ module.exports.run = (action) => {
   switch (action.type) {
     case ACTION_SET_ADDRESS: {
       set(ch, { shouldSetAddress: true, address, channel });
+      break;
+    }
+    case ACTION_UP: {
+      set(ch, { shouldUp: true });
+      break;
+    }
+    case ACTION_DOWN: {
+      set(ch, { shouldDown: true });
+      break;
+    }
+    case ACTION_STOP: {
+      set(ch, { shouldStop: true });
       break;
     }
     case ACTION_SET_POSITION: {
@@ -131,6 +154,7 @@ module.exports.add = (id) => {
 };
 
 send = (id, payload) => {
+  console.log(payload)
   const { bind } = get(id);
   if (!bind) return;
   const { is_rbus } = get(bind);

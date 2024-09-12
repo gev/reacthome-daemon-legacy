@@ -140,6 +140,8 @@ module.exports.ACTION_MULTIROOM_ZONE = "ACTION_MULTIROOM_ZONE";
 module.exports.ACTION_STOP = "ACTION_STOP";
 module.exports.ACTION_OPEN = "ACTION_OPEN";
 module.exports.ACTION_CLOSE = "ACTION_CLOSE";
+module.exports.ACTION_UP = "ACTION_UP";
+module.exports.ACTION_DOWN = "ACTION_DOWN";
 
 module.exports.OPEN_CLOSE = "open_close";
 module.exports.CLOSE_OPEN = "close_open";
