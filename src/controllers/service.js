@@ -2528,6 +2528,7 @@ const run = (action) => {
         break;
       }
       case ACTION_SET_ADDRESS:
+      case ACTION_SET_POSITION:
       case ACTION_SET_MODE:
       case ACTION_SET_DIRECTION:
       case ACTION_SET_FAN_SPEED: {

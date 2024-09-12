@@ -19,6 +19,7 @@ const {
   DRIVER_TYPE_COMFOVENT,
   DRIVER_TYPE_DALI_DLC,
   DRIVER_TYPE_MD_CCM18_AN_E,
+  DRIVER_TYPE_DAUERHAFT,
 } = require("../constants");
 const { get } = require("../actions");
 const RS21 = require("./RS21");
@@ -39,6 +40,7 @@ const alink = require("./alink");
 // const me210_701 = require("./owen/me210_701");
 const dali_gw = require("./dali-gw");
 const dali_dlc = require("./dali-dlc");
+const dauerhaft = require("./dauerhaft");
 
 const mac = require("../mac");
 
@@ -135,6 +137,11 @@ module.exports.manage = () => {
         instances.add(id, dali_dlc);
         dali_dlc.add(id);
         break;
+      case DRIVER_TYPE_DAUERHAFT:
+        instances.add(id, dauerhaft);
+        dauerhaft.add(id);
+        break;
+
     }
   });
 };

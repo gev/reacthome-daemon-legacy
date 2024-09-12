@@ -201,6 +201,7 @@ module.exports.ACTION_SET_ADDRESS = "ACTION_SET_ADDRESS";
 module.exports.ACTION_SET_FAN_SPEED = "ACTION_SET_FAN_SPEED";
 module.exports.ACTION_SET_MODE = "ACTION_SET_MODE";
 module.exports.ACTION_SET_DIRECTION = "ACTION_SET_DIRECTION";
+module.exports.ACTION_SET_POSITION = "ACTION_SET_POSITION";
 
 module.exports.ACTION_PRINT = "ACTION_PRINT";
 
@@ -387,6 +388,7 @@ module.exports.DRIVER_TYPE_MD_CCM18_AN_E = 'MD_CCM18_AN_E';
 module.exports.DRIVER_TYPE_RTD_RA = "RT_DA";
 module.exports.DRIVER_TYPE_ALINK = "ALINK";
 module.exports.DRIVER_TYPE_ME210_701 = "ME210_710";
+module.exports.DRIVER_TYPE_DAUERHAFT = 'DAUERHAFT';
 
 module.exports.DALI_LIGHT = 'dali_light';
 module.exports.DALI_GROUP = 'dali_group';
