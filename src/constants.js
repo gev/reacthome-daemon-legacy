@@ -146,6 +146,9 @@ module.exports.ACTION_DOWN = "ACTION_DOWN";
 module.exports.ACTION_LIMIT_UP = 'ACTION_LIMIT_UP';
 module.exports.ACTION_LIMIT_DOWN = 'ACTION_LIMIT_DOWN';
 
+module.exports.ACTION_LEARN = 'ACTION_LEARN';
+module.exports.ACTION_DONE = 'ACTION_DONE';
+
 
 module.exports.OPEN_CLOSE = "open_close";
 module.exports.CLOSE_OPEN = "close_open";

@@ -205,6 +205,8 @@ const {
   ACTION_DOWN,
   ACTION_LIMIT_UP,
   ACTION_LIMIT_DOWN,
+  ACTION_LEARN,
+  ACTION_DONE,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -2542,6 +2544,8 @@ const run = (action) => {
       case ACTION_DOWN:
       case ACTION_LIMIT_UP:
       case ACTION_LIMIT_DOWN:
+      case ACTION_LEARN:
+      case ACTION_DONE:
       case ACTION_SET_POSITION:
       case ACTION_SET_MODE:
       case ACTION_SET_DIRECTION:
