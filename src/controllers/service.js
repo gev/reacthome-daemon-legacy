@@ -202,6 +202,7 @@ const {
   ACTION_SET_POSITION,
   ACTION_UP,
   DRIVER_TYPE_DAUERHAFT,
+  ACTION_DOWN,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
