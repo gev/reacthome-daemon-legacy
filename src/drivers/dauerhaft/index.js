@@ -79,7 +79,7 @@ const sync = (id, index) => {
   const { shouldSetAddress, shouldSetPosition
     , shouldUp, shouldDown, shouldStop
     , shouldLimitUp, shouldLimitDown
-    , address, channel } = get(ch) || {};
+    , address, channel, value } = get(ch) || {};
   let cmd;
   if (shouldSetAddress) {
     cmd = query(address, channel, 0xaa, 0xaa)
@@ -104,6 +104,10 @@ const sync = (id, index) => {
   } else if (shouldLimitDown) {
     cmd = query(address, channel, 0xda, 0xee)
     set(ch, { shouldLimitDown: false });
+    send(id, cmd);
+  } else if (shouldSetPosition) {
+    cmd = query(address, channel, 0xdd, value)
+    set(ch, { shouldSetPosition: false });
     send(id, cmd);
   }
 }
@@ -147,8 +151,8 @@ module.exports.run = (action) => {
       break;
     }
     case ACTION_SET_POSITION: {
-      const { position } = action;
-      set(ch, { shouldSetPosition: true, position });
+      const { value } = action;
+      set(ch, { shouldSetPosition: true, value });
       break;
     }
   }
