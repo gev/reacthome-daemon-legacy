@@ -79,6 +79,7 @@ const sync = (id, index) => {
   const { shouldSetAddress, shouldSetPosition, address, channel } = get(ch) || {};
   if (shouldSetAddress) {
     query(id, address, channel, 0x0a, 0xdd);
+    set(ch, { shouldSetAddress: false });
   }
 }
 
