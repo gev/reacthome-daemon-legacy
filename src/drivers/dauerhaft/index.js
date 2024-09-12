@@ -1,4 +1,24 @@
 // назначение айди и канала:
+  // 0x9a id  chl	chh 0xaa 0xaa	crc дважды
+  // 0x9a id  chl	chh 0xсa 0xсa	crc (запрос статуса)
+  // ответ:
+  // Head code	  0xd8										
+  // D1	  Motor ID										
+  // D2	  Motor Channel low 8 bits  b0 - b7 for 1 - 8 channel										
+  // D3	  Motor channel high 8 bits  b0 - b7 for 9 - 16 channel										
+  // D4	  Baud Rate:  00:1200   01:2400    02:4800    03:9600   04:19200										
+  // D5	  Hand control method Settings: 0Normal    1Press the button to go UP, then press it to STOP, then press it to go DOWN, then press it to STOP, infinite loop    2ress the UP button to go UP, then press the UP button to STOP, press the DOWN button to go DOWN, then press the DOWN button to STOP, pressing the button opposite the direction of motor operation will change the direction    3Runs when button is pressed, stops when hand is released    4When the motor is moving up or down, pressing any button will stop it										
+  // D6	Rotational speed in RPM/min (50-130)										
+  // D7	  0xca Feedback on function of curtain motor enquiries										
+  // D8	Zone Bit										
+  //   b0：  0 with hand pull start  1 without hand pull start 										
+  //   b1：  0 default direction 1 reverse										
+  //   b2：  0 continuous movement  1 dot movement										
+  //   b3：  0With slow start  1 without slow start										
+  //   b4：  0 to limit point with clearance 1 to limit point without clearance										
+  //   b5：  0 Stop at limit point 1 Stop when blocked										
+  //   b6：  0Remembering the itinerary 1 Not to remember the itinerary										
+  //     b7:   Reserved										
 
 // управление вверх/вниз/остановить:
 // up:     0x9a id  chl	chh 0x0a 0xdd	crc
