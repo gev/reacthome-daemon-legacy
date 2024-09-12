@@ -78,7 +78,7 @@ const sync = (id, index) => {
   const ch = `${id}/curtain/${index}`;
   const { shouldSetAddress, shouldSetPosition, address, channel } = get(ch) || {};
   if (shouldSetAddress) {
-    const cmd = query(address, channel, 0x0a, 0xdd)
+    const cmd = query(address, channel, 0xaa, 0xaa)
     console.log(cmd);
     send(id, cmd);
     set(ch, { shouldSetAddress: false });
