@@ -72,7 +72,7 @@ const { delay } = require('../../util');
 
 const timers = new Map();
 
-let tid = 0;
+const indexes = new Map();
 
 const sync = (id, index) => {
   const ch = `${id}/curtain/${index}`;
@@ -112,6 +112,7 @@ const sync = (id, index) => {
   } else {
     cmd = query(address, channel, 0xcc, 0x00)
   }
+  indexes.set(id, ch);
   send(id, cmd);
 }
 
@@ -172,6 +173,18 @@ module.exports.run = (action) => {
 
 module.exports.handle = ({ id, data }) => {
   console.log(id, data);
+  switch (data[0]) {
+    case 0xd8: {
+      const ch = indexes.get(id);
+      if (ch) {
+        const { address, channel } = get(ch) || {};
+        if (address == data[1] && channel == data[2]) {
+          set(ch, { value: data[7] });
+        }
+      }
+      break;
+    }
+  }
 }
 
 
