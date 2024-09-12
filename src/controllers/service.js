@@ -199,6 +199,9 @@ const {
   ACTION_ALED_MASK_ANIMATION_PLAY,
   ACTION_ALED_COLOR_ANIMATION_STOP,
   ACTION_ALED_COLOR_ANIMATION_PLAY,
+  ACTION_SET_POSITION,
+  ACTION_UP,
+  DRIVER_TYPE_DAUERHAFT,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -307,6 +310,10 @@ const run = (action) => {
       case ACTION_STOP:
       case ACTION_CLOSE: {
         const o = get(action.id) || {};
+        if (o.type === DRIVER_TYPE_DAUERHAFT) {
+          drivers.run(action);
+          return;
+        }
         if (o.disabled) return;
         if (o.bind) {
           const [dev, type, index] = o.bind.split("/");
@@ -2528,6 +2535,8 @@ const run = (action) => {
         break;
       }
       case ACTION_SET_ADDRESS:
+      case ACTION_UP:
+      case ACTION_DOWN:
       case ACTION_SET_POSITION:
       case ACTION_SET_MODE:
       case ACTION_SET_DIRECTION:
