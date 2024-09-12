@@ -79,46 +79,42 @@ const sync = (id, index) => {
   const { shouldSetAddress, shouldSetPosition
     , shouldUp, shouldDown, shouldStop
     , shouldLimitUp, shouldLimitDown
-    , address, channel, value } = get(ch) || {};
+    , address, channel, position } = get(ch) || {};
   let cmd;
   if (shouldSetAddress) {
     cmd = query(address, channel, 0xaa, 0xaa)
     set(ch, { shouldSetAddress: false });
-    send(id, cmd);
   } else if (shouldUp) {
     cmd = query(address, channel, 0x0a, 0xdd)
     set(ch, { shouldUp: false });
-    send(id, cmd);
   } else if (shouldDown) {
     cmd = query(address, channel, 0x0a, 0xee)
     set(ch, { shouldDown: false });
-    send(id, cmd);
   } else if (shouldStop) {
     cmd = query(address, channel, 0x0a, 0xcc)
     set(ch, { shouldStop: false });
-    send(id, cmd);
   } else if (shouldLimitUp) {
     cmd = query(address, channel, 0xda, 0xdd)
     set(ch, { shouldLimitUp: false });
-    send(id, cmd);
   } else if (shouldLimitDown) {
     cmd = query(address, channel, 0xda, 0xee)
     set(ch, { shouldLimitDown: false });
-    send(id, cmd);
   } else if (shouldSetPosition) {
-    cmd = query(address, channel, 0xdd, value)
+    cmd = query(address, channel, 0xdd, position)
     set(ch, { shouldSetPosition: false });
-    send(id, cmd);
+  } else {
+    cmd = query(address, channel, 0x00, 0x00)
   }
+  send(id, cmd);
 }
 
 const loop = (id) => async () => {
   const { numberCurtain = 0 } = get(id) || {};
   for (let i = 1; i <= numberCurtain; i += 1) {
     sync(id, i);
-    await delay(20);
+    await delay(50);
   }
-  timers.set(id, setTimeout(loop(id), numberCurtain * 25));
+  timers.set(id, setTimeout(loop(id), numberCurtain * 1025));
 }
 
 module.exports.run = (action) => {
@@ -151,8 +147,8 @@ module.exports.run = (action) => {
       break;
     }
     case ACTION_SET_POSITION: {
-      const { value } = action;
-      set(ch, { shouldSetPosition: true, value });
+      const { position } = action;
+      set(ch, { shouldSetPosition: true, position });
       break;
     }
   }
