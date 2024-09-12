@@ -105,7 +105,6 @@ const sync = (id, index) => {
   } else {
     cmd = query(address, channel, 0xcc, 0x00)
   }
-
   // send(id, cmd);
 }
 
