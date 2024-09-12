@@ -156,7 +156,7 @@ query = (address, channel, a, b) => {
   const buffer = Buffer.alloc(7);
   buffer.writeUint8(0x9a, 0);
   buffer.writeUInt8(address, 1);
-  buffer.writeInt16LE(1 << channel, 2);
+  buffer.writeInt16LE(1 << (channel - 1), 2);
   buffer.writeUInt8(a, 4);
   buffer.writeUInt8(b, 5);
   buffer.writeUInt8(buffer[1] ^ buffer[2] ^ buffer[4] ^ buffer[5], 6);
