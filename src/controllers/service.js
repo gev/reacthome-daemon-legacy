@@ -199,6 +199,8 @@ const {
   ACTION_ALED_MASK_ANIMATION_PLAY,
   ACTION_ALED_COLOR_ANIMATION_STOP,
   ACTION_ALED_COLOR_ANIMATION_PLAY,
+  DEVICE_TYPE_DOPPLER_1_DI_4,
+  DEVICE_TYPE_DOPPLER_5_DI_4,
   ACTION_SET_POSITION,
   ACTION_UP,
   DRIVER_TYPE_DAUERHAFT,
@@ -2647,6 +2649,8 @@ const run = (action) => {
           action.index
         ]);
         switch (dev.type) {
+          case DEVICE_TYPE_DOPPLER_1_DI_4:
+          case DEVICE_TYPE_DOPPLER_5_DI_4:
           case DEVICE_TYPE_SMART_BOTTOM_1:
           case DEVICE_TYPE_SMART_BOTTOM_2: {
             device.sendRBUS(buff, action.id);
@@ -2668,6 +2672,8 @@ const run = (action) => {
           action.value
         ]);
         switch (dev.type) {
+          case DEVICE_TYPE_DOPPLER_1_DI_4:
+          case DEVICE_TYPE_DOPPLER_5_DI_4:
           case DEVICE_TYPE_SMART_BOTTOM_1:
           case DEVICE_TYPE_SMART_BOTTOM_2: {
             device.sendRBUS(buff, action.id);
@@ -2700,6 +2706,8 @@ const run = (action) => {
             ...action.params || []
           ]);
           switch (dev.type) {
+            case DEVICE_TYPE_DOPPLER_1_DI_4:
+            case DEVICE_TYPE_DOPPLER_5_DI_4:
             case DEVICE_TYPE_SMART_BOTTOM_1:
             case DEVICE_TYPE_SMART_BOTTOM_2: {
               device.sendRBUS(buff, id);
@@ -2727,6 +2735,8 @@ const run = (action) => {
             parseInt(index, 10),
           ]);
           switch (dev.type) {
+            case DEVICE_TYPE_DOPPLER_1_DI_4:
+            case DEVICE_TYPE_DOPPLER_5_DI_4:
             case DEVICE_TYPE_SMART_BOTTOM_1:
             case DEVICE_TYPE_SMART_BOTTOM_2: {
               device.sendRBUS(buff, id);
@@ -2754,6 +2764,8 @@ const run = (action) => {
             action.inverse
           ]);
           switch (dev.type) {
+            case DEVICE_TYPE_DOPPLER_1_DI_4:
+            case DEVICE_TYPE_DOPPLER_5_DI_4:
             case DEVICE_TYPE_SMART_BOTTOM_1:
             case DEVICE_TYPE_SMART_BOTTOM_2: {
               device.sendRBUS(buff, id);
@@ -2785,6 +2797,8 @@ const run = (action) => {
         });
         const buff = Buffer.from(cmd);
         switch (dev.type) {
+          case DEVICE_TYPE_DOPPLER_1_DI_4:
+          case DEVICE_TYPE_DOPPLER_5_DI_4:
           case DEVICE_TYPE_SMART_BOTTOM_1:
           case DEVICE_TYPE_SMART_BOTTOM_2: {
             device.sendRBUS(buff, action.id);
