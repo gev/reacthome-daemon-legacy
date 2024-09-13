@@ -249,7 +249,16 @@ module.exports.manage = () => {
         }
         case ACTION_DO: {
           const { type } = get(id) || {};
-          if (type === DEVICE_TYPE_SMART_TOP_A6P || type === DEVICE_TYPE_SMART_TOP_G4D) {
+          if (
+            type === DEVICE_TYPE_SMART_TOP_A6P ||
+            type === DEVICE_TYPE_SMART_TOP_G4D ||
+            type === DEVICE_TYPE_SMART_TOP_A4T ||
+            type === DEVICE_TYPE_SMART_TOP_A6T ||
+            type === DEVICE_TYPE_SMART_TOP_G6 ||
+            type === DEVICE_TYPE_SMART_TOP_G4 ||
+            type === DEVICE_TYPE_SMART_TOP_G2 ||
+            type === DEVICE_TYPE_SMART_TOP_A4P
+          ) {
             set(id, { state: data[7] })
             return;
           }
@@ -453,7 +462,13 @@ module.exports.manage = () => {
               break;
             }
             case DEVICE_TYPE_SMART_TOP_A6P:
-            case DEVICE_TYPE_SMART_TOP_G4D: {
+            case DEVICE_TYPE_SMART_TOP_G4D:
+            case DEVICE_TYPE_SMART_TOP_A4T:
+            case DEVICE_TYPE_SMART_TOP_A6T:
+            case DEVICE_TYPE_SMART_TOP_G6:
+            case DEVICE_TYPE_SMART_TOP_G4:
+            case DEVICE_TYPE_SMART_TOP_G2:
+            case DEVICE_TYPE_SMART_TOP_A4P: {
               set(id, { brightness: data[7] });
               break;
             }
@@ -501,7 +516,13 @@ module.exports.manage = () => {
           const { type } = get(id) || {};
           switch (type) {
             case DEVICE_TYPE_SMART_TOP_A6P:
-            case DEVICE_TYPE_SMART_TOP_G4D: {
+            case DEVICE_TYPE_SMART_TOP_G4D:
+            case DEVICE_TYPE_SMART_TOP_A4T:
+            case DEVICE_TYPE_SMART_TOP_A6T:
+            case DEVICE_TYPE_SMART_TOP_G6:
+            case DEVICE_TYPE_SMART_TOP_G4:
+            case DEVICE_TYPE_SMART_TOP_G2:
+            case DEVICE_TYPE_SMART_TOP_A4P: {
               let [, , , , , , , palette, index] = data;
               if (index === 0) {
                 index = 1;
@@ -533,7 +554,13 @@ module.exports.manage = () => {
           const { type } = get(id) || {};
           switch (type) {
             case DEVICE_TYPE_SMART_TOP_A6P:
-            case DEVICE_TYPE_SMART_TOP_G4D: {
+            case DEVICE_TYPE_SMART_TOP_G4D:
+            case DEVICE_TYPE_SMART_TOP_A4T:
+            case DEVICE_TYPE_SMART_TOP_A6T:
+            case DEVICE_TYPE_SMART_TOP_G6:
+            case DEVICE_TYPE_SMART_TOP_G4:
+            case DEVICE_TYPE_SMART_TOP_G2:
+            case DEVICE_TYPE_SMART_TOP_A4P: {
               const image = Array.from(data.slice(7, 15))
               set(id, { image });
               break;
@@ -550,7 +577,13 @@ module.exports.manage = () => {
           const { type } = get(id) || {};
           switch (type) {
             case DEVICE_TYPE_SMART_TOP_A6P:
-            case DEVICE_TYPE_SMART_TOP_G4D: {
+            case DEVICE_TYPE_SMART_TOP_G4D:
+            case DEVICE_TYPE_SMART_TOP_A4T:
+            case DEVICE_TYPE_SMART_TOP_A6T:
+            case DEVICE_TYPE_SMART_TOP_G6:
+            case DEVICE_TYPE_SMART_TOP_G4:
+            case DEVICE_TYPE_SMART_TOP_G2:
+            case DEVICE_TYPE_SMART_TOP_A4P: {
               const blink = Array.from(data.slice(7, 15))
               set(id, { blink });
               break;

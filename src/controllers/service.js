@@ -209,6 +209,12 @@ const {
   ACTION_LIMIT_DOWN,
   ACTION_LEARN,
   ACTION_DELETE_ADDRESS,
+  DEVICE_TYPE_SMART_TOP_A4T,
+  DEVICE_TYPE_SMART_TOP_A6T,
+  DEVICE_TYPE_SMART_TOP_G6,
+  DEVICE_TYPE_SMART_TOP_G4,
+  DEVICE_TYPE_SMART_TOP_G2,
+  DEVICE_TYPE_SMART_TOP_A4P,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -536,7 +542,13 @@ const run = (action) => {
             break;
           }
           case DEVICE_TYPE_SMART_TOP_A6P:
-          case DEVICE_TYPE_SMART_TOP_G4D: {
+          case DEVICE_TYPE_SMART_TOP_G4D:
+          case DEVICE_TYPE_SMART_TOP_A4T:
+          case DEVICE_TYPE_SMART_TOP_A6T:
+          case DEVICE_TYPE_SMART_TOP_G6:
+          case DEVICE_TYPE_SMART_TOP_G4:
+          case DEVICE_TYPE_SMART_TOP_G2:
+          case DEVICE_TYPE_SMART_TOP_A4P: {
             device.sendTOP(Buffer.from([
               ACTION_DO, action.value
             ]),
@@ -698,7 +710,13 @@ const run = (action) => {
             break;
           }
           case DEVICE_TYPE_SMART_TOP_A6P:
-          case DEVICE_TYPE_SMART_TOP_G4D: {
+          case DEVICE_TYPE_SMART_TOP_G4D:
+          case DEVICE_TYPE_SMART_TOP_A4T:
+          case DEVICE_TYPE_SMART_TOP_A6T:
+          case DEVICE_TYPE_SMART_TOP_G6:
+          case DEVICE_TYPE_SMART_TOP_G4:
+          case DEVICE_TYPE_SMART_TOP_G2:
+          case DEVICE_TYPE_SMART_TOP_A4P: {
             device.sendTOP(Buffer.from([
               ACTION_DIMMER,
               action.value,
@@ -785,7 +803,13 @@ const run = (action) => {
             break;
           }
           case DEVICE_TYPE_SMART_TOP_A6P:
-          case DEVICE_TYPE_SMART_TOP_G4D: {
+          case DEVICE_TYPE_SMART_TOP_G4D:
+          case DEVICE_TYPE_SMART_TOP_A4T:
+          case DEVICE_TYPE_SMART_TOP_A6T:
+          case DEVICE_TYPE_SMART_TOP_G6:
+          case DEVICE_TYPE_SMART_TOP_G4:
+          case DEVICE_TYPE_SMART_TOP_G2:
+          case DEVICE_TYPE_SMART_TOP_A4P: {
             device.sendTOP(Buffer.from([
               ACTION_RGB,
               palette,
@@ -900,7 +924,13 @@ const run = (action) => {
             break;
           }
           case DEVICE_TYPE_SMART_TOP_A6P:
-          case DEVICE_TYPE_SMART_TOP_G4D: {
+          case DEVICE_TYPE_SMART_TOP_G4D:
+          case DEVICE_TYPE_SMART_TOP_A4T:
+          case DEVICE_TYPE_SMART_TOP_A6T:
+          case DEVICE_TYPE_SMART_TOP_G6:
+          case DEVICE_TYPE_SMART_TOP_G4:
+          case DEVICE_TYPE_SMART_TOP_G2:
+          case DEVICE_TYPE_SMART_TOP_A4P: {
             device.sendTOP(Buffer.from([
               ACTION_RGB,
               palette,
@@ -1249,7 +1279,13 @@ const run = (action) => {
               break;
             }
             case DEVICE_TYPE_SMART_TOP_A6P:
-            case DEVICE_TYPE_SMART_TOP_G4D: {
+            case DEVICE_TYPE_SMART_TOP_G4D:
+            case DEVICE_TYPE_SMART_TOP_A4T:
+            case DEVICE_TYPE_SMART_TOP_A6T:
+            case DEVICE_TYPE_SMART_TOP_G6:
+            case DEVICE_TYPE_SMART_TOP_G4:
+            case DEVICE_TYPE_SMART_TOP_G2:
+            case DEVICE_TYPE_SMART_TOP_A4P: {
               device.sendTOP(Buffer.from([
                 ACTION_DO, ON
               ]),
@@ -1409,7 +1445,13 @@ const run = (action) => {
               break;
             }
             case DEVICE_TYPE_SMART_TOP_A6P:
-            case DEVICE_TYPE_SMART_TOP_G4D: {
+            case DEVICE_TYPE_SMART_TOP_G4D:
+            case DEVICE_TYPE_SMART_TOP_A4T:
+            case DEVICE_TYPE_SMART_TOP_A6T:
+            case DEVICE_TYPE_SMART_TOP_G6:
+            case DEVICE_TYPE_SMART_TOP_G4:
+            case DEVICE_TYPE_SMART_TOP_G2:
+            case DEVICE_TYPE_SMART_TOP_A4P: {
               device.sendTOP(Buffer.from([
                 ACTION_DO, OFF
               ]),
@@ -2530,8 +2572,12 @@ const run = (action) => {
         buffer.writeUInt8(ACTION_VIBRO, 0);
         buffer.writeUInt8(action.value, 1);
         switch (type) {
-          case DEVICE_TYPE_SMART_TOP_A6P:
-          case DEVICE_TYPE_SMART_TOP_G4D: {
+          case DEVICE_TYPE_SMART_TOP_G4D:
+          case DEVICE_TYPE_SMART_TOP_A4T:
+          case DEVICE_TYPE_SMART_TOP_A6T:
+          case DEVICE_TYPE_SMART_TOP_G6:
+          case DEVICE_TYPE_SMART_TOP_G4:
+          case DEVICE_TYPE_SMART_TOP_G2: {
             device.sendTOP(buffer, action.id);
             break;
           }

@@ -14,6 +14,12 @@ const {
   DEVICE_TYPE_SMART_TOP_A6P,
   DEVICE_TYPE_DI_4,
   DEVICE_TYPE_DI_4_RSM,
+  DEVICE_TYPE_SMART_TOP_A4T,
+  DEVICE_TYPE_SMART_TOP_A6T,
+  DEVICE_TYPE_SMART_TOP_G6,
+  DEVICE_TYPE_SMART_TOP_G4,
+  DEVICE_TYPE_SMART_TOP_G2,
+  DEVICE_TYPE_SMART_TOP_A4P,
 } = require("../constants");
 const { device } = require("../sockets");
 
@@ -46,8 +52,14 @@ const online = (id, props) => {
         );
         break;
       }
+      case DEVICE_TYPE_SMART_TOP_A6P:
       case DEVICE_TYPE_SMART_TOP_G4D:
-      case DEVICE_TYPE_SMART_TOP_A6P: {
+      case DEVICE_TYPE_SMART_TOP_A4T:
+      case DEVICE_TYPE_SMART_TOP_A6T:
+      case DEVICE_TYPE_SMART_TOP_G6:
+      case DEVICE_TYPE_SMART_TOP_G4:
+      case DEVICE_TYPE_SMART_TOP_G2:
+      case DEVICE_TYPE_SMART_TOP_A4P: {
         device.sendTOP(
           Buffer.from([
             ACTION_GET_STATE,
