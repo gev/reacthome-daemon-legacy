@@ -519,6 +519,7 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_RGB: {
+          console.log('rgb', data)
           const { type } = get(id) || {};
           switch (type) {
             case DEVICE_TYPE_SMART_TOP_A6P:
