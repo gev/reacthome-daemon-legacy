@@ -66,7 +66,7 @@
 
 
 const { get, set } = require('../../actions');
-const { ACTION_SET_ADDRESS, ACTION_SET_POSITION, DEVICE_TYPE_DI_4_RSM, DEVICE_TYPE_RS_HUB1_RS, ACTION_RS485_TRANSMIT, ACTION_UP, ACTION_DOWN, ACTION_STOP, ACTION_LIMIT_UP, ACTION_LIMIT_DOWN, ACTION_LEARN, ACTION_DONE } = require('../../constants');
+const { ACTION_SET_ADDRESS, ACTION_SET_POSITION, DEVICE_TYPE_DI_4_RSM, DEVICE_TYPE_RS_HUB1_RS, ACTION_RS485_TRANSMIT, ACTION_UP, ACTION_DOWN, ACTION_STOP, ACTION_LIMIT_UP, ACTION_LIMIT_DOWN, ACTION_LEARN, ACTION_DELETE_ADDRESS } = require('../../constants');
 const { device } = require('../../sockets');
 const { delay } = require('../../util');
 
@@ -106,9 +106,9 @@ const sync = (id, index) => {
   } else if (shouldLearn) {
     cmd = query(address, channel, 0x0a, 0xaa)
     set(ch, { shouldLearn: false });
-  } else if (shouldDone) {
+  } else if (shouldDelete) {
     cmd = query(address, channel, 0x0a, 0xa6)
-    set(ch, { shouldDone: false });
+    set(ch, { shouldDelete: false });
   } else {
     cmd = query(address, channel, 0xcc, 0x00)
   }
@@ -158,8 +158,8 @@ module.exports.run = (action) => {
       set(ch, { shouldLearn: true });
       break;
     }
-    case ACTION_DONE: {
-      set(ch, { shouldDone: true });
+    case ACTION_DELETE_ADDRESS: {
+      set(ch, { shouldDelete: true });
       break;
     }
     case ACTION_SET_POSITION: {
