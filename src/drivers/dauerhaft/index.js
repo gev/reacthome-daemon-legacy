@@ -79,7 +79,7 @@ const sync = (id, index) => {
   const { shouldSetAddress, shouldSetPosition
     , shouldUp, shouldDown, shouldStop
     , shouldLimitUp, shouldLimitDown
-    , shouldLearn, shouldDone
+    , shouldLearn, shouldDelete
     , address, channel, position } = get(ch) || {};
   let cmd;
   if (shouldSetAddress) {
