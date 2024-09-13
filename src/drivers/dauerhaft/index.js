@@ -113,7 +113,7 @@ const sync = (id, index) => {
     cmd = query(address, channel, 0xcc, 0x00)
   }
   indexes.set(id, ch);
-  send(id, cmd);
+  // send(id, cmd);
 }
 
 const loop = (id) => async () => {
