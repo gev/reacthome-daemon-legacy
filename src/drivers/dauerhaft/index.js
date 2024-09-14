@@ -74,7 +74,7 @@ const timers = new Map();
 
 const indexes = new Map();
 
-const sync = (id, index) => {
+const sync = async (id, index) => {
   const ch = `${id}/curtain/${index}`;
   const { shouldSetAddress, shouldSetPosition
     , shouldUp, shouldDown, shouldStop
@@ -83,37 +83,40 @@ const sync = (id, index) => {
     , address, channel, position } = get(ch) || {};
   let cmd;
   if (shouldSetAddress) {
-    cmd = query(address, channel, 0xaa, 0xaa)
+    send(id, query(address, channel, 0xaa, 0xaa));
+    await delay(20);
+    send(id, query(address, channel, 0xca, 0xca));
+    await delay(20);
+    send(id, query(address, channel, 0xca, 0xcb));
     set(ch, { shouldSetAddress: false });
   } else if (shouldUp) {
-    cmd = query(address, channel, 0x0a, 0xdd)
+    send(id, query(address, channel, 0x0a, 0xdd));
     set(ch, { shouldUp: false });
   } else if (shouldDown) {
-    cmd = query(address, channel, 0x0a, 0xee)
+    send(id, query(address, channel, 0x0a, 0xee));
     set(ch, { shouldDown: false });
   } else if (shouldStop) {
-    cmd = query(address, channel, 0x0a, 0xcc)
+    send(id, query(address, channel, 0x0a, 0xcc));
     set(ch, { shouldStop: false });
   } else if (shouldLimitUp) {
-    cmd = query(address, channel, 0xda, 0xdd)
+    send(id, query(address, channel, 0xda, 0xdd));
     set(ch, { shouldLimitUp: false });
   } else if (shouldLimitDown) {
-    cmd = query(address, channel, 0xda, 0xee)
+    send(id, query(address, channel, 0xda, 0xee));
     set(ch, { shouldLimitDown: false });
   } else if (shouldSetPosition) {
-    cmd = query(address, channel, 0xdd, position)
+    send(id, query(address, channel, 0xdd, position));
     set(ch, { shouldSetPosition: false });
   } else if (shouldLearn) {
-    cmd = query(address, channel, 0x0a, 0xaa)
+    send(id, query(address, channel, 0x0a, 0xaa));
     set(ch, { shouldLearn: false });
   } else if (shouldDelete) {
-    cmd = query(address, channel, 0x0a, 0xa6)
+    send(id, query(address, channel, 0x0a, 0xa6));
     set(ch, { shouldDelete: false });
   } else {
-    cmd = query(address, channel, 0xcc, 0x00)
+    send(id, query(address, channel, 0xcc, 0x00));
   }
   indexes.set(id, ch);
-  send(id, cmd);
 }
 
 const loop = (id) => async () => {
