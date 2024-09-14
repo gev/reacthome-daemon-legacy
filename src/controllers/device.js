@@ -605,6 +605,7 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_VIBRO: {
+          console.log('vibro', data)
           const vibro = data.readUInt8(7);
           set(id, { vibro });
           break;
