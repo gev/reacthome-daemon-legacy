@@ -119,11 +119,11 @@ const sync = async (id, index) => {
   indexes.set(id, ch);
 }
 
-const loop = (id) => async () => {
+const loop = (id) => await() => {
   const { numberCurtain = 0 } = get(id) || {};
   for (let i = 1; i <= numberCurtain; i += 1) {
     await sync(id, i);
-    await delay(50);
+    await delay(100);
   }
   timers.set(id, setTimeout(loop(id), numberCurtain * 1025));
 }
