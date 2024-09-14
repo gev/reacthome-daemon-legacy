@@ -81,6 +81,7 @@ const sync = async (id, index) => {
     , shouldLimitUp, shouldLimitDown
     , shouldLearn, shouldDelete
     , address, channel, position } = get(ch) || {};
+  if (address === 0) return;
   indexes.set(id, ch);
   console.log(ch);
   if (shouldSetAddress) {
