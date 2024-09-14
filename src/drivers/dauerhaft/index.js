@@ -81,7 +81,7 @@ const sync = async (id, index) => {
     , shouldLimitUp, shouldLimitDown
     , shouldLearn, shouldDelete
     , address, channel, position } = get(ch) || {};
-  let cmd;
+  console.log(ch);
   if (shouldSetAddress) {
     send(id, query(address, channel, 0xaa, 0xaa));
     await delay(20);
