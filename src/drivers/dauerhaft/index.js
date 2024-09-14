@@ -81,6 +81,7 @@ const sync = async (id, index) => {
     , shouldLimitUp, shouldLimitDown
     , shouldLearn, shouldDelete
     , address, channel, position } = get(ch) || {};
+  indexes.set(id, ch);
   console.log(ch);
   if (shouldSetAddress) {
     send(id, query(address, channel, 0xaa, 0xaa));
@@ -116,14 +117,13 @@ const sync = async (id, index) => {
   } else {
     send(id, query(address, channel, 0xcc, 0x00));
   }
-  indexes.set(id, ch);
 }
 
 const loop = (id) => async () => {
   const { numberCurtain = 0 } = get(id) || {};
   for (let i = 1; i <= numberCurtain; i += 1) {
     await sync(id, i);
-    await delay(100);
+    await delay(200);
   }
   timers.set(id, setTimeout(loop(id), numberCurtain * 1025));
 }
