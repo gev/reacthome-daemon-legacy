@@ -122,7 +122,7 @@ const sync = async (id, index) => {
 const loop = (id) => async () => {
   const { numberCurtain = 0 } = get(id) || {};
   for (let i = 1; i <= numberCurtain; i += 1) {
-    sync(id, i);
+    await sync(id, i);
     await delay(50);
   }
   timers.set(id, setTimeout(loop(id), numberCurtain * 1025));
@@ -192,7 +192,7 @@ module.exports.handle = ({ id, data }) => {
 
 
 module.exports.clear = () => {
-  timers.forEach(i => clearTimeout(i))
+  timers.forEach(i => clearTimeout(i));
   timers.clear();
   queues.clear();
 }
