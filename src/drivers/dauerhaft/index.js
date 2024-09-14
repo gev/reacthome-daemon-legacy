@@ -175,10 +175,10 @@ module.exports.run = (action) => {
 }
 
 module.exports.handle = ({ id, data }) => {
-  console.log(id, data);
+  const ch = indexes.get(id);
+  console.log(ch, data);
   switch (data[0]) {
     case 0xd8: {
-      const ch = indexes.get(id);
       if (ch) {
         const { address, channel } = get(ch) || {};
         if (address == data[1] && channel == data[2]) {
