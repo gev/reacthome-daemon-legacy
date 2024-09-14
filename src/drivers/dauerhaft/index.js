@@ -119,7 +119,7 @@ const sync = async (id, index) => {
   indexes.set(id, ch);
 }
 
-const loop = (id) => await() => {
+const loop = (id) => async () => {
   const { numberCurtain = 0 } = get(id) || {};
   for (let i = 1; i <= numberCurtain; i += 1) {
     await sync(id, i);
