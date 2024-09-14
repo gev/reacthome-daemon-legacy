@@ -129,9 +129,9 @@ const loop = (id) => async () => {
 }
 
 module.exports.run = (action) => {
-  console.log(action);
   const { id, index, address, channel } = action;
   const ch = `${id}/curtain/${index}`;
+  console.log(ch, action);
   switch (action.type) {
     case ACTION_SET_ADDRESS: {
       set(ch, { shouldSetAddress: true, address, channel });
