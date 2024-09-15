@@ -2591,10 +2591,12 @@ const run = (action) => {
       case ACTION_SET_POSITION: {
         const [id, type, index] = action.id.split("/");
         if (type === 'curtain') {
+          const { position } = action.payload || {};
           drivers.run({
             type: ACTION_SET_POSITION,
             id,
-            index
+            index,
+            position
           })
         } else {
           drivers.run(action);
