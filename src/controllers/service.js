@@ -2599,6 +2599,7 @@ const run = (action) => {
       case ACTION_SET_MODE:
       case ACTION_SET_DIRECTION:
       case ACTION_SET_FAN_SPEED: {
+        console.log(action)
         drivers.run(action);
         break;
       }
