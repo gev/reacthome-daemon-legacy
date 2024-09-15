@@ -2592,12 +2592,11 @@ const run = (action) => {
         console.log(action);
         const [id, type, index] = action.id.split("/");
         if (type === 'curtain') {
-          const { value } = action.payload || {};
           drivers.run({
             type: ACTION_SET_POSITION,
             id,
             index,
-            position: value
+            position: action.value
           })
         } else {
           drivers.run(action);
