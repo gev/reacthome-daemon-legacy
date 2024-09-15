@@ -203,7 +203,6 @@ module.exports.add = (id) => {
 };
 
 send = (id, payload) => {
-  console.log(payload)
   const { bind } = get(id);
   if (!bind) return;
   const { is_rbus } = get(bind);
