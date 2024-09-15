@@ -2588,6 +2588,19 @@ const run = (action) => {
         }
         break;
       }
+      case ACTION_SET_POSITION: {
+        const [id, type, index] = action.id.split("/");
+        if (type === 'curtain') {
+          drivers.run({
+            type: ACTION_SET_POSITION,
+            id,
+            index
+          })
+        } else {
+          drivers.run(action);
+        }
+        break;
+      }
       case ACTION_SET_ADDRESS:
       case ACTION_DELETE_ADDRESS:
       case ACTION_UP:
@@ -2595,11 +2608,9 @@ const run = (action) => {
       case ACTION_LIMIT_UP:
       case ACTION_LIMIT_DOWN:
       case ACTION_LEARN:
-      case ACTION_SET_POSITION:
       case ACTION_SET_MODE:
       case ACTION_SET_DIRECTION:
       case ACTION_SET_FAN_SPEED: {
-        console.log(action)
         drivers.run(action);
         break;
       }
