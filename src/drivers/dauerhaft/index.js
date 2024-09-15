@@ -85,10 +85,10 @@ const sync = async (id, index) => {
   indexes.set(id, ch);
   if (shouldSetAddress) {
     send(id, query(address, channel, 0xaa, 0xaa));
-    await delay(20);
-    send(id, query(address, channel, 0xca, 0xca));
-    await delay(20);
-    send(id, query(address, channel, 0xca, 0xcb));
+    // await delay(20);
+    // send(id, query(address, channel, 0xca, 0xca));
+    // await delay(20);
+    // send(id, query(address, channel, 0xca, 0xcb));
     set(ch, { shouldSetAddress: false });
   } else if (shouldUp) {
     send(id, query(address, channel, 0x0a, 0xdd));
