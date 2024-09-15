@@ -2589,6 +2589,7 @@ const run = (action) => {
         break;
       }
       case ACTION_SET_POSITION: {
+        console.log(action);
         const [id, type, index] = action.id.split("/");
         if (type === 'curtain') {
           const { position } = action.payload || {};
