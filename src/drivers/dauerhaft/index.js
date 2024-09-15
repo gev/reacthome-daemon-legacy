@@ -85,9 +85,9 @@ const sync = async (id, index) => {
   indexes.set(id, ch);
   if (shouldSetAddress) {
     send(id, query(address, channel, 0xaa, 0xaa));
-    await delay(20);
+    await delay(100);
     send(id, query(address, channel, 0xca, 0xca));
-    await delay(20);
+    await delay(100);
     send(id, query(address, channel, 0xca, 0xcb));
     set(ch, { shouldSetAddress: false });
   } else if (shouldUp) {
@@ -123,9 +123,9 @@ const loop = (id) => async () => {
   const { numberCurtain = 0 } = get(id) || {};
   for (let i = 1; i <= numberCurtain; i += 1) {
     await sync(id, i);
-    await delay(200);
+    await delay(50);
   }
-  timers.set(id, setTimeout(loop(id), numberCurtain * 1025));
+  timers.set(id, setTimeout(loop(id), numberCurtain * 200));
 }
 
 module.exports.run = (action) => {
