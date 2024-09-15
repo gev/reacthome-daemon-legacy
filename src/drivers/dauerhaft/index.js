@@ -83,7 +83,6 @@ const sync = async (id, index) => {
     , address, channel, position } = get(ch) || {};
   if (address === 0) return;
   indexes.set(id, ch);
-  console.log(ch);
   if (shouldSetAddress) {
     send(id, query(address, channel, 0xaa, 0xaa));
     await delay(20);
@@ -132,7 +131,6 @@ const loop = (id) => async () => {
 module.exports.run = (action) => {
   const { id, index, address, channel } = action;
   const ch = `${id}/curtain/${index}`;
-  console.log(ch, action);
   switch (action.type) {
     case ACTION_SET_ADDRESS: {
       set(ch, { shouldSetAddress: true, address, channel });
@@ -177,7 +175,6 @@ module.exports.run = (action) => {
 
 module.exports.handle = ({ id, data }) => {
   const ch = indexes.get(id);
-  console.log(ch, data);
   switch (data[0]) {
     case 0xd8: {
       if (ch) {

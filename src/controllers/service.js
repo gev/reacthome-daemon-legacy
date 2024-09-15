@@ -2568,7 +2568,6 @@ const run = (action) => {
         break;
       }
       case ACTION_VIBRO: {
-        console.log(action)
         const { type } = get(action.id) || {};
         const buffer = Buffer.alloc(2);
         buffer.writeUInt8(ACTION_VIBRO, 0);

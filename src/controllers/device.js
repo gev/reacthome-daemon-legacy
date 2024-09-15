@@ -519,7 +519,6 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_RGB: {
-          console.log('rgb', data)
           const { type } = get(id) || {};
           switch (type) {
             case DEVICE_TYPE_SMART_TOP_A6P:
@@ -605,7 +604,6 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_VIBRO: {
-          console.log('vibro', data)
           const vibro = data.readUInt8(7);
           set(id, { vibro });
           break;
