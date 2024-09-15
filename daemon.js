@@ -75,6 +75,7 @@ const load = async () => {
   device.manage();
   drivers.manage();
   cpu.manage();
+  console.log(init.mac);
   discovery.start(init.mac);
   websocket.start(init.mac);
   // janus.start();
