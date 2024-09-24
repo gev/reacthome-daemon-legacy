@@ -55,6 +55,7 @@ module.exports.handle = (action) => {
           mode: data.readUInt16BE(10),
           synced: true
         })
+        console.log(get(id))
       }
       break;
     }
