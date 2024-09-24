@@ -37,7 +37,8 @@ module.exports.run = (action) => {
       set(id, { value: false, synced: false });
       break;
     }
-    case ACTION_SET_MODE: {
+    case ACTION_SET_MODE:
+    case ACTION_SET_FAN_SPEED: {
       set(id, { mode: action.value, synced: false });
       break;
     }
@@ -55,7 +56,6 @@ module.exports.handle = (action) => {
           mode: data.readUInt16BE(10),
           synced: true
         })
-        console.log(get(id))
       }
       break;
     }
