@@ -2766,6 +2766,7 @@ const run = (action) => {
             action.inverseTime,
             ...action.params || []
           ]);
+          console.log(buff);
           switch (dev.type) {
             case DEVICE_TYPE_DOPPLER_1_DI_4:
             case DEVICE_TYPE_DOPPLER_5_DI_4:

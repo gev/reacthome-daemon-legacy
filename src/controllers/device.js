@@ -867,6 +867,7 @@ module.exports.manage = () => {
         case ACTION_ALED_COLOR_ANIMATION_STOP:
         case ACTION_ALED_MASK_ANIMATION_STOP:
         case ACTION_ALED_CLIP: {
+          console.log(data);
           break;
         }
         case ACTION_ALED_CONFIG_GROUP: {
