@@ -2763,6 +2763,7 @@ const run = (action) => {
             action.phase,
             action.split,
             action.loop,
+            action.inverseTime,
             ...action.params || []
           ]);
           switch (dev.type) {
