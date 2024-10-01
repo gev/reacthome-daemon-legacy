@@ -2763,7 +2763,7 @@ const run = (action) => {
             action.phase,
             action.split,
             action.loop,
-            action.inverseTime,
+            action.inverseDirection,
             ...action.params || []
           ]);
           console.log(buff);
