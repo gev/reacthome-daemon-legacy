@@ -2704,11 +2704,19 @@ const run = (action) => {
       case ACTION_ALED_ON:
       case ACTION_ALED_OFF: {
         const dev = get(action.id) || {};
+        const { version = "" } = dev;
         const buff = Buffer.from([
           action.type,
           action.index
         ]);
         switch (dev.type) {
+          case DEVICE_TYPE_DI_4: {
+            const [major] = version.split(".");
+            if (major >= 5){
+              device.sendRBUS(buff, action.id);
+            }
+            break;
+          }
           case DEVICE_TYPE_DOPPLER_1_DI_4:
           case DEVICE_TYPE_DOPPLER_5_DI_4:
           case DEVICE_TYPE_SMART_BOTTOM_1:
@@ -2726,12 +2734,20 @@ const run = (action) => {
       }
       case ACTION_ALED_BRIGHTNESS: {
         const dev = get(action.id) || {};
+        const { version = "" } = dev;
         const buff = Buffer.from([
           action.type,
           action.index,
           action.value
         ]);
         switch (dev.type) {
+          case DEVICE_TYPE_DI_4: {
+            const [major] = version.split(".");
+            if (major >= 5){
+              device.sendRBUS(buff, action.id);
+            }
+            break;
+          }
           case DEVICE_TYPE_DOPPLER_1_DI_4:
           case DEVICE_TYPE_DOPPLER_5_DI_4:
           case DEVICE_TYPE_SMART_BOTTOM_1:
@@ -2753,6 +2769,7 @@ const run = (action) => {
         if (bind) {
           const [id, , index] = bind.split('/');
           const dev = get(id) || {};
+          const { version = "" } = dev;
           const buff = Buffer.from([
             action.type === 'ACTION_ALED_COLOR_ANIMATION_PLAY'
               ? ACTION_ALED_COLOR_ANIMATION_PLAY
@@ -2768,6 +2785,13 @@ const run = (action) => {
           ]);
           console.log(buff);
           switch (dev.type) {
+            case DEVICE_TYPE_DI_4: {
+              const [major] = version.split(".");
+              if (major >= 5){
+                device.sendRBUS(buff, action.id);
+              }
+              break;
+            }
             case DEVICE_TYPE_DOPPLER_1_DI_4:
             case DEVICE_TYPE_DOPPLER_5_DI_4:
             case DEVICE_TYPE_SMART_BOTTOM_1:
@@ -2790,6 +2814,7 @@ const run = (action) => {
         if (bind) {
           const [id, , index] = bind.split('/');
           const dev = get(id) || {};
+          const { version = "" } = dev;
           const buff = Buffer.from([
             action.type === 'ACTION_ALED_COLOR_ANIMATION_STOP'
               ? ACTION_ALED_COLOR_ANIMATION_STOP
@@ -2797,6 +2822,13 @@ const run = (action) => {
             parseInt(index, 10),
           ]);
           switch (dev.type) {
+            case DEVICE_TYPE_DI_4: {
+              const [major] = version.split(".");
+              if (major >= 5){
+                device.sendRBUS(buff, action.id);
+              }
+              break;
+            }
             case DEVICE_TYPE_DOPPLER_1_DI_4:
             case DEVICE_TYPE_DOPPLER_5_DI_4:
             case DEVICE_TYPE_SMART_BOTTOM_1:
@@ -2818,6 +2850,7 @@ const run = (action) => {
         if (bind) {
           const [id, , index] = bind.split('/');
           const dev = get(id) || {};
+          const { version = "" } = dev;
           const buff = Buffer.from([
             ACTION_ALED_CLIP,
             parseInt(index, 10),
@@ -2826,6 +2859,13 @@ const run = (action) => {
             action.inverse
           ]);
           switch (dev.type) {
+            case DEVICE_TYPE_DI_4: {
+              const [major] = version.split(".");
+              if (major >= 5){
+                device.sendRBUS(buff, action.id);
+              }
+              break;
+            }
             case DEVICE_TYPE_DOPPLER_1_DI_4:
             case DEVICE_TYPE_DOPPLER_5_DI_4:
             case DEVICE_TYPE_SMART_BOTTOM_1:
@@ -2844,6 +2884,7 @@ const run = (action) => {
       }
       case ACTION_ALED_CONFIG_GROUP: {
         const dev = get(action.id) || {};
+        const { version = "" } = dev;
         let { segments, colors } = get(`${action.id}/LA/${action.index}`) || {};
         segments = action.segments || (Array.isArray(segments) ? segments : []);
         colors = action.colors || colors || 0;
@@ -2859,6 +2900,13 @@ const run = (action) => {
         });
         const buff = Buffer.from(cmd);
         switch (dev.type) {
+          case DEVICE_TYPE_DI_4: {
+            const [major] = version.split(".");
+            if (major >= 5){
+              device.sendRBUS(buff, action.id);
+            }
+            break;
+          }
           case DEVICE_TYPE_DOPPLER_1_DI_4:
           case DEVICE_TYPE_DOPPLER_5_DI_4:
           case DEVICE_TYPE_SMART_BOTTOM_1:
