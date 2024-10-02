@@ -855,6 +855,8 @@ module.exports.initialize = (id) => {
           const { brightness = 0 } = get(`${id}/LA/${i + 1}`) || {};
           a.push(brightness);
         }
+        device.sendRBUS(Buffer.from(a), id);
+        break;
       }
     }
     default: {
