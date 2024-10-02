@@ -829,15 +829,9 @@ module.exports.initialize = (id) => {
       );
       break;
     }
+    case DEVICE_TYPE_DI_4:
     case DEVICE_TYPE_SMART_BOTTOM_1:
-    case DEVICE_TYPE_SMART_BOTTOM_2: {
-      for (let i = 0; i < 10; i++) {
-        const { brightness = 0 } = get(`${id}/LA/${i + 1}`) || {};
-        a.push(brightness);
-      }
-      device.sendRBUS(Buffer.from(a), id);
-      break;
-    }
+    case DEVICE_TYPE_SMART_BOTTOM_2:
     case DEVICE_TYPE_DOPPLER_1_DI_4:
     case DEVICE_TYPE_DOPPLER_5_DI_4: {
       for (let i = 0; i < 10; i++) {
@@ -846,18 +840,6 @@ module.exports.initialize = (id) => {
       }
       device.sendRBUS(Buffer.from(a), id);
       break;
-    }
-    case DEVICE_TYPE_DI_4:{
-      const { version = "" } = get(id) || {};
-      const major = parseInt(version.split(".")[0], 10);
-      if (major >= 5) {
-        for (let i = 0; i < 10; i++) {
-          const { brightness = 0 } = get(`${id}/LA/${i + 1}`) || {};
-          a.push(brightness);
-        }
-        device.sendRBUS(Buffer.from(a), id);
-        break;
-      }
     }
     default: {
       set(id, { initialized: true });
