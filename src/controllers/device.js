@@ -541,7 +541,9 @@ module.exports.manage = () => {
                   b: data[i * 3 + 11],
                 };
                 set(chan, payload);
-                set(`${id}/rgb/${index + i}`, payload); /// fucking hack
+                if (palette === 1) {
+                  set(`${id}/rgb/${index + i}`, payload); /// fucking hack
+                }
               }
               break;
             }
