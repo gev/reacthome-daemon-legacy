@@ -864,14 +864,13 @@ module.exports.manage = () => {
           set(`${id}/LA/${index}`, { brightness });
           break;
         }
-        case ACTION_ALED_COLOR_ANIMATION_PLAY:
-        case ACTION_ALED_MASK_ANIMATION_PLAY:
-        case ACTION_ALED_COLOR_ANIMATION_STOP:
-        case ACTION_ALED_MASK_ANIMATION_STOP:
-        case ACTION_ALED_CLIP: {
-          console.log(data);
-          break;
-        }
+        // case ACTION_ALED_COLOR_ANIMATION_PLAY:
+        // case ACTION_ALED_MASK_ANIMATION_PLAY:
+        // case ACTION_ALED_COLOR_ANIMATION_STOP:
+        // case ACTION_ALED_MASK_ANIMATION_STOP:
+        // case ACTION_ALED_CLIP: {
+        //   break;
+        // }
         case ACTION_ALED_CONFIG_GROUP: {
           const index = data[7];
           const colors = data[8];

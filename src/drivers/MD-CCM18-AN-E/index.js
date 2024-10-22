@@ -16,7 +16,7 @@ const sync = async (id, modbus, address, n) => {
     const ch = `${id}/ac/${i + 1}`
     const { synced, value, mode, fan_speed, setpoint } = get(ch) || {};
     if (!synced) {
-      const dataMode = (value ? 1 : 0) << 7 | 1 << mode;
+      const dataMode = (value ? 0b1000_0000 : 0) | (1 << mode);
       let dataFan = 0;
       switch (fan_speed) {
         case 0:
