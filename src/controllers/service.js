@@ -2769,7 +2769,6 @@ const run = (action) => {
             action.inverseDirection,
             ...action.params || []
           ]);
-          console.log(buff);
           switch (dev.type) {
             case DEVICE_TYPE_DI_4:
             case DEVICE_TYPE_DOPPLER_1_DI_4:
