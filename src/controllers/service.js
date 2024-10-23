@@ -1253,7 +1253,7 @@ const run = (action) => {
                 }
                 default: {
                   device.sendRBUS(Buffer.from([
-                    ACTION_DO,
+                    ACTION_DIMMER,
                     index,
                     ON,
                   ]),
@@ -1420,7 +1420,7 @@ const run = (action) => {
                   break;
                 default:
                   device.sendRBUS(Buffer.from([
-                    ACTION_DO,
+                    ACTION_DIMMER,
                     index,
                     OFF,
                   ]),
