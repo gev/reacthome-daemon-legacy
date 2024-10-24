@@ -2221,8 +2221,8 @@ const run = (action) => {
             run({ type: ACTION_SCRIPT_RUN, id: onIntensity[intensity] });
           }
         };
-        const stopCool = make(STOP, onStopCool, COOL, cool);
-        const stopHeat = make(STOP, onStopHeat, HEAT, heat);
+        const stopCool = make(STOP, onStopCool, mode, cool);
+        const stopHeat = make(STOP, onStopHeat, mode, heat);
         const startCool = make(COOL, onStartCool, COOL, cool, cool_intensity, onCoolIntensity);
         const startHeat = make(HEAT, onStartHeat, HEAT, heat, heat_intensity, onHeatIntensity);
         switch (mode) {
