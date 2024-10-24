@@ -2223,7 +2223,7 @@ const run = (action) => {
           }
         };
         const stopCool = make(STOP, onStopCool, mode, cool);
-        const stopHeat = make(STOP, onStopHeat, mod, heat);
+        const stopHeat = make(STOP, onStopHeat, mode, heat);
         const startCool = make(COOL, onStartCool, COOL, cool, cool_intensity, onCoolIntensity);
         const startHeat = make(HEAT, onStartHeat, HEAT, heat, heat_intensity, onHeatIntensity);
         switch (mode) {
