@@ -2694,9 +2694,12 @@ const run = (action) => {
         const { id, command } = action;
         const { stderr = "", stdout = "" } = get(id) || {};
         const controller = new AbortController();
+        if (controllers[id]) {
+          controllers[id].abort();
+        }
         controllers[id] = controller;
         set(id, { command, state: true, error: "", stdout: "", stderr: "" });
-        const process = childProcess.exec(cmd, { signal: controller.signal });
+        const process = childProcess.exec(command, { signal: controller.signal });
         process.stdout.on("data", (data) => {
           set(id, { stdout: stdout + data.toString() });
         });
