@@ -2697,7 +2697,6 @@ const run = (action) => {
         }
         console.log(command);
         const process = childProcess.exec(command);
-        processes[id] = process;
         process.stdout.on("data", (data) => {
           console.log(data);
           const { stdout = "" } = get(id) || {};
@@ -2710,8 +2709,7 @@ const run = (action) => {
         })
         process.on("error", (e) => {
           console.warn(e.message);
-          set(id, { state: false, error: e.message });
-          delete processes[id];
+          set(id, { error: e.message });
         });
         process.on("close", () => {
           console.log("close");
@@ -2721,6 +2719,7 @@ const run = (action) => {
         process.on("spawn", () => {
           console.log("spawn");
           set(id, { command, state: true, error: "", stdout: "", stderr: "" });
+          processes[id] = process;
         });
         break;
       }
