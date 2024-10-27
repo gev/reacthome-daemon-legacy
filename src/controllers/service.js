@@ -2726,6 +2726,7 @@ const run = (action) => {
       case ACTION_SHELL_STOP: {
         const { id } = action;
         const process = processes[id];
+        console.log("stop", id, process);
         if (process) {
           process.kill();
           delete processes[id];
