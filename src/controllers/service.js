@@ -2696,7 +2696,7 @@ const run = (action) => {
           processes[id].kill();
         }
         console.log(command);
-        const process = childProcess.exec(command, { signal: controller.signal });
+        const process = childProcess.exec(command);
         processes[id] = process;
         process.stdout.on("data", (data) => {
           console.log(data);
