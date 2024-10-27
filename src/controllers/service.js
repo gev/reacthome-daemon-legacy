@@ -215,6 +215,8 @@ const {
   DEVICE_TYPE_SMART_TOP_G4,
   DEVICE_TYPE_SMART_TOP_G2,
   DEVICE_TYPE_SMART_TOP_A4P,
+  ACTION_SHELL_START,
+  ACTION_SHELL_STOP,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -241,6 +243,8 @@ const { RING } = require("../ring/constants");
 const { ip2int } = require("../util");
 const { char2image } = require("../drivers/display");
 const childProcess = require("child_process");
+const { error } = require("console");
+const { stdout } = require("process");
 
 const timers = {};
 const schedules = {};
@@ -251,6 +255,8 @@ const ARTNET_VELOCITY = 1;
 
 const bind = ["r", "g", "b", "bind"];
 const rgb = ["r", "g", "b"];
+
+const controllers = {};
 
 const run = (action) => {
   try {
@@ -2681,6 +2687,39 @@ const run = (action) => {
             }
             break;
           }
+        }
+        break;
+      }
+      case ACTION_SHELL_START: {
+        const { id, cmd } = action;
+        const { stderr = "", stdout = "" } = get(id) || {};
+        const controller = new AbortController();
+        controllers[id] = controller;
+        set(id, { command, state: true, error: "", stdout: "", stderr: "" });
+        const process = childProcess.exec(cmd, { signal: controller.signal });
+        process.stdout.on("data", (data) => {
+          set(id, { stdout: stdout + data.toString() });
+        });
+        process.stderr.on("data", (data) => {
+          set(id, { stderr: stderr + data.toString() });
+        })
+        process.on("error", (e) => {
+          set(id, { state: false, error: e.message });
+          delete controllers[id];
+        });
+        process.on("close", () => {
+          set(id, { state: false })
+          delete controllers[id];
+        });
+        break;
+      }
+      case ACTION_SHELL_STOP: {
+        const { id } = action;
+        const controller = controllers[id];
+        if (controller) {
+          controller.abort();
+          delete controllers[id];
+          set(id, { state: false });
         }
         break;
       }
