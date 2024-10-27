@@ -2692,7 +2692,6 @@ const run = (action) => {
       }
       case ACTION_SHELL_START: {
         const { id, command } = action;
-        const { stderr = "", stdout = "" } = get(id) || {};
         const controller = new AbortController();
         if (controllers[id]) {
           controllers[id].abort();
@@ -2703,10 +2702,12 @@ const run = (action) => {
         const process = childProcess.exec(command, { signal: controller.signal });
         process.stdout.on("data", (data) => {
           console.log(data);
+          const { stdout = "" } = get(id) || {};
           set(id, { stdout: stdout + data.toString() });
         });
         process.stderr.on("data", (data) => {
           console.error(data);
+          const { stderr = "" } = get(id) || {};
           set(id, { stderr: stderr + data.toString() });
         })
         process.on("error", (e) => {
