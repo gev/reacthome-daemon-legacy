@@ -256,7 +256,7 @@ const ARTNET_VELOCITY = 1;
 const bind = ["r", "g", "b", "bind"];
 const rgb = ["r", "g", "b"];
 
-const controllers = {};
+const processes = {};
 
 const run = (action) => {
   try {
@@ -2692,14 +2692,12 @@ const run = (action) => {
       }
       case ACTION_SHELL_START: {
         const { id, command } = action;
-        const controller = new AbortController();
-        if (controllers[id]) {
-          controllers[id].abort();
+        if (processes[id]) {
+          processes[id].kill();
         }
-        controllers[id] = controller;
         console.log(command);
-        set(id, { command, state: true, error: "", stdout: "", stderr: "" });
         const process = childProcess.exec(command, { signal: controller.signal });
+        processes[id] = process;
         process.stdout.on("data", (data) => {
           console.log(data);
           const { stdout = "" } = get(id) || {};
@@ -2713,21 +2711,25 @@ const run = (action) => {
         process.on("error", (e) => {
           console.warn(e.message);
           set(id, { state: false, error: e.message });
-          delete controllers[id];
+          delete processes[id];
         });
         process.on("close", () => {
           console.log("close");
           set(id, { state: false })
-          delete controllers[id];
+          delete processes[id];
+        });
+        process.on("spawn", () => {
+          console.log("spawn");
+          set(id, { command, state: true, error: "", stdout: "", stderr: "" });
         });
         break;
       }
       case ACTION_SHELL_STOP: {
         const { id } = action;
-        const controller = controllers[id];
-        if (controller) {
-          controller.abort();
-          delete controllers[id];
+        const process = processes[id];
+        if (process) {
+          process.kill();
+          delete processes[id];
           set(id, { state: false });
         }
         break;
