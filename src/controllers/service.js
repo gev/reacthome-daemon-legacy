@@ -2698,19 +2698,24 @@ const run = (action) => {
           controllers[id].abort();
         }
         controllers[id] = controller;
+        console.log(command);
         set(id, { command, state: true, error: "", stdout: "", stderr: "" });
         const process = childProcess.exec(command, { signal: controller.signal });
         process.stdout.on("data", (data) => {
+          console.log(data);
           set(id, { stdout: stdout + data.toString() });
         });
         process.stderr.on("data", (data) => {
+          console.error(data);
           set(id, { stderr: stderr + data.toString() });
         })
         process.on("error", (e) => {
+          console.warn(e.message);
           set(id, { state: false, error: e.message });
           delete controllers[id];
         });
         process.on("close", () => {
+          console.log("close");
           set(id, { state: false })
           delete controllers[id];
         });
