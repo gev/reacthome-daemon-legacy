@@ -2691,7 +2691,7 @@ const run = (action) => {
         break;
       }
       case ACTION_SHELL_START: {
-        const { id, cmd } = action;
+        const { id, command } = action;
         const { stderr = "", stdout = "" } = get(id) || {};
         const controller = new AbortController();
         controllers[id] = controller;
