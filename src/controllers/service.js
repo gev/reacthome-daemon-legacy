@@ -256,8 +256,6 @@ const ARTNET_VELOCITY = 1;
 const bind = ["r", "g", "b", "bind"];
 const rgb = ["r", "g", "b"];
 
-const processes = {};
-
 const run = (action) => {
   try {
     switch (action.type) {
@@ -2692,42 +2690,33 @@ const run = (action) => {
       }
       case ACTION_SHELL_START: {
         const { id, command } = action;
-        if (processes[id]) {
-          process.kill(-processes[id].pid);
+        const { pid } = get(id) || {};
+        if (pid) {
+          process.kill(-pid);
         }
-        console.log(command);
-        const process = childProcess.spawn(command, { detached: true, shell: true });
-        process.stdout.on("data", (data) => {
-          console.log(data);
-          const { stdout = "" } = get(id) || {};
-          set(id, { stdout: stdout + data.toString() });
+        const child = childProcess.spawn(command, { detached: true, shell: true });
+        child.stdout.on("data", (data) => {
+          set(id, { stdout: data.toString() });
         });
-        process.stderr.on("data", (data) => {
-          console.error(data);
-          const { stderr = "" } = get(id) || {};
-          set(id, { stderr: stderr + data.toString() });
+        child.stderr.on("data", (data) => {
+          set(id, { stderr: data.toString() });
         })
-        process.on("error", (e) => {
-          console.warn(e.message);
+        child.on("error", (e) => {
           set(id, { error: e.message });
         });
-        process.on("close", () => {
-          console.log("close");
-          set(id, { state: false })
-          delete processes[id];
+        child.on("close", () => {
+          set(id, { state: false, pid: null })
         });
-        process.on("spawn", () => {
-          console.log("spawn");
-          set(id, { command, state: true, error: "", stdout: "", stderr: "" });
-          processes[id] = process;
+        child.on("spawn", () => {
+          set(id, { command, state: true, error: "", stdout: "", stderr: "", pid: child.pid });
         });
         break;
       }
       case ACTION_SHELL_STOP: {
         const { id } = action;
-        console.log("stop", id, process[id]);
-        if (process) {
-          process.kill(-processes[id].pid);
+        const { pid } = get(id) || {};
+        if (pid) {
+          process.kill(-pid);
         }
         break;
       }
