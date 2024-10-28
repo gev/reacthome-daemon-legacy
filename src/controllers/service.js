@@ -2695,20 +2695,30 @@ const run = (action) => {
           try {
             process.kill(-pid);
           } catch (e) {
+            set(id, { pid: null });
           }
         }
         const child = childProcess.spawn(command, { detached: true, shell: true });
         child.stdout.on("data", (data) => {
-          set(id, { stdout: data.toString() });
+          const { pid } = get(id) || {};
+          if (pid === child.pid) {
+            set(id, { stdout: data.toString() });
+          }
         });
         child.stderr.on("data", (data) => {
-          set(id, { stderr: data.toString() });
+          const { pid } = get(id) || {};
+          if (pid === child.pid) {
+            set(id, { stderr: data.toString() });
+          }
         })
         child.on("error", (e) => {
           set(id, { error: e.message });
         });
         child.on("close", () => {
-          set(id, { state: false, pid: null })
+          const { pid } = get(id) || {};
+          if (pid === child.pid) {
+            set(id, { state: false, pid: null })
+          }
         });
         child.on("spawn", () => {
           set(id, { command, state: true, error: "", stdout: "", stderr: "", pid: child.pid });
@@ -2722,6 +2732,7 @@ const run = (action) => {
           try {
             process.kill(-pid);
           } catch (e) {
+            set(id, { pid: null });
           }
         }
         break;
