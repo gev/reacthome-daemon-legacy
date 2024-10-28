@@ -201,6 +201,7 @@ const {
   ACTION_ALED_COLOR_ANIMATION_PLAY,
   DEVICE_TYPE_DOPPLER_1_DI_4,
   DEVICE_TYPE_DOPPLER_5_DI_4,
+  DEVICE_TYPE_DI_4,
   ACTION_SET_POSITION,
   ACTION_UP,
   DRIVER_TYPE_DAUERHAFT,
@@ -2695,7 +2696,7 @@ const run = (action) => {
           try {
             process.kill(-pid);
           } catch (e) {
-            set(id, { pid: null });
+            set(id, { pid: null, value: false });
           }
         }
         const child = childProcess.spawn(command, { detached: true, shell: true });
@@ -2732,7 +2733,7 @@ const run = (action) => {
           try {
             process.kill(-pid);
           } catch (e) {
-            set(id, { pid: null });
+            set(id, { pid: null, value: false });
           }
         }
         break;
@@ -2762,6 +2763,7 @@ const run = (action) => {
           action.index
         ]);
         switch (dev.type) {
+          case DEVICE_TYPE_DI_4:
           case DEVICE_TYPE_DOPPLER_1_DI_4:
           case DEVICE_TYPE_DOPPLER_5_DI_4:
           case DEVICE_TYPE_SMART_BOTTOM_1:
@@ -2785,6 +2787,7 @@ const run = (action) => {
           action.value
         ]);
         switch (dev.type) {
+          case DEVICE_TYPE_DI_4:
           case DEVICE_TYPE_DOPPLER_1_DI_4:
           case DEVICE_TYPE_DOPPLER_5_DI_4:
           case DEVICE_TYPE_SMART_BOTTOM_1:
@@ -2820,6 +2823,7 @@ const run = (action) => {
             ...action.params || []
           ]);
           switch (dev.type) {
+            case DEVICE_TYPE_DI_4:
             case DEVICE_TYPE_DOPPLER_1_DI_4:
             case DEVICE_TYPE_DOPPLER_5_DI_4:
             case DEVICE_TYPE_SMART_BOTTOM_1:
@@ -2849,6 +2853,7 @@ const run = (action) => {
             parseInt(index, 10),
           ]);
           switch (dev.type) {
+            case DEVICE_TYPE_DI_4:
             case DEVICE_TYPE_DOPPLER_1_DI_4:
             case DEVICE_TYPE_DOPPLER_5_DI_4:
             case DEVICE_TYPE_SMART_BOTTOM_1:
@@ -2878,6 +2883,7 @@ const run = (action) => {
             action.inverse
           ]);
           switch (dev.type) {
+            case DEVICE_TYPE_DI_4:
             case DEVICE_TYPE_DOPPLER_1_DI_4:
             case DEVICE_TYPE_DOPPLER_5_DI_4:
             case DEVICE_TYPE_SMART_BOTTOM_1:
@@ -2911,6 +2917,7 @@ const run = (action) => {
         });
         const buff = Buffer.from(cmd);
         switch (dev.type) {
+          case DEVICE_TYPE_DI_4:
           case DEVICE_TYPE_DOPPLER_1_DI_4:
           case DEVICE_TYPE_DOPPLER_5_DI_4:
           case DEVICE_TYPE_SMART_BOTTOM_1:

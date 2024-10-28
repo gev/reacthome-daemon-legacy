@@ -850,12 +850,22 @@ module.exports.manage = () => {
         }
         case ACTION_ALED_ON: {
           const index = data[7];
-          set(`${id}/LA/${index}`, { value: true });
+          const ch = `${id}/LA/${index}`;
+          set(ch, { value: true });
+          const { bind } = get(ch) || {};
+          if (bind) {
+            set(bind, { value: true });
+          }
           break;
         }
         case ACTION_ALED_OFF: {
           const index = data[7];
-          set(`${id}/LA/${index}`, { value: false });
+          const ch = `${id}/LA/${index}`;
+          set(ch, { value: false });
+          const { bind } = get(ch) || {};
+          if (bind) {
+            set(bind, { value: false });
+          }
           break;
         }
         case ACTION_ALED_BRIGHTNESS: {

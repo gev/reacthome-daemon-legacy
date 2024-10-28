@@ -56,6 +56,7 @@ const {
   DEVICE_TYPE_SMART_BOTTOM_2,
   DEVICE_TYPE_DOPPLER_1_DI_4,
   DEVICE_TYPE_DOPPLER_5_DI_4,
+  DEVICE_TYPE_DI_4,
 } = require("../constants");
 const { get, set, add } = require("./create");
 const { device } = require("../sockets");
@@ -828,15 +829,9 @@ module.exports.initialize = (id) => {
       );
       break;
     }
+    case DEVICE_TYPE_DI_4:
     case DEVICE_TYPE_SMART_BOTTOM_1:
-    case DEVICE_TYPE_SMART_BOTTOM_2: {
-      for (let i = 0; i < 10; i++) {
-        const { brightness = 0 } = get(`${id}/LA/${i + 1}`) || {};
-        a.push(brightness);
-      }
-      device.sendRBUS(Buffer.from(a), id);
-      break;
-    }
+    case DEVICE_TYPE_SMART_BOTTOM_2:
     case DEVICE_TYPE_DOPPLER_1_DI_4:
     case DEVICE_TYPE_DOPPLER_5_DI_4: {
       for (let i = 0; i < 10; i++) {
