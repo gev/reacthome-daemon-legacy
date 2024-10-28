@@ -2696,7 +2696,7 @@ const run = (action) => {
           try {
             process.kill(-pid);
           } catch (e) {
-            set(id, { pid: null });
+            set(id, { pid: null, value: false });
           }
         }
         const child = childProcess.spawn(command, { detached: true, shell: true });
@@ -2733,7 +2733,7 @@ const run = (action) => {
           try {
             process.kill(-pid);
           } catch (e) {
-            set(id, { pid: null });
+            set(id, { pid: null, value: false });
           }
         }
         break;
