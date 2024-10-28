@@ -2718,11 +2718,11 @@ const run = (action) => {
         child.on("close", () => {
           const { pid } = get(id) || {};
           if (pid === child.pid) {
-            set(id, { state: false, pid: null })
+            set(id, { value: false, pid: null })
           }
         });
         child.on("spawn", () => {
-          set(id, { command, state: true, error: "", stdout: "", stderr: "", pid: child.pid });
+          set(id, { command, value: true, error: "", stdout: "", stderr: "", pid: child.pid });
         });
         break;
       }
