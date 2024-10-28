@@ -2693,7 +2693,7 @@ const run = (action) => {
       case ACTION_SHELL_START: {
         const { id, command } = action;
         if (processes[id]) {
-          processes[id].kill();
+          processes[id].exit();
         }
         console.log(command);
         const process = childProcess.exec(command);
