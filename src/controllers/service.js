@@ -2728,7 +2728,7 @@ const run = (action) => {
         const process = processes[id];
         console.log("stop", id, process);
         if (process) {
-          process.kill();
+          process.exit();
         }
         break;
       }
