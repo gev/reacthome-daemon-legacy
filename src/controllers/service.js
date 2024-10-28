@@ -2692,7 +2692,10 @@ const run = (action) => {
         const { id, command } = action;
         const { pid } = get(id) || {};
         if (pid) {
-          process.kill(-pid);
+          try {
+            process.kill(-pid);
+          } catch (e) {
+          }
         }
         const child = childProcess.spawn(command, { detached: true, shell: true });
         child.stdout.on("data", (data) => {
@@ -2716,7 +2719,10 @@ const run = (action) => {
         const { id } = action;
         const { pid } = get(id) || {};
         if (pid) {
-          process.kill(-pid);
+          try {
+            process.kill(-pid);
+          } catch (e) {
+          }
         }
         break;
       }
