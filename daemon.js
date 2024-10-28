@@ -8,6 +8,7 @@ const {
   ACTION_SCRIPT_RUN,
   ACTION_SCHEDULE_START,
   ACTION_TIMER_START,
+  ACTION_SHELL_STOP,
 } = require("./src/constants");
 const { state, device, service, cpu, weather } = require("./src/controllers");
 const { get, set, count } = require("./src/actions");
@@ -27,13 +28,16 @@ const start = (id) => {
   const { project } = get(id) || {};
   if (project) {
     count(project);
-    const { timer = [], schedule = [] } = get(project) || {};
+    const { timer = [], schedule = [], shell = [] } = get(project) || {};
     schedule.forEach((id) => {
       const { script, state, schedule } = get(id) || {};
       if (state && schedule && script) {
         service.run({ id, type: ACTION_SCHEDULE_START, schedule, script });
       }
     });
+    shell.forEach((id) => {
+      service.run({ id, type: ACTION_SHELL_STOP });
+    })
     timer.forEach((id) => {
       const { script, state, time = 0, timestamp = 0 } = get(id) || {};
       if (state && script) {
