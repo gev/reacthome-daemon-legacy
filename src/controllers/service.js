@@ -2696,7 +2696,7 @@ const run = (action) => {
           process.kill(-processes[id].pid);
         }
         console.log(command);
-        const process = childProcess.exec(command);
+        const process = childProcess.exec(command, { detached: true });
         process.stdout.on("data", (data) => {
           console.log(data);
           const { stdout = "" } = get(id) || {};
