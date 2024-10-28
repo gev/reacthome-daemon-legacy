@@ -216,6 +216,8 @@ const {
   DEVICE_TYPE_SMART_TOP_G4,
   DEVICE_TYPE_SMART_TOP_G2,
   DEVICE_TYPE_SMART_TOP_A4P,
+  ACTION_SHELL_START,
+  ACTION_SHELL_STOP,
 } = require("../constants");
 const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
@@ -242,6 +244,8 @@ const { RING } = require("../ring/constants");
 const { ip2int } = require("../util");
 const { char2image } = require("../drivers/display");
 const childProcess = require("child_process");
+const { error } = require("console");
+const { stdout } = require("process");
 
 const timers = {};
 const schedules = {};
@@ -1254,7 +1258,7 @@ const run = (action) => {
                 }
                 default: {
                   device.sendRBUS(Buffer.from([
-                    ACTION_DO,
+                    ACTION_DIMMER,
                     index,
                     ON,
                   ]),
@@ -1421,7 +1425,7 @@ const run = (action) => {
                   break;
                 default:
                   device.sendRBUS(Buffer.from([
-                    ACTION_DO,
+                    ACTION_DIMMER,
                     index,
                     OFF,
                   ]),
@@ -2681,6 +2685,55 @@ const run = (action) => {
               run({ type: ACTION_LANAMP, id: dev, index: i, mode, volume });
             }
             break;
+          }
+        }
+        break;
+      }
+      case ACTION_SHELL_START: {
+        const { id, command } = action;
+        const { pid } = get(id) || {};
+        if (pid) {
+          try {
+            process.kill(-pid);
+          } catch (e) {
+            set(id, { pid: null });
+          }
+        }
+        const child = childProcess.spawn(command, { detached: true, shell: true });
+        child.stdout.on("data", (data) => {
+          const { pid } = get(id) || {};
+          if (pid === child.pid) {
+            set(id, { stdout: data.toString() });
+          }
+        });
+        child.stderr.on("data", (data) => {
+          const { pid } = get(id) || {};
+          if (pid === child.pid) {
+            set(id, { stderr: data.toString() });
+          }
+        })
+        child.on("error", (e) => {
+          set(id, { error: e.message });
+        });
+        child.on("close", () => {
+          const { pid } = get(id) || {};
+          if (pid === child.pid) {
+            set(id, { state: false, pid: null })
+          }
+        });
+        child.on("spawn", () => {
+          set(id, { command, state: true, error: "", stdout: "", stderr: "", pid: child.pid });
+        });
+        break;
+      }
+      case ACTION_SHELL_STOP: {
+        const { id } = action;
+        const { pid } = get(id) || {};
+        if (pid) {
+          try {
+            process.kill(-pid);
+          } catch (e) {
+            set(id, { pid: null });
           }
         }
         break;
