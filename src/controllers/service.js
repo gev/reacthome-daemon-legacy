@@ -2706,12 +2706,12 @@ const run = (action) => {
         //     set(id, { stdout: data.toString() });
         //   }
         // });
-        child.stderr.on("data", (data) => {
-          const { pid } = get(id) || {};
-          if (pid === child.pid) {
-            set(id, { stderr: data.toString() });
-          }
-        })
+        // child.stderr.on("data", (data) => {
+        //   const { pid } = get(id) || {};
+        //   if (pid === child.pid) {
+        //     set(id, { stderr: data.toString() });
+        //   }
+        // })
         child.on("error", (e) => {
           set(id, { error: e.message });
         });
