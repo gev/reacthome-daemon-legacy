@@ -2700,12 +2700,12 @@ const run = (action) => {
           }
         }
         const child = childProcess.spawn(command, { detached: true, shell: true });
-        child.stdout.on("data", (data) => {
-          const { pid } = get(id) || {};
-          if (pid === child.pid) {
-            set(id, { stdout: data.toString() });
-          }
-        });
+        // child.stdout.on("data", (data) => {
+        //   const { pid } = get(id) || {};
+        //   if (pid === child.pid) {
+        //     set(id, { stdout: data.toString() });
+        //   }
+        // });
         child.stderr.on("data", (data) => {
           const { pid } = get(id) || {};
           if (pid === child.pid) {
