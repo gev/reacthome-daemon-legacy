@@ -38,7 +38,6 @@ const connect = () => {
   socket.on('close', () => {
     setTimeout(connect, TIMEOUT_RECONNECT);
   });
-  socket.on('error', console.error);
   callbacks.clear();
   streams.clear();
 };
