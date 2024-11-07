@@ -57,6 +57,7 @@ const {
   DEVICE_TYPE_DOPPLER_1_DI_4,
   DEVICE_TYPE_DOPPLER_5_DI_4,
   DEVICE_TYPE_DI_4,
+  DEVICE_TYPE_DI_4_LA,
 } = require("../constants");
 const { get, set, add } = require("./create");
 const { device } = require("../sockets");
@@ -829,7 +830,7 @@ module.exports.initialize = (id) => {
       );
       break;
     }
-    case DEVICE_TYPE_DI_4:
+    case DEVICE_TYPE_DI_4_LA:
     case DEVICE_TYPE_SMART_BOTTOM_1:
     case DEVICE_TYPE_SMART_BOTTOM_2:
     case DEVICE_TYPE_DOPPLER_1_DI_4:
