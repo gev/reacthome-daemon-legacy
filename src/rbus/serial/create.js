@@ -2,6 +2,8 @@ const { SerialPort } = require('serialport');
 const { addCRC } = require('../crc');
 const { handle } = require('./handle');
 
+const queue = [];
+
 const createPort = (rbus, path) => {
   const port = new SerialPort(
     { path, baudRate: 1_000_000, dataBits: 8, stopBits: 1, parity: 'none' },
@@ -12,7 +14,9 @@ const createPort = (rbus, path) => {
   port.on('data', handle(rbus));
   const send = (data) => {
     // console.log("UART send", data)
-    port.write(data)
+    queue.push(() => {
+      port.write(data)
+    });
   }
   rbus.port = {
     path,
@@ -24,5 +28,10 @@ const createPort = (rbus, path) => {
     }
   };
 }
+
+setInterval(() => {
+  const run = queue.shift();
+  if (run) run();
+}, 1);
 
 module.exports.createPort = createPort;
