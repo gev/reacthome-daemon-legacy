@@ -54,8 +54,9 @@ device.sendTOP = (data, id) => {
 }
 
 setInterval(() => {
-  if (queue.length > 0) {
-    queue.shift()();
+  const run = queue.shift();
+  if (run) {
+    run();
   }
 }, 1);
 
