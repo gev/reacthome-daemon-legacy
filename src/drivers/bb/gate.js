@@ -92,6 +92,7 @@ plc[0].handle = function (cmd, data) {
                   });
                   sensor[id] = 1;
                   if (type === 'button' && button.scene) {
+                      clearTimeout(timers[id]);
                       timers[id] = setTimeout(() => {
                           Object.entries(state.get('location')).forEach(([id, location]) => {
                               if (location.selector != undefined) {

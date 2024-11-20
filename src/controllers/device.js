@@ -240,6 +240,7 @@ module.exports.manage = () => {
                   };
                 }
               };
+              clearTimeout(hold[channel].timeout);
               hold[channel].timeout = setTimeout(handleHold_, parseInt(chan.timeout || 1000), true);
             } else {
               clearTimeout(timeout);

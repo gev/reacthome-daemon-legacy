@@ -55,9 +55,9 @@ const connect = (id) => {
   });
   socket.on("open", () => {
     // console.log("websocket opened");
-    clearTimeout(timeout);
     clearInterval(interval);
     interval = setInterval(() => {
+      clearTimeout(timeout);
       timeout = setTimeout(() => socket.close(), 2 * TIMEOUT);
       socket.ping();
     }, TIMEOUT);
