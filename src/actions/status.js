@@ -81,6 +81,7 @@ const online = (id, props) => {
     }
   }
   set(id, { ...props, online: true });
+  clearTimeout(timeout[id]);
   timeout[id] = setTimeout(() => {
     offline(id);
     delete timeout[id];
