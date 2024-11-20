@@ -20,7 +20,7 @@ const device = socket((socket) => {
   data.writeUInt32BE(IP_ADDRESS, 1);
   data.writeUInt16BE(socket.address().port, 5);
   return () => {
-    queue.push(() => {
+    push(() => {
       device.send(data, DEVICE_GROUP);
     });
   };
@@ -28,7 +28,7 @@ const device = socket((socket) => {
 
 
 device.sendRBUS = (data, id) => {
-  queue.push(() => {
+  push(() => {
     const mac = id.split(":").map((i) => parseInt(i, 16));
     const header = [ACTION_RBUS_TRANSMIT, ...mac];
     const dev = get(id);
@@ -44,19 +44,30 @@ device.sendRBUS = (data, id) => {
 
 
 device.sendTOP = (data, id) => {
-  queue.push(() => {
+  push(() => {
     const { bottom } = get(id) || {};
     if (bottom) {
-      // console.log(data, bottom)
       device.sendRBUS([ACTION_SMART_TOP, ...data], bottom);
     }
   });
 }
 
-setInterval(() => {
+let timeout;
+
+const start = () => {
+  clearTimeout(timeout);
+  timeout = setTimeout(go, 1);
+};
+
+const go = () => {
   const run = queue.shift();
-  if (run) run();
-}, 1);
+  if (run) {
+    run();
+    start()
+  }
+}
 
-
-module.exports = device;
+const push = (run) => {
+  queue.push(run);
+  start();
+}
