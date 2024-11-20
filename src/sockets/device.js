@@ -71,3 +71,5 @@ const push = (run) => {
   queue.push(run);
   start();
 }
+
+module.exports = device;
