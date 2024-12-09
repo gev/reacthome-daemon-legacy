@@ -16,7 +16,7 @@ const sync = async (id, modbus, address, n) => {
     if (!synced) {
       writeCoil(modbus, address, i, value ? 1 : 0);
       delay(100);
-      writeRegister(modbus, address, 0x1001 + i, mode);
+      writeRegister(modbus, address, 0x1000 + i, mode);
       delay(100);
       writeRegister(modbus, address, 0x1001 + i, setpoint);
       delay(100);
@@ -26,7 +26,7 @@ const sync = async (id, modbus, address, n) => {
       index = i + 1;
       readCoils(modbus, address, i, 1);
       await delay(300);
-      readHoldingRegisters(modbus, address, 0x1001 + i * 6, 3);
+      readHoldingRegisters(modbus, address, 0x1000 + i * 6, 3);
     }
     await delay(1000);
   }
