@@ -14,7 +14,7 @@ const sync = async (id, modbus, address, n) => {
     const ch = `${id}/ac/${i + 1}`
     const { synced, value, mode, fan_speed, setpoint } = get(ch) || {};
     if (!synced) {
-      writeCoil(modbus, address, i, value ? 0xff00 : 0x0000);
+      writeCoil(modbus, address, i, value ? 1 : 0);
       delay(100);
       const data = [mode, setpoint, fan_speed];
       writeRegisters(modbus, address, 0x1000 + i, data);
@@ -72,9 +72,9 @@ module.exports.handle = (action) => {
   console.log(index, data);
   switch (data[0]) {
     case READ_COILS: {
-      const value = !!data.readUInt16BE(2);
+      const value = !!data.readUInt8(2);
       console.log({ value });
-      // set(`${id}/ac/${index}`, { value });
+      set(`${id}/ac/${index}`, { value });
       break;
     }
     case READ_HOLDING_REGISTERS: {
@@ -82,7 +82,7 @@ module.exports.handle = (action) => {
       const setpoint = data.readUInt16BE(4);
       const fan_speed = data.readUInt16BE(6);
       console.log({ mode, setpoint, fan_speed });
-      // set(`${id}/ac/${index}`, { mode, setpoint, fan_speed });
+      set(`${id}/ac/${index}`, { mode, setpoint, fan_speed });
       break;
     }
   }
