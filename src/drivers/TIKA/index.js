@@ -69,12 +69,20 @@ module.exports.run = (action) => {
 
 module.exports.handle = (action) => {
   const { id, data } = action;
-  console.log(data)
+  console.log(index, data);
   switch (data[0]) {
     case READ_COILS: {
+      const value = !!data.readUInt16BE(2);
+      console.log({ value });
+      // set(`${id}/ac/${index}`, { value });
       break;
     }
     case READ_HOLDING_REGISTERS: {
+      const mode = data.readUInt16BE(2);
+      const setpoint = data.readUInt16BE(4);
+      const fan_speed = data.readUInt16BE(6);
+      console.log({ mode, setpoint, fan_speed });
+      // set(`${id}/ac/${index}`, { mode, setpoint, fan_speed });
       break;
     }
   }
