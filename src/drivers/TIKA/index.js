@@ -14,7 +14,7 @@ const sync = async (id, modbus, address, n) => {
     const ch = `${id}/ac/${i + 1}`
     const { synced, value, mode, fan_speed, setpoint } = get(ch) || {};
     if (!synced) {
-      writeCoil(modbus, address, i + 1, value ? 1 : 0);
+      writeCoil(modbus, address, i, value ? 1 : 0);
       await delay(100);
       writeRegister(modbus, address, 0x1000 + i * 6, mode);
       await delay(100);
