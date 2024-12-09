@@ -14,13 +14,13 @@ const sync = async (id, modbus, address, n) => {
     const ch = `${id}/ac/${i + 1}`
     const { synced, value, mode, fan_speed, setpoint } = get(ch) || {};
     if (!synced) {
-      writeCoil(modbus, address, i, value ? 1 : 0);
+      writeCoil(modbus, address, i + 1, value ? 1 : 0);
       delay(100);
-      writeRegister(modbus, address, 0x1000 + i * 6, mode);
+      writeRegister(modbus, address, 0x1001 + i * 6, mode);
       delay(100);
-      writeRegister(modbus, address, 0x1001 + i * 6, setpoint);
+      writeRegister(modbus, address, 0x1002 + i * 6, setpoint);
       delay(100);
-      writeRegister(modbus, address, 0x1002 + i * 6, fan_speed);
+      writeRegister(modbus, address, 0x1003 + i * 6, fan_speed);
       set(ch, { synced: true });
     } else {
       index = i + 1;
@@ -63,7 +63,7 @@ module.exports.run = (action) => {
       break;
     }
     case ACTION_SETPOINT: {
-      set(ch, { setpoint: Math.max(17, Math.min(30, action.value)), synced: false });
+      set(ch, { setpoint: Math.max(16, Math.min(30, action.value)), synced: false });
       break;
     }
   }
