@@ -19,6 +19,7 @@ const {
   DRIVER_TYPE_COMFOVENT,
   DRIVER_TYPE_DALI_DLC,
   DRIVER_TYPE_MD_CCM18_AN_E,
+  DRIVER_TYPE_TIKA,
   DRIVER_TYPE_DAUERHAFT,
 } = require("../constants");
 const { get } = require("../actions");
@@ -35,6 +36,7 @@ const comfovent = require("./comfovent");
 const varmann = require("./varmann");
 const intesisbox = require("./intesisbox");
 const md_ccm18_an_e = require("./MD-CCM18-AN-E");
+const tika = require("./TIKA");
 const rtdra = require("./RTD-RA");
 const alink = require("./alink");
 // const me210_701 = require("./owen/me210_701");
@@ -112,6 +114,10 @@ module.exports.manage = () => {
       case DRIVER_TYPE_MD_CCM18_AN_E:
         instances.add(id, md_ccm18_an_e);
         md_ccm18_an_e.add(id);
+        break;
+      case DRIVER_TYPE_TIKA:
+        instances.add(id, tika);
+        tika.add(id);
         break;
       case DRIVER_TYPE_COMFOVENT:
         instances.add(id, comfovent);
