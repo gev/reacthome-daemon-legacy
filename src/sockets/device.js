@@ -54,22 +54,15 @@ device.sendTOP = (data, id) => {
 
 let timeout;
 
-const start = () => {
-  clearTimeout(timeout);
-  timeout = setTimeout(go, 1);
-};
-
-const go = () => {
+setInterval(() => {
   const run = queue.shift();
   if (run) {
     run();
-    start()
   }
-}
+}, 1);
 
 const push = (run) => {
   queue.push(run);
-  start();
 }
 
 module.exports = device;
