@@ -1,13 +1,21 @@
-const { mkdir, readdir, stat, exists, asset } = require('../fs');
+const { mkdir, exists } = require('../fs');
 const { DB, ASSETS, TMP, VAR } = require('./constants');
 
-const init = async (...path) => {
+const init = (...path) => {
   for (const i of path) {
-    (await exists(i)) || mkdir(i);
+    exists(i, (alreadyExists, e) => {
+      if (e) {
+        console.error(e);
+      } else if (!alreadyExists) {
+        mkdir(i, (e) => {
+          if (e) console.error(e);
+        });
+      }
+    });
   }
 };
 
 module.exports.init = async () => {
-  await init(VAR);
-  Promise.all(init(DB, ASSETS, TMP));
+  init(VAR);
+  init(DB, ASSETS, TMP);
 };

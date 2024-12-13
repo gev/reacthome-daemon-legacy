@@ -73,7 +73,7 @@ const load = async () => {
     set(init.mac, d);
   }
   // cleanup(init);
-  await assets.init();
+  assets.init();
   state.init(init);
   weather.manage();
   device.manage();
