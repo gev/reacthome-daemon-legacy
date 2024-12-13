@@ -54,12 +54,12 @@ device.sendTOP = (data, id) => {
 
 let timeout;
 
-setInterval(() => {
-  const run = queue.shift();
-  if (run) {
-    run();
-  }
-}, 1);
+// setInterval(() => {
+//   const run = queue.shift();
+//   if (run) {
+//     run();
+//   }
+// }, 1);
 
 const push = (run) => {
   run();
