@@ -62,7 +62,8 @@ setInterval(() => {
 }, 1);
 
 const push = (run) => {
-  queue.push(run);
+  run();
+  // queue.push(run);
 }
 
 module.exports = device;
