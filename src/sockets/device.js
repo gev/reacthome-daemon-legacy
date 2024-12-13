@@ -60,7 +60,7 @@ setInterval(() => {
     console.log(queue.length + 1);
     run();
   }
-}, 1);
+}, 10);
 
 const push = (run) => {
   queue.push(run);
