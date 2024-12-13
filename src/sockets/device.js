@@ -57,7 +57,6 @@ let timeout;
 setInterval(() => {
   const run = queue.shift();
   if (run) {
-    console.log(queue.length + 1);
     run();
   }
 }, 1);
