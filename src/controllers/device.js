@@ -132,9 +132,10 @@ const hold = {};
 const timestamp = {}
 
 module.exports.manage = () => {
-  ((get(mac()) || {}).device || []).forEach((id) => {
+  const devices = (get(mac()) || {}).device || [];
+  for (const id of devices) {
     offline(id);
-  });
+  }
 
   const handleData = (data, { address }, { hub = null } = {}) => {
     try {
@@ -920,23 +921,23 @@ const calcTemperature = site => {
   const { sensor = [], thermostat = [] } = get(site) || {};
   let temperature = 0;
   let n = 0;
-  sensor.forEach(id => {
+  for (const id of sensor) {
     const dev = get(id) || {};
     if (dev.online && typeof dev.temperature === 'number') {
       temperature += dev.temperature;
       n++;
     }
-  });
+  }
   if (n > 0) {
     temperature /= n;
     set(site, { temperature });
-    thermostat.forEach(id => {
+    for (const id of thermostat) {
       run({
         ...get(id),
         type: ACTION_THERMOSTAT_HANDLE,
         id
       });
-    })
+    }
   }
 }
 
@@ -944,23 +945,23 @@ const calcHumidity = site => {
   const { sensor = [], hygrostat = [] } = get(site) || {};
   let humidity = 0;
   let n = 0;
-  sensor.forEach(id => {
+  for (const id of sensor) {
     const dev = get(id) || {};
     if (dev.online && typeof dev.humidity === 'number') {
       humidity += dev.humidity;
       n++;
     }
-  });
+  }
   if (n > 0) {
     humidity /= n;
     set(site, { humidity });
-    hygrostat.forEach(id => {
+    for (const id of hygrostat) {
       run({
         ...get(id),
         type: ACTION_HYGROSTAT_HANDLE,
         id
       });
-    })
+    }
   }
 }
 
@@ -968,13 +969,13 @@ const calcIllumination = site => {
   const { sensor = [] } = get(site) || {};
   let illumination = 0;
   let n = 0;
-  sensor.forEach(id => {
+  for (const id of sensor) {
     const dev = get(id) || {};
     if (dev.online && typeof dev.illumination === 'number') {
       illumination += dev.illumination;
       n++;
     }
-  });
+  }
   if (n > 0) {
     illumination /= n;
     set(site, { illumination });
@@ -985,23 +986,23 @@ const calcCO2 = site => {
   const { sensor = [], co2_stat = [] } = get(site) || {};
   let co2 = 0;
   let n = 0;
-  sensor.forEach(id => {
+  for (const id of sensor) {
     const dev = get(id) || {};
     if (dev.online && typeof dev.co2 === 'number') {
       co2 += dev.co2;
       n++;
     }
-  });
+  }
   if (n > 0) {
     co2 /= n;
     set(site, { co2 });
-    co2_stat.forEach(id => {
+    for (const id of co2_stat) {
       run({
         ...get(id),
         type: ACTION_CO2_STAT_HANDLE,
         id
       });
-    })
+    }
   }
 }
 
@@ -1009,7 +1010,7 @@ const calcWarmFloorTemperature = site => {
   const { warm_floor = [] } = get(site) || {};
   let temperature = 0;
   let n = 0;
-  warm_floor.forEach(id => {
+  for (const id of warm_floor) {
     const dev = get(id) || {};
     if (dev.sensor) {
       const sensor = get(dev.sensor) || {};
@@ -1018,7 +1019,7 @@ const calcWarmFloorTemperature = site => {
         n++;
       }
     }
-  });
+  }
   if (n > 0) {
     return temperature /= n;
   }
@@ -1254,9 +1255,9 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
                 case 1: {
                   const value = min + 0.5;
                   if (value < 40 && value > 5 && value < max) {
-                    warm_floor.forEach(id => {
-                      set(id, { min: value })
-                    })
+                    for (const id of warm_floor) {
+                      set(id, { min: value });
+                    }
                     renderSmartTop(id);
                   }
                   break;
@@ -1264,9 +1265,9 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
                 case 2: {
                   const value = max + 0.5;
                   if (value < 40 && value > 5 && value > min) {
-                    warm_floor.forEach(id => {
-                      set(id, { max: value })
-                    })
+                    for (const id of warm_floor) {
+                      set(id, { max: value });
+                    }
                     renderSmartTop(id);
                   }
                   break;
@@ -1279,9 +1280,9 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
                 case 1: {
                   const value = min - 0.5;
                   if (value < 40 && value > 5 && value < max) {
-                    warm_floor.forEach(id => {
-                      set(id, { min: min - 0.5 })
-                    })
+                    for (const id of warm_floor) {
+                      set(id, { min: min - 0.5 });
+                    }
                     renderSmartTop(id);
                   }
                   break;
@@ -1289,9 +1290,9 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
                 case 2: {
                   const value = max - 0.5;
                   if (value < 40 && value > 5 && value > min) {
-                    warm_floor.forEach(id => {
-                      set(id, { max: max - 0.5 })
-                    })
+                    for (const id of warm_floor) {
+                      set(id, { max: max - 0.5 });
+                    }
                     renderSmartTop(id);
                   }
                   break;
@@ -1301,14 +1302,14 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
             }
             case 'power': {
               const on = isWarmFloorOn(warm_floor);
-              warm_floor.forEach(id => {
+              for (const id of warm_floor) {
                 const { inverse } = get(id) || {};
                 if (inverse) {
                   run({ type: on ? ACTION_ON : ACTION_OFF, id });
                 } else {
                   run({ type: on ? ACTION_OFF : ACTION_ON, id });
                 }
-              })
+              }
               setTimeout(renderSmartTop, 300, id);
               break;
             }
@@ -1473,9 +1474,9 @@ const handleSmartTopHold = (id, dev, chan, current) => {
                   case 1: {
                     const value = min + 0.5;
                     if (value < 40 && value > 5 && value < max) {
-                      warm_floor.forEach(id => {
-                        set(id, { min: value })
-                      })
+                      for (const id of warm_floor) {
+                        set(id, { min: value });
+                      }
                       renderSmartTop(id);
                       return true;
                     }
@@ -1484,9 +1485,9 @@ const handleSmartTopHold = (id, dev, chan, current) => {
                   case 2: {
                     const value = max + 0.5;
                     if (value < 40 && value > 5 && value > min) {
-                      warm_floor.forEach(id => {
-                        set(id, { max: value })
-                      })
+                      for (const id of warm_floor) {
+                        set(id, { max: value });
+                      }
                       renderSmartTop(id);
                       return true;
                     }
@@ -1500,9 +1501,9 @@ const handleSmartTopHold = (id, dev, chan, current) => {
                   case 1: {
                     const value = min - 0.5;
                     if (value < 40 && value > 5 && value < max) {
-                      warm_floor.forEach(id => {
-                        set(id, { min: min - 0.5 })
-                      })
+                      for (const id of warm_floor) {
+                        set(id, { min: min - 0.5 });
+                      }
                       renderSmartTop(id);
                       return true;
                     }
@@ -1511,9 +1512,9 @@ const handleSmartTopHold = (id, dev, chan, current) => {
                   case 2: {
                     const value = max - 0.5;
                     if (value < 40 && value > 5 && value > min) {
-                      warm_floor.forEach(id => {
-                        set(id, { max: max - 0.5 })
-                      })
+                      for (const id of warm_floor) {
+                        set(id, { max: max - 0.5 });
+                      }
                       renderSmartTop(id);
                       return true;
                     }
@@ -1554,19 +1555,19 @@ const handleSmartTopHold = (id, dev, chan, current) => {
           }
           case 'MODE_WARM_FLOOR': {
             let on = false;
-            warm_floor.forEach((id) => {
+            for (const id of warm_floor) {
               const { bind, inverse } = get(id) || {};
               const { value } = get(bind) || {};
               on ||= inverse ? !value : value;
-            })
-            warm_floor.forEach(id => {
+            }
+            for (const id of warm_floor) {
               const { inverse } = get(id) || {};
               if (inverse) {
                 run({ type: on ? ACTION_ON : ACTION_OFF, id });
               } else {
                 run({ type: on ? ACTION_OFF : ACTION_ON, id });
               }
-            })
+            }
             setTimeout(renderSmartTop, 300, id);
             break;
           }
@@ -1757,37 +1758,37 @@ const format = (value, min, max, fixed) =>
 
 const isWarmFloorOn = (warm_floor = []) => {
   let on = false;
-  warm_floor.forEach((id) => {
+  for (const id of warm_floor) {
     const { bind, inverse } = get(id) || {};
     const { value } = get(bind) || {};
     on ||= inverse ? !value : value;
-  })
+  }
   return on;
 }
 
 const maxCoolIntensity = (thermostat = []) => {
   let max = 0;
-  thermostat.forEach((id) => {
+  for (const id of thermostat) {
     const { onCoolIntensity = [] } = get(id) || {};
     max = Math.max(max, onCoolIntensity.length - 1);
-  })
+  }
   return max;
 }
 
 const maxHeatIntensity = (thermostat = []) => {
   let max = 0;
-  thermostat.forEach((id) => {
+  for (const id of thermostat) {
     const { onHeatIntensity = [] } = get(id) || {};
     max = Math.max(max, onHeatIntensity.length - 1);
-  })
+  }
   return max;
 }
 
 const maxVentilationIntensity = (co2_stat = []) => {
   let max = 0;
-  co2_stat.forEach((id) => {
+  for (const id of co2_stat) {
     const { onVentilationIntensity = [] } = get(id) || {};
     max = Math.max(max, onVentilationIntensity.length - 1);
-  })
+  }
   return max;
 }

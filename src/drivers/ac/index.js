@@ -23,18 +23,20 @@ const manage = (power, setpoint, ac) => {
     case DEVICE_TYPE_IR_4: {
       const [major] = version.split(".");
       if (major < 2) return;
-      command.forEach((code, i) => {
+      for (let i = 0; i < command.length; i++) {
+        const code = command[i];
         setTimeout(
           device.send,
           i * model.delay,
           Buffer.from([ACTION_IR, index, ...code]),
           ip
         );
-      });
+      }
       break;
     }
     default:
-      command.forEach((code, i) => {
+      for (let i = 0; i < command.length; i++) {
+        const code = command[i];
         const data = ircodes.encode(
           model.count,
           model.header,
@@ -50,7 +52,7 @@ const manage = (power, setpoint, ac) => {
           buff.writeUInt16BE(data[i], i * 2 + 5);
         }
         setTimeout(device.send, i * model.delay, buff, ip);
-      });
+      }
   }
 };
 

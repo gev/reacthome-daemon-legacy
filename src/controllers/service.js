@@ -832,8 +832,8 @@ const run = (action) => {
           }
           case LIGHT_RGB: {
             set(id, { last: { r, g, b } });
-            rgb.forEach((i) => {
-              if (!o[i]) return;
+            for (const i of rgb) {
+              if (!o[i]) continue;
               const [dev, kind, index] = o[i].split("/");
               const { ip, type: deviceType } = get(dev);
               const v = value[i];
@@ -899,7 +899,7 @@ const run = (action) => {
                   break;
                 }
               }
-            });
+            }
             break;
           }
         }
@@ -1204,8 +1204,8 @@ const run = (action) => {
         }
         const { last = {} } = o;
         const isOn = last.r > 0 || last.g > 0 || last.b > 0 || last.value > 0;
-        bind.forEach((i) => {
-          if (!o[i]) return;
+        for (const i of bind) {
+          if (!o[i]) continue;
           const { type } = get(o[i]) || {};
           const [dev, kind, index] = o[i].split("/");
           const { ip, type: deviceType, protocol } = get(dev);
@@ -1342,7 +1342,7 @@ const run = (action) => {
               device.send(Buffer.from([ACTION_DO, index, ON]), ip);
             }
           }
-        });
+        }
         break;
       }
       case ACTION_DISABLE: {
@@ -1375,8 +1375,8 @@ const run = (action) => {
         if (o.onOff) {
           run({ type: ACTION_SCRIPT_RUN, id: o.onOff });
         }
-        bind.forEach((i) => {
-          if (!o[i]) return;
+        for (const i of bind) {
+          if (!o[i]) continue;
           const { type } = get(o[i]) || {};
           const [dev, kind, index] = o[i].split("/");
           const { ip, type: deviceType, protocol } = get(dev);
@@ -1508,7 +1508,7 @@ const run = (action) => {
               device.send(Buffer.from([ACTION_DO, index, OFF]), ip);
             }
           }
-        });
+        }
         break;
       }
       case ACTION_DIM: {
@@ -1522,15 +1522,16 @@ const run = (action) => {
         const rgb = color.hsv.rgb(h, s, value / 2.55);
         const [r, g, b] = rgb;
         set(id, { last: o.bind ? { value } : { r, g, b }, value: !!value });
-        bind.forEach((i, c) => {
-          if (!o[i]) return;
-          const [dev, kind, index] = o[i].split("/");
+        for (let i = 0; i < bind.length; i++) {
+          const c = bind[i];
+          if (!o[c]) continue;
+          const [dev, kind, index] = o[c].split("/");
           const { ip, type: deviceType } = get(dev);
           let v;
           if (i === "bind") {
             v = value;
           } else {
-            v = rgb[c];
+            v = rgb[i];
           }
           switch (deviceType) {
             case DEVICE_TYPE_SERVER:
@@ -1588,7 +1589,7 @@ const run = (action) => {
               break;
             }
           }
-        });
+        }
         break;
       }
       case ACTION_DIM_RELATIVE: {
@@ -1626,12 +1627,13 @@ const run = (action) => {
         const rgb = color.hsv.rgb(h, s, v);
         const [r, g, b] = rgb || [0, 0, 0];
         set(id, { last: o.bind ? { v } : { r, g, b }, value: !!v });
-        bind.forEach((i, c) => {
-          if (!o[i]) return;
-          const [dev, kind, index] = o[i].split("/");
+        for (let i = 0; i < bind.length; i++) {
+          const c = bind[i];
+          if (!o[c]) continue;
+          const [dev, kind, index] = o[c].split("/");
           const { ip, type: deviceType } = get(dev);
           if (i !== "bind") {
-            v = rgb[c];
+            v = rgb[i];
           }
           switch (deviceType) {
             case DEVICE_TYPE_SERVER:
@@ -1689,39 +1691,51 @@ const run = (action) => {
               break;
             }
           }
-        });
+        }
         break;
       }
       case ACTION_SITE_LIGHT_DIM_RELATIVE: {
         const { id, operator, value } = action;
         applySite(id, ({ light_220 = [], light_LED = [], light_RGB = [] }) => {
-          light_220.forEach((i) =>
-            run({ type: ACTION_DIM_RELATIVE, id: i, operator, value })
-          );
-          light_LED.forEach((i) =>
-            run({ forEach: ACTION_DIM_RELATIVE, id: i, operator, value })
-          );
-          light_RGB.forEach((i) =>
-            run({ type: ACTION_DIM_RELATIVE, id: i, operator, value })
-          );
+          for (const i of light_220) {
+            run({ type: ACTION_DIM_RELATIVE, id: i, operator, value });
+          }
+          for (const i of light_LED) {
+            run({ type: ACTION_DIM_RELATIVE, id: i, operator, value });
+          }
+          for (const i of light_RGB) {
+            run({ type: ACTION_DIM_RELATIVE, id: i, operator, value });
+          }
         });
         break;
       }
       case ACTION_SITE_LIGHT_ON: {
         const { id } = action;
         applySite(id, ({ light_220 = [], light_LED = [], light_RGB = [] }) => {
-          light_220.forEach((i) => run({ type: ACTION_ON, id: i }));
-          light_LED.forEach((i) => run({ type: ACTION_ON, id: i }));
-          light_RGB.forEach((i) => run({ type: ACTION_ON, id: i }));
+          for (const i of light_220) {
+            run({ type: ACTION_ON, id: i });
+          }
+          for (const i of light_LED) {
+            run({ type: ACTION_ON, id: i });
+          }
+          for (const i of light_RGB) {
+            run({ type: ACTION_ON, id: i });
+          }
         });
         break;
       }
       case ACTION_SITE_LIGHT_OFF: {
         const { id } = action;
         applySite(id, ({ light_220 = [], light_LED = [], light_RGB = [] }) => {
-          light_220.forEach((i) => run({ type: ACTION_OFF, id: i }));
-          light_LED.forEach((i) => run({ type: ACTION_OFF, id: i }));
-          light_RGB.forEach((i) => run({ type: ACTION_OFF, id: i }));
+          for (const i of light_220) {
+            run({ type: ACTION_OFF, id: i });
+          }
+          for (const i of light_LED) {
+            run({ type: ACTION_OFF, id: i });
+          }
+          for (const i of light_RGB) {
+            run({ type: ACTION_OFF, id: i });
+          }
         });
         break;
       }
@@ -1752,7 +1766,9 @@ const run = (action) => {
         switch (type) {
           case SITE: {
             const { thermostat = [] } = get(id) || {};
-            thermostat.forEach(i => run({ type: ACTION_START_COOL, id: i }));
+            for (const i of thermostat) {
+              run({ type: ACTION_START_COOL, id: i });
+            }
             break;
           }
           case THERMOSTAT: {
@@ -1770,7 +1786,9 @@ const run = (action) => {
         switch (type) {
           case SITE: {
             const { thermostat = [] } = get(id) || {};
-            thermostat.forEach(i => run({ type: ACTION_STOP_COOL, id: i }));
+            for (const i of thermostat) {
+              run({ type: ACTION_STOP_COOL, id: i });
+            }
             break;
           }
           case THERMOSTAT: {
@@ -1788,7 +1806,9 @@ const run = (action) => {
         switch (type) {
           case SITE: {
             const { thermostat = [] } = get(id) || {};
-            thermostat.forEach(i => run({ type: ACTION_START_HEAT, id: i }));
+            for (const i of thermostat) {
+              run({ type: ACTION_START_HEAT, id: i });
+            }
             break;
           }
           case THERMOSTAT: {
@@ -1806,7 +1826,9 @@ const run = (action) => {
         switch (type) {
           case SITE: {
             const { thermostat = [] } = get(id) || {};
-            thermostat.forEach(i => run({ type: ACTION_STOP_HEAT, id: i }));
+            for (const i of thermostat) {
+              run({ type: ACTION_STOP_HEAT, id: i });
+            }
             break;
           }
           case THERMOSTAT: {
@@ -1824,7 +1846,9 @@ const run = (action) => {
         switch (type) {
           case SITE: {
             const { hygrostat = [] } = get(id) || {};
-            hygrostat.forEach(i => run({ type: ACTION_START_WET, id: i }));
+            for (const i of hygrostat) {
+              run({ type: ACTION_START_WET, id: i });
+            }
             break;
           }
           case HYGROSTAT: {
@@ -1842,7 +1866,9 @@ const run = (action) => {
         switch (type) {
           case SITE: {
             const { hygrostat = [] } = get(id) || {};
-            hygrostat.forEach(i => run({ type: ACTION_STOP_WET, id: i }));
+            for (const i of hygrostat) {
+              run({ type: ACTION_STOP_WET, id: i });
+            }
             break;
           }
           case HYGROSTAT: {
@@ -1860,8 +1886,10 @@ const run = (action) => {
         switch (type) {
           case SITE: {
             const { co2_stat = [] } = get(id) || {};
-            co2_stat.forEach(i => run({ type: ACTION_START_VENTILATION, id: i }));
-            co2_stat;
+            for (const i of co2_stat) {
+              run({ type: ACTION_START_VENTILATION, id: i });
+            }
+            break;
           }
           case CO2_STAT: {
             const { onStartVentilation } = get(id) || {};
@@ -1878,7 +1906,9 @@ const run = (action) => {
         switch (type) {
           case SITE: {
             const { co2_stat = [] } = get(id) || {};
-            co2_stat.forEach(i => run({ type: ACTION_STOP_VENTILATION, id: i }));
+            for (const i of co2_stat) {
+              run({ type: ACTION_STOP_VENTILATION, id: i });
+            }
             break;
           }
           case CO2_STAT: {
@@ -1899,7 +1929,9 @@ const run = (action) => {
           if (setpoint > 40) setpoint = 40;
           if (dev.type === SITE) {
             const { thermostat = [] } = dev
-            thermostat.forEach(t => set(t, { setpoint }));
+            for (const t of thermostat) {
+              set(t, { setpoint });
+            }
             set(id, { setpoint });
           } else if (dev.type === DRIVER_TYPE_INTESIS_BOX || dev.type === DRIVER_TYPE_MD_CCM18_AN_E || dev.type === DRIVER_TYPE_TIKA || dev.type === DRIVER_TYPE_NOVA || dev.type === DRIVER_TYPE_SWIFT || dev.type === DRIVER_TYPE_ALINK || dev.type === DRIVER_TYPE_COMFOVENT) {
             if (temperature) action.value = temperature;
@@ -1913,7 +1945,9 @@ const run = (action) => {
           if (setpoint > 90) setpoint = 90;
           if (dev.type === SITE) {
             const { hygrostat = [] } = dev;
-            hygrostat.forEach(t => set(t, { setpoint }));
+            for (const t of hygrostat) {
+              set(t, { setpoint });
+            }
           } else {
             set(id, { setpoint });
           }
@@ -1923,7 +1957,9 @@ const run = (action) => {
           if (setpoint > 1200) setpoint = 1200;
           if (dev.type === SITE) {
             const { co2_stat = [] } = dev;
-            co2_stat.forEach(t => set(t, { setpoint }));
+            for (const t of co2_stat) {
+              set(t, { setpoint });
+            }
           } else {
             set(id, { setpoint });
           }
@@ -1972,9 +2008,9 @@ const run = (action) => {
         if (cool >= 0) {
           if (dev.type === SITE) {
             const { thermostat = [] } = dev
-            thermostat.forEach(id => {
+            for (const id of thermostat) {
               run({ type: ACTION_INTENSITY, id, cool });
-            });
+            }
           } else {
             const { onCoolIntensity = [] } = get(id) || {};
             if (onCoolIntensity.length > 0) {
@@ -1991,9 +2027,9 @@ const run = (action) => {
         } else if (heat >= 0) {
           if (dev.type === SITE) {
             const { thermostat = [] } = dev
-            thermostat.forEach(id => {
+            for (const id of thermostat) {
               run({ type: ACTION_INTENSITY, id, heat });
-            });
+            }
           } else {
             const { onHeatIntensity = [] } = get(id) || {};
             if (onHeatIntensity.length > 0) {
@@ -2010,9 +2046,9 @@ const run = (action) => {
         } else if (ventilation >= 0) {
           if (dev.type === SITE) {
             const { co2_stat = [] } = dev
-            co2_stat.forEach(id => {
+            for (const id of co2_stat) {
               run({ type: ACTION_INTENSITY, id, ventilation });
-            });
+            }
           } else {
             const { onVentilationIntensity = [] } = get(id) || {};
             if (onVentilationIntensity.length > 0) {
@@ -2505,29 +2541,31 @@ const run = (action) => {
           }
           return buff;
         };
-        code.forEach((c) => setTimeout(() => {
-          switch (type) {
-            case DEVICE_TYPE_IR_4:
-            case DEVICE_TYPE_SMART_4A:
-            case DEVICE_TYPE_SMART_4AM:
-            case DEVICE_TYPE_SMART_4G:
-            case DEVICE_TYPE_SMART_4GD:
-            case DEVICE_TYPE_SMART_6_PUSH: {
-              const [major] = version.split(".");
-              device.sendRBUS(
-                major < 2 ? legacy(c) : Buffer.from([ACTION_IR, index, ...c]),
-                dev
-              );
-              break;
+        for (const c of code) {
+          setTimeout(() => {
+            switch (type) {
+              case DEVICE_TYPE_IR_4:
+              case DEVICE_TYPE_SMART_4A:
+              case DEVICE_TYPE_SMART_4AM:
+              case DEVICE_TYPE_SMART_4G:
+              case DEVICE_TYPE_SMART_4GD:
+              case DEVICE_TYPE_SMART_6_PUSH: {
+                const [major] = version.split(".");
+                device.sendRBUS(
+                  major < 2 ? legacy(c) : Buffer.from([ACTION_IR, index, ...c]),
+                  dev
+                );
+                break;
+              }
+              case DEVICE_TYPE_LANAMP: {
+                device.send(Buffer.from([ACTION_IR, index, ...c]), ip);
+                break;
+              }
+              default:
+                device.send(legacy(c), ip);
             }
-            case DEVICE_TYPE_LANAMP: {
-              device.send(Buffer.from([ACTION_IR, index, ...c]), ip);
-              break;
-            }
-            default:
-              device.send(legacy(c), ip);
-          }
-        }), 100);
+          }, 100);
+        }
         break;
       }
       case ACTION_LEAKAGE_RESET: {
@@ -2745,7 +2783,7 @@ const run = (action) => {
         const script = get(id);
         if (script && Array.isArray(script.action)) {
           if (script.disabled) return;
-          script.action.forEach((i) => {
+          for (const i of script.action) {
             const { type, payload, delay } = get(i);
             const a = { action: i, type, ...payload };
             if (delay > 0) {
@@ -2753,7 +2791,7 @@ const run = (action) => {
             } else {
               run(a);
             }
-          });
+          }
         }
         break;
       }
@@ -2913,10 +2951,10 @@ const run = (action) => {
           colors,
           segments.length
         ];
-        segments.forEach(({ direction, size }) => {
+        for (const { direction, size } of segments) {
           cmd.push(direction);
           cmd.push(size);
-        });
+        }
         const buff = Buffer.from(cmd);
         switch (dev.type) {
           case DEVICE_TYPE_DI_4_LA:

@@ -99,7 +99,9 @@ module.exports = class {
   query = (cmd) => {
     const buff = Buffer.alloc(1 + cmd.length);
     buff.writeUInt8(address & 0xff, 0);
-    cmd.forEach((b, i) => { buff.writeUInt8(b, i + 1) });
+    for (let i = 0; i < cmd.length; i++) {
+      buff.writeUInt8(cmd[i], i + 1);
+    }
     const req = Buffer.alloc(buff.length + 2, buff);
     req.writeUInt16LE(crc16(buff), buff.length);
     return req;

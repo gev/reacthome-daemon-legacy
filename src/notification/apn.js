@@ -1,4 +1,3 @@
-
 const apn = require('apn');
 const { get } = require('../actions');
 const mac = require('../mac');
@@ -39,9 +38,9 @@ module.exports.send = (token, message) => {
   provider
     .send(message, token)
     .then(({ failed = [] }) => {
-      failed.forEach(({ error, device }) => {
+      for (const { error, device } of failed) {
         if (!error) deleteToken(device);
-      });
+      }
     })
     .catch(console.error);
 };

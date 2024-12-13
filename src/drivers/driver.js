@@ -67,7 +67,7 @@ module.exports.manage = () => {
   dali_dlc.clear();
 
   if (!Array.isArray(driver)) return;
-  driver.forEach((id) => {
+  for (const id of driver) {
     const { type } = get(id) || {};
     switch (type) {
       case DRIVER_TYPE_RS21:
@@ -147,9 +147,8 @@ module.exports.manage = () => {
         instances.add(id, dauerhaft);
         dauerhaft.add(id);
         break;
-
     }
-  });
+  }
 };
 
 module.exports.run = (action) => {

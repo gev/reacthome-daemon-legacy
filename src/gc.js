@@ -13,7 +13,7 @@ const build = (id, pool, state, assets) => {
   const subject = pool[id];
   if (!subject) return;
   state[id] = subject;
-  Object.entries(subject).forEach(([k, v]) => {
+  for (const [k, v] of Object.entries(subject)) {
     if (isNumber(k)) {
       delete subject[k];
       db.put(id, JSON.stringify(subject));
@@ -67,27 +67,27 @@ const build = (id, pool, state, assets) => {
         }
       }
     }
-  });
+  }
 };
 
 module.exports.cleanup = (pool) => {
   const state = {};
   const assets = [];
   build(pool.mac, pool, state, assets);
-  Object.keys(pool).forEach(k => {
-    if (k === 'mac') return;
-    if (k === POOL) return;
+  for (const k of Object.keys(pool)) {
+    if (k === 'mac') continue;
+    if (k === POOL) continue;
     if (state[k] === undefined) {
       delete pool[k];
       db.del(k);
     }
-  });
-  readdirSync(ASSETS).forEach(i => {
+  }
+  for (const i of readdirSync(ASSETS)) {
     if (!assets.includes(i)) {
       const a = asset(i);
       if (existsSync(a)) {
         unlinkSync(a);
       }
     }
-  });
+  }
 };

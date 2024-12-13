@@ -1,4 +1,3 @@
-
 const { get, set } = require('../../actions');
 const { DALI_GROUP, DALI_LIGHT } = require('../../constants');
 const { writeRegisters, readWriteRegisters } = require('../modbus');
@@ -62,9 +61,10 @@ module.exports.handle = ({ id, data }) => {
   }
 }
 
-
 module.exports.clear = () => {
-  instance.forEach(i => clearTimeout(i))
+  for (const i of instance) {
+    clearTimeout(i);
+  }
   instance.clear();
 }
 

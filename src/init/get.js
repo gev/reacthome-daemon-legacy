@@ -1,16 +1,15 @@
-
 const { get } = require('../actions');
 const { send } = require('../websocket/peer');
 const { ACTION_SET, ACTION_ASSET } = require('../constants');
 const { asset, exists, readFile } = require('../fs');
 
 module.exports = ({ state = [], assets = [] }, session) => {
-  state.forEach(id => {
+  for (const id of state) {
     send(session, { type: ACTION_SET, id, payload: get(id) });
-  });
-  assets.forEach(async name => {
+  }
+  for (const name of assets) {
     try {
-      if (typeof name !== 'string') return;
+      if (typeof name !== 'string') continue;
       const file = asset(name);
       if (await exists(file)) {
         const data = await readFile(file);
@@ -20,5 +19,5 @@ module.exports = ({ state = [], assets = [] }, session) => {
     } catch (e) {
       console.error(e);
     }
-  })
+  }
 };
