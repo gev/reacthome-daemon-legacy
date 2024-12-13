@@ -34,23 +34,20 @@ const build = (id, pool, state, assets) => {
         switch (k) {
           case SITE:
           case SCRIPT: {
-            v.forEach(i => {
+            for (const i of v) {
               build(i, pool, state, assets);
-            });
+            }
             break;
           }
           case DEVICE: {
-            v.forEach(d => {
-              // if (typeof d === 'string') {
-              Object
-                .keys(pool)
-                .filter(i => i.startsWith(`${d}/`))
-                .forEach(i => {
-                  state[i] = pool[i];
-                });
+            for (const d of v) {
+              for (const i of d) {
+                if (i.startsWith(`${d}/`)) {
+                  state[i] = pool[i]
+                }
+              }
               state[d] = pool[d];
-              // }
-            });
+            }
             break;
           }
           default: {
@@ -59,12 +56,9 @@ const build = (id, pool, state, assets) => {
               case PROJECT:
               case SITE:
               case SCRIPT: {
-                v.forEach(i => {
-                  // if (typeof i === 'string') {
+                for (const i of v) {
                   build(i, pool, state, assets);
-                  //state[i] = pool[i];
-                  // }
-                });
+                }
                 break;
               }
             }
@@ -97,4 +91,3 @@ module.exports.cleanup = (pool) => {
     }
   });
 };
-

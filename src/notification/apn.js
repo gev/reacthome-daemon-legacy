@@ -2,7 +2,7 @@
 const apn = require('apn');
 const { get } = require('../actions');
 const mac = require('../mac');
-const {deleteToken} = require ('./token');
+const { deleteToken } = require('./token');
 const token = require('../../var/apn.json');
 
 provider = new apn.Provider({
@@ -16,7 +16,7 @@ const payload = (action) => ({
 });
 
 module.exports.notificationMessage = (action) => {
-  const {title, code} = get(mac());
+  const { title, code } = get(mac());
   return new apn.Notification({
     title: action.title || title || code,
     body: action.message,
@@ -38,8 +38,8 @@ module.exports.dataMessage = (action) => {
 module.exports.send = (token, message) => {
   provider
     .send(message, token)
-    .then(({failed = []}) => {
-      failed.forEach(({error, device}) => {
+    .then(({ failed = [] }) => {
+      failed.forEach(({ error, device }) => {
         if (!error) deleteToken(device);
       });
     })

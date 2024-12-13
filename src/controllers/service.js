@@ -1695,13 +1695,13 @@ const run = (action) => {
       case ACTION_SITE_LIGHT_DIM_RELATIVE: {
         const { id, operator, value } = action;
         applySite(id, ({ light_220 = [], light_LED = [], light_RGB = [] }) => {
-          light_220.map((i) =>
+          light_220.forEach((i) =>
             run({ type: ACTION_DIM_RELATIVE, id: i, operator, value })
           );
-          light_LED.map((i) =>
-            run({ type: ACTION_DIM_RELATIVE, id: i, operator, value })
+          light_LED.forEach((i) =>
+            run({ forEach: ACTION_DIM_RELATIVE, id: i, operator, value })
           );
-          light_RGB.map((i) =>
+          light_RGB.forEach((i) =>
             run({ type: ACTION_DIM_RELATIVE, id: i, operator, value })
           );
         });
@@ -1710,18 +1710,18 @@ const run = (action) => {
       case ACTION_SITE_LIGHT_ON: {
         const { id } = action;
         applySite(id, ({ light_220 = [], light_LED = [], light_RGB = [] }) => {
-          light_220.map((i) => run({ type: ACTION_ON, id: i }));
-          light_LED.map((i) => run({ type: ACTION_ON, id: i }));
-          light_RGB.map((i) => run({ type: ACTION_ON, id: i }));
+          light_220.forEach((i) => run({ type: ACTION_ON, id: i }));
+          light_LED.forEach((i) => run({ type: ACTION_ON, id: i }));
+          light_RGB.forEach((i) => run({ type: ACTION_ON, id: i }));
         });
         break;
       }
       case ACTION_SITE_LIGHT_OFF: {
         const { id } = action;
         applySite(id, ({ light_220 = [], light_LED = [], light_RGB = [] }) => {
-          light_220.map((i) => run({ type: ACTION_OFF, id: i }));
-          light_LED.map((i) => run({ type: ACTION_OFF, id: i }));
-          light_RGB.map((i) => run({ type: ACTION_OFF, id: i }));
+          light_220.forEach((i) => run({ type: ACTION_OFF, id: i }));
+          light_LED.forEach((i) => run({ type: ACTION_OFF, id: i }));
+          light_RGB.forEach((i) => run({ type: ACTION_OFF, id: i }));
         });
         break;
       }
