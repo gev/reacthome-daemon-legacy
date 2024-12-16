@@ -21,7 +21,7 @@ const device = socket((socket) => {
   data.writeUInt16BE(socket.address().port, 5);
   return () => {
     push(() => {
-      console.log("send discovery", data);
+      // console.log("send discovery", data);
       device.send(data, DEVICE_GROUP);
     });
   };
@@ -60,12 +60,12 @@ device.sendTOP = (data, id) => {
 
 let timeout;
 
-setInterval(() => {
-  const run = queue.shift();
-  if (run) {
-    run();
-  }
-}, 1)
+// setInterval(() => {
+//   const run = queue.shift();
+//   if (run) {
+//     run();
+//   }
+// }, 1)
 
 const push = (run) => {
   run()

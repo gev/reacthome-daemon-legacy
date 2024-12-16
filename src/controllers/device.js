@@ -138,7 +138,6 @@ module.exports.manage = () => {
   }
 
   const handleData = (data, { address }, { hub = null } = {}) => {
-    console.log('receive', data, address, hub);
     try {
       const dev_mac = Array.from(data.slice(0, 6));
       const id = dev_mac.map((i) => `0${i.toString(16)}`.slice(-2)).join(":");
@@ -147,6 +146,9 @@ module.exports.manage = () => {
         online(id, { ip: address, hub, type: dev.type });
       }
       const action = data[6];
+      if (action !== ACTION_DISCOVERY, cation !== ACTION_READY, action !== ACTION_RBUS_TRANSMIT) {
+        console.log('receive', data, address, hub);
+      }
       switch (action) {
         case DEVICE_TYPE_PLC: {
           for (let i = 1; i <= 36; i++) {
