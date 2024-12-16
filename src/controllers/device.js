@@ -146,7 +146,7 @@ module.exports.manage = () => {
         online(id, { ip: address, hub, type: dev.type });
       }
       const action = data[6];
-      if (action !== ACTION_DISCOVERY, cation !== ACTION_READY, action !== ACTION_RBUS_TRANSMIT) {
+      if (action !== ACTION_DISCOVERY, action !== ACTION_READY, action !== ACTION_RBUS_TRANSMIT) {
         console.log('receive', data, address, hub);
       }
       switch (action) {
