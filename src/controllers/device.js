@@ -146,9 +146,7 @@ module.exports.manage = () => {
         online(id, { ip: address, hub, type: dev.type });
       }
       const action = data[6];
-      if (action !== ACTION_DISCOVERY && action !== ACTION_READY && action !== ACTION_RBUS_TRANSMIT) {
-        console.log('receive', data, address, hub);
-      }
+      console.log('receive', data, address, hub);
       switch (action) {
         case DEVICE_TYPE_PLC: {
           for (let i = 1; i <= 36; i++) {
