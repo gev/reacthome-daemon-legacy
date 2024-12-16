@@ -37,7 +37,7 @@ device.sendRBUS = (data, id) => {
     if (dev) {
       if (dev.hub) {
         console.log(dev);
-        buff = Buffer.from([...header, dev.hub.port, dev.hub.address, ...data]);
+        buff = Buffer.from([...header, dev.port, dev.address, ...data]);
         console.log("send rbus via hub", buff);
       } else {
         buff = Buffer.from([...header, ...data]);
