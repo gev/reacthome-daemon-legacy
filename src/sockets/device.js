@@ -21,6 +21,7 @@ const device = socket((socket) => {
   data.writeUInt16BE(socket.address().port, 5);
   return () => {
     push(() => {
+      console.log("send discovery", data);
       device.send(data, DEVICE_GROUP);
     });
   };
@@ -32,12 +33,16 @@ device.sendRBUS = (data, id) => {
     const mac = id.split(":").map((i) => parseInt(i, 16));
     const header = [ACTION_RBUS_TRANSMIT, ...mac];
     const dev = get(id);
+    let buf;
     if (dev) {
       if (dev.hub) {
-        device.send(Buffer.from([...header, dev.port, dev.address, ...data]), dev.ip);
+        buff = Buffer.from([...header, dev.hub.port, dev.hub.address, ...data]);
+        console.log("send rbus via hub", buff);
       } else {
-        device.send(Buffer.from([...header, ...data]), dev.ip);
+        buff = Buffer.from([...header, ...data]);
+        console.log("send rbus", buff);
       }
+      device.send(buff, dev.ip);
     }
   });
 }
@@ -47,6 +52,7 @@ device.sendTOP = (data, id) => {
   push(() => {
     const { bottom } = get(id) || {};
     if (bottom) {
+      console.log("send top", data);
       device.sendRBUS([ACTION_SMART_TOP, ...data], bottom);
     }
   });
