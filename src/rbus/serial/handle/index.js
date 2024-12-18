@@ -84,7 +84,7 @@ module.exports.handle = (rbus) => {
   }
 
   return (data) => {
-    // console.log("UART receive", data)
+    console.log("UART receive", data)
     for (let i = 0; i < data.length; i++) {
       process(data[i])
     }
