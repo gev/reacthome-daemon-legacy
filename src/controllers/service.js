@@ -1329,7 +1329,7 @@ const run = (action) => {
                 id: dev,
                 kind,
                 index,
-                value: 255,
+                value,
               });
               break;
             }
