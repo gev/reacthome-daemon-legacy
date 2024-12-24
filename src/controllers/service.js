@@ -1632,8 +1632,8 @@ const run = (action) => {
           if (!o[c]) continue;
           const [dev, kind, index] = o[c].split("/");
           const { ip, type: deviceType } = get(dev);
-          if (i !== "bind") {
-            v = rgb[i];
+          if (c !== "bind") {
+            v = rgb[c];
           }
           switch (deviceType) {
             case DEVICE_TYPE_SERVER:
