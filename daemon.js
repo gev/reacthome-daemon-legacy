@@ -29,16 +29,16 @@ const start = (id) => {
   if (project) {
     count(project);
     const { timer = [], schedule = [], shell = [] } = get(project) || {};
-    schedule.forEach((id) => {
+    for (const id of schedule) {
       const { script, state, schedule } = get(id) || {};
       if (state && schedule && script) {
         service.run({ id, type: ACTION_SCHEDULE_START, schedule, script });
       }
-    });
-    shell.forEach((id) => {
+    }
+    for (const id of shell) {
       service.run({ id, type: ACTION_SHELL_STOP });
-    })
-    timer.forEach((id) => {
+    }
+    for (const id of timer) {
       const { script, state, time = 0, timestamp = 0 } = get(id) || {};
       if (state && script) {
         let dt = Date.now() - timestamp;
@@ -49,7 +49,7 @@ const start = (id) => {
           service.run({ id, type: ACTION_TIMER_START, time: dt, script });
         }
       }
-    });
+    }
     const { onStart } = get(project) || {};
     if (onStart) {
       setTimeout(() => {
@@ -73,7 +73,7 @@ const load = async () => {
     set(init.mac, d);
   }
   // cleanup(init);
-  await assets.init();
+  assets.init();
   state.init(init);
   weather.manage();
   device.manage();

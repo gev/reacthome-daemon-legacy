@@ -190,7 +190,9 @@ module.exports.handle = ({ id, data }) => {
 
 
 module.exports.clear = () => {
-  timers.forEach(i => clearTimeout(i));
+  for (const i of timers.values()) {
+    clearTimeout(i);
+  }
   timers.clear();
   queues.clear();
 }

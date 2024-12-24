@@ -77,7 +77,9 @@ const applySite = (id, action) => {
   if (!o) return;
   action(o);
   if (!o.site || o.site.length === 0) return;
-  o.site.forEach((i) => applySite(i, action));
+  for (const i of o.site) {
+    applySite(i, action);
+  }
 };
 
 module.exports.applySite = applySite;

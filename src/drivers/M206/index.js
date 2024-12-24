@@ -64,9 +64,9 @@ module.exports = class {
   }
 
   request = () => {
-    cmd.forEach((c, i) => {
-      setTimeout(this.send, i * delay, c);
-    });
+    for (let i = 0; i < cmd.length; i++) {
+      setTimeout(this.send, i * delay, cmd[i]);
+    }
   };
 
   send = (cmd) => {

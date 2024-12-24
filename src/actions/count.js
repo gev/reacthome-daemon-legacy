@@ -1,4 +1,3 @@
-
 const { get, set } = require('./create');
 
 const count_on = (site, type, id) => {
@@ -40,22 +39,26 @@ const bind = ['bind', 'r', 'g', 'b'];
 const count = (site, pool = []) => {
   const o = get(site) || {};
   o.count = {};
-  Object.entries(o).forEach(([type, a]) => {
+  for (const [type, a] of Object.entries(o)) {
     if (Array.isArray(a)) {
-      a.forEach(id => {
+      for (const id of a) {
         const o = get(id) || {};
-        bind.forEach(i => {
+        for (const i of bind) {
           if (o[i]) {
             const { value } = get(o[i]) || {};
             if (value) {
               count_on(site, type, id);
             }
           }
-        })
-      });
+        }
+      }
     }
-    if (Array.isArray(o.site)) o.site.forEach(i => count(i, pool));
-  });
+    if (Array.isArray(o.site)) {
+      for (const i of o.site) {
+        count(i, pool);
+      }
+    }
+  }
 }
 
 module.exports.count = count;

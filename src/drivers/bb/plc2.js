@@ -1,4 +1,3 @@
-
 const { get, set, count_on, count_off } = require('../../actions');
 const service = require('../../controllers/service');
 const mac = require('../../mac');
@@ -132,14 +131,15 @@ module.exports = class {
     });
     this.timer = setInterval(() => {
       this.master.readHoldingRegisters(0, 83);
-      setpoint.forEach((id, i) => {
+      for (let i = 0; i < setpoint.length; i++) {
+        const id = setpoint[i];
         const { value, thermostat } = get(this.channel(id)) || {};
         if (thermostat) {
           const { setpoint } = get(thermostat);
           if (setpoint === value) return;
           this.master.writeSingleOutputRegister(i + 68, setpoint * 100);
         }
-      });
+      }
       const { project } = get(mac()) || {};
       const { weather: { main: { temp } = {} } = {} } = get(project) || {};
       if (temp !== undefined) {
@@ -199,7 +199,7 @@ module.exports = class {
 
   masterHandle({ cmd, data }) {
     let offset = 0;
-    param.forEach(id => {
+    for (const id of param) {
       if (id)
         switch (id) {
           case "voltage_phase_a":
@@ -324,7 +324,7 @@ module.exports = class {
           }
         }
       else offset += 2;
-    });
+    }
   }
 
 }
