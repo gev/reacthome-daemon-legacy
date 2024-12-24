@@ -1528,7 +1528,7 @@ const run = (action) => {
           const [dev, kind, index] = o[c].split("/");
           const { ip, type: deviceType } = get(dev);
           let v;
-          if (i === "bind") {
+          if (c === "bind") {
             v = value;
           } else {
             v = rgb[i];
