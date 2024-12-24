@@ -12,9 +12,6 @@ const sync = async (id, kind, modbus, address, r, n) => {
     if (!synced) {
       writeRegister(modbus, address, r + i * 5, value > 254 ? 254 : value);
       set(ch, { synced: true });
-      if (value > 0) {
-        set(ch, { last: { value } })
-      }
       await delay(50);
     }
   }
