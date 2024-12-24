@@ -1209,7 +1209,7 @@ const run = (action) => {
           const { type } = get(o[i]) || {};
           const [dev, kind, index] = o[i].split("/");
           const { ip, type: deviceType, protocol } = get(dev);
-          const value = isOn ? (i === "bind" ? last.value : last[i]) : 255;
+          const value = isOn ? (i === "bind" ? last.value || 255 : last[i]) : 255;
           switch (deviceType) {
             case DEVICE_TYPE_SERVER:
             case DEVICE_TYPE_RS_HUB4:
