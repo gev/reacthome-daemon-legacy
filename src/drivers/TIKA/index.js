@@ -75,7 +75,7 @@ module.exports.handle = (action) => {
   switch (data[0]) {
     case READ_COILS: {
       const value = !!data.readUInt8(2);
-      console.log({ value });
+      // console.log({ value });
       set(`${id}/ac/${index}`, { value });
       break;
     }
