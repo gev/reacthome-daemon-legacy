@@ -39,6 +39,7 @@ const {
   DEVICE_TYPE_DIM_12_LED_RS,
   DEVICE_TYPE_DIM_12_AC_RS,
   DEVICE_TYPE_DIM_12_DC_RS,
+  DEVICE_TYPE_DIM_1_AC_RS,
   DEVICE_TYPE_RELAY_12_RS,
   DEVICE_TYPE_DIM_8_RS,
   DEVICE_TYPE_RS_HUB1_RS,
@@ -624,6 +625,16 @@ module.exports.initialize = (id) => {
         a[2 * i] = (channel && channel.value) || 0;
       }
       device.send(Buffer.from(a), dev.ip);
+      break;
+    }
+    case DEVICE_TYPE_DIM_1_AC_RS: {
+      const mac = id.split(":").map((i) => parseInt(i, 16));
+      a[0] = ACTION_INITIALIZE;
+      const channel = get(`${id}/${DIM}/${1}`);
+      a[1] = (channel && channel.group) || 1;
+      a[2] = (channel && channel.type)  || 0;
+      a[3] = (channel && channel.value) || 0;
+      device.sendRBUS(Buffer.from(a), id);
       break;
     }
     case DEVICE_TYPE_DIM_4: {
