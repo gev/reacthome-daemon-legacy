@@ -630,7 +630,7 @@ module.exports.initialize = (id) => {
     case DEVICE_TYPE_DIM_1_AC_RS: {
       const mac = id.split(":").map((i) => parseInt(i, 16));
       a[0] = ACTION_INITIALIZE;
-      const channel = get(`${id}/${DIM}/${1}`);
+      const channel = get(`${id}/${DIM}/1`);
       a[1] = (channel && channel.group) || 1;
       a[2] = (channel && channel.type)  || 0;
       a[3] = (channel && channel.value) || 0;
