@@ -147,7 +147,7 @@ module.exports.manage = () => {
       }
       const action = data[6];
       if (hub && action !== ACTION_DISCOVERY && action !== ACTION_READY) {
-        console.log('receive', data, address, hub);
+        // console.log('receive', data, address, hub);
       }
       switch (action) {
         case DEVICE_TYPE_PLC: {
