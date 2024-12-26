@@ -40,7 +40,7 @@ device.sendRBUS = (data, id) => {
         // console.log("send rbus via hub", buff);
       } else {
         buff = Buffer.from([...header, ...data]);
-        // console.log("send rbus", buff);
+        console.log("send rbus", buff);
       }
       device.send(buff, dev.ip);
     }
