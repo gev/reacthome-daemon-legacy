@@ -12,7 +12,6 @@ const createPort = (rbus, path) => {
   port.on('data', handle(rbus));
   const send = (data) => {
     const buff = Buffer.from(data);
-    console.log("UART send", buff)
     port.write(buff)
   }
   rbus.port = {
