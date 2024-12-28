@@ -37,6 +37,7 @@ device.sendRBUS = (data, id) => {
     if (dev) {
       if (dev.hub) {
         buff = Buffer.from([...header, dev.port, dev.address, ...data]);
+        // console.log("send rbus via hub", buff);
       } else {
         buff = Buffer.from([...header, ...data]);
       }
@@ -50,6 +51,7 @@ device.sendTOP = (data, id) => {
   push(() => {
     const { bottom } = get(id) || {};
     if (bottom) {
+      // console.log("send top", data);
       device.sendRBUS([ACTION_SMART_TOP, ...data], bottom);
     }
   });

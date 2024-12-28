@@ -333,7 +333,8 @@ module.exports.DEVICE_TYPE_RS_HUB4_LEGACY = 0xb2;
 
 module.exports.DEVICE_TYPE_DIM_12_AC_RS = 0xb3;
 module.exports.DEVICE_TYPE_DIM_12_DC_RS = 0xb4;
-module.exports.DEVICE_TYPE_MIX_6x12_RS = 0xb5;
+module.exports.DEVICE_TYPE_MIX_6x12_RS  = 0xb5;
+module.exports.DEVICE_TYPE_DIM_1_AC_RS  = 0xb6;
 
 module.exports.DEVICE_TYPE_SERVER = 0xc0;
 module.exports.DEVICE_TYPE_RS_HUB4 = 0xc1;
