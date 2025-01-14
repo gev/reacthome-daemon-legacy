@@ -190,7 +190,7 @@ const {
   ACTION_INTENSITY,
   VENTILATION,
   DRIVER_TYPE_MD_CCM18_AN_E,
-  DRIVER_TYPE_TIKA,
+  DRIVER_TYPE_TICA,
   ACTION_ALED_ON,
   ACTION_ALED_BRIGHTNESS,
   ACTION_ALED_OFF,
@@ -664,9 +664,9 @@ const run = (action) => {
           case DEVICE_TYPE_AO_4_DIN: {
             const velocity =
               dev.type === DEVICE_TYPE_DIM_12_LED_RS ||
-              dev.type === DEVICE_TYPE_DIM_12_AC_RS ||
-              dev.type === DEVICE_TYPE_DIM_12_DC_RS ||
-              dev.type === DEVICE_TYPE_DIM_1_AC_RS ||
+                dev.type === DEVICE_TYPE_DIM_12_AC_RS ||
+                dev.type === DEVICE_TYPE_DIM_12_DC_RS ||
+                dev.type === DEVICE_TYPE_DIM_1_AC_RS ||
                 dev.type === DEVICE_TYPE_DIM_8_RS
                 ? DIM_VELOCITY
                 : AO_VELOCITY;
@@ -1195,7 +1195,7 @@ const run = (action) => {
         const { id } = action;
         const o = get(id) || {};
         if (o.disabled) return;
-        if (o.type === DRIVER_TYPE_INTESIS_BOX || o.type === DRIVER_TYPE_MD_CCM18_AN_E || o.type === DRIVER_TYPE_TIKA || o.type === DRIVER_TYPE_NOVA || o.type === DRIVER_TYPE_SWIFT || o.type === DRIVER_TYPE_ALINK || o.type === DRIVER_TYPE_COMFOVENT) {
+        if (o.type === DRIVER_TYPE_INTESIS_BOX || o.type === DRIVER_TYPE_MD_CCM18_AN_E || o.type === DRIVER_TYPE_TICA || o.type === DRIVER_TYPE_NOVA || o.type === DRIVER_TYPE_SWIFT || o.type === DRIVER_TYPE_ALINK || o.type === DRIVER_TYPE_COMFOVENT) {
           drivers.run(action);
           return;
         }
@@ -1369,7 +1369,7 @@ const run = (action) => {
         const { id } = action;
         const o = get(id) || {};
         if (o.disabled) return;
-        if (o.type === DRIVER_TYPE_INTESIS_BOX || o.type === DRIVER_TYPE_MD_CCM18_AN_E || o.type === DRIVER_TYPE_TIKA || o.type === DRIVER_TYPE_NOVA || o.type === DRIVER_TYPE_SWIFT || o.type === DRIVER_TYPE_ALINK || o.type === DRIVER_TYPE_COMFOVENT) {
+        if (o.type === DRIVER_TYPE_INTESIS_BOX || o.type === DRIVER_TYPE_MD_CCM18_AN_E || o.type === DRIVER_TYPE_TICA || o.type === DRIVER_TYPE_NOVA || o.type === DRIVER_TYPE_SWIFT || o.type === DRIVER_TYPE_ALINK || o.type === DRIVER_TYPE_COMFOVENT) {
           drivers.run(action);
           return;
         }
@@ -1944,7 +1944,7 @@ const run = (action) => {
               set(t, { setpoint });
             }
             set(id, { setpoint });
-          } else if (dev.type === DRIVER_TYPE_INTESIS_BOX || dev.type === DRIVER_TYPE_MD_CCM18_AN_E || dev.type === DRIVER_TYPE_TIKA || dev.type === DRIVER_TYPE_NOVA || dev.type === DRIVER_TYPE_SWIFT || dev.type === DRIVER_TYPE_ALINK || dev.type === DRIVER_TYPE_COMFOVENT) {
+          } else if (dev.type === DRIVER_TYPE_INTESIS_BOX || dev.type === DRIVER_TYPE_MD_CCM18_AN_E || dev.type === DRIVER_TYPE_TICA || dev.type === DRIVER_TYPE_NOVA || dev.type === DRIVER_TYPE_SWIFT || dev.type === DRIVER_TYPE_ALINK || dev.type === DRIVER_TYPE_COMFOVENT) {
             if (temperature) action.value = temperature;
             drivers.run(action);
           } else {
