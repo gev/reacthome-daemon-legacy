@@ -333,8 +333,8 @@ module.exports.DEVICE_TYPE_RS_HUB4_LEGACY = 0xb2;
 
 module.exports.DEVICE_TYPE_DIM_12_AC_RS = 0xb3;
 module.exports.DEVICE_TYPE_DIM_12_DC_RS = 0xb4;
-module.exports.DEVICE_TYPE_MIX_6x12_RS  = 0xb5;
-module.exports.DEVICE_TYPE_DIM_1_AC_RS  = 0xb6;
+module.exports.DEVICE_TYPE_MIX_6x12_RS = 0xb5;
+module.exports.DEVICE_TYPE_DIM_1_AC_RS = 0xb6;
 
 module.exports.DEVICE_TYPE_SERVER = 0xc0;
 module.exports.DEVICE_TYPE_RS_HUB4 = 0xc1;
@@ -404,7 +404,7 @@ module.exports.DRIVER_TYPE_COMFOVENT = "COMFOVENT";
 module.exports.DRIVER_TYPE_VARMANN = "VARMANN";
 module.exports.DRIVER_TYPE_INTESIS_BOX = "INTESIS_BOX";
 module.exports.DRIVER_TYPE_MD_CCM18_AN_E = 'MD_CCM18_AN_E';
-module.exports.DRIVER_TYPE_TIKA = 'TIKA';
+module.exports.DRIVER_TYPE_TICA = 'TICA';
 module.exports.DRIVER_TYPE_RTD_RA = "RT_DA";
 module.exports.DRIVER_TYPE_ALINK = "ALINK";
 module.exports.DRIVER_TYPE_ME210_701 = "ME210_710";
