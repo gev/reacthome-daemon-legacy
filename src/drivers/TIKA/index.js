@@ -19,8 +19,8 @@ const sync = async (id, modbus, address, n) => {
       writeRegister(modbus, address, 0x1000 + i * 6, mode);
       await delay(300);
       writeRegister(modbus, address, 0x1001 + i * 6, setpoint);
-      await delay(300);
-      writeRegister(modbus, address, 0x1002 + i * 6, fan_speed);
+      // await delay(300);
+      // writeRegister(modbus, address, 0x1002 + i * 6, fan_speed);
       set(ch, { synced: true });
     } else {
       index = i + 1;
