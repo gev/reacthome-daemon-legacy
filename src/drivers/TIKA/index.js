@@ -24,10 +24,11 @@ const sync = async (id, modbus, address, n) => {
       await delay(500);
       set(ch, { synced: true });
     } else {
-      index = i + 1;
       readCoils(modbus, address, i, 1);
-      await delay(500);
+      await delay(1000);
+      index = i + 1;
       readHoldingRegisters(modbus, address, 0x1000 + i * 6, 3);
+      await delay(1000);
     }
   }
 };
