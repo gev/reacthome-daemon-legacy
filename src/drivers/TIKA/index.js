@@ -15,20 +15,22 @@ const sync = async (id, modbus, address, n) => {
     const { synced, value, mode, fan_speed, setpoint } = get(ch) || {};
     if (!synced) {
       writeCoil(modbus, address, i, value ? 1 : 0);
-      await delay(1000);
-      writeRegister(modbus, address, 0x1000 + i * 6, mode);
-      await delay(1000);
-      writeRegister(modbus, address, 0x1001 + i * 6, setpoint);
-      await delay(1000);
-      writeRegister(modbus, address, 0x1002 + i * 6, fan_speed);
-      await delay(1000);
+      await delay(2000);
+      writeRegisters(modbus, address, 0x1000 + i * 6, [mode, setpoint, fan_speed]);
+      await delay(2000);
+      // writeRegister(modbus, address, 0x1000 + i * 6, mode);
+      // await delay(2000);
+      // writeRegister(modbus, address, 0x1001 + i * 6, setpoint);
+      // await delay(2000);
+      // writeRegister(modbus, address, 0x1002 + i * 6, fan_speed);
+      // await delay(2000);
       set(ch, { synced: true });
     } else {
       readCoils(modbus, address, i, 1);
-      await delay(1000);
+      await delay(100);
       index = i + 1;
       readHoldingRegisters(modbus, address, 0x1000 + i * 6, 3);
-      await delay(1000);
+      await delay(100);
     }
   }
 };
