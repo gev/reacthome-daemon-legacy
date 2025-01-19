@@ -101,6 +101,7 @@ const {
   DEVICE_TYPE_SMART_TOP_G4,
   DEVICE_TYPE_SMART_TOP_G2,
   DEVICE_TYPE_SMART_TOP_A4P,
+  DEVICE_TYPE_SMART_TOP_A4TD,
 } = require("../constants");
 const {
   get,
@@ -268,7 +269,8 @@ module.exports.manage = () => {
             type === DEVICE_TYPE_SMART_TOP_G6 ||
             type === DEVICE_TYPE_SMART_TOP_G4 ||
             type === DEVICE_TYPE_SMART_TOP_G2 ||
-            type === DEVICE_TYPE_SMART_TOP_A4P
+            type === DEVICE_TYPE_SMART_TOP_A4P ||
+            type === DEVICE_TYPE_SMART_TOP_A4TD
           ) {
             set(id, { state: data[7] })
             return;
@@ -382,7 +384,8 @@ module.exports.manage = () => {
               set(id, { top: top_id, topDetected: true });
               online(top_id, { type, bottom: id, version: `${data[15]}.${data[16]}`, ip: address, ready: true });
               switch (type) {
-                case DEVICE_TYPE_SMART_TOP_G4D: {
+                case DEVICE_TYPE_SMART_TOP_G4D:
+                case DEVICE_TYPE_SMART_TOP_A4TD: {
                   const ts = timestamp[top_id] || 0;
                   const { timeout = 0, mode, defaultMode } = get(top_id) || {};
                   if (Date.now() - ts > (timeout || 10_000)) {
@@ -479,7 +482,8 @@ module.exports.manage = () => {
             case DEVICE_TYPE_SMART_TOP_G6:
             case DEVICE_TYPE_SMART_TOP_G4:
             case DEVICE_TYPE_SMART_TOP_G2:
-            case DEVICE_TYPE_SMART_TOP_A4P: {
+            case DEVICE_TYPE_SMART_TOP_A4P:
+            case DEVICE_TYPE_SMART_TOP_A4TD: {
               set(id, { brightness: data[7] });
               break;
             }
@@ -533,7 +537,8 @@ module.exports.manage = () => {
             case DEVICE_TYPE_SMART_TOP_G6:
             case DEVICE_TYPE_SMART_TOP_G4:
             case DEVICE_TYPE_SMART_TOP_G2:
-            case DEVICE_TYPE_SMART_TOP_A4P: {
+            case DEVICE_TYPE_SMART_TOP_A4P:
+            case DEVICE_TYPE_SMART_TOP_A4TD: {
               let [, , , , , , , palette, index] = data;
               if (index === 0) {
                 index = 1;
@@ -575,7 +580,8 @@ module.exports.manage = () => {
             case DEVICE_TYPE_SMART_TOP_G6:
             case DEVICE_TYPE_SMART_TOP_G4:
             case DEVICE_TYPE_SMART_TOP_G2:
-            case DEVICE_TYPE_SMART_TOP_A4P: {
+            case DEVICE_TYPE_SMART_TOP_A4P:
+            case DEVICE_TYPE_SMART_TOP_A4TD: {
               const image = Array.from(data.slice(7, 15))
               set(id, { image });
               break;
@@ -598,7 +604,8 @@ module.exports.manage = () => {
             case DEVICE_TYPE_SMART_TOP_G6:
             case DEVICE_TYPE_SMART_TOP_G4:
             case DEVICE_TYPE_SMART_TOP_G2:
-            case DEVICE_TYPE_SMART_TOP_A4P: {
+            case DEVICE_TYPE_SMART_TOP_A4P:
+            case DEVICE_TYPE_SMART_TOP_A4TD: {
               const blink = Array.from(data.slice(7, 15))
               set(id, { blink });
               break;
@@ -1051,7 +1058,8 @@ const handleDefaultOff = handleDefault('onOff', 'onOffCount');
 const handle = (handleSmartTop, handleDefault) => (id, index, chan) => {
   const dev = get(id) || {};
   switch (dev.type) {
-    case DEVICE_TYPE_SMART_TOP_G4D: {
+    case DEVICE_TYPE_SMART_TOP_G4D:
+    case DEVICE_TYPE_SMART_TOP_A4TD: {
       const { mode = 0, modes = [] } = dev;
       if (modes.length > 0) {
         const cid = modes[mode % modes.length];
@@ -1591,7 +1599,7 @@ const handleOff = handle(handleSmartTop, handleDefaultOff);
 
 
 const renderSmartTop = (id) => {
-
+  return;
   timestamp[id] = Date.now();
 
   const dev = get(id) || {};

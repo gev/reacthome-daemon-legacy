@@ -50,8 +50,6 @@ const {
   DEVICE_TYPE_SMART_4AM,
   DEVICE_TYPE_SMART_6_PUSH,
   DEVICE_TYPE_MIX_6x12_RS,
-  DEVICE_TYPE_SMART_TOP_A6P,
-  DEVICE_TYPE_SMART_TOP_G4D,
   DEVICE_TYPE_DI_4_RSM,
   DEVICE_TYPE_SMART_BOTTOM_1,
   DEVICE_TYPE_SMART_BOTTOM_2,
@@ -148,44 +146,6 @@ module.exports.initialize = (id) => {
       device.sendRBUS(Buffer.from(a), id);
       break;
     }
-    // case DEVICE_TYPE_SMART_TOP_A6P: {
-    //   const mac = id.split(":").map((i) => parseInt(i, 16));
-    //   const { state = 1, brightness = 128, image = [], blink = [], vibro = 0 } = get(id);
-    //   a[0] = ACTION_INITIALIZE;
-    //   a[1] = vibro;
-    //   a[2] = state;
-    //   a[3] = brightness;
-    //   a[4] = image[1] || 0b111111;
-    //   a[5] = blink[1] || 0;
-    //   for (let i = 1; i <= 6; i++) {
-    //     const channel = get(`${id}/rgb/${i}`);
-    //     a[3 * i + 3] = (channel && channel.r) || 0;
-    //     a[3 * i + 4] = (channel && channel.g) || 0;
-    //     a[3 * i + 5] = (channel && channel.b) || 0;
-    //   }
-    //   device.sendTOP(Buffer.from(a), id);
-    //   break;
-    // }
-    // case DEVICE_TYPE_SMART_TOP_G4D: {
-    //   const mac = id.split(":").map((i) => parseInt(i, 16));
-    //   const { state = 1, brightness = 128, image = [], blink = [], vibro = 100 } = get(id);
-    //   a[0] = ACTION_INITIALIZE;
-    //   a[1] = vibro;
-    //   a[2] = state;
-    //   a[3] = brightness;
-    //   for (let i = 0; i < 8; i++) {
-    //     a[i + 4] = image[i] || 0;
-    //     a[i + 12] = blink[i] || 0;
-    //   }
-    //   for (let i = 1; i <= 64; i++) {
-    //     const channel = get(`${id}/rgb/${i}`);
-    //     a[3 * i + 17] = (channel && channel.r) || 0;
-    //     a[3 * i + 18] = (channel && channel.g) || 0;
-    //     a[3 * i + 19] = (channel && channel.b) || 0;
-    //   }
-    //   device.sendTOP(Buffer.from(a), id);
-    //   break;
-    // }
     case DEVICE_TYPE_DI24: {
       for (let i = 1; i <= 24; i++) {
         const channel = get(`${id}/${DI}/${i}`);
@@ -632,7 +592,7 @@ module.exports.initialize = (id) => {
       a[0] = ACTION_INITIALIZE;
       const channel = get(`${id}/${DIM}/1`);
       a[1] = (channel && channel.group) || 1;
-      a[2] = (channel && channel.type)  || 0;
+      a[2] = (channel && channel.type) || 0;
       a[3] = (channel && channel.value) || 0;
       device.sendRBUS(Buffer.from(a), id);
       break;

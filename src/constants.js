@@ -309,6 +309,7 @@ module.exports.DEVICE_TYPE_SMART_TOP_G6 = 0x34;
 module.exports.DEVICE_TYPE_SMART_TOP_G4 = 0x35;
 module.exports.DEVICE_TYPE_SMART_TOP_G2 = 0x36;
 module.exports.DEVICE_TYPE_SMART_TOP_A4P = 0x37
+module.exports.DEVICE_TYPE_SMART_TOP_A4TD = 0x38
 
 module.exports.DEVICE_TYPE_SMART_BOTTOM_1 = 0x3a;
 module.exports.DEVICE_TYPE_SMART_BOTTOM_2 = 0x3b;

@@ -21,6 +21,7 @@ const {
   DEVICE_TYPE_SMART_TOP_G2,
   DEVICE_TYPE_SMART_TOP_A4P,
   DEVICE_TYPE_DI_4_LA,
+  DEVICE_TYPE_SMART_TOP_A4TD,
 } = require("../constants");
 const { device } = require("../sockets");
 
@@ -61,7 +62,8 @@ const online = (id, props) => {
       case DEVICE_TYPE_SMART_TOP_G6:
       case DEVICE_TYPE_SMART_TOP_G4:
       case DEVICE_TYPE_SMART_TOP_G2:
-      case DEVICE_TYPE_SMART_TOP_A4P: {
+      case DEVICE_TYPE_SMART_TOP_A4P:
+      case DEVICE_TYPE_SMART_TOP_A4TD: {
         device.sendTOP(
           Buffer.from([
             ACTION_GET_STATE,
