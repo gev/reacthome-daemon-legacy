@@ -1243,9 +1243,9 @@ const run = (action) => {
               if (i === 1)
                 if (c === ".") {
                   c = value[--j] || " ";
-                  setBit(60, 1);
+                  setBit(58, 1);
                 } else {
-                  setBit(60, 0);
+                  setBit(58, 0);
                 }
               const mask = dict[c] || 0;
               const offset = offsets[i];
@@ -1267,22 +1267,22 @@ const run = (action) => {
               case 0:
                 setBit(6, 0);
                 setBit(7, 0);
-                setBit(9, 0);
+                setBit(8, 0);
                 break;
               case 1:
                 setBit(6, 0);
                 setBit(7, 0);
-                setBit(9, 1);
+                setBit(8, 1);
                 break;
               case 2:
                 setBit(6, 0);
                 setBit(7, 1);
-                setBit(9, 1);
+                setBit(8, 1);
                 break;
               default:
                 setBit(6, 1);
                 setBit(7, 1);
-                setBit(9, 1);
+                setBit(8, 1);
             }
             run({ type: ACTION_IMAGE, id, value: image })
             break;
