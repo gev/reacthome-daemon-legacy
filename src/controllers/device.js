@@ -1627,19 +1627,12 @@ const renderSmartTop = (id) => {
       break;
     }
     case DEVICE_TYPE_SMART_TOP_A4TD: {
-      image[0] &= 0b0011_1111;
-      image[1] &= 0b1111_0000;
-      blink[0] &= 0b0011_1111;
-      blink[1] &= 0b1111_0000;
-      if (current.indicator > 0 && current.indicator <= 2) {
-        image[0] |= 1 << (current.indicator + 5);
+      image[1] &= 0b0000_0011;
+      blink[1] &= 0b0000_0011;
+      if (current.indicator > 0 && current.indicator <= 6) {
+        image[0] |= 1 << (current.indicator + 1);
         if (configuring) {
-          blink[0] |= 1 << (current.indicator + 5);
-        }
-      } else if (current.indicator <= 6) {
-        image[1] |= 1 << (current.indicator - 5);
-        if (configuring) {
-          blink[1] |= 1 << (current.indicator - 5);
+          blink[0] |= 1 << (current.indicator + 1);
         }
       }
       break;
