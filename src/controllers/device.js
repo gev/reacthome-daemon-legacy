@@ -1599,7 +1599,6 @@ const handleOff = handle(handleSmartTop, handleDefaultOff);
 
 
 const renderSmartTop = (id) => {
-  return;
   timestamp[id] = Date.now();
 
   const dev = get(id) || {};
