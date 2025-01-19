@@ -1609,10 +1609,10 @@ const renderSmartTop = (id) => {
   const current = get(modes[mode % modes.length]) || {};
   switch (dev.type) {
     case DEVICE_TYPE_SMART_TOP_G4D: {
-      // image[1] &= 0b0000_1111;
-      // image[2] &= 0b1111_1100;
-      // blink[1] &= 0b0000_1111;
-      // blink[2] &= 0b1111_1100;
+      image[1] &= 0b0000_1111;
+      image[2] &= 0b1111_1100;
+      blink[1] &= 0b0000_1111;
+      blink[2] &= 0b1111_1100;
       if (current.indicator > 0 && current.indicator <= 4) {
         image[1] |= 1 << (current.indicator + 3);
         if (configuring) {
@@ -1627,6 +1627,10 @@ const renderSmartTop = (id) => {
       break;
     }
     case DEVICE_TYPE_SMART_TOP_A4TD: {
+      image[0] &= 0b0011_1111;
+      image[1] &= 0b1111_0000;
+      blink[0] &= 0b0011_1111;
+      blink[1] &= 0b1111_0000;
       if (current.indicator > 0 && current.indicator <= 2) {
         image[0] |= 1 << (current.indicator + 5);
         if (configuring) {
