@@ -1606,20 +1606,39 @@ const renderSmartTop = (id) => {
   const { mode = 0, modes = [], configuring } = dev;
   const image = [...(dev.image || [0, 0, 0, 0, 0, 0, 0, 0])];
   const blink = [...(dev.blink || [0, 0, 0, 0, 0, 0, 0, 0])];
-  image[1] &= 0b0000_1111;
-  image[2] &= 0b1111_1100;
-  blink[1] &= 0b0000_1111;
-  blink[2] &= 0b1111_1100;
   const current = get(modes[mode % modes.length]) || {};
-  if (current.indicator > 0 && current.indicator <= 4) {
-    image[1] |= 1 << (current.indicator + 3);
-    if (configuring) {
-      blink[1] |= 1 << (current.indicator + 3);
+  switch (dev.type) {
+    case DEVICE_TYPE_SMART_TOP_G4D: {
+      // image[1] &= 0b0000_1111;
+      // image[2] &= 0b1111_1100;
+      // blink[1] &= 0b0000_1111;
+      // blink[2] &= 0b1111_1100;
+      if (current.indicator > 0 && current.indicator <= 4) {
+        image[1] |= 1 << (current.indicator + 3);
+        if (configuring) {
+          blink[1] |= 1 << (current.indicator + 3);
+        }
+      } else if (current.indicator <= 6) {
+        image[2] |= 1 << (current.indicator - 5);
+        if (configuring) {
+          blink[2] |= 1 << (current.indicator - 5);
+        }
+      }
+      break;
     }
-  } else if (current.indicator <= 6) {
-    image[2] |= 1 << (current.indicator - 5);
-    if (configuring) {
-      blink[2] |= 1 << (current.indicator - 5);
+    case DEVICE_TYPE_SMART_TOP_A4TD: {
+      if (current.indicator > 0 && current.indicator <= 2) {
+        image[0] |= 1 << (current.indicator + 5);
+        if (configuring) {
+          blink[0] |= 1 << (current.indicator + 5);
+        }
+      } else if (current.indicator <= 6) {
+        image[1] |= 1 << (current.indicator - 5);
+        if (configuring) {
+          blink[1] |= 1 << (current.indicator - 5);
+        }
+      }
+      break;
     }
   }
   const site = current.site || dev.site;
