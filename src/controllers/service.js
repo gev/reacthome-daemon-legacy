@@ -975,7 +975,7 @@ const run = (action) => {
             const topRight = get(`${id}/gradient/${palette}.2`) || {};
             const bottomLeft = get(`${id}/gradient/${palette}.3`) || {};
             const bottomRight = get(`${id}/gradient/${palette}.4`) || {};
-            const cmd = [ACTION_RGB, palette, 19];
+            const cmd = [ACTION_RGB, palette, type === DEVICE_TYPE_SMART_TOP_G4D ? 19 : 17];
             for (let i = 0; i < 5; i++) {
               const left = compose(topLeft, 5 - i, bottomLeft, i);
               const right = compose(topRight, 5 - i, bottomRight, i);
