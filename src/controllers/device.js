@@ -1630,9 +1630,9 @@ const renderSmartTop = (id) => {
       image[1] &= 0b0000_0011;
       blink[1] &= 0b0000_0011;
       if (current.indicator > 0 && current.indicator <= 6) {
-        image[0] |= 1 << (current.indicator + 1);
+        image[1] |= 1 << (current.indicator + 1);
         if (configuring) {
-          blink[0] |= 1 << (current.indicator + 1);
+          blink[1] |= 1 << (current.indicator + 1);
         }
       }
       break;
