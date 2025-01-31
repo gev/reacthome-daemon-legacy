@@ -1305,7 +1305,7 @@ const run = (action) => {
         break;
       }
       case ACTION_ON: {
-        const [id_, t_, index] = id.split("/");
+        const [id_, t_, index] = action.id.split("/");
         if (t_ === 'ac') {
           action.id = id_;
           action.index = index;
@@ -1485,7 +1485,7 @@ const run = (action) => {
         break;
       }
       case ACTION_OFF: {
-        const [id_, t_, index] = id.split("/");
+        const [id_, t_, index] = action.id.split("/");
         if (t_ === 'ac') {
           action.id = id_;
           action.index = index;
@@ -2057,7 +2057,7 @@ const run = (action) => {
         break;
       }
       case ACTION_SETPOINT: {
-        const [id_, t_, index] = id.split("/");
+        const [id_, t_, index] = action.id.split("/");
         if (t_ === 'ac') {
           action.id = id_;
           action.index = index;
