@@ -1306,6 +1306,13 @@ const run = (action) => {
       }
       case ACTION_ON: {
         const { id } = action;
+        const [id_, t_, index] = id.split("/");
+        if (t_ === AC) {
+          const o_ = get(id_) || {};
+          if (o_.disabled) return;
+          drivers.run({ type: ACTION_ON, id: id_, index });
+          return
+        }
         const o = get(id) || {};
         if (o.disabled) return;
         if (o.type === DRIVER_TYPE_INTESIS_BOX || o.type === DRIVER_TYPE_MD_CCM18_AN_E || o.type === DRIVER_TYPE_TICA || o.type === DRIVER_TYPE_NOVA || o.type === DRIVER_TYPE_SWIFT || o.type === DRIVER_TYPE_ALINK || o.type === DRIVER_TYPE_COMFOVENT) {
@@ -1481,6 +1488,13 @@ const run = (action) => {
       }
       case ACTION_OFF: {
         const { id } = action;
+        const [id_, t_, index] = id.split("/");
+        if (t_ === AC) {
+          const o_ = get(id_) || {};
+          if (o_.disabled) return;
+          drivers.run({ type: ACTION_OFF, id: id_, index });
+          return
+        }
         const o = get(id) || {};
         if (o.disabled) return;
         if (o.type === DRIVER_TYPE_INTESIS_BOX || o.type === DRIVER_TYPE_MD_CCM18_AN_E || o.type === DRIVER_TYPE_TICA || o.type === DRIVER_TYPE_NOVA || o.type === DRIVER_TYPE_SWIFT || o.type === DRIVER_TYPE_ALINK || o.type === DRIVER_TYPE_COMFOVENT) {
@@ -2048,6 +2062,13 @@ const run = (action) => {
       }
       case ACTION_SETPOINT: {
         const { id, value, temperature, humidity, co2 } = action;
+        const [id_, t_, index] = id.split("/");
+        if (t_ === AC) {
+          const o_ = get(id_) || {};
+          if (o_.disabled) return;
+          drivers.run({ type: ACTION_SETPOINT, id: id_, index, value: temperature || value });
+          return
+        }
         const dev = get(id) || {};
         if (temperature || value) {
           let setpoint = temperature || value;
@@ -2784,6 +2805,8 @@ const run = (action) => {
       case ACTION_SET_MODE:
       case ACTION_SET_DIRECTION:
       case ACTION_SET_FAN_SPEED: {
+        const [id_, t_, index] = action.id.split("/");
+
         drivers.run(action);
         break;
       }
