@@ -15,16 +15,16 @@ const sync = async (id, modbus, address, n) => {
     const { synced, value, mode, fan_speed, setpoint } = get(ch) || {};
     if (!synced) {
       writeCoil(modbus, address, i, value ? 0xff00 : 0);
-      await delay(4000);
+      await delay(5000);
       writeRegisters(modbus, address, 0x1000 + i * 6, [mode, setpoint, fan_speed]);
       await delay(1000);
       set(ch, { synced: true });
     } else {
       index = i + 1;
       readCoils(modbus, address, i, 1);
-      await delay(300);
+      await delay(500);
       readHoldingRegisters(modbus, address, 0x1000 + i * 6, 3);
-      await delay(300);
+      await delay(500);
     }
   }
 };
@@ -35,7 +35,7 @@ const loop = (id) => async () => {
   const { bind = "", numberAC } = dev;
   const [modbus, , address] = bind.split('/');
   await sync(id, modbus, address, numberAC);
-  instance.set(id, setTimeout(loop(id), 300));
+  instance.set(id, setTimeout(loop(id), 500));
 }
 
 
