@@ -670,7 +670,7 @@ const run = (action) => {
                 dev.type === DEVICE_TYPE_DIM_12_DC_RS ||
                 dev.type === DEVICE_TYPE_DIM_1_AC_RS ||
                 dev.type === DEVICE_TYPE_DIM_8_RS
-                ? DIM_VELOCITY
+                ? (action.velocity || {DIM_VELOCITY})
                 : AO_VELOCITY;
             switch (action.action) {
               case DIM_TYPE:
