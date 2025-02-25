@@ -739,7 +739,7 @@ const run = (action) => {
             break;
           }
           default: {
-            let velocity = DIM_VELOCITY;
+            let velocity = (action.velocity || {DIM_VELOCITY});
             if (dev.type === DRIVER_TYPE_ARTNET) {
               velocity = ARTNET_VELOCITY;
             }
