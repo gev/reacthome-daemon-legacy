@@ -1644,7 +1644,7 @@ const run = (action) => {
         break;
       }
       case ACTION_DIM: {
-        const { id, value, velocity } = action;
+        const { id, value } = action;
         const o = get(id) || {};
         const { last } = o;
         const R = o.r ? (get(o.r) || {}).value || 0 : 0;
@@ -1673,7 +1673,7 @@ const run = (action) => {
             case DEVICE_TYPE_DIM8:
             case DEVICE_TYPE_DIM_8: {
               device.send(
-                Buffer.from([ACTION_DIMMER, index, DIM_FADE, v, (velocity || {DIM_VELOCITY})]),
+                Buffer.from([ACTION_DIMMER, index, DIM_FADE, v, (action.velocity || {DIM_VELOCITY})]),
                 ip
               );
               break;
@@ -1695,7 +1695,7 @@ const run = (action) => {
                   deviceType === DEVICE_TYPE_DIM_12_DC_RS ||
                   deviceType === DEVICE_TYPE_DIM_1_AC_RS ||
                   deviceType === DEVICE_TYPE_DIM_8_RS
-                  ? (velocity || {DIM_VELOCITY})
+                  ? (action.velocity || {DIM_VELOCITY})
                   : AO_VELOCITY,
               ]),
                 dev
