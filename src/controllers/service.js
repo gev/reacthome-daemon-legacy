@@ -263,6 +263,7 @@ const rgb = ["r", "g", "b"];
 
 const run = (action) => {
   try {
+    console.log(action);
     switch (action.type) {
       case ACTION_SET: {
         const { id, payload } = action;
