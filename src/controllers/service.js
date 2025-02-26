@@ -1665,6 +1665,8 @@ const run = (action) => {
           } else {
             v = rgb[i];
           }
+          const dimVelocity = (get(action.velocity) || {DIM_VELOCITY})
+          console.log(dimVelocity)
           switch (deviceType) {
             case DEVICE_TYPE_SERVER:
             case DEVICE_TYPE_RS_HUB4:
@@ -1673,7 +1675,7 @@ const run = (action) => {
             case DEVICE_TYPE_DIM8:
             case DEVICE_TYPE_DIM_8: {
               device.send(
-                Buffer.from([ACTION_DIMMER, index, DIM_FADE, v, (get(action.velocity) || {DIM_VELOCITY})]),
+                Buffer.from([ACTION_DIMMER, index, DIM_FADE, v, dimVelocity]),
                 ip
               );
               break;
@@ -1695,7 +1697,7 @@ const run = (action) => {
                   deviceType === DEVICE_TYPE_DIM_12_DC_RS ||
                   deviceType === DEVICE_TYPE_DIM_1_AC_RS ||
                   deviceType === DEVICE_TYPE_DIM_8_RS
-                  ? (get(action.velocity) || {DIM_VELOCITY})
+                  ? dimVelocity
                   : AO_VELOCITY,
               ]),
                 dev
