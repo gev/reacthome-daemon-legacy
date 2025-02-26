@@ -1665,8 +1665,9 @@ const run = (action) => {
           } else {
             v = rgb[i];
           }
-          const dimVelocity = action.velocity || {DIM_VELOCITY}
+          const dimVelocity = get(action.velocity) || {DIM_VELOCITY}
           console.log(dimVelocity)
+          console.log(v)
           switch (deviceType) {
             case DEVICE_TYPE_SERVER:
             case DEVICE_TYPE_RS_HUB4:
