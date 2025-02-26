@@ -765,6 +765,8 @@ const run = (action) => {
                 );
                 break;
               case DIM_FADE:
+                console.log(action)
+                console.log(velocity)
                 device.send(
                   Buffer.from([
                     ACTION_DIMMER,
