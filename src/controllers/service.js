@@ -1353,7 +1353,7 @@ const run = (action) => {
                       index,
                       DIM_FADE,
                       value,
-                      (action.velocity || {DIM_VELOCITY}),
+                      DIM_VELOCITY,
                     ]),
                     ip
                   );
@@ -1379,7 +1379,7 @@ const run = (action) => {
                     index,
                     DIM_FADE,
                     value,
-                    (action.velocity || {DIM_VELOCITY}),
+                    DIM_VELOCITY,
                   ]),
                     dev
                   );
@@ -1530,7 +1530,7 @@ const run = (action) => {
                       index,
                       DIM_FADE,
                       0,
-                      (action.velocity || {DIM_VELOCITY}),
+                      DIM_VELOCITY,
                     ]),
                     ip
                   );
@@ -1554,7 +1554,7 @@ const run = (action) => {
                     index,
                     DIM_FADE,
                     0,
-                    (action.velocity || {DIM_VELOCITY}),
+                    DIM_VELOCITY,
                   ]),
                     dev
                   );
