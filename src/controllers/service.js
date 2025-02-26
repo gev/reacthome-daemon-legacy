@@ -670,7 +670,7 @@ const run = (action) => {
                 dev.type === DEVICE_TYPE_DIM_12_DC_RS ||
                 dev.type === DEVICE_TYPE_DIM_1_AC_RS ||
                 dev.type === DEVICE_TYPE_DIM_8_RS
-                ? ( get(action.velocity) || {DIM_VELOCITY})
+                ? DIM_VELOCITY
                 : AO_VELOCITY;
             switch (action.action) {
               case DIM_TYPE:
@@ -739,7 +739,7 @@ const run = (action) => {
             break;
           }
           default: {
-            let velocity = (get(action.velocity) || {DIM_VELOCITY});
+            let velocity = DIM_VELOCITY;
             if (dev.type === DRIVER_TYPE_ARTNET) {
               velocity = ARTNET_VELOCITY;
             }
@@ -1665,8 +1665,8 @@ const run = (action) => {
           } else {
             v = rgb[i];
           }
-          const dimVelocity = get(action.velocity) || {DIM_VELOCITY}
-          console.log(dimVelocity)
+          const dimVelocity = action.velocity ? action.velocity : DIM_VELOCITY
+          console.log(action.velocity, DIM_VELOCITY)
           console.log(v)
           switch (deviceType) {
             case DEVICE_TYPE_SERVER:
