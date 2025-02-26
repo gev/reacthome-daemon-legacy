@@ -263,7 +263,6 @@ const rgb = ["r", "g", "b"];
 
 const run = (action) => {
   try {
-    console.log(action);
     switch (action.type) {
       case ACTION_SET: {
         const { id, payload } = action;
@@ -766,8 +765,6 @@ const run = (action) => {
                 );
                 break;
               case DIM_FADE:
-                console.log(action)
-                console.log(velocity)
                 device.send(
                   Buffer.from([
                     ACTION_DIMMER,
