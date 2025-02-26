@@ -670,7 +670,7 @@ const run = (action) => {
                 dev.type === DEVICE_TYPE_DIM_12_DC_RS ||
                 dev.type === DEVICE_TYPE_DIM_1_AC_RS ||
                 dev.type === DEVICE_TYPE_DIM_8_RS
-                ? (action.velocity || {DIM_VELOCITY})
+                ? ( get(action.velocity) || {DIM_VELOCITY})
                 : AO_VELOCITY;
             switch (action.action) {
               case DIM_TYPE:
@@ -739,7 +739,7 @@ const run = (action) => {
             break;
           }
           default: {
-            let velocity = (action.velocity || {DIM_VELOCITY});
+            let velocity = (get(action.velocity) || {DIM_VELOCITY});
             if (dev.type === DRIVER_TYPE_ARTNET) {
               velocity = ARTNET_VELOCITY;
             }
@@ -1673,7 +1673,7 @@ const run = (action) => {
             case DEVICE_TYPE_DIM8:
             case DEVICE_TYPE_DIM_8: {
               device.send(
-                Buffer.from([ACTION_DIMMER, index, DIM_FADE, v, (action.velocity || {DIM_VELOCITY})]),
+                Buffer.from([ACTION_DIMMER, index, DIM_FADE, v, (get(action.velocity) || {DIM_VELOCITY})]),
                 ip
               );
               break;
@@ -1695,7 +1695,7 @@ const run = (action) => {
                   deviceType === DEVICE_TYPE_DIM_12_DC_RS ||
                   deviceType === DEVICE_TYPE_DIM_1_AC_RS ||
                   deviceType === DEVICE_TYPE_DIM_8_RS
-                  ? (action.velocity || {DIM_VELOCITY})
+                  ? (get(action.velocity) || {DIM_VELOCITY})
                   : AO_VELOCITY,
               ]),
                 dev
