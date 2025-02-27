@@ -666,12 +666,12 @@ const run = (action) => {
           case DEVICE_TYPE_AO_4_DIN: {
             const velocity =
               dev.type === DEVICE_TYPE_DIM_12_LED_RS ||
-                dev.type === DEVICE_TYPE_DIM_12_AC_RS ||
-                dev.type === DEVICE_TYPE_DIM_12_DC_RS ||
-                dev.type === DEVICE_TYPE_DIM_1_AC_RS ||
-                dev.type === DEVICE_TYPE_DIM_8_RS
-                ? DIM_VELOCITY
-                : AO_VELOCITY;
+              dev.type === DEVICE_TYPE_DIM_12_AC_RS ||
+              dev.type === DEVICE_TYPE_DIM_12_DC_RS ||
+              dev.type === DEVICE_TYPE_DIM_1_AC_RS ||
+              dev.type === DEVICE_TYPE_DIM_8_RS
+              ? DIM_VELOCITY
+              : AO_VELOCITY;
             switch (action.action) {
               case DIM_TYPE:
               case DIM_GROUP: {
@@ -1665,6 +1665,7 @@ const run = (action) => {
           } else {
             v = rgb[i];
           }
+          const dimVelocity = action.velocity === undefined ? DIM_VELOCITY : action.velocity
           switch (deviceType) {
             case DEVICE_TYPE_SERVER:
             case DEVICE_TYPE_RS_HUB4:
@@ -1673,7 +1674,7 @@ const run = (action) => {
             case DEVICE_TYPE_DIM8:
             case DEVICE_TYPE_DIM_8: {
               device.send(
-                Buffer.from([ACTION_DIMMER, index, DIM_FADE, v, DIM_VELOCITY]),
+                Buffer.from([ACTION_DIMMER, index, DIM_FADE, v, dimVelocity]),
                 ip
               );
               break;
@@ -1690,13 +1691,10 @@ const run = (action) => {
                 index,
                 DIM_FADE,
                 v,
-                deviceType === DEVICE_TYPE_DIM_12_LED_RS ||
-                  deviceType === DEVICE_TYPE_DIM_12_AC_RS ||
-                  deviceType === DEVICE_TYPE_DIM_12_DC_RS ||
-                  deviceType === DEVICE_TYPE_DIM_1_AC_RS ||
-                  deviceType === DEVICE_TYPE_DIM_8_RS
-                  ? DIM_VELOCITY
-                  : AO_VELOCITY,
+                deviceType === DEVICE_TYPE_DI_4_RSM ||
+                deviceType === DEVICE_TYPE_AO_4_DIN
+                ? AO_VELOCITY
+                : dimVelocity,
               ]),
                 dev
               );
