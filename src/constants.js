@@ -227,6 +227,8 @@ module.exports.ACTION_STOP_FAN = "ACTION_STOP_FAN";
 module.exports.ACTION_STOP_VENTILATION = "ACTION_STOP_VENTILATION";
 module.exports.ACTION_STOP_WET = "ACTION_STOP_WET";
 
+module.exports.ACTION_ASSIST = "ACTION_ASSIST";
+
 module.exports.TEMPERATURE_EXT = "temperature_ext";
 
 module.exports.OFF = 0x0;
