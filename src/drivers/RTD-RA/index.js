@@ -64,6 +64,7 @@ module.exports.run = (action) => {
 
 module.exports.handle = (action) => {
   const { id, data } = action;
+  console.log(action);
   switch (data[0]) {
     case READ_HOLDING_REGISTERS: {
       const dev = get(id) || {};
