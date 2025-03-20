@@ -1511,6 +1511,7 @@ const run = (action) => {
           const { type } = get(o[i]) || {};
           const [dev, kind, index] = o[i].split("/");
           const { ip, type: deviceType, protocol } = get(dev);
+          cansole.log(dev, kind, index, type, deviceType, protocol);
           switch (deviceType) {
             case DEVICE_TYPE_SERVER:
             case DEVICE_TYPE_RS_HUB4:
