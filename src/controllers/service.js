@@ -559,6 +559,7 @@ const run = (action) => {
           case DEVICE_TYPE_SMART_TOP_G2:
           case DEVICE_TYPE_SMART_TOP_A4P:
           case DEVICE_TYPE_SMART_TOP_A4TD: {
+            console.log(action.id);
             device.sendTOP(Buffer.from([
               ACTION_DO, action.value
             ]),
@@ -1592,6 +1593,7 @@ const run = (action) => {
             case DEVICE_TYPE_SMART_TOP_G2:
             case DEVICE_TYPE_SMART_TOP_A4P:
             case DEVICE_TYPE_SMART_TOP_A4TD: {
+              console.log(dev);
               device.sendTOP(Buffer.from([
                 ACTION_DO, OFF
               ]),
