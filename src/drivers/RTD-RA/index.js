@@ -92,12 +92,10 @@ module.exports.add = (id) => {
 
 let index = 0;
 
-const loop = () => {
+setInterval(() => {
   const arr = Array.from(instance);
   if (arr.length > 0) {
     sync(arr[index % arr.length]);
     index++;
   }
-  setTimeout(loop, TIMEOUT);
-}
-setTimeout(loop, TIMEOUT);
+}, TIMEOUT);
