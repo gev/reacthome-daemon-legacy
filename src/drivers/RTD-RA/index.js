@@ -15,9 +15,9 @@ const sync = async (id) => {
   const { bind, synced } = dev;
   const [modbus, , address] = bind.split('/');
   if (synced) {
-    readHoldingRegisters(modbus, address, 0x1, 5);
+    readHoldingRegisters(modbus, address, 0x0, 5);
   } else {
-    writeRegisters(modbus, address, 0x1, [dev.setpoint, dev.fan_speed, dev.mode, dev.value, dev.value]);
+    writeRegisters(modbus, address, 0x0, [dev.setpoint, dev.fan_speed, dev.mode, dev.direction, dev.value]);
     await delay(500);
     // writeRegister(modbus, address, 0x3, dev.mode);
     // await delay(300);
