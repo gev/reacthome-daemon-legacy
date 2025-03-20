@@ -1422,7 +1422,7 @@ const run = (action) => {
               device.sendTOP(Buffer.from([
                 ACTION_DO, ON
               ]),
-                action.id
+                dev
               );
               break;
             }
@@ -1595,7 +1595,7 @@ const run = (action) => {
               device.sendTOP(Buffer.from([
                 ACTION_DO, OFF
               ]),
-                action.id
+                dev
               );
               break;
             }
@@ -1698,6 +1698,21 @@ const run = (action) => {
               ]),
                 dev
               );
+              break;
+            }
+            case DEVICE_TYPE_SMART_TOP_A6P:
+            case DEVICE_TYPE_SMART_TOP_G4D:
+            case DEVICE_TYPE_SMART_TOP_A4T:
+            case DEVICE_TYPE_SMART_TOP_A6T:
+            case DEVICE_TYPE_SMART_TOP_G6:
+            case DEVICE_TYPE_SMART_TOP_G4:
+            case DEVICE_TYPE_SMART_TOP_G2:
+            case DEVICE_TYPE_SMART_TOP_A4P:
+            case DEVICE_TYPE_SMART_TOP_A4TD: {
+              device.sendTOP(Buffer.from([ 
+                ACTION_DIMMER, 
+                v ]), 
+                dev);
               break;
             }
             case DRIVER_TYPE_ARTNET: {
