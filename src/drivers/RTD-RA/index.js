@@ -16,15 +16,17 @@ const sync = async (id) => {
   if (synced) {
     readHoldingRegisters(modbus, address, 0x1, 5);
   } else {
-    writeRegister(modbus, address, 0x3, dev.mode);
-    await delay(100);
-    writeRegister(modbus, address, 0x2, dev.fan_speed);
-    await delay(100);
-    writeRegister(modbus, address, 0x4, dev.direction);
-    await delay(100);
-    writeRegister(modbus, address, 0x1, dev.setpoint);
-    await delay(100);
-    writeRegister(modbus, address, 0x5, dev.value);
+    writeRegisters(modbus, address, 0x1, [dev.setpoint, dev.fan_speed, dev.mode, dev.direction, dev.value]);
+    await delay(500);
+    // writeRegister(modbus, address, 0x3, dev.mode);
+    // await delay(300);
+    // writeRegister(modbus, address, 0x2, dev.fan_speed);
+    // await delay(300);
+    // writeRegister(modbus, address, 0x4, dev.direction);
+    // await delay(300);
+    // writeRegister(modbus, address, 0x1, dev.setpoint);
+    // await delay(300);
+    // writeRegister(modbus, address, 0x5, dev.value);
     set(id, { synced: true });
   }
 };
