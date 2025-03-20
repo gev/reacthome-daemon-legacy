@@ -18,7 +18,6 @@ const sync = async (id) => {
     readHoldingRegisters(modbus, address, 0x1, 5);
   } else {
     writeRegisters(modbus, address, 0x1, [dev.setpoint, dev.fan_speed, dev.mode, dev.direction, dev.value]);
-    await delay(500);
     // writeRegister(modbus, address, 0x3, dev.mode);
     // await delay(300);
     // writeRegister(modbus, address, 0x2, dev.fan_speed);
