@@ -6,6 +6,7 @@ const { READ_HOLDING_REGISTERS, WRITE_REGISTER } = require('../modbus/constants'
 const { BROADCAST_ADDRESS, TIMEOUT } = require('./constants');
 const { del } = require('../../db');
 const { delay } = require('../../util');
+const { timeout } = require('cron');
 
 const instance = new Set();
 
@@ -91,10 +92,12 @@ module.exports.add = (id) => {
 
 let index = 0;
 
-setInterval(() => {
+const loop = () => {
   const arr = Array.from(instance);
   if (arr.length > 0) {
     sync(arr[index % arr.length]);
     index++;
   }
-}, TIMEOUT);
+  setTimeout(loop, TIMEOUT);
+}
+setTimeout(loop, TIMEOUT);
