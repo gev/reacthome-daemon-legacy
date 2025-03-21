@@ -1516,9 +1516,6 @@ const run = (action) => {
           case DEVICE_TYPE_SMART_TOP_G2:
           case DEVICE_TYPE_SMART_TOP_A4P:
           case DEVICE_TYPE_SMART_TOP_A4TD: {
-            console.log("dev:", dev);
-            console.log("action.id", action.id);
-
             device.sendTOP(Buffer.from([
               ACTION_DO, OFF
             ]),
