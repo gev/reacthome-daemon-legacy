@@ -1662,86 +1662,91 @@ const run = (action) => {
         const rgb = color.hsv.rgb(h, s, value / 2.55);
         const [r, g, b] = rgb;
         set(id, { last: o.bind ? { value } : { r, g, b }, value: !!value });
-        for (let i = 0; i < bind.length; i++) {
-          const c = bind[i];
-          if (!o[c]) continue;
-          const [dev, kind, index] = o[c].split("/");
-          const { ip, type: deviceType } = get(dev);
-          let v;
-          if (c === "bind") {
-            v = value;
-          } else {
-            v = rgb[i];
+        switch (o.type) {
+          case DEVICE_TYPE_SMART_TOP_A6P:
+          case DEVICE_TYPE_SMART_TOP_G4D:
+          case DEVICE_TYPE_SMART_TOP_A4T:
+          case DEVICE_TYPE_SMART_TOP_A6T:
+          case DEVICE_TYPE_SMART_TOP_G6:
+          case DEVICE_TYPE_SMART_TOP_G4:
+          case DEVICE_TYPE_SMART_TOP_G2:
+          case DEVICE_TYPE_SMART_TOP_A4P:
+          case DEVICE_TYPE_SMART_TOP_A4TD: {
+            device.sendTOP(Buffer.from([
+              ACTION_DIMMER,
+              value]),
+              action.id
+            );
+            break;
           }
-          const dimVelocity = action.velocity === undefined ? DIM_VELOCITY : action.velocity
-          switch (deviceType) {
-            case DEVICE_TYPE_SERVER:
-            case DEVICE_TYPE_RS_HUB4:
-            case DEVICE_TYPE_DIM4:
-            case DEVICE_TYPE_DIM_4:
-            case DEVICE_TYPE_DIM8:
-            case DEVICE_TYPE_DIM_8: {
-              device.send(
-                Buffer.from([ACTION_DIMMER, index, DIM_FADE, v, dimVelocity]),
-                ip
-              );
-              break;
-            }
-            case DEVICE_TYPE_DIM_8_RS:
-            case DEVICE_TYPE_DIM_12_LED_RS:
-            case DEVICE_TYPE_DIM_12_AC_RS:
-            case DEVICE_TYPE_DIM_12_DC_RS:
-            case DEVICE_TYPE_DIM_1_AC_RS:
-            case DEVICE_TYPE_DI_4_RSM:
-            case DEVICE_TYPE_AO_4_DIN: {
-              device.sendRBUS(Buffer.from([
-                ACTION_DIMMER,
-                index,
-                DIM_FADE,
-                v,
-                deviceType === DEVICE_TYPE_DI_4_RSM ||
-                  deviceType === DEVICE_TYPE_AO_4_DIN
-                  ? AO_VELOCITY
-                  : dimVelocity,
-              ]),
-                dev
-              );
-              break;
-            }
-            case DEVICE_TYPE_SMART_TOP_A6P:
-            case DEVICE_TYPE_SMART_TOP_G4D:
-            case DEVICE_TYPE_SMART_TOP_A4T:
-            case DEVICE_TYPE_SMART_TOP_A6T:
-            case DEVICE_TYPE_SMART_TOP_G6:
-            case DEVICE_TYPE_SMART_TOP_G4:
-            case DEVICE_TYPE_SMART_TOP_G2:
-            case DEVICE_TYPE_SMART_TOP_A4P:
-            case DEVICE_TYPE_SMART_TOP_A4TD: {
-              device.sendTOP(Buffer.from([
-                ACTION_DIMMER,
-                v]),
-                dev);
-              break;
-            }
-            case DRIVER_TYPE_ARTNET: {
-              drivers.run({
-                id: dev,
-                index,
-                action: ARTNET_FADE,
-                value: v,
-                velocity: ARTNET_VELOCITY,
-              });
-              break;
-            }
-            case DRIVER_TYPE_DALI_GW:
-            case DRIVER_TYPE_DALI_DLC: {
-              drivers.run({
-                id: dev,
-                kind,
-                index,
-                value: v,
-              });
-              break;
+          default: {
+            for (let i = 0; i < bind.length; i++) {
+              const c = bind[i];
+              if (!o[c]) continue;
+              const [dev, kind, index] = o[c].split("/");
+              const { ip, type: deviceType } = get(dev);
+              let v;
+              if (c === "bind") {
+                v = value;
+              } else {
+                v = rgb[i];
+              }
+              const dimVelocity = action.velocity === undefined ? DIM_VELOCITY : action.velocity
+              switch (deviceType) {
+                case DEVICE_TYPE_SERVER:
+                  case DEVICE_TYPE_RS_HUB4:
+                case DEVICE_TYPE_DIM4:
+                case DEVICE_TYPE_DIM_4:
+                case DEVICE_TYPE_DIM8:
+                case DEVICE_TYPE_DIM_8: {
+                  device.send(
+                    Buffer.from([ACTION_DIMMER, index, DIM_FADE, v, dimVelocity]),
+                    ip
+                  );
+                  break;
+                }
+                case DEVICE_TYPE_DIM_8_RS:
+                case DEVICE_TYPE_DIM_12_LED_RS:
+                case DEVICE_TYPE_DIM_12_AC_RS:
+                case DEVICE_TYPE_DIM_12_DC_RS:
+                case DEVICE_TYPE_DIM_1_AC_RS:
+                case DEVICE_TYPE_DI_4_RSM:
+                case DEVICE_TYPE_AO_4_DIN: {
+                  device.sendRBUS(Buffer.from([
+                    ACTION_DIMMER,
+                    index,
+                    DIM_FADE,
+                    v,
+                    deviceType === DEVICE_TYPE_DI_4_RSM ||
+                      deviceType === DEVICE_TYPE_AO_4_DIN
+                      ? AO_VELOCITY
+                      : dimVelocity,
+                  ]),
+                    dev
+                  );
+                  break;
+                }
+                case DRIVER_TYPE_ARTNET: {
+                  drivers.run({
+                    id: dev,
+                    index,
+                    action: ARTNET_FADE,
+                    value: v,
+                    velocity: ARTNET_VELOCITY,
+                  });
+                  break;
+                }
+                case DRIVER_TYPE_DALI_GW:
+                case DRIVER_TYPE_DALI_DLC: {
+                  drivers.run({
+                    id: dev,
+                    kind,
+                    index,
+                    value: v,
+                  });
+                  break;
+                }
+              }
             }
           }
         }
