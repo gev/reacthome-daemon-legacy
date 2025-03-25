@@ -17,6 +17,7 @@ const onPTY = require('../terminal');
 const janus = require('../janus');
 const { CANDIDATE, KEEPALIVE } = require('../janus/constants');
 const { ACTION_ASSIST } = require('../constants');
+const { handleAssist } = require('../assist');
 
 module.exports = (session, message) => {
   try {
@@ -93,9 +94,7 @@ module.exports = (session, message) => {
         break;
       }
       case ACTION_ASSIST: {
-        console.log(action);
-        action.payload.message = "поберегись";
-        peer.send(action)
+        peer.send(handleAssist(action))
         break;
       }
       default: {

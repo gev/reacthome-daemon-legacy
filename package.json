@@ -13,6 +13,7 @@
     "fast-deep-equal": "github:gev/fast-deep-equal",
     "fast-memoize": "^2.5.1",
     "firebase-admin": "^11.0.1",
+    "fuse.js": "^7.1.0",
     "level": "^8.0.0",
     "node-fetch": "^2.6.0",
     "node-pty": "^0.10.1",

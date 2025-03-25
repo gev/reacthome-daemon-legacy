@@ -1,3 +1,5 @@
+const fs = require("fs");
+
 process.on("uncaughtException", function (err) {
   console.error(err);
 });
@@ -9,6 +11,20 @@ const {
   ACTION_SCHEDULE_START,
   ACTION_TIMER_START,
   ACTION_SHELL_STOP,
+  PROJECT,
+  LIGHT_220,
+  LIGHT_RGB,
+  LIGHT_LED,
+  VALVE_WATER,
+  VALVE_HEATING,
+  WARM_FLOOR,
+  AC,
+  FAN,
+  SOCKET_220,
+  BOILER,
+  PUMP,
+  SITE,
+  SCRIPT,
 } = require("./src/constants");
 const { state, device, service, cpu, weather } = require("./src/controllers");
 const { get, set, count } = require("./src/actions");
@@ -20,6 +36,7 @@ const janus = require("./src/janus");
 const sip = require("./src/sip");
 const db = require("./src/db");
 const { cleanup } = require("./src/gc");
+const { initAssist } = require("./src/assist");
 
 const init = {};
 
@@ -75,6 +92,7 @@ const load = async () => {
   // cleanup(init);
   assets.init();
   state.init(init);
+  initAssist();
   weather.manage();
   device.manage();
   drivers.manage();
@@ -82,7 +100,7 @@ const load = async () => {
   console.log(init.mac);
   discovery.start(init.mac);
   websocket.start(init.mac);
-  janus.start();
+  // janus.start();
   sip.start();
   start(init.mac);
   set(init.mac, { token: [] });
