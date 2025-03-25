@@ -3,7 +3,7 @@ const WebSocket = require('ws');
 const uuid = require('uuid').v4;
 const peer = require('../websocket/peer');
 const { streams } = require('../camera/streams');
-const { CREATE, ATTACH, MESSAGE, TRICKLE, CANDIDATE, KEEPALIVE } =require('./constants');
+const { CREATE, ATTACH, MESSAGE, TRICKLE, CANDIDATE, KEEPALIVE } = require('./constants');
 
 const TIMEOUT_RECONNECT = 10000;
 const TIMEOUT_TRANSACTION = 30000;
@@ -27,9 +27,9 @@ const connect = () => {
           callback(action);
         }
       } else if (action.janus === TRICKLE) {
-        const {session_id, sender: handle_id, candidate} = action;
+        const { session_id, sender: handle_id, candidate } = action;
         const session = handlers.get(handle_id);
-        peer.send(session, {type: CANDIDATE, session_id, handle_id, candidate});
+        peer.send(session, { type: CANDIDATE, session_id, handle_id, candidate });
       }
     } catch (e) {
       console.error(e);
@@ -43,6 +43,7 @@ const connect = () => {
 };
 
 const send = (action, callback) => {
+  if (!socket) return;
   try {
     const transaction = uuid();
     if (callback) {
@@ -90,7 +91,7 @@ module.exports.trickle = ({ session_id, handle_id, candidate }, callback) => {
   send({ janus: TRICKLE, session_id, handle_id, candidate }, callback);
 };
 
-module.exports.keepalive = ({session_id}) => {
+module.exports.keepalive = ({ session_id }) => {
   send({ janus: KEEPALIVE, session_id });
 };
 
