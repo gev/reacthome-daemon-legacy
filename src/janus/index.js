@@ -43,6 +43,7 @@ const connect = () => {
 };
 
 const send = (action, callback) => {
+  if (!socket) return;
   try {
     const transaction = uuid();
     if (callback) {
