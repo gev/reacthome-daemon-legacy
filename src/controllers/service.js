@@ -1,31 +1,17 @@
 const { CronJob } = require("cron");
-const { exists, createWriteStream } = require("fs");
-const fetch = require("node-fetch");
-const crypto = require("crypto");
 const color = require("color-convert");
 const ircodes = require("reacthome-ircodes");
 const drivers = require("../drivers");
 const {
-  VERSION,
   AC,
-  TV,
-  DO,
-  DIM,
   GROUP,
-  ARTNET,
   ACTION_DO,
   ACTION_GROUP,
   ACTION_DI_RELAY_SYNC,
   ACTION_DOPPLER0,
   ACTION_DIMMER,
   ACTION_ARTNET,
-  ACTION_DISCOVERY,
   ACTION_FIND_ME,
-  ACTION_BOOTLOAD,
-  ACTION_INIT,
-  ACTION_SET,
-  ACTION_ASSET,
-  ACTION_DOWNLOAD,
   ACTION_RGB,
   ACTION_IR,
   ACTION_IR_CONFIG,
@@ -56,11 +42,6 @@ const {
   ACTION_TV,
   ACTION_LEAKAGE_RESET,
   ACTION_SCRIPT_RUN,
-  ACTION_MOVE_TO_HUE,
-  ACTION_MOVE_TO_SATURATION,
-  ACTION_MOVE_TO_HUE_SATURATION,
-  ACTION_MOVE_TO_LEVEL,
-  DEVICE_PORT,
   DEVICE_TYPE_DIM4,
   DEVICE_TYPE_DIM_4,
   DEVICE_TYPE_DIM8,
@@ -69,7 +50,6 @@ const {
   DEVICE_TYPE_RELAY_2_DIN,
   DEVICE_TYPE_RELAY_6,
   DEVICE_TYPE_RELAY_12,
-  DEVICE_TYPE_RELAY_24,
   DEVICE_TYPE_IR_4,
   DEVICE_TYPE_SENSOR4,
   DRIVER_TYPE_ARTNET,
@@ -120,11 +100,6 @@ const {
   ACTION_LANAMP,
   ACTION_RTP,
   ACTION_MULTIROOM_ZONE,
-  ACTION_ADD,
-  ACTION_DEL,
-  ACTION_MAKE_BIND,
-  ACTION_ADD_BIND,
-  BIND,
   DEVICE_TYPE_AO_4_DIN,
   SITE,
   DEVICE_TYPE_SMART_4G,
@@ -142,7 +117,6 @@ const {
   DEVICE_TYPE_DIM_12_AC_RS,
   DEVICE_TYPE_DIM_12_DC_RS,
   DEVICE_TYPE_DIM_1_AC_RS,
-  POOL,
   ACTION_SITE_LIGHT_ON,
   DEVICE_TYPE_RELAY_12_RS,
   ACTION_SCREEN,
@@ -203,7 +177,6 @@ const {
   ACTION_ALED_COLOR_ANIMATION_PLAY,
   DEVICE_TYPE_DOPPLER_1_DI_4,
   DEVICE_TYPE_DOPPLER_5_DI_4,
-  DEVICE_TYPE_DI_4,
   ACTION_SET_POSITION,
   ACTION_UP,
   DRIVER_TYPE_DAUERHAFT,
@@ -223,34 +196,21 @@ const {
   DEVICE_TYPE_DI_4_LA,
   DEVICE_TYPE_SMART_TOP_A4TD,
 } = require("../constants");
-const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
 const notification = require("../notification");
 const {
   get,
   set,
-  add,
-  del,
   makeBind,
-  addBind,
-  offline,
-  online,
   applySite,
-  pendingFirmware,
-  updateFirmware,
 } = require("../actions");
 const { device } = require("../sockets");
 const mac = require("../mac");
 const { ac } = require("../drivers");
-const { broadcast } = require("../websocket/peer");
-const { asset, writeFile } = require("../fs");
 const { RING } = require("../ring/constants");
 const { ip2int } = require("../util");
 const { char2image } = require("../drivers/display");
 const childProcess = require("child_process");
-const { error } = require("console");
-const { stdout } = require("process");
-const { initAssistDelayed } = require("../assist");
 
 const timers = {};
 const schedules = {};
