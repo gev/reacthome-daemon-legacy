@@ -233,6 +233,7 @@ const search = (keywords, index) => {
             res.push(all.get(id))
         }
     }
+    console.log(res)
     return res;
 }
 module.exports = { initAssist, initAssistDelayed, handleAssist }
