@@ -9,6 +9,7 @@ const { PROJECT, SITE, LIGHT_220, LIGHT_LED
 } = require("../constants");
 const { state } = require("../controllers/state");
 const { run } = require("../controllers/service");
+const { applySite } = require("../actions");
 
 const commands = [
     {
@@ -49,40 +50,65 @@ const commandIndex = makeIndex(commands, ['command']);
 let scriptIndex = initIndex({});
 let thingIndex = initIndex({});
 
+
+let timeout;
+
+const initAssistDelayed = () => {
+    clearTimeout(timeout);
+    timeout = setTimeout(initAssist, 1000)
+}
+
 const initAssist = () => {
     const data = state();
     const scripts = [];
     const things = [];
-    for ([id, item] of Object.entries(data)) {
-        switch (item.type) {
-            case SCRIPT:
-                scripts.push({ id, code: item.code, title: item.title });
-                break;
-            case PROJECT:
-            case SITE:
-            case LIGHT_220:
-            case LIGHT_LED:
-            case LIGHT_RGB:
-            case VALVE_WATER:
-            case VALVE_HEATING:
-            case WARM_FLOOR:
-            case AC:
-            case FAN:
-            case SOCKET_220:
-            case BOILER:
-            case PUMP:
-                details = getDetails(data, item.site)
-                things.push({
-                    id,
-                    type: item.type,
-                    code: item.code && [item.code, ...details.code],
-                    title: item.title && [item.title, ...details.title],
-                });
-                break;
+    applySite(data.mac, (site) => {
+        for ([key, value] of Object.entries(site)) {
+            switch (key) {
+                case PROJECT:
+                    const project = data[value];
+                    things.push({
+                        id: value,
+                        type: project.type,
+                        code: project.code,
+                        title: project.title,
+                    });
+                    break;
+                case SCRIPT:
+                    for (const id of value) {
+                        const script = data[id]
+                        scripts.push({ id, code: script.code, title: script.title });
+                    }
+                    break;
+                case SITE:
+                case LIGHT_220:
+                case LIGHT_LED:
+                case LIGHT_RGB:
+                case VALVE_WATER:
+                case VALVE_HEATING:
+                case WARM_FLOOR:
+                case AC:
+                case FAN:
+                case SOCKET_220:
+                case BOILER:
+                case PUMP:
+                    for (const id of value) {
+                        const item = data[id];
+                        details = getDetails(data, item.site)
+                        things.push({
+                            id,
+                            type: item.type,
+                            code: item.code && [item.code, ...details.code],
+                            title: item.title && [item.title, ...details.title],
+                        });
+                    }
+                    break;
+            }
         }
-    }
-    thingIndex = initIndex(things);
+    });
     console.log(scripts)
+    console.log(things)
+    thingIndex = initIndex(things);
     scriptIndex = initIndex(scripts);
     fs.writeFileSync("var/tmp/state.json", JSON.stringify(things, null, 4))
 }
@@ -209,4 +235,4 @@ const search = (keywords, index) => {
     }
     return res;
 }
-module.exports = { initAssist, handleAssist }
+module.exports = { initAssist, initAssistDelayed, handleAssist }

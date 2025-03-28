@@ -250,7 +250,7 @@ const { char2image } = require("../drivers/display");
 const childProcess = require("child_process");
 const { error } = require("console");
 const { stdout } = require("process");
-const { initAssist } = require("../assist");
+const { initAssistDelayed } = require("../assist");
 
 const timers = {};
 const schedules = {};
@@ -262,13 +262,14 @@ const ARTNET_VELOCITY = 1;
 const bind = ["r", "g", "b", "bind"];
 const rgb = ["r", "g", "b"];
 
+
 const run = (action) => {
   try {
     switch (action.type) {
       case ACTION_SET: {
         const { id, payload } = action;
-        if (action.title || action.code) {
-          initAssist()
+        if (payload.title || payload.code) {
+          initAssistDelayed()
         }
         if (id !== POOL) {
           set(id, payload);

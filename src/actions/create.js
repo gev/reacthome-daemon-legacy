@@ -76,9 +76,13 @@ const applySite = (id, action) => {
   const o = state.get(id);
   if (!o) return;
   action(o);
-  if (!o.site || o.site.length === 0) return;
-  for (const i of o.site) {
-    applySite(i, action);
+  if (o.project) {
+    applySite(o.project, action);
+  }
+  if (o.site && o.site.length > 0) {
+    for (const i of o.site) {
+      applySite(i, action);
+    }
   }
 };
 
