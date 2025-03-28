@@ -43,7 +43,7 @@ const makeIndex = (data, keys) => new Fuse(data, {
 })
 
 
-const initIndex = (data) => makeIndex(data, ['code', 'title']);
+const initIndex = (data) => makeIndex(data, ['code', 'title', 'details']);
 
 
 const commandIndex = makeIndex(commands, ['command']);
@@ -94,12 +94,12 @@ const initAssist = () => {
                 case PUMP:
                     for (const id of value) {
                         const item = data[id];
-                        details = getDetails(data, item.site)
                         things.push({
                             id,
                             type: item.type,
-                            code: item.code && [item.code, ...details.code],
-                            title: item.title && [item.title, ...details.title],
+                            code: item.code,
+                            title: item.title,
+                            details: getDetails(data, item.site)
                         });
                     }
                     break;
