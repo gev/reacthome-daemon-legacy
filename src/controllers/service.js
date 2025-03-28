@@ -266,45 +266,6 @@ const rgb = ["r", "g", "b"];
 const run = (action) => {
   try {
     switch (action.type) {
-      case ACTION_SET: {
-        const { id, payload } = action;
-        if (payload.title || payload.code) {
-          initAssistDelayed()
-        }
-        if (id !== POOL) {
-          set(id, payload);
-        }
-        break;
-      }
-      case ACTION_ADD: {
-        const { id, ref, value } = action;
-        add(id, ref, value);
-        break;
-      }
-      case ACTION_DEL: {
-        const { id, ref, value } = action;
-        del(id, ref, value);
-        break;
-      }
-      case ACTION_MAKE_BIND: {
-        const { id, ref, value, bind } = action;
-        makeBind(id, ref, value, bind);
-        break;
-      }
-      case ACTION_ADD_BIND: {
-        const { id, ref, value, bind } = action;
-        addBind(id, ref, value, bind);
-        break;
-      }
-      case ACTION_ASSET: {
-        const { name, payload } = action;
-        writeFile(asset(name), Buffer.from(payload, "base64"))
-          .then(() => {
-            broadcast({ type: LIST, assets: [name] });
-          })
-          .catch(console.error);
-        break;
-      }
       case ACTION_FIND_ME: {
         const dev = get(action.id);
         switch (dev.type) {
