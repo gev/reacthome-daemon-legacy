@@ -4,10 +4,11 @@ const { PROJECT, SITE, LIGHT_220, LIGHT_LED
     , LIGHT_RGB, VALVE_WATER, VALVE_HEATING, WARM_FLOOR
     , AC, FAN, SOCKET_220, BOILER, PUMP, SCRIPT,
     ACTION_ON,
-    ACTION_OFF
+    ACTION_OFF,
+    ACTION_SCRIPT_RUN
 } = require("../constants");
 const { state } = require("../controllers/state");
-
+const { run } = require("../controllers/service");
 
 const commands = [
     {
@@ -107,25 +108,42 @@ const handleAssist = (action) => {
     let answer;
 
     if (scripts.length > 0) {
-        answer = "Выполняю скрипт: " + getTitles(scripts).join(", ");
+        if (scripts.length == 1) {
+            const script = script[0]
+            const scriptTitle = getTitle(script);
+            answer = "Выполняю скрипт: " + scriptTitle;
+            const action = ({ type: ACTION_SCRIPT_RUN, id: script.id })
+            console.log(action);
+            run(action);
+        } else {
+            const scriptTitles = getTitles(scripts)
+            answer = "Уточните какой скрипт выполнить: " + scriptTitles
+        }
     } else {
         const commands = searchCommands(keywords, commandIndex);
         const things = search(keywords, thingIndex);
-        const titles = getTitles(things)
-        if (commands.length > 0) {
-            const command = (t) => commands.map(i => i.answer[t]).join(", ");
-            if (titles.length === 1) {
-                answer = command("pc") + " " + titles[0]
+        if (commands.length == 1) {
+            const command = commands[0];
+            if (things.length === 1) {
+                const thing = things[0]
+                const thingTitle = getTitle(thing);
+                answer = command.answer.pc + " " + thingTitle;
+                const action = { type: command.id, id: thing.id }
+                console.log(action)
+                run(action);
             } else {
-                answer = "Уточните, что именно " + command("inf");
+                const thingTitles = getTitles(things);
+                answer = "Я могу " + command.answer.inf + " " + thingTitles +
+                    ". Уточните, что именно " + command.answer.inf;
             }
-        } else if (titles.length > 0) {
-            answer = "Я нашла: " + titles.join(", ")
+        } else if (commands.length > 1) {
+            const commandTitles = commands.map(i => i.answer.inf);
+            const thingTitles = getTitles(things);
+            answer = "Я могу " + commandTitles + ": " + thingTitles;
         } else {
             answer = "Идите в баню"
         }
     }
-
 
     action.payload.message = answer
     return action;
@@ -142,12 +160,14 @@ const searchCommands = (keywords, index) => {
     return res;
 }
 
+const getTitle = ({ title, code }) => title || code;
+
 const getTitles = (some) => {
     const res = [];
-    for (const { title, code } of some) {
-        res.push(title || code)
+    for (const item of some) {
+        res.push(getTitle(item))
     }
-    return res;
+    return res.join(", ");
 }
 
 const search = (keywords, index) => {
