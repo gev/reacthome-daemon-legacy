@@ -143,7 +143,12 @@ const handleAssist = (action) => {
             const thingTitles = getTitles(things);
             answer = "Я могу " + commandTitles + ": " + thingTitles;
         } else {
-            answer = "Идите в баню"
+            if (things.length > 0) {
+                const thingTitles = getTitles(things);
+                answer = "Что сделать с: " + thingTitles + "?";
+            } else {
+                answer = "Идите в баню"
+            }
         }
     }
 
