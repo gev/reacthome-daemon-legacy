@@ -250,6 +250,7 @@ const { char2image } = require("../drivers/display");
 const childProcess = require("child_process");
 const { error } = require("console");
 const { stdout } = require("process");
+const { initAssist } = require("../assist");
 
 const timers = {};
 const schedules = {};
@@ -266,6 +267,9 @@ const run = (action) => {
     switch (action.type) {
       case ACTION_SET: {
         const { id, payload } = action;
+        if (action.title || action.code) {
+          initAssist()
+        }
         if (id !== POOL) {
           set(id, payload);
         }
@@ -1327,7 +1331,7 @@ const run = (action) => {
         }
         const { last = {} } = o;
         const isOn = last.r > 0 || last.g > 0 || last.b > 0 || last.value > 0;
-        switch(o.type){
+        switch (o.type) {
           case DEVICE_TYPE_SMART_TOP_A6P:
           case DEVICE_TYPE_SMART_TOP_G4D:
           case DEVICE_TYPE_SMART_TOP_A4T:
@@ -1471,7 +1475,7 @@ const run = (action) => {
               }
             }
           }
-        } 
+        }
         break;
       }
       case ACTION_DISABLE: {
@@ -1526,7 +1530,7 @@ const run = (action) => {
             );
             break;
           }
-          default : {
+          default: {
             for (const i of bind) {
               if (!o[i]) continue;
               const { type } = get(o[i]) || {};
@@ -1694,7 +1698,7 @@ const run = (action) => {
               const dimVelocity = action.velocity === undefined ? DIM_VELOCITY : action.velocity
               switch (deviceType) {
                 case DEVICE_TYPE_SERVER:
-                  case DEVICE_TYPE_RS_HUB4:
+                case DEVICE_TYPE_RS_HUB4:
                 case DEVICE_TYPE_DIM4:
                 case DEVICE_TYPE_DIM_4:
                 case DEVICE_TYPE_DIM8:

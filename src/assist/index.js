@@ -131,6 +131,8 @@ const handleAssist = (action) => {
                 const action = { type: command.id, id: thing.id }
                 console.log(action)
                 run(action);
+            } else if (things.length === 0) {
+                answer = "Уточните, что именно " + command.answer.inf;
             } else {
                 const thingTitles = getTitles(things);
                 answer = "Я могу " + command.answer.inf + " " + thingTitles +
