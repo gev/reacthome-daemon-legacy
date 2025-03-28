@@ -135,7 +135,7 @@ const handleAssist = (action) => {
 
     if (scripts.length > 0) {
         if (scripts.length == 1) {
-            const script = script[0]
+            const script = scripts[0]
             const scriptTitle = getTitle(script);
             answer = "Выполняю скрипт: " + scriptTitle;
             const action = ({ type: ACTION_SCRIPT_RUN, id: script.id })
