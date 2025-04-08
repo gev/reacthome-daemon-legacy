@@ -43,12 +43,13 @@ const makeIndex = (data, keys) => new Fuse(data, {
 })
 
 
-const initIndex = (data) => makeIndex(data, ['code', 'title', 'details']);
+const initIndex = (data) => makeIndex(data, ['code', 'title']);
 
 
 const commandIndex = makeIndex(commands, ['command']);
 let scriptIndex = initIndex({});
 let thingIndex = initIndex({});
+let siteIndex = initIndex({});
 
 
 let timeout;
@@ -62,6 +63,7 @@ const initAssist = () => {
     const data = state();
     const scripts = [];
     const things = [];
+    const sites = [];
     applySite(data.mac, (site) => {
         for ([key, value] of Object.entries(site)) {
             switch (key) {
@@ -81,6 +83,16 @@ const initAssist = () => {
                     }
                     break;
                 case SITE:
+                    for (const id of value) {
+                        const item = data[id];
+                        const details = getDetails(data, item.site)
+                        sites.push({
+                            id,
+                            type: item.type,
+                            code: item.code && [item.code, ...details.code],
+                            title: item.title && [item.title, ...details.title],
+                        })
+                    }
                 case LIGHT_220:
                 case LIGHT_LED:
                 case LIGHT_RGB:
@@ -99,7 +111,6 @@ const initAssist = () => {
                             type: item.type,
                             code: item.code,
                             title: item.title,
-                            details: getDetails(data, item.site)
                         });
                     }
                     break;
@@ -108,9 +119,10 @@ const initAssist = () => {
     });
     console.log(scripts)
     console.log(things)
+    console.log(sites);
     thingIndex = initIndex(things);
     scriptIndex = initIndex(scripts);
-    fs.writeFileSync("var/tmp/state.json", JSON.stringify(things, null, 4))
+    siteIndex = initIndex(sites);
 }
 
 const getDetails = (state, id) => {
