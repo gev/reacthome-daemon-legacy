@@ -32,7 +32,7 @@ const commands = [
 
 const makeIndex = (data, keys) => new Fuse(data, {
     keys,
-    threshold: 0.4,
+    threshold: 0.001,
     includeScore: true,
     isCaseSensitive: false,
     minMatchCharLength: 3,
