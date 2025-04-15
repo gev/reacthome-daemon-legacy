@@ -224,6 +224,7 @@ const search = (keywords, index) => {
         if (some.length > 0) {
             const set = new Set();
             for (const { item } of some) {
+                console.log(some);
                 ids.add(item.id);
                 all.set(item.id, item);
                 set.add(item.id);
