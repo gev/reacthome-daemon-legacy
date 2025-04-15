@@ -74,7 +74,7 @@ const initAssist = () => {
                     break;
                 case PROJECT:
                     const { code, title } = data[value];
-                    site.push({ id: value, code, title });
+                    sites.push({ id: value, code, title });
                     break;
                 case SITE:
                     for (const id of value) {
