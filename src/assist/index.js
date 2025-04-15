@@ -124,16 +124,13 @@ const handleAssist = (action) => {
         if (subjects.size > 0) {
             for (const subject of subjects.values()) {
                 res.push({
-                    action: action.item,
-                    subject: subject.item,
+                    action,
+                    subject,
                     score: (action.score + subject.score) / 2
                 })
             }
         } else {
-            res.push({
-                action: action.item,
-                score: action.score
-            })
+            res.push({ action, score: action.score })
         }
     }
 
