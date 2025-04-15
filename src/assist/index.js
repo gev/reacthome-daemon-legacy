@@ -113,6 +113,7 @@ const handleAssist = (action) => {
     const subjects = search(keywords, subjectIndex);
     const sites = search(keywords, siteIndex);
 
+    console.log(action);
     console.log("scripts", scripts);
     console.log("actions", actions);
     console.log("subjects", subjects);
