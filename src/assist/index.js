@@ -114,10 +114,10 @@ const handleAssist = (action) => {
     const sites = search(keywords, siteIndex);
 
     console.log(action);
-    // console.log("scripts", scripts);
-    // console.log("actions", actions);
-    // console.log("subjects", subjects);
-    // console.log("sites", sites);
+    console.log("scripts", scripts);
+    console.log("actions", actions);
+    console.log("subjects", subjects);
+    console.log("sites", sites);
 
     const res = [];
     for (const action of actions.values()) {
@@ -151,7 +151,7 @@ const search = (keywords, index) => {
         const items = index.search(keyword);
         for (const { item, score } of items) {
             if (res.has(item.id)) {
-                res.get(item.id).score += score;
+                res.get(item.id).score *= score;
             } else {
                 res.set(item.id, { ...item, score });
             }
