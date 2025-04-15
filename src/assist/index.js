@@ -117,9 +117,9 @@ const initAssist = () => {
             }
         }
     });
-    console.log(scripts)
-    console.log(things)
-    console.log(sites);
+    // console.log(scripts)
+    // console.log(things)
+    // console.log(sites);
     thingIndex = initIndex(things);
     scriptIndex = initIndex(scripts);
     siteIndex = initIndex(sites);
@@ -137,9 +137,9 @@ const getDetails = (state, id) => {
 }
 
 const handleAssist = (action) => {
-    console.log(action);
+    // console.log(action);
     const keywords = action.payload.message.split(" ")
-    console.log(keywords)
+    // console.log(keywords)
     const scripts = search(keywords, scriptIndex);
 
 
@@ -151,7 +151,7 @@ const handleAssist = (action) => {
             const scriptTitle = getTitle(script);
             answer = "Выполняю скрипт: " + scriptTitle;
             const action = ({ type: ACTION_SCRIPT_RUN, id: script.id })
-            console.log(action);
+            // console.log(action);
             run(action);
         } else {
             const scriptTitles = getTitles(scripts)
@@ -167,7 +167,7 @@ const handleAssist = (action) => {
                 const thingTitle = getTitle(thing);
                 answer = command.answer.pc + " " + thingTitle;
                 const action = { type: command.id, id: thing.id }
-                console.log(action)
+                // console.log(action)
                 run(action);
             } else if (things.length === 0) {
                 answer = "Уточните, что именно " + command.answer.inf;
@@ -224,12 +224,12 @@ const search = (keywords, index) => {
         if (some.length > 0) {
             const set = new Set();
             for (const { item } of some) {
-                console.log(some);
                 ids.add(item.id);
                 all.set(item.id, item);
                 set.add(item.id);
             }
-            console.log(keyword, set);
+            console.log(keyword);
+            console.log(some);
             sub.push(set)
         }
     }
@@ -246,7 +246,7 @@ const search = (keywords, index) => {
             res.push(all.get(id))
         }
     }
-    console.log(res)
+    // console.log(res)
     return res;
 }
 module.exports = { initAssist, initAssistDelayed, handleAssist }
