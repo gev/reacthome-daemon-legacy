@@ -132,7 +132,7 @@ const search = (keywords, index) => {
             res.add(item)
         }
     }
-    return res.values;
+    return res.values();
 }
 
 const getTitle = ({ title, code }) => title || code;
