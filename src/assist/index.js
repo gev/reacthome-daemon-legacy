@@ -120,9 +120,9 @@ const handleAssist = (action) => {
     // console.log("sites", sites);
 
     const res = [];
-    for (const action of actions) {
-        if (subjects.length > 0) {
-            for (const subject of subjects) {
+    for (const action of actions.values()) {
+        if (subjects.size > 0) {
+            for (const subject of subjects.values()) {
                 res.push({
                     action: action.item,
                     subject: subject.item,
@@ -153,7 +153,7 @@ const search = (keywords, index) => {
             res.add(item)
         }
     }
-    return res.values();
+    return res;
 }
 
 const getTitle = ({ title, code }) => title || code;
