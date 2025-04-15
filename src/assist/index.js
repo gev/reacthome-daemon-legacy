@@ -128,7 +128,7 @@ const search = (keywords, index) => {
     const res = new Map();
     for (const keyword of keywords) {
         const items = index.search(keyword);
-        res.push(keyword, items)
+        res.set(keyword, items)
     }
     return res;
 }
