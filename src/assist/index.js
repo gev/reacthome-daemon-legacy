@@ -146,11 +146,16 @@ const handleAssist = (action) => {
 }
 
 const search = (keywords, index) => {
-    const res = new Set();
+    const res = new Map();
     for (const keyword of keywords) {
         const items = index.search(keyword);
-        for (const item of items) {
-            res.add(item)
+        for (const { item, score } of items) {
+            if (res.has(item.id)) {
+                res.get(id).score += score;
+            } else {
+                res.set(item.id, { ...item, score });
+            }
+
         }
     }
     return res;
