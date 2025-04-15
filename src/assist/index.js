@@ -185,7 +185,7 @@ const handleAssist = (action) => {
                 const thingTitles = getTitles(things);
                 answer = "Что сделать с: " + thingTitles + "?";
             } else {
-                answer = "Идите в баню"
+                answer = "Слушаю и повинуюсь"
             }
         }
     }
