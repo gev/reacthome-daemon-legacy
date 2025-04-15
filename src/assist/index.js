@@ -126,7 +126,7 @@ const handleAssist = (action) => {
                 res.push({
                     action: action.item,
                     subject: subject.item,
-                    score: action.score + subject.score
+                    score: (action.score + subject.score) / 2
                 })
             }
         } else {
