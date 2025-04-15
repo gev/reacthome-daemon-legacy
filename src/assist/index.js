@@ -151,7 +151,7 @@ const search = (keywords, index) => {
         const items = index.search(keyword);
         for (const { item, score } of items) {
             if (res.has(item.id)) {
-                res.get(id).score += score;
+                res.get(item.id).score += score;
             } else {
                 res.set(item.id, { ...item, score });
             }
