@@ -129,7 +129,7 @@ const search = (keywords, index) => {
     const res = new Map();
     for (const keyword of keywords) {
         const items = index.search(keyword);
-        res.set(keyword, items)
+        res.set(keyword, JSON.stringify(items, null, 2))
     }
     return res;
 }
