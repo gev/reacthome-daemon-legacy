@@ -125,14 +125,12 @@ const handleAssist = (action) => {
 }
 
 const search = (keywords, index) => {
-    const res = new Set();
+    const res = new Map();
     for (const keyword of keywords) {
         const items = index.search(keyword);
-        for (const item of items) {
-            res.add(item)
-        }
+        res.push(keyword, items)
     }
-    return res.values();
+    return res;
 }
 
 const getTitle = ({ title, code }) => title || code;
