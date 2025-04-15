@@ -128,7 +128,7 @@ const search = (keywords, index) => {
     const res = new Set();
     for (const keyword of keywords) {
         const items = index.search(keyword);
-        items.array.forEach(res.add);
+        items.forEach(res.add);
     }
     return res.values;
 }
