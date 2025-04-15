@@ -93,8 +93,8 @@ const initAssist = () => {
                 case BOILER:
                 case PUMP:
                     for (const id of value) {
-                        const { code, title } = data[id];
-                        subjects.push({ id, code, title });
+                        const { code, type, title } = data[id];
+                        subjects.push({ id, code, type, title });
                     }
                     break;
             }
@@ -114,10 +114,24 @@ const handleAssist = (action) => {
     const sites = search(keywords, siteIndex);
 
     console.log(action);
-    console.log("scripts", scripts);
-    console.log("actions", actions);
-    console.log("subjects", subjects);
-    console.log("sites", sites);
+    // console.log("scripts", scripts);
+    // console.log("actions", actions);
+    // console.log("subjects", subjects);
+    // console.log("sites", sites);
+
+    const res = [];
+    for (const action of actions) {
+        for (const subject of subjects) {
+            const item = {
+                action: action.item,
+                subject: subject.item,
+                score: action.score * subject.score
+            }
+            res.push(item);
+        }
+    }
+
+    console.log(res);
 
     let answer = "Да, я тут!";
 
