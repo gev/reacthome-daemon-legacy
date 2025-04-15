@@ -125,7 +125,7 @@ const handleAssist = (action) => {
             const item = {
                 action: action.item,
                 subject: subject.item,
-                score: action.score * subject.score
+                score: action.score + subject.score
             }
             res.push(item);
         }
