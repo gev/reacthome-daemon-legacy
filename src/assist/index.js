@@ -113,12 +113,10 @@ const handleAssist = (action) => {
     const subjects = search(keywords, subjectIndex);
     const sites = search(keywords, siteIndex);
 
-    console.log(scripts);
-    console.log(actions);
-    console.log(subjects);
-    console.log(sites);
-
-    console.log()
+    console.log("scripts", scripts);
+    console.log("actions", actions);
+    console.log("subjects", subjects);
+    console.log("sites", sites);
 
     let answer = "Да, я тут!";
 
