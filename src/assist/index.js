@@ -69,17 +69,17 @@ const initAssist = () => {
                 case SCRIPT:
                     for (const id of value) {
                         const { code, title, } = data[id]
-                        scripts.push({ id, code, title: title.split(" ") });
+                        scripts.push({ id, code, title: title && title.split(" ") });
                     }
                     break;
                 case PROJECT:
                     const { code, title } = data[value];
-                    sites.push({ id: value, code, title: title.split(" ") });
+                    sites.push({ id: value, code, title: title && title.split(" ") });
                     break;
                 case SITE:
                     for (const id of value) {
                         const { code, title } = data[id] || {};
-                        sites.push({ id, code, title: title.split(" ") })
+                        sites.push({ id, code, title: title && title.split(" ") })
                     }
                 case LIGHT_220:
                 case LIGHT_LED:
@@ -94,7 +94,7 @@ const initAssist = () => {
                 case PUMP:
                     for (const id of value) {
                         const { code, type, title } = data[id];
-                        subjects.push({ id, code, type, title: title.split(" ") });
+                        subjects.push({ id, code, type, title: title && title.split(" ") });
                     }
                     break;
             }
