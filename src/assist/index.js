@@ -114,10 +114,6 @@ const handleAssist = (action) => {
     const sites = search(keywords, siteIndex);
 
     console.log(action);
-    console.log("scripts", scripts);
-    console.log("actions", actions);
-    console.log("subjects", subjects);
-    console.log("sites", sites);
 
     const res = [];
     for (const action of actions.values()) {
@@ -134,7 +130,7 @@ const handleAssist = (action) => {
         }
     }
 
-    console.log(res);
+    console.log(JSON.stringify(res, null, 2));
 
     let answer = "Да ты, батюшка, только скажи как!";
 
