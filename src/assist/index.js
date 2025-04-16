@@ -58,6 +58,11 @@ const initAssistDelayed = () => {
     timeout = setTimeout(initAssist, 1000)
 }
 
+const prepare = o => ({
+    ...o,
+    title: o.title && o.title.split(" ")
+})
+
 const initAssist = () => {
     const data = state();
     const scripts = [];
@@ -69,17 +74,17 @@ const initAssist = () => {
                 case SCRIPT:
                     for (const id of value) {
                         const { code, title, } = data[id]
-                        scripts.push({ id, code, title: title && title.split(" ") });
+                        scripts.push(prepare({ id, code, title }));
                     }
                     break;
                 case PROJECT:
                     const { code, title } = data[value];
-                    sites.push({ id: value, code, title: title && title.split(" ") });
+                    sites.push(prepare({ id: value, code, title }));
                     break;
                 case SITE:
                     for (const id of value) {
                         const { code, title } = data[id] || {};
-                        sites.push({ id, code, title: title && title.split(" ") })
+                        sites.push(prepare({ id, code, title }))
                     }
                 case LIGHT_220:
                 case LIGHT_LED:
@@ -96,10 +101,10 @@ const initAssist = () => {
                         const { code, type, title } = data[id];
                         if (title) {
                             for (const t of title.split(" ")) {
-                                subjects.push({ id, code, type, title: t });
+                                subjects.push(prepare({ id, code, type, title: t }));
                             }
                         } else {
-                            subjects.push({ id, code, type });
+                            subjects.push(prepare({ id, code, type }));
                         }
                     }
                     break;
