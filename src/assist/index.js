@@ -99,13 +99,7 @@ const initAssist = () => {
                 case PUMP:
                     for (const id of value) {
                         const { code, type, title } = data[id];
-                        if (title) {
-                            for (const t of title.split(" ")) {
-                                subjects.push(prepare({ id, code, type, title: t }));
-                            }
-                        } else {
-                            subjects.push(prepare({ id, code, type }));
-                        }
+                        subjects.push(prepare({ id, code, type, title }));
                     }
                     break;
             }
