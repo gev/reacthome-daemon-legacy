@@ -55,7 +55,6 @@ const tests = [
 
 const search = keywords => {
     const items = new Map()
-
     for (const keyword of keywords) {
         for (const { item, score } of index.search(keyword)) {
             const s = score > 0.001 ? score : 0.001
@@ -66,8 +65,6 @@ const search = keywords => {
             }
         }
     }
-
-
     return [...items.values()].sort((a, b) => a.score - b.score)
 
 }
