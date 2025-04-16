@@ -68,18 +68,18 @@ const initAssist = () => {
             switch (key) {
                 case SCRIPT:
                     for (const id of value) {
-                        const script = data[id]
-                        scripts.push({ id, code: script.code, title: script.title });
+                        const { code, title, } = data[id]
+                        scripts.push({ id, code, title: title.split(" ") });
                     }
                     break;
                 case PROJECT:
                     const { code, title } = data[value];
-                    sites.push({ id: value, code, title });
+                    sites.push({ id: value, code, title: title.split(" ") });
                     break;
                 case SITE:
                     for (const id of value) {
                         const { code, title } = data[id] || {};
-                        sites.push({ id, code, title })
+                        sites.push({ id, code, title: title.split(" ") })
                     }
                 case LIGHT_220:
                 case LIGHT_LED:
@@ -94,7 +94,7 @@ const initAssist = () => {
                 case PUMP:
                     for (const id of value) {
                         const { code, type, title } = data[id];
-                        subjects.push({ id, code, type, title });
+                        subjects.push({ id, code, type, title: title.split(" ") });
                     }
                     break;
             }
@@ -136,7 +136,7 @@ const handleAssist = (action) => {
 
     console.log(res);
 
-    let answer = "Да, я тут!";
+    let answer = "Да ты, батюшка, только скажи как!";
 
     action.payload.message = answer
     return action;
