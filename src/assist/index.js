@@ -98,7 +98,17 @@ const handleAssist = (action) => {
 
     const words = action.payload.message.split(" ")
 
-    findActions(words);
+    const parts = []
+    let prev = 0
+    let act
+    for (act of findActions(words)) {
+        const part = words.slice(prev, act.position)
+        parts.push(mkPart(part))
+        parts.push(act)
+        prev = act.position + 1
+    }
+    parts.push(mkPart(words.slice(act.position + 1)))
+
 
     // const scripts = search(words, scriptIndex)
     // const subjects = search(words, subjectIndex)
@@ -123,29 +133,31 @@ const handleAssist = (action) => {
     return action
 }
 
+const mkPart = (part) => ({ type: 'part', part })
+
 const findActions = (words) => {
     const res = [];
     for (let position = 0; position < words.length; position += 1) {
         const word = words[position]
-        const a = [];
+        const acts = [];
         for (const action of actions) {
-            const s = closest(word, action.forms)
-            if (s > 0.9) {
-                a.push({
+            const sim = closest(word, action.forms)
+            if (sim > 0.9) {
+                acts.push({
+                    type: 'action',
                     action,
-                    similarity: s
+                    similarity: sim
                 })
             }
         }
-        if (a.length > 0) {
+        if (acts.length > 0) {
             res.push({
                 word,
                 position,
-                actions: a,
+                actions: acts,
             })
         }
     }
-    console.log(JSON.stringify(res, null, 2));
     return res
 }
 
