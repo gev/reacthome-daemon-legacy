@@ -102,11 +102,11 @@ const handleAssist = (action) => {
 
     let prev = 0
     for (const { action, position } of findActionPositions(words)) {
-        pushNoneEmpty(parts, mkPart(words.slice(prev, position)))
+        pushNoneEmptyPart(parts, words.slice(prev, position))
         parts.push(action)
         prev = position + 1
     }
-    pushNoneEmpty(parts, mkPart(words.slice(prev)))
+    pushNoneEmptyPart(parts, words.slice(prev))
     console.log(parts)
 
     // const scripts = search(words, scriptIndex)
@@ -134,9 +134,9 @@ const handleAssist = (action) => {
 
 const mkPart = (part) => ({ type: 'part', part })
 
-const pushNoneEmpty = (a, it) => {
+const pushNoneEmptyPart = (a, it) => {
     if (it.length > 0) {
-        a.push(it)
+        a.push(mkPart(it))
     }
 }
 
