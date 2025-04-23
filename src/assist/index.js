@@ -120,22 +120,16 @@ const handleAssist = (action) => {
 
     const res = []
     for (const action of actions.values()) {
-        if (subjects.size > 0) {
-            for (const subject of subjects.values()) {
-                res.push({
-                    action,
-                    subject,
-                    score: (action.score + subject.score) / 2
-                })
-            }
-        } else {
-            res.push({ action, score: action.score })
-        }
+        res.push(action)
     }
+    for (const subject of subjects.values()) {
+        res.push(subject)
+    }
+
 
     console.log(JSON.stringify(res, null, 2))
 
-    let answer = "Да ты, батюшка, только скажи как!"
+    let answer = "Ага!"
 
     action.payload.message = answer
     return action
