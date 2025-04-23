@@ -101,11 +101,11 @@ const handleAssist = (action) => {
     const parts = []
 
     let prev = 0
-    for (const act of findActions(words)) {
-        const part = words.slice(prev, act.position)
+    for (const { action, position } of findActionPositions(words)) {
+        const part = words.slice(prev, position)
         pushNoneEmpty(parts, mkPart(part))
-        parts.push(act.action)
-        prev = act.position + 1
+        parts.push(action)
+        prev = position + 1
     }
     pushNoneEmpty(parts, mkPart(words.slice(prev)))
     console.log(parts)
@@ -141,7 +141,7 @@ const pushNoneEmpty = (a, it) => {
     }
 }
 
-const findActions = (words) => {
+const findActionPositions = (words) => {
     const res = [];
     for (let position = 0; position < words.length; position += 1) {
         const word = words[position]
@@ -156,13 +156,11 @@ const findActions = (words) => {
         }
         if (action) {
             res.push({
-                word,
                 position,
                 action,
             })
         }
     }
-    console.log(res)
     return res
 }
 
