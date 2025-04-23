@@ -46,13 +46,14 @@ const initAssistDelayed = () => {
 const prepare = id => {
     const { code, title, type } = get(id) || {}
     const words = title ? title.split(" ") : []
+    const forms = getForms(words)
     return {
         id,
         code,
         type,
         title,
         words,
-        forms: getForms(words)
+        forms: forms.length > 0 ? forms : words
     }
 }
 
