@@ -55,10 +55,7 @@ const initAssistDelayed = () => {
     timeout = setTimeout(initAssist, 1000)
 }
 
-const prepare = o => ({
-    ...o,
-    title: o.title && o.title.split(" ")
-})
+const prepare = o => o
 
 const initAssist = () => {
     const data = state()
