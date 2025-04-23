@@ -162,6 +162,7 @@ const findActions = (words) => {
             })
         }
     }
+    console.log(res)
     return res
 }
 
