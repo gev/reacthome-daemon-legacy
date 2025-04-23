@@ -14,6 +14,7 @@ const { getAllForms } = require("./lang/ru")
 const actions = [
     {
         id: ACTION_ON,
+        type: "action",
         action: "включи",
         answer: {
             pc: "включаю",
@@ -22,6 +23,7 @@ const actions = [
     },
     {
         id: ACTION_OFF,
+        type: "action",
         action: "выключи",
         answer: {
             inf: "выключить",
@@ -112,12 +114,15 @@ const initAssist = () => {
 }
 
 const handleAssist = (action) => {
-    const keywords = action.payload.message.split(" ")
+    const words = action.payload.message.split(" ")
 
-    const scripts = search(keywords, scriptIndex)
-    const actions = search(keywords, actionIndex)
-    const subjects = search(keywords, subjectIndex)
-    const sites = search(keywords, siteIndex)
+    findActions(words);
+
+    return;
+
+    const scripts = search(words, scriptIndex)
+    const subjects = search(words, subjectIndex)
+    const sites = search(words, siteIndex)
 
     console.log(action)
 
@@ -136,6 +141,21 @@ const handleAssist = (action) => {
 
     action.payload.message = answer
     return action
+}
+
+const findActions = (words) => {
+    const res = [];
+    for (let position = 0; position < words.length; position += 1) {
+        actions = actionIndex.search(words[position])
+        if (actions.length > 0) {
+            res.push({
+                actions,
+                position
+            })
+        }
+    }
+    console.log(res);
+    return res
 }
 
 const search = (keywords, index) => {
