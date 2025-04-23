@@ -154,7 +154,7 @@ const findActions = (words) => {
             })
         }
     }
-    console.log(res);
+    console.log(JSON.stringify(res, null, 2));
     return res
 }
 
