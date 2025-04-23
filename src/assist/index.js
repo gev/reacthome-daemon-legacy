@@ -100,15 +100,14 @@ const handleAssist = (action) => {
 
     const parts = []
     let prev = 0
-    let act
-    for (act of findActions(words)) {
+    for (const act of findActions(words)) {
         const part = words.slice(prev, act.position)
         parts.push(mkPart(part))
         parts.push(act)
         prev = act.position + 1
     }
-    parts.push(mkPart(words.slice(act.position + 1)))
-
+    parts.push(mkPart(words.slice(prev)))
+    console.log(parts)
 
     // const scripts = search(words, scriptIndex)
     // const subjects = search(words, subjectIndex)
