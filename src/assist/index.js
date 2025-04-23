@@ -92,6 +92,10 @@ const initAssist = () => {
             }
         }
     })
+    console.log(actions)
+    console.log(scripts)
+    console.log(sites)
+    console.log(subjects)
 }
 
 const handleAssist = (action) => {
