@@ -188,7 +188,6 @@ const getForms = (words) => {
         for (form of getAllForms(word))
             res.push(form)
     }
-    console.log(res)
     return res
 }
 
