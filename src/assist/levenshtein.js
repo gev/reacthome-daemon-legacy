@@ -11,7 +11,6 @@ const closest = (test, words) => {
     let r = 0;
     for (const word of words) {
         const s = similarity(test, word)
-        console.log(test, "<->", word, "=", s)
         if (s > r) {
             r = s
         }
