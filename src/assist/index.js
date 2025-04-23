@@ -146,11 +146,13 @@ const handleAssist = (action) => {
 const findActions = (words) => {
     const res = [];
     for (let position = 0; position < words.length; position += 1) {
-        const actions = actionIndex.search(words[position])
+        const word = words[position]
+        const actions = actionIndex.search(word)
         if (actions.length > 0) {
             res.push({
+                word,
+                position,
                 actions,
-                position
             })
         }
     }
