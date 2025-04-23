@@ -34,7 +34,7 @@ const actions = [
 
 const makeIndex = (data, keys) => new Fuse(data, {
     keys,
-    threshold: 0.4,
+    threshold: 0.6,
     includeScore: true,
     isCaseSensitive: false,
     minMatchCharLength: 1,
