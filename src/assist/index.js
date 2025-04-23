@@ -114,6 +114,8 @@ const initAssist = () => {
 }
 
 const handleAssist = (action) => {
+    console.log(action)
+
     const words = action.payload.message.split(" ")
 
     findActions(words);
@@ -122,7 +124,7 @@ const handleAssist = (action) => {
     // const subjects = search(words, subjectIndex)
     // const sites = search(words, siteIndex)
 
-    // console.log(action)
+    // 
 
     // const res = []
     // for (const action of actions.values()) {
