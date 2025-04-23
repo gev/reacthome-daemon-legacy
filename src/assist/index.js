@@ -9,7 +9,7 @@ const { state, get } = require("../controllers/state")
 const { run } = require("../controllers/service")
 const { applySite } = require("../actions")
 const { getAllForms } = require("./lang/ru")
-const { similarity } = require("./levenshtein")
+const { similarity, closest } = require("./levenshtein")
 
 const scripts = []
 const subjects = []
@@ -128,7 +128,7 @@ const findActions = (words) => {
     for (let position = 0; position < words.length; position += 1) {
         const word = words[position]
         for (const action of actions) {
-            const s = closet(word, action.words)
+            const s = closest(word, action.words)
             console.log(word, action, s)
         }
         // if (actions.length > 0) {
