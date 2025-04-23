@@ -1,15 +1,15 @@
-const fs = require("fs");
-const Fuse = require("fuse.js");
+const Fuse = require("fuse.js")
 const { PROJECT, SITE, LIGHT_220, LIGHT_LED
     , LIGHT_RGB, VALVE_WATER, VALVE_HEATING, WARM_FLOOR
     , AC, FAN, SOCKET_220, BOILER, PUMP, SCRIPT,
     ACTION_ON,
     ACTION_OFF,
     ACTION_SCRIPT_RUN
-} = require("../constants");
-const { state } = require("../controllers/state");
-const { run } = require("../controllers/service");
-const { applySite } = require("../actions");
+} = require("../constants")
+const { state } = require("../controllers/state")
+const { run } = require("../controllers/service")
+const { applySite } = require("../actions")
+const { getAllForms } = require("./lang/ru")
 
 const actions = [
     {
@@ -35,26 +35,23 @@ const makeIndex = (data, keys) => new Fuse(data, {
     threshold: 0.4,
     includeScore: true,
     isCaseSensitive: false,
-    minMatchCharLength: 3,
+    minMatchCharLength: 1,
     shouldSort: true,
 
 })
 
+const initIndex = (data) => makeIndex(data, ['code', 'forms'])
 
-const initIndex = (data) => makeIndex(data, ['code', 'title']);
+const actionIndex = makeIndex(actions, ['action'])
+let scriptIndex = initIndex({})
+let subjectIndex = initIndex({})
+let siteIndex = initIndex({})
+let typeIndex = initIndex({})
 
-
-const actionIndex = makeIndex(actions, ['action']);
-let scriptIndex = initIndex({});
-let subjectIndex = initIndex({});
-let siteIndex = initIndex({});
-let typeIndex = initIndex({});
-
-
-let timeout;
+let timeout
 
 const initAssistDelayed = () => {
-    clearTimeout(timeout);
+    clearTimeout(timeout)
     timeout = setTimeout(initAssist, 1000)
 }
 
@@ -64,27 +61,30 @@ const prepare = o => ({
 })
 
 const initAssist = () => {
-    const data = state();
-    const scripts = [];
-    const subjects = [];
-    const sites = [];
+    const data = state()
+    const scripts = []
+    const subjects = []
+    const sites = []
     applySite(data.mac, (site) => {
         for ([key, value] of Object.entries(site)) {
             switch (key) {
                 case SCRIPT:
                     for (const id of value) {
-                        const { code, title, } = data[id]
-                        scripts.push(prepare({ id, code, title }));
+                        const { code, title, } = data[id] || {}
+                        const forms = getForms(title)
+                        scripts.push(prepare({ id, code, title, forms }))
                     }
-                    break;
+                    break
                 case PROJECT:
-                    const { code, title } = data[value];
-                    sites.push(prepare({ id: value, code, title }));
-                    break;
+                    const { code, title } = data[value] || {}
+                    const forms = getForms(title)
+                    sites.push(prepare({ id: value, code, title, forms }))
+                    break
                 case SITE:
                     for (const id of value) {
-                        const { code, title } = data[id] || {};
-                        sites.push(prepare({ id, code, title }))
+                        const { code, title } = data[id] || {}
+                        const forms = getForms(title)
+                        sites.push(prepare({ id, code, title, forms }))
                     }
                 case LIGHT_220:
                 case LIGHT_LED:
@@ -98,29 +98,30 @@ const initAssist = () => {
                 case BOILER:
                 case PUMP:
                     for (const id of value) {
-                        const { code, type, title } = data[id];
-                        subjects.push(prepare({ id, code, type, title }));
+                        const { code, type, title } = data[id] || {}
+                        const forms = getForms(title)
+                        subjects.push(prepare({ id, code, type, title, forms }))
                     }
-                    break;
+                    break
             }
         }
-    });
-    subjectIndex = initIndex(subjects);
-    scriptIndex = initIndex(scripts);
-    siteIndex = initIndex(sites);
+    })
+    subjectIndex = initIndex(subjects)
+    scriptIndex = initIndex(scripts)
+    siteIndex = initIndex(sites)
 }
 
 const handleAssist = (action) => {
     const keywords = action.payload.message.split(" ")
 
-    const scripts = search(keywords, scriptIndex);
-    const actions = search(keywords, actionIndex);
-    const subjects = search(keywords, subjectIndex);
-    const sites = search(keywords, siteIndex);
+    const scripts = search(keywords, scriptIndex)
+    const actions = search(keywords, actionIndex)
+    const subjects = search(keywords, subjectIndex)
+    const sites = search(keywords, siteIndex)
 
-    console.log(action);
+    console.log(action)
 
-    const res = [];
+    const res = []
     for (const action of actions.values()) {
         if (subjects.size > 0) {
             for (const subject of subjects.values()) {
@@ -135,38 +136,41 @@ const handleAssist = (action) => {
         }
     }
 
-    console.log(JSON.stringify(res, null, 2));
+    console.log(JSON.stringify(res, null, 2))
 
-    let answer = "Да ты, батюшка, только скажи как!";
+    let answer = "Да ты, батюшка, только скажи как!"
 
     action.payload.message = answer
-    return action;
+    return action
 }
 
 const search = (keywords, index) => {
-    const res = new Map();
+    const res = new Map()
     for (const keyword of keywords) {
-        const items = index.search(keyword);
+        const items = index.search(keyword)
         for (const { item, score } of items) {
             const s = score > 0.001 ? score : 0.001
             if (res.has(item.id)) {
-                res.get(item.id).score *= s;
+                res.get(item.id).score *= s
             } else {
-                res.set(item.id, { ...item, score: s });
+                res.set(item.id, { ...item, score: s })
             }
         }
     }
-    return res;
+    return res
 }
 
-const getTitle = ({ title, code }) => title || code;
+const getTitle = ({ title, code }) => title || code
 
-const getTitles = (some) => {
-    const res = [];
-    for (const item of some) {
-        res.push(getTitle(item))
+const getForms = (text) => {
+    if (!text) return []
+    const res = []
+    for (const word of text.split(" ")) {
+        for (form of getAllForms(word))
+            res.push(form)
     }
-    return res.join(", ");
+    console.log(res)
+    return res
 }
 
 

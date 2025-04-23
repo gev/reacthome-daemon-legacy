@@ -33,23 +33,25 @@ const data = [
 
 const makeIndex = (data, keys) => new Fuse(data, {
     keys,
-    threshold: 1,
+    threshold: 0.4,
     includeScore: true,
     isCaseSensitive: false,
-    minMatchCharLength: 3,
-    shouldSort: true,
-
+    minMatchCharLength: 1,
+    // shouldSort: true,
+    // ignoreFieldNorm: true,
+    findAllMatches: true,
+    ignoreLocation: true,
 })
 
 const index = makeIndex(data, ['title'])
 
 const tests = [
-    ["красный", "лампус"],
-    ["лампус", "красный"],
-    ["красный"],
-    ["красный", "лампусик"],
-    ["красный", "лампусикус"],
-    ["лампа"],
+    ["красную", "лампу"],
+    // ["лампус красный"],
+    // ["красный"],
+    // ["красный лампусик"],
+    // ["красный лампусикус"],
+    // ["лампа"],
 ]
 
 
@@ -57,11 +59,13 @@ const search = keywords => {
     const items = new Map()
     for (const keyword of keywords) {
         for (const { item, score } of index.search(keyword)) {
-            const s = score > 0.001 ? score : 0.001
+            const s = score;// > 0.001 ? score : 0.001
             if (items.has(item.id)) {
-                items.get(item.id).score *= s
+                const it = items.get(item.id)
+                it.score *= s
+                it.scores[keyword] = s
             } else {
-                items.set(item.id, { ...item, score: s })
+                items.set(item.id, { ...item, score: s, scores: { [keyword]: s } })
             }
         }
     }
