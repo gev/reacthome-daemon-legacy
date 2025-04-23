@@ -57,7 +57,7 @@ const initAssistDelayed = () => {
 
 const prepare = o => ({
     ...o,
-    title: o.title.split(" ")
+    title: o.title ? o.title.split(" ") : []
 })
 
 const initAssist = () => {
@@ -157,7 +157,6 @@ const search = (keywords, index) => {
 const getTitle = ({ title, code }) => title || code
 
 const getForms = (words) => {
-    if (!text) return []
     const res = []
     for (const word of words) {
         for (form of getAllForms(word))
