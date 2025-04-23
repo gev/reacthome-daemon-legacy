@@ -102,8 +102,7 @@ const handleAssist = (action) => {
 
     let prev = 0
     for (const { action, position } of findActionPositions(words)) {
-        const part = words.slice(prev, position)
-        pushNoneEmpty(parts, mkPart(part))
+        pushNoneEmpty(parts, mkPart(words.slice(prev, position)))
         parts.push(action)
         prev = position + 1
     }
