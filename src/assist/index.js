@@ -99,14 +99,15 @@ const handleAssist = (action) => {
     const words = action.payload.message.split(" ")
 
     const parts = []
+
     let prev = 0
     for (const act of findActions(words)) {
         const part = words.slice(prev, act.position)
-        parts.push(mkPart(part))
-        parts.push(act.actions)
+        pushNoneEmpty(parts, mkPart(part))
+        parts.push(act.action)
         prev = act.position + 1
     }
-    parts.push(mkPart(words.slice(prev)))
+    pushNoneEmpty(parts, mkPart(words.slice(prev)))
     console.log(parts)
 
     // const scripts = search(words, scriptIndex)
@@ -134,26 +135,30 @@ const handleAssist = (action) => {
 
 const mkPart = (part) => ({ type: 'part', part })
 
+const pushNoneEmpty = (a, it) => {
+    if (it.length > 0) {
+        a.push(it)
+    }
+}
+
 const findActions = (words) => {
     const res = [];
     for (let position = 0; position < words.length; position += 1) {
         const word = words[position]
-        const acts = [];
-        for (const action of actions) {
-            const sim = closest(word, action.forms)
-            if (sim > 0.9) {
-                acts.push({
-                    type: 'action',
-                    action,
-                    similarity: sim
-                })
+        const max = 0;
+        let action;
+        for (const act of actions) {
+            const sim = closest(word, act.forms)
+            if (sim > max) {
+                max = sim;
+                action = act;
             }
         }
-        if (acts.length > 0) {
+        if (action) {
             res.push({
                 word,
                 position,
-                actions: acts,
+                actions,
             })
         }
     }
