@@ -19,7 +19,7 @@ const actions = [
     {
         id: ACTION_ON,
         type: "action",
-        action: ["включи", "включить"],
+        forms: ["включи", "включить"],
         answer: {
             inf: "включить",
             pc: "включаю",
@@ -28,7 +28,7 @@ const actions = [
     {
         id: ACTION_OFF,
         type: "action",
-        words: ["выключи", "выключить"],
+        forms: ["выключи", "выключить"],
         answer: {
             inf: "выключить",
             pc: "выключаю",
@@ -128,7 +128,7 @@ const findActions = (words) => {
     for (let position = 0; position < words.length; position += 1) {
         const word = words[position]
         for (const action of actions) {
-            const s = closest(word, action.words)
+            const s = closest(word, action.forms)
             console.log(word, action, s)
         }
         // if (actions.length > 0) {
