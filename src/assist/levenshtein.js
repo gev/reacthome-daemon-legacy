@@ -1,23 +1,33 @@
 const { distance } = require("fastest-levenshtein")
 
-const subjects = ["л", "лампа", "лампус", "лампусик", "лампусикус", "красная лампа", "зеленая лампа", "синяя лампа"]
 
 
-const tests = ["л", "лампа", "лампус красный", "красный", "красный лампусик", "красный лампусикус", "лампа зеленая"]
-
-const compare = (a, b) => {
+const similarity = (a, b) => {
     const l = a.length > b.length ? a.length : b.length
     return 1 - distance(a, b) / l
 }
 
-for (const test of tests) {
-    for (const subject of subjects) {
-        console.log(
-            test,
-            "<->",
-            subject,
-            "=",
-            compare(test, subject),
-        )
+const closest = (test, words) => {
+    let r = 0;
+    for (const word of words) {
+        const s = similarity(test, word)
+        console.log(test, "<->", word, "=", s)
+        if (s > r) {
+            r = s
+        }
     }
+    return r
 }
+
+const compare = (words, tests) => {
+    let a = 0;
+    let h = 1;
+    for (const test of tests) {
+        const x = closest(test, words)
+        a += x
+        h += 1 / x
+    }
+    return (a / tests.length + tests.length / h) / 2
+}
+
+module.exports = { similarity, closest, compare }

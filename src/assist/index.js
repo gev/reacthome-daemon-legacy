@@ -1,4 +1,3 @@
-const Fuse = require("fuse.js")
 const { PROJECT, SITE, LIGHT_220, LIGHT_LED
     , LIGHT_RGB, VALVE_WATER, VALVE_HEATING, WARM_FLOOR
     , AC, FAN, SOCKET_220, BOILER, PUMP, SCRIPT,
@@ -10,46 +9,32 @@ const { state, get } = require("../controllers/state")
 const { run } = require("../controllers/service")
 const { applySite } = require("../actions")
 const { getAllForms } = require("./lang/ru")
+const { similarity } = require("./levenshtein")
+
+const scripts = []
+const subjects = []
+const sites = []
 
 const actions = [
     {
         id: ACTION_ON,
         type: "action",
-        action: "включи",
+        action: ["включи", "включить"],
         answer: {
-            pc: "включаю",
             inf: "включить",
+            pc: "включаю",
         }
     },
     {
         id: ACTION_OFF,
         type: "action",
-        action: "выключи",
+        words: ["выключи", "выключить"],
         answer: {
             inf: "выключить",
             pc: "выключаю",
         }
     },
 ]
-
-const makeIndex = (data, keys) => new Fuse(data, {
-    keys,
-    threshold: 0.6,
-    includeScore: true,
-    isCaseSensitive: false,
-    minMatchCharLength: 1,
-    fieldNormWeight: 2,
-    shouldSort: true,
-
-})
-
-const initIndex = (data) => makeIndex(data, ['code', 'forms'])
-
-const actionIndex = makeIndex(actions, ['action'])
-let scriptIndex = initIndex({})
-let subjectIndex = initIndex({})
-let siteIndex = initIndex({})
-let typeIndex = initIndex({})
 
 let timeout
 
@@ -60,22 +45,19 @@ const initAssistDelayed = () => {
 
 const prepare = id => {
     const { code, title, type } = get(id) || {}
-    const titles = title ? title.split(" ") : []
+    const words = title ? title.split(" ") : []
     return {
         id,
         code,
         type,
         title,
-        titles,
-        forms: getForms(titles)
+        words,
+        forms: getForms(words)
     }
 }
 
 const initAssist = () => {
     const { mac } = state()
-    const scripts = []
-    const subjects = []
-    const sites = []
     applySite(mac, (site) => {
         for ([key, value] of Object.entries(site)) {
             switch (key) {
@@ -109,9 +91,6 @@ const initAssist = () => {
             }
         }
     })
-    subjectIndex = initIndex(subjects)
-    scriptIndex = initIndex(scripts)
-    siteIndex = initIndex(sites)
 }
 
 const handleAssist = (action) => {
@@ -148,34 +127,37 @@ const findActions = (words) => {
     const res = [];
     for (let position = 0; position < words.length; position += 1) {
         const word = words[position]
-        const actions = actionIndex.search(word)
-        if (actions.length > 0) {
-            res.push({
-                word,
-                position,
-                actions,
-            })
+        for (const action of actions) {
+            const s = closet(word, action.words)
+            console.log(word, action, s)
         }
+        // if (actions.length > 0) {
+        //     res.push({
+        //         word,
+        //         position,
+        //         actions,
+        //     })
+        // }
     }
-    console.log(JSON.stringify(res, null, 2));
+    // console.log(JSON.stringify(res, null, 2));
     return res
 }
 
-const search = (keywords, index) => {
-    const res = new Map()
-    for (const keyword of keywords) {
-        const items = index.search(keyword)
-        for (const { item, score } of items) {
-            const s = score > 0.001 ? score : 0.001
-            if (res.has(item.id)) {
-                res.get(item.id).score *= s
-            } else {
-                res.set(item.id, { ...item, score: s })
-            }
-        }
-    }
-    return res
-}
+// const search = (keywords, index) => {
+//     const res = new Map()
+//     for (const keyword of keywords) {
+//         const items = index.search(keyword)
+//         for (const { item, score } of items) {
+//             const s = score > 0.001 ? score : 0.001
+//             if (res.has(item.id)) {
+//                 res.get(item.id).score *= s
+//             } else {
+//                 res.set(item.id, { ...item, score: s })
+//             }
+//         }
+//     }
+//     return res
+// }
 
 const getTitle = ({ title, code }) => title || code
 
