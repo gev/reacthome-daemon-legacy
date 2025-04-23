@@ -127,17 +127,21 @@ const findActions = (words) => {
     const res = [];
     for (let position = 0; position < words.length; position += 1) {
         const word = words[position]
+        const a = [];
         for (const action of actions) {
             const s = closest(word, action.forms)
-            console.log(word, action, s)
+            a.push({
+                action,
+                similarity: s
+            })
         }
-        // if (actions.length > 0) {
-        //     res.push({
-        //         word,
-        //         position,
-        //         actions,
-        //     })
-        // }
+        if (a.length > 0) {
+            res.push({
+                word,
+                position,
+                actions: a,
+            })
+        }
     }
     // console.log(JSON.stringify(res, null, 2));
     return res
