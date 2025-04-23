@@ -6,7 +6,7 @@ const { PROJECT, SITE, LIGHT_220, LIGHT_LED
     ACTION_OFF,
     ACTION_SCRIPT_RUN
 } = require("../constants")
-const { state } = require("../controllers/state")
+const { state, get } = require("../controllers/state")
 const { run } = require("../controllers/service")
 const { applySite } = require("../actions")
 const { getAllForms } = require("./lang/ru")
@@ -55,36 +55,38 @@ const initAssistDelayed = () => {
     timeout = setTimeout(initAssist, 1000)
 }
 
-const prepare = o => ({
-    ...o,
-    title: o.title ? o.title.split(" ") : []
-})
+const prepare = id => {
+    const { code, title, type } = get(id) || {}
+    const titles = title ? title.split(" ") : []
+    return {
+        id,
+        code,
+        type,
+        title,
+        titles,
+        forms: getForms(titles)
+    }
+}
 
 const initAssist = () => {
-    const data = state()
+    const { mac } = state()
     const scripts = []
     const subjects = []
     const sites = []
-    applySite(data.mac, (site) => {
+    applySite(mac, (site) => {
         for ([key, value] of Object.entries(site)) {
             switch (key) {
                 case SCRIPT:
                     for (const id of value) {
-                        const { code, title, } = data[id] || {}
-                        const forms = getForms(title)
-                        scripts.push(prepare({ id, code, title, forms }))
+                        scripts.push(prepare(id))
                     }
                     break
                 case PROJECT:
-                    const { code, title } = data[value] || {}
-                    const forms = getForms(title)
-                    sites.push(prepare({ id: value, code, title, forms }))
+                    sites.push(prepare(value))
                     break
                 case SITE:
                     for (const id of value) {
-                        const { code, title } = data[id] || {}
-                        const forms = getForms(title)
-                        sites.push(prepare({ id, code, title, forms }))
+                        sites.push(prepare(id))
                     }
                 case LIGHT_220:
                 case LIGHT_LED:
@@ -98,9 +100,7 @@ const initAssist = () => {
                 case BOILER:
                 case PUMP:
                     for (const id of value) {
-                        const { code, type, title } = data[id] || {}
-                        const forms = getForms(title)
-                        subjects.push(prepare({ id, code, type, title, forms }))
+                        subjects.push(prepare(id))
                     }
                     break
             }
