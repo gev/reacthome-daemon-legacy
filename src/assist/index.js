@@ -38,6 +38,7 @@ const makeIndex = (data, keys) => new Fuse(data, {
     includeScore: true,
     isCaseSensitive: false,
     minMatchCharLength: 1,
+    fieldNormWeight: 2,
     shouldSort: true,
 
 })
