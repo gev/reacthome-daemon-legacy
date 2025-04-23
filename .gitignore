@@ -2,7 +2,7 @@
 .idea
 .history
 .vscode*
-.DS_Dtore 
+.DS_Store 
 
 # Logs
 logs
