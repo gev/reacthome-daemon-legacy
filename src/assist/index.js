@@ -130,10 +130,12 @@ const findActions = (words) => {
         const a = [];
         for (const action of actions) {
             const s = closest(word, action.forms)
-            a.push({
-                action,
-                similarity: s
-            })
+            if (s > 0.9) {
+                a.push({
+                    action,
+                    similarity: s
+                })
+            }
         }
         if (a.length > 0) {
             res.push({
