@@ -118,24 +118,22 @@ const handleAssist = (action) => {
 
     findActions(words);
 
-    return;
+    // const scripts = search(words, scriptIndex)
+    // const subjects = search(words, subjectIndex)
+    // const sites = search(words, siteIndex)
 
-    const scripts = search(words, scriptIndex)
-    const subjects = search(words, subjectIndex)
-    const sites = search(words, siteIndex)
+    // console.log(action)
 
-    console.log(action)
-
-    const res = []
-    for (const action of actions.values()) {
-        res.push(action)
-    }
-    for (const subject of subjects.values()) {
-        res.push(subject)
-    }
+    // const res = []
+    // for (const action of actions.values()) {
+    //     res.push(action)
+    // }
+    // for (const subject of subjects.values()) {
+    //     res.push(subject)
+    // }
 
 
-    console.log(JSON.stringify(res, null, 2))
+    // console.log(JSON.stringify(res, null, 2))
 
     let answer = "Ага!"
 
