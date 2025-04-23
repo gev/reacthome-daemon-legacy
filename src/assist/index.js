@@ -145,7 +145,7 @@ const findActions = (words) => {
     const res = [];
     for (let position = 0; position < words.length; position += 1) {
         const word = words[position]
-        const max = 0;
+        let max = 0;
         let action;
         for (const act of actions) {
             const sim = closest(word, act.forms)
