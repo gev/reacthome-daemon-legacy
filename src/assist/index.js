@@ -149,10 +149,11 @@ const search = (keywords, index) => {
     for (const keyword of keywords) {
         const items = index.search(keyword)
         for (const { item, score } of items) {
+            const s = score > 0.001 ? score : 0.001
             if (res.has(item.id)) {
-                res.get(item.id).score *= score
+                res.get(item.id).score *= s
             } else {
-                res.set(item.id, { ...item, score })
+                res.set(item.id, { ...item, score: s })
             }
         }
     }
