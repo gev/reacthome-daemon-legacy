@@ -55,7 +55,10 @@ const initAssistDelayed = () => {
     timeout = setTimeout(initAssist, 1000)
 }
 
-const prepare = o => o
+const prepare = o => ({
+    ...o,
+    title: o.title.split(" ")
+})
 
 const initAssist = () => {
     const data = state()
@@ -153,10 +156,10 @@ const search = (keywords, index) => {
 
 const getTitle = ({ title, code }) => title || code
 
-const getForms = (text) => {
+const getForms = (words) => {
     if (!text) return []
     const res = []
-    for (const word of text.split(" ")) {
+    for (const word of words) {
         for (form of getAllForms(word))
             res.push(form)
     }
