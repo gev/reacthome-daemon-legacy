@@ -158,7 +158,7 @@ const findActions = (words) => {
             res.push({
                 word,
                 position,
-                actions,
+                action,
             })
         }
     }
