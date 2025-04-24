@@ -103,16 +103,25 @@ const handleAssist = (action) => {
 
     const words = action.payload.message.split(" ")
 
-    const parts = []
+    const stage1 = []
 
     let prev = 0
     for (const { action, position } of findActionPositions(words)) {
-        pushNoneEmptyPart(parts, words.slice(prev, position))
-        parts.push(action)
+        pushNoneEmptyPart(stage1, words.slice(prev, position))
+        stage1.push(action)
         prev = position + 1
     }
-    pushNoneEmptyPart(parts, words.slice(prev))
-    console.log(parts)
+    pushNoneEmptyPart(stage1, words.slice(prev))
+
+    const stage2 = []
+    for (const part of stage1) {
+        if (part.type === "part") {
+            stage2.push(part)
+        } else {
+            stage2.push(part)
+        }
+    }
+    console.log(stage2)
 
     // const scripts = search(words, scriptIndex)
     // const subjects = search(words, subjectIndex)
