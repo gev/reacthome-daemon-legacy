@@ -116,30 +116,13 @@ const handleAssist = (action) => {
     const stage2 = []
     for (const fragment of stage1) {
         if (fragment.type === "fragment") {
-            findSubjects(fragment.words)
-            stage2.push(fragment)
+            const sub = findSubjects(fragment.words)
+            stage2.push(sub)
         } else {
             stage2.push(fragment)
         }
     }
-    // console.log(stage2)
-
-    // const scripts = search(words, scriptIndex)
-    // const subjects = search(words, subjectIndex)
-    // const sites = search(words, siteIndex)
-
-    // 
-
-    // const res = []
-    // for (const action of actions.values()) {
-    //     res.push(action)
-    // }
-    // for (const subject of subjects.values()) {
-    //     res.push(subject)
-    // }
-
-
-    // console.log(JSON.stringify(res, null, 2))
+    console.log(stage2)
 
     let answer = "Ага!"
 
@@ -155,11 +138,13 @@ const pushNoneEmptyFragment = (a, it) => {
     }
 }
 
+const threshold = 0.9
+
 const findActionPositions = (words) => {
     const res = [];
     for (let position = 0; position < words.length; position += 1) {
         const word = words[position]
-        let max = 0.9;
+        let max = threshold;
         let action;
         for (const act of actions) {
             const sim = closest(word, act.forms)
@@ -179,28 +164,23 @@ const findActionPositions = (words) => {
 }
 
 const findSubjects = (words) => {
-    console.log(words)
+    const res = []
     for (const subject of subjects) {
-        console.log(subject, compare(words, subject.forms))
+        let a = 0
+        let n = 0
+        for (const word of words) {
+            const s = closest(word, subject.forms)
+            if (s > threshold) {
+                a += s
+                n += 1
+            }
+        }
+        if (n > 0) {
+            res.push({ subject, score: a / n })
+        }
     }
-    // return res
+    return res
 }
-
-// const search = (keywords, index) => {
-//     const res = new Map()
-//     for (const keyword of keywords) {
-//         const items = index.search(keyword)
-//         for (const { item, score } of items) {
-//             const s = score > 0.001 ? score : 0.001
-//             if (res.has(item.id)) {
-//                 res.get(item.id).score *= s
-//             } else {
-//                 res.set(item.id, { ...item, score: s })
-//             }
-//         }
-//     }
-//     return res
-// }
 
 const getTitle = ({ title, code }) => title || code
 

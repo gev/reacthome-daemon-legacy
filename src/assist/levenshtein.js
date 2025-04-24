@@ -18,15 +18,6 @@ const closest = (test, words) => {
     return r
 }
 
-const compare = (words, tests) => {
-    let a = 0;
-    let h = 1;
-    for (const test of tests) {
-        const x = closest(test, words)
-        a += x
-        h += 1 / x
-    }
-    return (a / tests.length + tests.length / h) / 2
-}
 
-module.exports = { similarity, closest, compare }
+
+module.exports = { similarity, closest }

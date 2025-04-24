@@ -1,4 +1,4 @@
-const { compare } = require("./levenshtein")
+const { closest } = require("./levenshtein")
 
 const subjects = [
     "л",
@@ -23,6 +23,17 @@ const tests = [
     "лампу",
 ]
 
+const compare = (words, tests) => {
+    let a = 0;
+    let h = 1;
+    for (const test of tests) {
+        const x = closest(test, words)
+        a += x
+        h += 1 / x
+    }
+    return (a / tests.length + tests.length / h) / 2
+}
+
 for (const test of tests) {
     for (const subject of subjects) {
         console.log(
@@ -31,6 +42,7 @@ for (const test of tests) {
             subject,
             "=",
             compare(test.split(" "), subject.split(" ")),
+            compare(subject.split(" "), test.split(" ")),
         )
         console.log()
     }
