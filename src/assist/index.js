@@ -9,7 +9,7 @@ const { state, get } = require("../controllers/state")
 const { run } = require("../controllers/service")
 const { applySite } = require("../actions")
 const { getAllForms } = require("./lang/ru")
-const { similarity, closest } = require("./levenshtein")
+const { similarity, closest, compare } = require("./levenshtein")
 
 const scripts = []
 const subjects = []
@@ -116,12 +116,13 @@ const handleAssist = (action) => {
     const stage2 = []
     for (const fragment of stage1) {
         if (fragment.type === "fragment") {
+            findSubjects(fragment.words)
             stage2.push(fragment)
         } else {
             stage2.push(fragment)
         }
     }
-    console.log(stage2)
+    // console.log(stage2)
 
     // const scripts = search(words, scriptIndex)
     // const subjects = search(words, subjectIndex)
@@ -146,7 +147,7 @@ const handleAssist = (action) => {
     return action
 }
 
-const mkFragment = (fragment) => ({ type: 'fragment', fragment })
+const mkFragment = (words) => ({ type: 'fragment', words })
 
 const pushNoneEmptyFragment = (a, it) => {
     if (it.length > 0) {
@@ -175,6 +176,13 @@ const findActionPositions = (words) => {
         }
     }
     return res
+}
+
+const findSubjects = (words) => {
+    for (const subject of subjects) {
+        console.log(compare(subject.forms, words))
+    }
+    // return res
 }
 
 // const search = (keywords, index) => {
