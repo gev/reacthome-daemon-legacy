@@ -181,7 +181,7 @@ const findActionPositions = (words) => {
 const findSubjects = (words) => {
     console.log(words)
     for (const subject of subjects) {
-        console.log(subject, compare(subject.forms, words))
+        console.log(subject, compare(words, subject.forms))
     }
     // return res
 }
