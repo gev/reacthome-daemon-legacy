@@ -122,7 +122,7 @@ const handleAssist = (action) => {
             stage2.push(fragment)
         }
     }
-    console.log(stage2)
+    console.log(JSON.stringify(stage2, null, 2))
 
     let answer = "Ага!"
 
