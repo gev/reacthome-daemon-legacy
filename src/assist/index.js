@@ -107,18 +107,18 @@ const handleAssist = (action) => {
 
     let prev = 0
     for (const { action, position } of findActionPositions(words)) {
-        pushNoneEmptyPart(stage1, words.slice(prev, position))
+        pushNoneEmptyFragment(stage1, words.slice(prev, position))
         stage1.push(action)
         prev = position + 1
     }
-    pushNoneEmptyPart(stage1, words.slice(prev))
+    pushNoneEmptyFragment(stage1, words.slice(prev))
 
     const stage2 = []
-    for (const part of stage1) {
-        if (part.type === "part") {
-            stage2.push(part)
+    for (const fragment of stage1) {
+        if (fragment.type === "fragment") {
+            stage2.push(fragment)
         } else {
-            stage2.push(part)
+            stage2.push(fragment)
         }
     }
     console.log(stage2)
@@ -146,11 +146,11 @@ const handleAssist = (action) => {
     return action
 }
 
-const mkPart = (part) => ({ type: 'part', part })
+const mkFragment = (fragment) => ({ type: 'fragment', fragment })
 
-const pushNoneEmptyPart = (a, it) => {
+const pushNoneEmptyFragment = (a, it) => {
     if (it.length > 0) {
-        a.push(mkPart(it))
+        a.push(mkFragment(it))
     }
 }
 
