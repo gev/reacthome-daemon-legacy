@@ -138,13 +138,13 @@ const pushNoneEmptyFragment = (a, it) => {
     }
 }
 
-const threshold = 0.9
+const actionThreshold = 0.9
 
 const findActionPositions = (words) => {
     const res = [];
     for (let position = 0; position < words.length; position += 1) {
         const word = words[position]
-        let max = threshold;
+        let max = actionThreshold;
         let action;
         for (const act of actions) {
             const sim = closest(word, act.forms)
@@ -163,6 +163,8 @@ const findActionPositions = (words) => {
     return res
 }
 
+const subjectThreshold = 0.5
+
 const findSubjects = (words) => {
     const res = []
     for (const subject of subjects) {
@@ -170,7 +172,7 @@ const findSubjects = (words) => {
         let n = 0
         for (const word of words) {
             const s = closest(word, subject.forms)
-            if (s > threshold) {
+            if (s > subjectThreshold) {
                 a += s
                 n += 1
             }
