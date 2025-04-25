@@ -166,6 +166,7 @@ const findActionPositions = (words) => {
 const subjectThreshold = 0.5
 
 const findSubjects = (words) => {
+    console.log(words)
     const res = []
     for (const subject of subjects) {
         let a = 0
