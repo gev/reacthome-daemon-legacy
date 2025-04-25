@@ -180,7 +180,7 @@ const findSubjects = (words) => {
             }
         }
         if (score > 0) {
-            // score /= (subject.forms.length)
+            score /= (subject.forms.length)
             res.push({ subject, score })
         }
     }
