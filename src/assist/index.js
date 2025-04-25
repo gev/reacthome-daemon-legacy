@@ -163,7 +163,7 @@ const findActionPositions = (words) => {
     return res
 }
 
-const subjectThreshold = 0.5
+const subjectThreshold = 0.9
 
 const findSubjects = (words) => {
     console.log(words)
@@ -176,7 +176,10 @@ const findSubjects = (words) => {
                 a += s
             }
         }
-        res.push({ subject, score: a / words.length })
+        const score = a / words.length
+        if (score > subjectThreshold) {
+            res.push({ subject, score })
+        }
     }
     return res
 }
