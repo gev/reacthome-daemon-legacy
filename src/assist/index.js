@@ -176,9 +176,7 @@ const findSubjects = (words) => {
                 a += s
             }
         }
-        if (n > 0) {
-            res.push({ subject, score: a / words.length })
-        }
+        res.push({ subject, score: a / words.length })
     }
     return res
 }
