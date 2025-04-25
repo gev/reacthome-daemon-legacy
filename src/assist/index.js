@@ -167,21 +167,16 @@ const findActionPositions = (words) => {
 const subjectThreshold = 0.9
 
 const findSubjects = (words) => {
-    console.log(words)
-    const res = []
-    for (const subject of subjects) {
-        let score = 0
-        for (const form of subject.forms) {
-            for (const word of words) {
+    const res = words.map(word => [{ word, subjects: [] }])
+    for (let i = 0; i < words.length; i += 1) {
+        const word = words[i]
+        for (const subject of subjects) {
+            for (const form of subject.forms) {
                 const s = closest(word, form)
                 if (s > subjectThreshold) {
-                    score += 1
+                    res[i].subjects.push(subject)
                 }
             }
-        }
-        if (score > 0) {
-            score /= (subject.forms.length)
-            res.push({ subject, score })
         }
     }
     return res
