@@ -184,7 +184,7 @@ const findSubjects = (words) => {
             }
 
         }
-        const score = a / (subject.forms.length + words.length)
+        const score = a * words.length / (subject.forms.length + words.length)
         if (score > 0) {
             res.push({ subject, score })
         }
