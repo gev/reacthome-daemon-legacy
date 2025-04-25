@@ -53,7 +53,7 @@ const prepare = id => {
         type,
         title,
         words,
-        forms: forms.length > 0 ? forms : words
+        forms
     }
 }
 
@@ -189,8 +189,14 @@ const getTitle = ({ title, code }) => title || code
 const getForms = (words) => {
     const res = []
     for (const word of words) {
-        for (form of getAllForms(word))
-            res.push(form)
+        const forms = getAllForms(word)
+        if (forms.length > 0) {
+            for (form of forms) {
+                res.push(form)
+            }
+        } else {
+            res.push(word)
+        }
     }
     return res
 }
