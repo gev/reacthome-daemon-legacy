@@ -167,7 +167,7 @@ const findActionPositions = (words) => {
 const subjectThreshold = 0.9
 
 const findSubjects = (words) => {
-    const res = words.map(word => [{ word, subjects: [] }])
+    const res = words.map(word => ({ word, subjects: [] }))
     for (let i = 0; i < words.length; i += 1) {
         const word = words[i]
         for (const subject of subjects) {
