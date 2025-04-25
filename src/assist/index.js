@@ -172,20 +172,16 @@ const findSubjects = (words) => {
     for (const subject of subjects) {
         let a = 0
         for (const form of subject.forms) {
-            let max = 0
+            let score = 0
             for (const word of words) {
                 const s = closest(word, form)
-                if (s > max) {
-                    max = s
+                if (s > subjectThreshold) {
+                    score += 1
                 }
             }
-            if (max > subjectThreshold) {
-                a += max
-            }
-
         }
-        const score = a * words.length / (subject.forms.length + words.length)
         if (score > 0) {
+            // score /= (subject.forms.length)
             res.push({ subject, score })
         }
     }
