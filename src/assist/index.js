@@ -189,7 +189,7 @@ const getForms = (words) => {
     for (const word of words) {
         const forms = getAllForms(word)
         if (forms.length > 0) {
-            res.push(forms)
+            res.push(forms.map(form => form.replace("ё\g", "е")))
         } else {
             res.push([word])
         }
