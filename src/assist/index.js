@@ -74,6 +74,7 @@ const initAssist = () => {
                     for (const id of value) {
                         sites.push(prepare(id))
                     }
+                    break
                 case LIGHT_220:
                 case LIGHT_LED:
                 case LIGHT_RGB:
