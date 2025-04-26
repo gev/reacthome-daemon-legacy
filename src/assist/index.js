@@ -116,10 +116,10 @@ const handleAssist = (action) => {
 
     const stage2 = []
 
-    if (stage1.length > 1 && state1[0].type === "fragment") {
-        for (let i = 0; i < stage.length - 1; i += 2) {
+    if (stage1.length > 1 && stage1[0].type === "fragment") {
+        for (let i = 0; i < stage1.length - 1; i += 2) {
             stage2[i] = stage1[i + 1]
-            stage2[i + 1] = stage[i]
+            stage2[i + 1] = stage1[i]
         }
 
         if (stage1.length % 2 === 1) {
