@@ -114,27 +114,7 @@ const handleAssist = (action) => {
     }
     pushNoneEmptyFragment(stage1, words.slice(prev))
 
-    const stage2 = []
-
-    if (stage1.length > 1 && stage1[0].type === "fragment") {
-        for (let i = 0; i < stage1.length - 1; i += 2) {
-            stage2[i] = stage1[i + 1]
-            stage2[i + 1] = stage1[i]
-        }
-
-        if (stage1.length % 2 === 1) {
-            const last1 = stage1[stage1.length - 1]
-            const last2 = stage2[stage2.length - 1]
-            for (const word of last1.words)
-                last2.words.push(word)
-        }
-    } else {
-        for (let i = 0; i < stage1.length; i += 1) {
-            stage2[i] = stage1[i]
-        }
-    }
-
-    console.log(stage2)
+    console.log(stage1)
 
     // const stage2 = []
     // for (const fragment of stage1) {
