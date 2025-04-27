@@ -140,7 +140,7 @@ const markup = (words, items) => {
     }
     for (const r of res) {
         let scores = [[]]
-        for (const it of res.items) {
+        for (const it of r.items) {
             scores[it.score] = [...score[it.score], it];
         }
         r.items = scores[scores.length - 1]
