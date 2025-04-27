@@ -133,11 +133,12 @@ const markup = (words, items) => {
     const res = words.map(word => ({ word, items: [] }))
     for (const r of res) {
         for (const it of its) {
-            console.log(it)
-            const s = closest(r.word, it.forms)
-            if (s > threshold) {
-                it.score += 1
-                r.items.push(it)
+            if (it.forms.length > 0) {
+                const s = closest(r.word, it.forms)
+                if (s > threshold) {
+                    it.score += 1
+                    r.items.push(it)
+                }
             }
         }
     }
