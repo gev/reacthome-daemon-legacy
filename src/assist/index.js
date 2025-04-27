@@ -89,14 +89,7 @@ const prepare = id => {
     const { code, title, type } = get(id) || {}
     const words = title ? title.split(" ") : []
     const forms = getForms(words)
-    return {
-        id,
-        code,
-        type,
-        title,
-        words,
-        forms
-    }
+    return { id, code, type, title, words, forms }
 }
 
 const getForms = (words) => {
@@ -117,10 +110,10 @@ const handleAssist = (action) => {
 
     const words = action.payload.message.split(" ")
 
-    const actions = markup(words, [...allActions]);
-    const scripts = markup(words, [...allScripts]);
-    const sites = markup(words, [...allSites]);
-    const subjects = markup(words, [...allSubjects])
+    const actions = markup(words, allActions);
+    const scripts = markup(words, allScripts);
+    const sites = markup(words, allSites);
+    const subjects = markup(words, allSubjects)
 
     console.log(actions)
     console.log(scripts)
@@ -136,9 +129,18 @@ const handleAssist = (action) => {
 const threshold = 0.9
 
 const markup = (words, items) => {
-    res = [];
+    const its = items.map(item => ({ ...item, score: 0 }))
+    const res = words.map(word => ({ word, items: [] }))
+    for (const r of res) {
+        for (const it of its) {
+            const s = closest(r.word, it.forms)
+            if (s > threshold) {
+                it.score += 1
+                r.items.push(it)
+            }
+        }
+    }
     return res;
-    // for (const)
 }
 
 // const getTitle = ({ title, code }) => title || code
