@@ -115,10 +115,10 @@ const handleAssist = (action) => {
     const sites = markup(words, allSites);
     const subjects = markup(words, allSubjects)
 
-    console.log(actions)
-    console.log(scripts)
-    console.log(sites)
-    console.log(subjects)
+    console.log("actions", actions)
+    console.log("scripts", scripts)
+    console.log("sites", sites)
+    console.log("subjects", subjects)
 
     let answer = "Ага!"
 
