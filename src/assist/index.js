@@ -114,18 +114,20 @@ const handleAssist = (action) => {
     }
     pushNoneEmptyFragment(stage1, words.slice(prev))
 
+    const subs = subjects.map(subject => ({ subject, score: 0 }))
+
     console.log(stage1)
 
-    // const stage2 = []
-    // for (const fragment of stage1) {
-    //     if (fragment.type === "fragment") {
-    //         const sub = findSubjects(fragment.words)
-    //         stage2.push(sub)
-    //     } else {
-    //         stage2.push(fragment)
-    //     }
-    // }
-    // console.log(JSON.stringify(stage2, null, 2))
+    const stage2 = []
+    for (const fragment of stage1) {
+        if (fragment.type === "fragment") {
+            const sub = findSubjects(fragment.words)
+            stage2.push(sub)
+        } else {
+            stage2.push(fragment)
+        }
+    }
+    console.log(JSON.stringify(stage2, null, 2))
 
     let answer = "Ага!"
 
