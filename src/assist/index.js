@@ -141,13 +141,23 @@ const markup = (words, items) => {
                 }
             }
         }
-        const items = []
+        const items1 = []
+        let min = 100000000;
         for (const it of r.items) {
             if (it.score === max) {
-                items.push(it);
+                items1.push(it);
+                if (it.forms.length < min) {
+                    min = it.forms.length
+                }
             }
         }
-        r.items = items;
+        const items2 = []
+        for (const it of r.items) {
+            if (it.forms.length === min) {
+                items2.push(it);
+            }
+        }
+        r.items = items2;
     }
     return res;
 }
