@@ -108,8 +108,6 @@ const getForms = (words) => {
 const handleAssist = (action) => {
     console.log(action)
 
-    const words = action.payload.message.split(" ")
-
     const actions = markup(words, allActions);
     const scripts = markup(words, allScripts);
     const sites = markup(words, allSites);
@@ -146,5 +144,12 @@ const markup = (words, items) => {
 }
 
 // const getTitle = ({ title, code }) => title || code
+
+const log = (...its) =>
+    its.forEach(it =>
+        console.log(
+            JSON.stringify(it, null, 2)
+        )
+    )
 
 module.exports = { initAssist, initAssistDelayed, handleAssist }
