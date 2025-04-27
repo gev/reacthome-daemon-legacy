@@ -74,10 +74,6 @@ const initAssist = () => {
             }
         }
     })
-    log(allActions)
-    log(allScripts)
-    log(allSites)
-    log(allSubjects)
 }
 
 const initAssistDelayed = () => {
@@ -113,10 +109,10 @@ const handleAssist = (action) => {
     const sites = markup(words, allSites);
     const subjects = markup(words, allSubjects)
 
-    console.log("actions", actions)
-    console.log("scripts", scripts)
-    console.log("sites", sites)
-    console.log("subjects", subjects)
+    log("actions", actions)
+    log("scripts", scripts)
+    log("sites", sites)
+    log("subjects", subjects)
 
     let answer = "Ага!"
 
