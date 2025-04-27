@@ -19,7 +19,7 @@ const allActions = [
     {
         id: ACTION_ON,
         type: "action",
-        forms: ["включи", "включить"],
+        forms: [["включи", "включить"]],
         answer: {
             inf: "включить",
             pc: "включаю",
@@ -28,7 +28,7 @@ const allActions = [
     {
         id: ACTION_OFF,
         type: "action",
-        forms: ["выключи", "выключить"],
+        forms: [["выключи", "выключить"]],
         answer: {
             inf: "выключить",
             pc: "выключаю",
