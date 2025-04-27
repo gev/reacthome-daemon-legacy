@@ -126,7 +126,7 @@ const threshold = 0.9
 
 const markup = (words, items) => {
     const its = items.map(item => ({ ...item, score: 0 }))
-    const res = words.map(word => ({ word, max: 0, items: [] }))
+    const res = words.map(word => ({ word, items: [] }))
     for (const r of res) {
         let max = 0;
         for (const it of its) {
@@ -152,7 +152,7 @@ const markup = (words, items) => {
             }
         }
         const items2 = []
-        for (const it of r.items) {
+        for (const it of item1) {
             if (it.forms.length === min) {
                 items2.push(it);
             }
