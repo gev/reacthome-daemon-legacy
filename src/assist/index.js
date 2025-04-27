@@ -147,7 +147,7 @@ const markup = (words, items) => {
                 items.push(it);
             }
         }
-        t.items = items;
+        r.items = items;
     }
     return res;
 }
