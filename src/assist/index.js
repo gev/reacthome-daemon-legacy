@@ -11,11 +11,11 @@ const { applySite } = require("../actions")
 const { getAllForms } = require("./lang/ru")
 const { similarity, closest, compare } = require("./levenshtein")
 
-const scripts = []
-const subjects = []
-const sites = []
+const allScripts = []
+const allSubjects = []
+const allSites = []
 
-const actions = [
+const allActions = [
     {
         id: ACTION_ON,
         type: "action",
@@ -38,6 +38,48 @@ const actions = [
 
 let timeout
 
+const initAssist = () => {
+    const { mac } = state()
+    applySite(mac, (site) => {
+        for ([key, value] of Object.entries(site)) {
+            switch (key) {
+                case SCRIPT:
+                    for (const id of value) {
+                        allScripts.push(prepare(id))
+                    }
+                    break
+                case PROJECT:
+                    allSites.push(prepare(value))
+                    break
+                case SITE:
+                    for (const id of value) {
+                        allSites.push(prepare(id))
+                    }
+                    break
+                case LIGHT_220:
+                case LIGHT_LED:
+                case LIGHT_RGB:
+                case VALVE_WATER:
+                case VALVE_HEATING:
+                case WARM_FLOOR:
+                case AC:
+                case FAN:
+                case SOCKET_220:
+                case BOILER:
+                case PUMP:
+                    for (const id of value) {
+                        allSubjects.push(prepare(id))
+                    }
+                    break
+            }
+        }
+    })
+    console.log(allActions)
+    console.log(allScripts)
+    console.log(allSites)
+    console.log(allSubjects)
+}
+
 const initAssistDelayed = () => {
     clearTimeout(timeout)
     timeout = setTimeout(initAssist, 1000)
@@ -57,137 +99,6 @@ const prepare = id => {
     }
 }
 
-const initAssist = () => {
-    const { mac } = state()
-    applySite(mac, (site) => {
-        for ([key, value] of Object.entries(site)) {
-            switch (key) {
-                case SCRIPT:
-                    for (const id of value) {
-                        scripts.push(prepare(id))
-                    }
-                    break
-                case PROJECT:
-                    sites.push(prepare(value))
-                    break
-                case SITE:
-                    for (const id of value) {
-                        sites.push(prepare(id))
-                    }
-                    break
-                case LIGHT_220:
-                case LIGHT_LED:
-                case LIGHT_RGB:
-                case VALVE_WATER:
-                case VALVE_HEATING:
-                case WARM_FLOOR:
-                case AC:
-                case FAN:
-                case SOCKET_220:
-                case BOILER:
-                case PUMP:
-                    for (const id of value) {
-                        subjects.push(prepare(id))
-                    }
-                    break
-            }
-        }
-    })
-    console.log(actions)
-    console.log(scripts)
-    console.log(sites)
-    console.log(subjects)
-}
-
-const handleAssist = (action) => {
-    console.log(action)
-
-    const words = action.payload.message.split(" ")
-
-    const stage1 = []
-
-    let prev = 0
-    for (const { action, position } of findActionPositions(words)) {
-        pushNoneEmptyFragment(stage1, words.slice(prev, position))
-        stage1.push(action)
-        prev = position + 1
-    }
-    pushNoneEmptyFragment(stage1, words.slice(prev))
-
-    const subs = subjects.map(subject => ({ subject, score: 0 }))
-
-    console.log(stage1)
-
-    const stage2 = []
-    for (const fragment of stage1) {
-        if (fragment.type === "fragment") {
-            const sub = findSubjects(fragment.words)
-            stage2.push(sub)
-        } else {
-            stage2.push(fragment)
-        }
-    }
-    console.log(JSON.stringify(stage2, null, 2))
-
-    let answer = "Ага!"
-
-    action.payload.message = answer
-    return action
-}
-
-const mkFragment = (words) => ({ type: 'fragment', words })
-
-const pushNoneEmptyFragment = (a, it) => {
-    if (it.length > 0) {
-        a.push(mkFragment(it))
-    }
-}
-
-const actionThreshold = 0.9
-
-const findActionPositions = (words) => {
-    const res = [];
-    for (let position = 0; position < words.length; position += 1) {
-        const word = words[position]
-        let max = actionThreshold;
-        let action;
-        for (const act of actions) {
-            const sim = closest(word, act.forms)
-            if (sim > max) {
-                max = sim;
-                action = act;
-            }
-        }
-        if (action) {
-            res.push({
-                position,
-                action,
-            })
-        }
-    }
-    return res
-}
-
-const subjectThreshold = 0.9
-
-const findSubjects = (words) => {
-    const res = words.map(word => ({ word, subjects: [] }))
-    for (let i = 0; i < words.length; i += 1) {
-        const word = words[i]
-        for (const subject of subjects) {
-            for (const form of subject.forms) {
-                const s = closest(word, form)
-                if (s > subjectThreshold) {
-                    res[i].subjects.push(subject)
-                }
-            }
-        }
-    }
-    return res
-}
-
-const getTitle = ({ title, code }) => title || code
-
 const getForms = (words) => {
     const res = []
     for (const word of words) {
@@ -201,5 +112,35 @@ const getForms = (words) => {
     return res
 }
 
+const handleAssist = (action) => {
+    console.log(action)
+
+    const words = action.payload.message.split(" ")
+
+    const actions = markup(words, [...allActions]);
+    const scripts = markup(words, [...allScripts]);
+    const sites = markup(words, [...allSites]);
+    const subjects = markup(words, [...allSubjects])
+
+    console.log(actions)
+    console.log(scripts)
+    console.log(sites)
+    console.log(subjects)
+
+    let answer = "Ага!"
+
+    action.payload.message = answer
+    return action
+}
+
+const threshold = 0.9
+
+const markup = (words, items) => {
+    res = [];
+    return res;
+    // for (const)
+}
+
+// const getTitle = ({ title, code }) => title || code
 
 module.exports = { initAssist, initAssistDelayed, handleAssist }
