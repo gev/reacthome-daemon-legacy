@@ -152,7 +152,7 @@ const markup = (words, items) => {
             }
         }
         const items2 = []
-        for (const it of item1) {
+        for (const it of items1) {
             if (it.forms.length === min) {
                 items2.push(it);
             }
