@@ -143,7 +143,7 @@ const markup = (words, items) => {
         }
         const items = []
         for (const it of r.items) {
-            if (it.score == r.max) {
+            if (it.score === max) {
                 items.push(it);
             }
         }
