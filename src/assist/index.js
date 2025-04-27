@@ -104,6 +104,8 @@ const getForms = (words) => {
 const handleAssist = (action) => {
     console.log(action)
 
+    const words = action.payload.message.split(" ")
+
     const actions = markup(words, allActions);
     const scripts = markup(words, allScripts);
     const sites = markup(words, allSites);
