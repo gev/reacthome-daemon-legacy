@@ -111,9 +111,9 @@ const handleAssist = (action) => {
     const sites = markup(words, allSites);
     const subjects = markup(words, allSubjects)
 
-    log("actions", actions)
-    log("scripts", scripts)
-    log("sites", sites)
+    // log("actions", actions)
+    // log("scripts", scripts)
+    // log("sites", sites)
     log("subjects", subjects)
 
     let answer = "Ага!"
@@ -138,6 +138,14 @@ const markup = (words, items) => {
             }
         }
     }
+    for (const r of res) {
+        let scores = [[]]
+        for (const it of res.items) {
+            scores[it.score] = [...score[it.score], it];
+        }
+        r.items = scores[scores.length - 1]
+    }
+
     return res;
 }
 
