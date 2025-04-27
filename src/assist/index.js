@@ -126,26 +126,29 @@ const threshold = 0.9
 
 const markup = (words, items) => {
     const its = items.map(item => ({ ...item, score: 0 }))
-    const res = words.map(word => ({ word, items: [] }))
+    const res = words.map(word => ({ word, max: 0, items: [] }))
     for (const r of res) {
+        let max = 0;
         for (const it of its) {
             for (const form of it.forms) {
                 const s = closest(r.word, form)
                 if (s > threshold) {
                     it.score += 1
+                    if (it.score > max) {
+                        max = it.score
+                    }
                     r.items.push(it)
                 }
             }
         }
-    }
-    for (const r of res) {
-        let scores = [[]]
-        for (const it of r.items) {
-            scores[it.score] = [...score[it.score], it];
+        const items = []
+        for (const it of it.items) {
+            if (it.score == r.max) {
+                items.push(it);
+            }
         }
-        r.items = scores[scores.length - 1]
+        t.items = items;
     }
-
     return res;
 }
 
