@@ -74,10 +74,10 @@ const initAssist = () => {
             }
         }
     })
-    console.log(allActions)
-    console.log(allScripts)
-    console.log(allSites)
-    console.log(allSubjects)
+    log(allActions)
+    log(allScripts)
+    log(allSites)
+    log(allSubjects)
 }
 
 const initAssistDelayed = () => {
