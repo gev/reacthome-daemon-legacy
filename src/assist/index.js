@@ -145,7 +145,10 @@ const sliceFragments = (words, items) => {
 const markupFragments = (fragments, items) => {
     res = []
     for (const fragment of fragments) {
-        res.push(markupWords(fragment.words, items, fragment.position))
+        const its = markupWords(fragment.words, items, fragment.position)
+        if (its.length > 0) {
+            res.push(its)
+        }
     }
     return res
 }
