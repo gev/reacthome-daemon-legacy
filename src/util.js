@@ -19,3 +19,25 @@ module.exports.int2ip = (ip) =>
 module.exports.delay = time => new Promise((resolve) => {
   setTimeout(resolve, time);
 });
+
+const KELVIN = 273.15;
+const GAS_CONSTANT = 287.05;
+const m_w = 18.015; // g/mol - Molar mass of water vapor
+
+module.exports.toKelvin = (temperature) => temperature + KELVIN;
+
+const saturationVaporPressure = (T) =>
+  611.2 * Math.exp((17.62 * (T - KELVIN)) / (243.12 + (T - KELVIN)));
+
+
+module.exports.toAbsoluteHumidity = (rh, t) => {
+  const p_sat = saturationVaporPressure(t);
+  const ah = rh * p_sat * m_w / GAS_CONSTANT / t / 100;
+  return ah;
+};
+
+module.exports.toRelativeHumidity = (ah, t) => {
+  const p_sat = saturationVaporPressure(t);
+  const rh = ah / p_sat / m_w * GAS_CONSTANT * t * 100;
+  return rh;
+};
