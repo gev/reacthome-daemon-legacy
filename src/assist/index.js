@@ -142,7 +142,6 @@ const markup = (words, items) => {
                 }
             }
         }
-        console.log(stage1)
         if (stage1.length > 0) {
             const stage2 = []
             let min = 100000000
