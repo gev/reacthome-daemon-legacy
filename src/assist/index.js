@@ -130,12 +130,12 @@ const sliceFragments = (words, items) => {
     let previous = 0
     for (const { position } of items) {
         const fragment = words.slice(previous, position)
-        res.push({ items: fragment, position: previous })
+        res.push({ words: fragment, position: previous })
         previous = position + 1
     }
     const fragment = words.slice(previous)
     if (fragment.length > 0) {
-        res.push({ items: fragment, position: previous })
+        res.push({ words: fragment, position: previous })
     }
     return res
 }
@@ -143,7 +143,7 @@ const sliceFragments = (words, items) => {
 const markupFragments = (fragments, items) => {
     res = []
     for (const fragment of fragments) {
-        res.push(markupWords(fragment, items, fragment.position))
+        res.push(markupWords(fragment.words, items, fragment.position))
     }
     return res
 }
