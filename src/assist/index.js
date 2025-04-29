@@ -127,8 +127,8 @@ const markup = (words, items) => {
     const res = []
     const its = items.map(item => ({ ...item, score: 0 }))
     for (let i = 0; i < words.length; i++) {
-        const stage1 = []
         const word = words[i]
+        const stage1 = []
         let max = 0
         for (const it of its) {
             for (const form of it.forms) {
@@ -142,6 +142,7 @@ const markup = (words, items) => {
                 }
             }
         }
+        console.log(stage1)
         if (stage1.length > 0) {
             const stage2 = []
             let min = 100000000
