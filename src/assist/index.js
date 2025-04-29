@@ -126,7 +126,6 @@ const threshold = 0.9
 const markup = (words, items) => {
     const res = []
     const its = items.map(item => ({ ...item, score: 0 }))
-    // const stage0 = words.map(word => ({ word, items: [] }))
     for (let i = 0; i < words.length; i++) {
         const stage1 = []
         const word = words[i]
@@ -143,23 +142,25 @@ const markup = (words, items) => {
                 }
             }
         }
-        const stage2 = []
-        let min = 100000000
-        for (const it of stage1) {
-            if (it.score === max) {
-                stage2.push(it)
-                if (it.forms.length < min) {
-                    min = it.forms.length
+        if (stage1.length > 0) {
+            const stage2 = []
+            let min = 100000000
+            for (const it of stage1) {
+                if (it.score === max) {
+                    stage2.push(it)
+                    if (it.forms.length < min) {
+                        min = it.forms.length
+                    }
                 }
             }
-        }
-        const stage3 = []
-        for (const it of stage2) {
-            if (it.forms.length === min) {
-                stage3.push(it)
+            const stage3 = []
+            for (const it of stage2) {
+                if (it.forms.length === min) {
+                    stage3.push(it)
+                }
             }
+            res.push({ position: i, items: stage3 })
         }
-        res.push({ position: i, items: stage3 })
     }
     return res
 }
