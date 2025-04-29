@@ -106,10 +106,13 @@ const handleAssist = (action) => {
 
     const words = action.payload.message.split(" ")
 
-    const actions = markup(words, allActions)
-    const scripts = markup(words, allScripts)
-    const sites = markup(words, allSites)
-    const subjects = markup(words, allSubjects)
+    const actions = markupWords(words, allActions)
+
+    const fragments = sliceFragments(words, actions)
+
+    const scripts = markupFragments(words, allScripts)
+    const sites = markupFragments(words, allSites)
+    const subjects = markupFragments(words, allSubjects)
 
     console.log("actions", actions)
     console.log("scripts", scripts)
@@ -121,9 +124,28 @@ const handleAssist = (action) => {
     return action
 }
 
+const sliceFragments = (words, items) => {
+    const res = []
+    let previous = 0
+    for (const { position } of items) {
+        const fragment = words.slice(previous, position)
+        previous = position + 1
+        res.pus[fragment]
+    }
+    return res
+}
+
+const markupFragments = (fragments, items) => {
+    res = []
+    for (const fragment of fragments) {
+        res.push(markupWords(fragment, items))
+    }
+    return res
+}
+
 const threshold = 0.9
 
-const markup = (words, items) => {
+const markupWords = (words, items) => {
     const res = []
     const its = items.map(item => ({ ...item, score: 0 }))
     for (let i = 0; i < words.length; i++) {
