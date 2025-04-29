@@ -129,10 +129,10 @@ const sliceFragments = (words, items) => {
     const res = []
     let previous = 0
     for (const { position } of items) {
-        const fragment = words.slice(previous, position)
+        res.push(words.slice(previous, position))
         previous = position + 1
-        res.push[fragment]
     }
+    res.push(words.slice(previous))
     return res
 }
 
