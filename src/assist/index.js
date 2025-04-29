@@ -143,14 +143,14 @@ const sliceFragments = (words, items) => {
 const markupFragments = (fragments, items) => {
     res = []
     for (const fragment of fragments) {
-        res.push(markupWords(fragment, items))
+        res.push(markupWords(fragment, items, fragment.position))
     }
     return res
 }
 
 const threshold = 0.9
 
-const markupWords = (words, items) => {
+const markupWords = (words, items, position = 0) => {
     const res = []
     const its = items.map(item => ({ ...item, score: 0 }))
     for (let i = 0; i < words.length; i++) {
@@ -186,7 +186,7 @@ const markupWords = (words, items) => {
                     stage3.push(it)
                 }
             }
-            res.push({ position: i, items: stage3 })
+            res.push({ position: position + i, items: stage3 })
         }
     }
     return res
