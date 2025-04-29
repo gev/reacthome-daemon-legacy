@@ -39,5 +39,5 @@ module.exports.toAbsoluteHumidity = (rh, t) => {
 module.exports.toRelativeHumidity = (ah, t) => {
   const p_sat = saturationVaporPressure(t);
   const rh = ah / p_sat / m_w * GAS_CONSTANT * t * 100;
-  return rh;
+  return rh > 100 ? 100 : rh;
 };
