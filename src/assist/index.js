@@ -110,9 +110,9 @@ const handleAssist = (action) => {
 
     const fragments = sliceFragments(words, actions)
 
-    const scripts = markupFragments(words, allScripts)
-    const sites = markupFragments(words, allSites)
-    const subjects = markupFragments(words, allSubjects)
+    const scripts = markupFragments(fragments, allScripts)
+    const sites = markupFragments(fragments, allSites)
+    const subjects = markupFragments(fragments, allSubjects)
 
     console.log("actions", actions)
     console.log("scripts", scripts)
