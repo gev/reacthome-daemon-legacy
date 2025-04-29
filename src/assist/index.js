@@ -191,7 +191,7 @@ const markupWords = (words, items, position = 0) => {
                     stage3.push(it)
                 }
             }
-            res.push({ position: position + i, items: stage3 })
+            res.push({ word, position: position + i, items: stage3 })
         }
     }
     return res
