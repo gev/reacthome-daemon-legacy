@@ -106,18 +106,17 @@ const handleAssist = (action) => {
 
     const words = action.payload.message.split(" ")
 
-    const actions = markup(words, allActions);
-    const scripts = markup(words, allScripts);
-    const sites = markup(words, allSites);
+    const actions = markup(words, allActions)
+    const scripts = markup(words, allScripts)
+    const sites = markup(words, allSites)
     const subjects = markup(words, allSubjects)
 
-    // log("actions", actions)
-    // log("scripts", scripts)
-    // log("sites", sites)
-    log("subjects", subjects)
+    console.log("actions", actions)
+    console.log("scripts", scripts)
+    console.log("sites", sites)
+    console.log("subjects", subjects)
 
     let answer = "Ага!"
-
     action.payload.message = answer
     return action
 }
@@ -125,41 +124,44 @@ const handleAssist = (action) => {
 const threshold = 0.9
 
 const markup = (words, items) => {
+    const res = []
     const its = items.map(item => ({ ...item, score: 0 }))
-    const res = words.map(word => ({ word, items: [] }))
-    for (const r of res) {
-        let max = 0;
+    // const stage0 = words.map(word => ({ word, items: [] }))
+    for (let i = 0; i < words.length; i++) {
+        const stage1 = []
+        const word = words[i]
+        let max = 0
         for (const it of its) {
             for (const form of it.forms) {
-                const s = closest(r.word, form)
+                const s = closest(word, form)
                 if (s > threshold) {
                     it.score += 1
                     if (it.score > max) {
                         max = it.score
                     }
-                    r.items.push(it)
+                    stage1.push(it)
                 }
             }
         }
-        const items1 = []
-        let min = 100000000;
-        for (const it of r.items) {
+        const stage2 = []
+        let min = 100000000
+        for (const it of stage1) {
             if (it.score === max) {
-                items1.push(it);
+                stage2.push(it)
                 if (it.forms.length < min) {
                     min = it.forms.length
                 }
             }
         }
-        const items2 = []
-        for (const it of items1) {
+        const stage3 = []
+        for (const it of stage2) {
             if (it.forms.length === min) {
-                items2.push(it);
+                stage3.push(it)
             }
         }
-        r.items = items2;
+        res.push({ position: i, items: stage3 })
     }
-    return res;
+    return res
 }
 
 // const getTitle = ({ title, code }) => title || code
