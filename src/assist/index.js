@@ -184,6 +184,7 @@ const markupWords = (words, items, position = 0) => {
                 stage0.push(it)
             }
         }
+        const stage1 = []
         let max = 0
         for (const it of stage0) {
             console.log(it)
