@@ -165,52 +165,27 @@ const markupWords = (words, items, position = 0) => {
     const res = []
     const its = items.map(item => ({ ...item, score: 0 }))
     for (let i = 0; i < words.length; i++) {
-        const stage0 = getClosestForms(word, its)
-        const stage1 = []
-        let max = 0
-        for (const it of stage0) {
-            if (it.closest.distance === min) {
-                it.score += 1
-                if (it.score > max) {
-                    max = it.score
-                }
-                stage1.push(it)
-            }
-        }
-        if (stage1.length > 0) {
-            const stage2 = []
-            let min = Number.MAX_SAFE_INTEGER
-            for (const it of stage1) {
-                if (it.score === max) {
-                    stage2.push(it)
-                    if (it.forms.length < min) {
-                        min = it.forms.length
-                    }
-                }
-            }
-            const stage3 = []
-            for (const it of stage2) {
-                if (it.forms.length === min) {
-                    stage3.push(it)
-                }
-            }
-            res.push({ word, position: position + i, items: stage3 })
-        }
+        res.push({
+            word,
+            position: position + i,
+            items: filterClosestItems(
+                selectClosestItems(its, word)
+            ),
+        })
     }
     return res
 }
 
-const getClosestForms = (word, items) => {
+const selectClosestItems = (items, word) => {
     const res = []
-    let min = Number.MAX_SAFE_INTEGER;
-    const word = words[i]
+    let min = Number.MAX_SAFE_INTEGER
     for (const it of items) {
-        let dist = Number.MAX_SAFE_INTEGER;
+        let dist = Number.MAX_SAFE_INTEGER
         for (const form of it.forms) {
             const c = closest(word, form)
             if (c.distance < dist) {
                 dist = c.distance
-                it.closest = c;
+                it.closest = c
             }
         }
         if (it.closest.similarity > threshold) {
@@ -221,6 +196,37 @@ const getClosestForms = (word, items) => {
         }
     }
     return res
+}
+
+const filterClosestItems = (items) => {
+    const stage1 = []
+    let max = 0
+    for (const it of items) {
+        if (it.closest.distance === min) {
+            it.score += 1
+            if (it.score > max) {
+                max = it.score
+            }
+            stage1.push(it)
+        }
+    }
+    const stage2 = []
+    let min = Number.MAX_SAFE_INTEGER
+    for (const it of stage1) {
+        if (it.score === max) {
+            stage2.push(it)
+            if (it.forms.length < min) {
+                min = it.forms.length
+            }
+        }
+    }
+    const stage3 = []
+    for (const it of stage2) {
+        if (it.forms.length === min) {
+            stage3.push(it)
+        }
+    }
+    return stage3
 }
 
 // const getTitle = ({ title, code }) => title || code
