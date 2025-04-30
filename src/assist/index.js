@@ -165,6 +165,7 @@ const markupWords = (words, items, position = 0) => {
     const res = []
     const its = items.map(item => ({ ...item, score: 0 }))
     for (let i = 0; i < words.length; i++) {
+        const word = words[i]
         res.push({
             word,
             position: position + i,
