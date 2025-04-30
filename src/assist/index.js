@@ -186,6 +186,7 @@ const markupWords = (words, items, position = 0) => {
         }
         const stage1 = []
         let max = 0
+        console.log(min)
         for (const it of stage0) {
             console.log(it)
             if (it.closest.distance === min) {
