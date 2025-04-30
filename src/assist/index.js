@@ -217,7 +217,7 @@ const selectClosest = (items, word) => {
             }
         }
     }
-    // State m: filter by the minimum length
+    // State 3: filter by the minimum length
     const stage3 = []
     for (const it of stage2) {
         if (it.forms.length === minLength) {
