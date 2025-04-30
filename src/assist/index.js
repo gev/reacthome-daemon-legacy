@@ -9,7 +9,7 @@ const { state, get } = require("../controllers/state")
 const { run } = require("../controllers/service")
 const { applySite } = require("../actions")
 const { getAllForms } = require("./lang/ru")
-const { similarity, closest, compare } = require("./levenshtein")
+const { closest } = require("./levenshtein")
 
 const allScripts = []
 const allSubjects = []
