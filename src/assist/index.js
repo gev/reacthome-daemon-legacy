@@ -178,7 +178,7 @@ const markupWords = (words, items, position = 0) => {
                 }
             }
             if (it.closest.similarity > threshold) {
-                if (min < dist) {
+                if (dist < min) {
                     min = dist
                 }
                 stage0.push(it)
