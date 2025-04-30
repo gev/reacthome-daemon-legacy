@@ -153,7 +153,7 @@ const markupFragments = (fragments, items) => {
     return res
 }
 
-const threshold = 0.9
+const threshold = 0.7
 
 const markupWords = (words, items, position = 0) => {
     const res = []
