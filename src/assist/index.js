@@ -165,8 +165,9 @@ const markupWords = (words, items, position = 0) => {
     const res = []
     const its = items.map(item => ({ ...item, score: 0 }))
     for (let i = 0; i < words.length; i++) {
-        const word = words[i]
+        const stage0 = []
         let min = Number.MAX_SAFE_INTEGER;
+        const word = words[i]
         for (const it of its) {
             let dist = Number.MAX_SAFE_INTEGER;
             for (const form of it.forms) {
@@ -176,14 +177,17 @@ const markupWords = (words, items, position = 0) => {
                     it.closest = c;
                 }
             }
-            if (min < dist) {
-                min = dist
+            if (it.closest.similarity > threshold) {
+                if (min < dist) {
+                    min = dist
+                }
+                stage0.push(it)
             }
         }
         let max = 0
-        const stage1 = []
-        for (const it of its) {
-            if (it.closest.distance === min && it.closest.similarity > threshold) {
+        for (const it of stage0) {
+            console.log(it)
+            if (it.closest.distance === min) {
                 it.score += 1
                 if (it.score > max) {
                     max = it.score
