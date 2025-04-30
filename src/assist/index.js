@@ -165,6 +165,7 @@ const markupWords = (words, items, position = 0) => {
         for (const it of its) {
             for (const form of it.forms) {
                 const s = closest(word, form)
+                console.log(word, s)
                 if (s > threshold) {
                     it.score += 1
                     if (it.score > max) {
