@@ -165,25 +165,7 @@ const markupWords = (words, items, position = 0) => {
     const res = []
     const its = items.map(item => ({ ...item, score: 0 }))
     for (let i = 0; i < words.length; i++) {
-        const stage0 = []
-        let min = Number.MAX_SAFE_INTEGER;
-        const word = words[i]
-        for (const it of its) {
-            let dist = Number.MAX_SAFE_INTEGER;
-            for (const form of it.forms) {
-                const c = closest(word, form)
-                if (c.distance < dist) {
-                    dist = c.distance
-                    it.closest = c;
-                }
-            }
-            if (it.closest.similarity > threshold) {
-                if (it.closest.distance < min) {
-                    min = it.closest.distance
-                }
-                stage0.push(it)
-            }
-        }
+        const stage0 = getClosestForms(word, its)
         const stage1 = []
         let max = 0
         for (const it of stage0) {
@@ -213,6 +195,29 @@ const markupWords = (words, items, position = 0) => {
                 }
             }
             res.push({ word, position: position + i, items: stage3 })
+        }
+    }
+    return res
+}
+
+const getClosestForms = (word, items) => {
+    const res = []
+    let min = Number.MAX_SAFE_INTEGER;
+    const word = words[i]
+    for (const it of items) {
+        let dist = Number.MAX_SAFE_INTEGER;
+        for (const form of it.forms) {
+            const c = closest(word, form)
+            if (c.distance < dist) {
+                dist = c.distance
+                it.closest = c;
+            }
+        }
+        if (it.closest.similarity > threshold) {
+            if (it.closest.distance < min) {
+                min = it.closest.distance
+            }
+            res.push(it)
         }
     }
     return res
