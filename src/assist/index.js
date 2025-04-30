@@ -45,15 +45,15 @@ const initAssist = () => {
             switch (key) {
                 case SCRIPT:
                     for (const id of value) {
-                        allScripts.push(prepare(id))
+                        push(allScripts, prepare(id))
                     }
                     break
                 case PROJECT:
-                    allSites.push(prepare(value))
+                    push(allSites, prepare(value))
                     break
                 case SITE:
                     for (const id of value) {
-                        allSites.push(prepare(id))
+                        push(allSites, prepare(id))
                     }
                     break
                 case LIGHT_220:
@@ -68,7 +68,7 @@ const initAssist = () => {
                 case BOILER:
                 case PUMP:
                     for (const id of value) {
-                        allSubjects.push(prepare(id))
+                        push(allSubjects, prepare(id))
                     }
                     break
             }
@@ -81,7 +81,13 @@ const initAssistDelayed = () => {
     timeout = setTimeout(initAssist, 1000)
 }
 
-const prepare = id => {
+const push = (items, item) => {
+    if (item.forms.length > 0) {
+        items.push(item)
+    }
+}
+
+const prepare = (id) => {
     const { code, title, type } = get(id) || {}
     const words = title ? title.split(" ") : []
     const forms = getForms(words)
