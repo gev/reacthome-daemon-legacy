@@ -11,6 +11,8 @@ const { applySite } = require("../actions")
 const { getAllForms } = require("./lang/ru")
 const { closest } = require("./levenshtein")
 
+const MAX = Number.MAX_SAFE_INTEGER;
+
 const allScripts = []
 const allSubjects = []
 const allSites = []
@@ -160,24 +162,34 @@ const markupWords = (words, items, position = 0) => {
     const its = items.map(item => ({ ...item, score: 0 }))
     for (let i = 0; i < words.length; i++) {
         const word = words[i]
-        const stage1 = []
-        let max = 0
+        let min = MAX;
         for (const it of its) {
+            let dist = MAX;
             for (const form of it.forms) {
-                const s = closest(word, form)
-                console.log(word, s)
-                if (s > threshold) {
-                    it.score += 1
-                    if (it.score > max) {
-                        max = it.score
-                    }
-                    stage1.push(it)
+                const c = closest(word, form)
+                if (c.distance < dist) {
+                    dist = c.distance
+                    it.closest = c;
                 }
+            }
+            if (min < dist) {
+                min = dist
+            }
+        }
+        let max = 0
+        const stage1 = []
+        for (const it of its) {
+            if (it.closest.distance === min && it.closest.similarity > threshold) {
+                it.score += 1
+                if (it.score > max) {
+                    max = it.score
+                }
+                stage1.push(it)
             }
         }
         if (stage1.length > 0) {
             const stage2 = []
-            let min = 100000000
+            let min = MAX
             for (const it of stage1) {
                 if (it.score === max) {
                     stage2.push(it)
