@@ -10,7 +10,7 @@ const similarity = (a, b) => {
 }
 
 const closest = (test, words) => {
-    let res = { distance: 1000, similarity: 0 };
+    let res = { distance: Number.MAX_SAFE_INTEGER, similarity: 0 };
     for (const word of words) {
         const s = similarity(test, word)
         if (s.distance < res.distance) {
