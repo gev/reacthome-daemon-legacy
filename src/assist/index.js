@@ -165,6 +165,7 @@ const markupWords = (words, items, position = 0) => {
     const res = []
     const its = items.map(item => ({ ...item, score: 0 }))
     for (let i = 0; i < words.length; i++) {
+        const word = words[i]
         const closestItems = selectClosest(its, word)
         if (closestItems.length > 0) {
             res.push({ word, position: position + i, items: closestItems })
@@ -177,7 +178,6 @@ const selectClosest = (items, word) => {
     // State 0: Select closest items by distance
     const stage0 = []
     let minDistance = Number.MAX_SAFE_INTEGER;
-    const word = words[i]
     for (const it of items) {
         let distance = Number.MAX_SAFE_INTEGER;
         for (const form of it.forms) {
