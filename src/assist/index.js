@@ -177,6 +177,7 @@ const markupWords = (words, items, position = 0) => {
         let max = 0
         const stage1 = []
         for (const it of its) {
+            console.log(it)
             if (it.closest.distance === min && it.closest.similarity > threshold) {
                 it.score += 1
                 if (it.score > max) {
