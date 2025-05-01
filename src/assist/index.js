@@ -158,32 +158,30 @@ const resolve = (actions) => {
     return res
 }
 
-const resolveSubjects = (subjects) => {
-
-}
-
 const combine = (commands, subjects, sites) => {
     const res = []
-    let where = []
-    for (let i = 0; i < commands.length; i += 1) {
-        const command = commands[i]
-        const its = subjects[i]
-        where = sites[i] || where
-        res.push({
-            command,
-            subjects: its ? its : [],
-            sites: where,
-        })
-    }
-    const last = res[commands.length - 1]
-    for (let i = commands.length; i < subjects.length; i += 1) {
-        for (const it of subjects[i]) {
-            last.subjects.push(it)
+    if (commands.length > 0) {
+        let where = []
+        for (let i = 0; i < commands.length; i += 1) {
+            const command = commands[i]
+            const its = subjects[i]
+            where = sites[i] || where
+            res.push({
+                command,
+                subjects: its ? its : [],
+                sites: where,
+            })
         }
-    }
-    for (let i = commands.length; i < sites.length; i += 1) {
-        for (const it of sites[i]) {
-            last.sites.push(it)
+        const last = res[commands.length - 1]
+        for (let i = commands.length; i < subjects.length; i += 1) {
+            for (const it of subjects[i]) {
+                last.subjects.push(it)
+            }
+        }
+        for (let i = commands.length; i < sites.length; i += 1) {
+            for (const it of sites[i]) {
+                last.sites.push(it)
+            }
         }
     }
     return res
