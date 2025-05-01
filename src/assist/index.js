@@ -75,7 +75,6 @@ const initAssist = () => {
             }
         }
     })
-    console.log(allSites)
 }
 
 const initAssistDelayed = () => {
