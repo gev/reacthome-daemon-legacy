@@ -141,11 +141,11 @@ const combine = (commands, subjects, sites) => {
     for (let i = 0; i < commands.length; i += 1) {
         const command = commands[i];
         const its = subjects[i];
-        where = sites[i]
+        where = sites[i] || where
         res.push({
             command,
             subjects: its ? its : [],
-            sites: where ? where : [],
+            sites: where,
         })
     }
     const last = res[commands.length - 1]
