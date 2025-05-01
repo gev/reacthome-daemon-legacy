@@ -10,15 +10,16 @@ const { run } = require("../controllers/service")
 const { applySite } = require("../actions")
 const { getAllForms } = require("./lang/ru")
 const { closest } = require("./levenshtein")
+const { command } = require("reacthome-ircodes/ircodes/TV/LG/group1")
 
 const allScripts = []
 const allSubjects = []
 const allSites = []
 
-const allActions = [
+const allCommands = [
     {
         id: ACTION_ON,
-        type: "action",
+        type: "command",
         forms: [["включи", "включить"]],
         answer: {
             inf: "включить",
@@ -27,7 +28,7 @@ const allActions = [
     },
     {
         id: ACTION_OFF,
-        type: "action",
+        type: "command",
         forms: [["выключи", "выключить"]],
         answer: {
             inf: "выключить",
@@ -112,23 +113,30 @@ const handleAssist = (action) => {
 
     const words = action.payload.message.split(" ")
 
-    const actions = markupWords(words, allActions)
+    const commands = markupWords(words, allCommands)
 
-    const fragments = sliceFragments(words, actions)
+    const fragments = sliceFragments(words, commands)
 
     const scripts = markupFragments(fragments, allScripts)
     const sites = markupFragments(fragments, allSites)
     const subjects = markupFragments(fragments, allSubjects)
 
-    console.log("actions", actions)
+    const actions = combine(commands, subjects)
+
+    console.log("commands", commands)
     console.log("fragments", fragments)
     console.log("scripts", scripts)
     console.log("sites", sites)
     console.log("subjects", subjects)
+    console.log("actions", actions)
 
     let answer = "Ага!"
     action.payload.message = answer
     return action
+}
+
+const combine = (commands, actions) => {
+
 }
 
 const sliceFragments = (words, items) => {
