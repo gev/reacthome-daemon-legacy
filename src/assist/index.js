@@ -182,6 +182,7 @@ const markupWords = (words, items, position = 0) => {
     }
     const stage1 = []
     for (const [it, matches] of stage0.entries()) {
+        delete it.closest
         stage1.push({ ...it, matches })
     }
     return stage1
@@ -218,7 +219,6 @@ const selectClosest = (items, word) => {
             }
             stage1.push(it)
         }
-        delete it.closest
     }
     // State 2: filter by the maximum score
     const stage2 = []
