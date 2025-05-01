@@ -89,10 +89,23 @@ const push = (items, item) => {
 }
 
 const prepare = (id) => {
-    const { code, title, type } = get(id) || {}
+    const it = get(id) || {}
+    const title = getParentTitles(it);
     const words = title ? title.split(" ") : []
     const forms = getForms(words)
-    return { id, code, type, title, words, forms }
+    return { ...it, words, forms }
+}
+
+const getParentTitles = (it, titles = []) => {
+    const parent = it.parent && get(it.parent)
+    if (parent) {
+        getParentTitles(parent, titles)
+    } else {
+        if (it.title) {
+            titles.unshift(it.title)
+        }
+    }
+    return titles
 }
 
 const getForms = (words) => {
@@ -122,25 +135,38 @@ const handleAssist = (action) => {
     const subjects = markupFragments(fragments, allSubjects)
 
     const actions = combine(commands, subjects, sites)
+    const res = resolve(actions)
 
     // console.log("commands", commands)
     // console.log("fragments", fragments)
     // console.log("scripts", scripts)
     // console.log("sites", sites)
     // console.log("subjects", subjects)
-    console.log("actions", actions)
+    console.log("actions", res)
 
     let answer = "Ага!"
     action.payload.message = answer
     return action
 }
 
+const resolve = (actions) => {
+    const res = []
+    for (const it of actions) {
+        res.push(it)
+    }
+    return res
+}
+
+const resolveSubjects = (subjects) => {
+
+}
+
 const combine = (commands, subjects, sites) => {
     const res = []
     let where = []
     for (let i = 0; i < commands.length; i += 1) {
-        const command = commands[i];
-        const its = subjects[i];
+        const command = commands[i]
+        const its = subjects[i]
         where = sites[i] || where
         res.push({
             command,
@@ -222,14 +248,14 @@ const markupWords = (words, items, position = 0) => {
 const selectClosest = (items, word) => {
     // State 0: Select closest items by distance
     const stage0 = []
-    let minDistance = Number.MAX_SAFE_INTEGER;
+    let minDistance = Number.MAX_SAFE_INTEGER
     for (const it of items) {
-        let distance = Number.MAX_SAFE_INTEGER;
+        let distance = Number.MAX_SAFE_INTEGER
         for (const form of it.forms) {
             const c = closest(word, form)
             if (c.distance < distance) {
                 distance = c.distance
-                it.closest = c;
+                it.closest = c
             }
         }
         if (it.closest.similarity > threshold) {
