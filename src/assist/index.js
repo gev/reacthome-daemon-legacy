@@ -145,7 +145,7 @@ const combine = (commands, subjects) => {
             subjects: its ? its : []
         })
     }
-    const last = res[actions.length - 1]
+    const last = res[commands.length - 1]
     for (let i = commands.length; i < subjects.length; i += 1) {
         const its = subjects[i];
         for (it of its) {
