@@ -227,11 +227,9 @@ const markupWords = (words, items, position = 0) => {
     for (let i = 0; i < words.length; i++) {
         const word = words[i]
         const closestItems = selectClosest(its, word)
-        if (closestItems.length > 0) {
-            for (const it of closestItems) {
-                it.matches.push({ word, position: position + i })
-                stage1.add(it)
-            }
+        for (const it of closestItems) {
+            it.matches.push({ word, position: position + i })
+            stage1.add(it)
         }
     }
     const stage2 = []
@@ -271,7 +269,7 @@ const selectClosest = (items, word) => {
             stage2.push(it)
         }
     }
-    return { items: stage2, maxScore }
+    return stage2
 }
 
 const filterClosest = (items) => {
