@@ -222,33 +222,30 @@ const markupFragments = (fragments, items) => {
 const threshold = 0.7
 
 const markupWords = (words, items, position = 0) => {
-    const stage0 = new Map()
-    const its = items.map(item => ({ ...item, score: 0 }))
+    const stage1 = new Set()
+    const its = items.map(item => ({ ...item, matches: [], score: 0 }))
     for (let i = 0; i < words.length; i++) {
         const word = words[i]
         const closestItems = selectClosest(its, word)
         if (closestItems.length > 0) {
             for (const it of closestItems) {
-                const matches = { word, position: position + i }
-                if (stage0.has(it)) {
-                    stage0.get(it).push(matches)
-                } else {
-                    stage0.set(it, [matches])
-                }
+                it.matches.push({ word, position: position + i })
+                stage1.add(it)
             }
         }
     }
-    const stage1 = []
-    for (const [it, matches] of stage0.entries()) {
+    const stage2 = []
+    const closestItems = filterClosest([...stage1])
+    for (const it of closestItems) {
         delete it.closest
-        stage1.push({ ...it, matches })
+        stage2.push(it)
     }
-    return stage1
+    return stage2
 }
 
 const selectClosest = (items, word) => {
-    // State 0: Select closest items by distance
-    const stage0 = []
+    // Stage 1: Select closest items by distance
+    const stage1 = []
     let minDistance = Number.MAX_SAFE_INTEGER
     for (const it of items) {
         let distance = Number.MAX_SAFE_INTEGER
@@ -263,42 +260,47 @@ const selectClosest = (items, word) => {
             if (it.closest.distance < minDistance) {
                 minDistance = it.closest.distance
             }
-            stage0.push(it)
-        }
-    }
-    // State 1: filter by the minimum distance
-    const stage1 = []
-    let maxScore = 0
-    for (const it of stage0) {
-        if (it.closest.distance === minDistance) {
-            it.score += 1
-            if (it.score > maxScore) {
-                maxScore = it.score
-            }
             stage1.push(it)
         }
     }
-    // State 2: filter by the maximum score
+    // Stage 2: filter by the minimum distance
     const stage2 = []
-    let minLength = Number.MAX_SAFE_INTEGER
     for (const it of stage1) {
-        if (it.score === maxScore) {
+        if (it.closest.distance === minDistance) {
+            it.score += 1
             stage2.push(it)
+        }
+    }
+    return { items: stage2, maxScore }
+}
+
+const filterClosest = (items, maxScore) => {
+    // Stage 0: get max score
+    let maxScore = 0
+    for (const it of items) {
+        if (it.score > maxScore) {
+            maxScore = it.score
+        }
+    }
+    // Stage 1: filter by the maximum score
+    const stage1 = []
+    let minLength = Number.MAX_SAFE_INTEGER
+    for (const it of items) {
+        if (it.score === maxScore) {
+            stage1.push(it)
             if (it.forms.length < minLength) {
                 minLength = it.forms.length
             }
         }
     }
-    // State 3: filter by the minimum length
-    const stage3 = []
-    for (const it of stage2) {
+    // State 2: filter by the minimum length
+    const stage2 = []
+    for (const it of stage1) {
         if (it.forms.length === minLength) {
-            stage3.push(it)
+            stage2.push(it)
         }
     }
-    console.log("stage 3 min length", minLength)
-    log(stage3)
-    return stage3
+    return stage2
 }
 
 // const getTitle = ({ title, code }) => title || code
