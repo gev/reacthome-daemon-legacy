@@ -134,12 +134,14 @@ const handleAssist = (action) => {
 const sliceFragments = (words, items) => {
     const res = []
     let previous = 0
-    for (const { position } of items) {
-        if (position > 0) {
-            const fragment = words.slice(previous, position)
+    for (const it of items) {
+        const firstPosition = it.matches[0].position
+        if (firstPosition > 0) {
+            const fragment = words.slice(previous, firstPosition)
             res.push({ words: fragment, position: previous })
         }
-        previous = position + 1
+        const lastPosition = it.matches[it.matches.length - 1].position
+        previous = lastPosition + 1
     }
     const fragment = words.slice(previous)
     if (fragment.length > 0) {
