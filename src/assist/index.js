@@ -248,6 +248,7 @@ const markupWords = (words, items, position = 0) => {
 
 const selectClosest = (items, word) => {
     // State 0: Select closest items by distance
+    console.log("stage 0")
     const stage0 = []
     let minDistance = Number.MAX_SAFE_INTEGER
     for (const it of items) {
@@ -264,9 +265,11 @@ const selectClosest = (items, word) => {
                 minDistance = it.closest.distance
             }
             stage0.push(it)
+            console.log(it)
         }
     }
     // State 1: filter by the minimum distance
+    console.log("stage 1 min distance", minDistance)
     const stage1 = []
     let maxScore = 0
     for (const it of stage0) {
@@ -276,20 +279,24 @@ const selectClosest = (items, word) => {
                 maxScore = it.score
             }
             stage1.push(it)
+            console.log(it)
         }
     }
     // State 2: filter by the maximum score
+    console.log("stage 2 max score", maxScore)
     const stage2 = []
     let minLength = Number.MAX_SAFE_INTEGER
     for (const it of stage1) {
         if (it.score === maxScore) {
             stage2.push(it)
+            console.log(it)
             if (it.forms.length < minLength) {
                 minLength = it.forms.length
             }
         }
     }
     // State 3: filter by the minimum length
+    console.log("stage 3 min length", minLength)
     const stage3 = []
     for (const it of stage2) {
         if (it.forms.length === minLength) {
