@@ -150,12 +150,12 @@ const combine = (commands, subjects, sites) => {
     }
     const last = res[commands.length - 1]
     for (let i = commands.length; i < subjects.length; i += 1) {
-        for (it of subjects[i]) {
+        for (const it of subjects[i]) {
             last.subjects.push(it)
         }
     }
     for (let i = commands.length; i < sites.length; i += 1) {
-        for (it of sites[i]) {
+        for (const it of sites[i]) {
             last.sites.push(it)
         }
     }
