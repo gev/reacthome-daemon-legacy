@@ -135,7 +135,7 @@ const handleAssist = (action) => {
 
     const scripts = markupFragments(fragments, allScripts)
     const sites = markupFragments(fragments, allSites)
-    const subjects = markupFragments(fragments, allSubjects)
+    // const subjects = markupFragments(fragments, allSubjects)
 
     // const actions = combine(commands, subjects, sites)
     // const res = resolve(actions)
@@ -143,8 +143,8 @@ const handleAssist = (action) => {
     // console.log("commands", commands)
     // console.log("fragments", fragments)
     // console.log("scripts", scripts)
-    console.log("sites", sites)
-    console.log("subjects", subjects)
+    log("sites", sites)
+    // console.log("subjects", subjects)
     // log("actions", res)
 
     let answer = "Ага!"
