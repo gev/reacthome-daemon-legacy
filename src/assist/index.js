@@ -75,6 +75,7 @@ const initAssist = () => {
             }
         }
     })
+    console.log(allSites)
 }
 
 const initAssistDelayed = () => {
@@ -90,20 +91,20 @@ const push = (items, item) => {
 
 const prepare = (id) => {
     const it = get(id) || {}
-    const title = getParentTitles(it);
-    const words = title ? title.split(" ") : []
+    const words = getParentTitles(it);
     const forms = getForms(words)
     return { ...it, words, forms }
 }
 
 const getParentTitles = (it, titles = []) => {
+    if (it.title) {
+        for (const t of it.title.split(" ")) {
+            titles.push(t)
+        }
+    }
     const parent = it.parent && get(it.parent)
     if (parent) {
         getParentTitles(parent, titles)
-    } else {
-        if (it.title) {
-            titles.unshift(it.title)
-        }
     }
     return titles
 }
