@@ -216,9 +216,9 @@ const selectClosest = (items, word) => {
             if (it.score > maxScore) {
                 maxScore = it.score
             }
-            delete it.closest
             stage1.push(it)
         }
+        delete it.closest
     }
     // State 2: filter by the maximum score
     const stage2 = []
