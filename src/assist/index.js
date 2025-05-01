@@ -141,11 +141,9 @@ const sliceFragments = (words, items) => {
         }
         previous = position + 1
     }
-    if (previous > 0) {
-        const fragment = words.slice(previous)
-        if (fragment.length > 0) {
-            res.push({ words: fragment, position: previous })
-        }
+    const fragment = words.slice(previous)
+    if (fragment.length > 0) {
+        res.push({ words: fragment, position: previous })
     }
     return res
 }
