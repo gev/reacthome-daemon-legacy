@@ -123,11 +123,11 @@ const handleAssist = (action) => {
 
     const actions = combine(commands, subjects, sites)
 
-    console.log("commands", commands)
-    console.log("fragments", fragments)
-    console.log("scripts", scripts)
-    console.log("sites", sites)
-    console.log("subjects", subjects)
+    // console.log("commands", commands)
+    // console.log("fragments", fragments)
+    // console.log("scripts", scripts)
+    // console.log("sites", sites)
+    // console.log("subjects", subjects)
     console.log("actions", actions)
 
     let answer = "Ага!"
