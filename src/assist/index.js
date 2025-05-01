@@ -167,9 +167,8 @@ const markupWords = (words, items) => {
     for (let i = 0; i < words.length; i++) {
         const word = words[i]
         const closestItems = selectClosest(its, word)
-        if (closestItems.length > 0) {
-            closestItems.forEach(res.add)
-            // res.push({ word, position: position + i, items: closestItems })
+        for (const it of closestItems) {
+            res.add(it)
         }
     }
     return [...res]
