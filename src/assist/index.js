@@ -203,6 +203,7 @@ const selectClosest = (items, word) => {
             if (it.score > maxScore) {
                 maxScore = it.score
             }
+            delete it.closest
             stage1.push(it)
         }
     }
