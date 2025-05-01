@@ -137,8 +137,8 @@ const handleAssist = (action) => {
     const sites = markupFragments(fragments, allSites)
     const subjects = markupFragments(fragments, allSubjects)
 
-    const actions = combine(commands, subjects, sites)
-    const res = resolve(actions)
+    // const actions = combine(commands, subjects, sites)
+    // const res = resolve(actions)
 
     // console.log("commands", commands)
     // console.log("fragments", fragments)
