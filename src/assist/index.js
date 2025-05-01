@@ -134,16 +134,16 @@ const handleAssist = (action) => {
     const fragments = sliceFragments(words, commands)
 
     // const scripts = markupFragments(fragments, allScripts)
-    // const sites = markupFragments(fragments, allSites)
+    const sites = markupFragments(fragments, allSites)
     const subjects = markupFragments(fragments, allSubjects)
 
     // const actions = combine(commands, subjects, sites)
     // const res = resolve(actions)
 
-    // console.log("commands", commands)
-    // console.log("fragments", fragments)
+    console.log("commands", commands)
+    console.log("fragments", fragments)
     // console.log("scripts", scripts)
-    // log("sites", sites)
+    log("sites", sites)
     console.log("subjects", subjects)
     // log("actions", res)
 
