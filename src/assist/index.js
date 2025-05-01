@@ -180,7 +180,7 @@ const markupWords = (words, items, position = 0) => {
     }
     const stage1 = []
     for (const [it, matches] of stage0.entries()) {
-        state1.push({ ...it, matches })
+        stage1.push({ ...it, matches })
     }
     return stage1
 }
