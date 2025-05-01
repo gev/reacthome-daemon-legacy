@@ -190,7 +190,7 @@ const markupWords = (words, items, position = 0) => {
 const selectClosest = (items, word) => {
     // State 0: Select closest items by distance
     const stage0 = []
-    const closest = []
+    const close = []
     let minDistance = Number.MAX_SAFE_INTEGER;
     for (let i = 0; i < items.length; i += 1) {
         const it = items[i]
@@ -199,10 +199,10 @@ const selectClosest = (items, word) => {
             const c = closest(word, form)
             if (c.distance < distance) {
                 distance = c.distance
-                closest[i] = c;
+                close[i] = c;
             }
         }
-        const c = closest[i]
+        const c = close[i]
         if (c.similarity > threshold) {
             if (c.distance < minDistance) {
                 minDistance = c.distance
@@ -215,7 +215,7 @@ const selectClosest = (items, word) => {
     let maxScore = 0
     for (let i = 0; i < stage0.length; i += 1) {
         const it = stage0[i]
-        if (closest[i].distance === minDistance) {
+        if (close[i].distance === minDistance) {
             it.score += 1
             if (it.score > maxScore) {
                 maxScore = it.score
