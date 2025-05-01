@@ -141,11 +141,9 @@ const sliceFragments = (words, items) => {
         }
         previous = position + 1
     }
-    if (previous > 0) {
-        const fragment = words.slice(previous)
-        if (fragment.length > 0) {
-            res.push({ words: fragment, position: previous })
-        }
+    const fragment = words.slice(previous)
+    if (fragment.length > 0) {
+        res.push({ words: fragment, position: previous })
     }
     return res
 }
@@ -153,7 +151,7 @@ const sliceFragments = (words, items) => {
 const markupFragments = (fragments, items) => {
     res = []
     for (const fragment of fragments) {
-        const its = markupWords(fragment.words, items)
+        const its = markupWords(fragment.words, items, fragment.position)
         if (its.length > 0) {
             res.push(its)
         }
@@ -163,18 +161,17 @@ const markupFragments = (fragments, items) => {
 
 const threshold = 0.7
 
-const markupWords = (words, items) => {
-    const res = new Set()
+const markupWords = (words, items, position = 0) => {
+    const res = []
     const its = items.map(item => ({ ...item, score: 0 }))
     for (let i = 0; i < words.length; i++) {
         const word = words[i]
         const closestItems = selectClosest(its, word)
-        for (const it of closestItems) {
-            delete it.closest
-            res.add(it)
+        if (closestItems.length > 0) {
+            res.push({ word, position: position + i, items: closestItems })
         }
     }
-    return [...res]
+    return res
 }
 
 const selectClosest = (items, word) => {
