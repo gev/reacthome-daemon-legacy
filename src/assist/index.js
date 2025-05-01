@@ -274,7 +274,7 @@ const selectClosest = (items, word) => {
     return { items: stage2, maxScore }
 }
 
-const filterClosest = (items, maxScore) => {
+const filterClosest = (items) => {
     // Stage 0: get max score
     let maxScore = 0
     for (const it of items) {
