@@ -162,16 +162,27 @@ const markupFragments = (fragments, items) => {
 const threshold = 0.7
 
 const markupWords = (words, items, position = 0) => {
-    const res = []
+    const stage0 = new Map()
     const its = items.map(item => ({ ...item, score: 0 }))
     for (let i = 0; i < words.length; i++) {
         const word = words[i]
         const closestItems = selectClosest(its, word)
         if (closestItems.length > 0) {
-            res.push({ word, position: position + i, items: closestItems })
+            for (const it of closestItems) {
+                const matches = { word, position: position + i }
+                if (stage0.has(it)) {
+                    stage0.get(it).push(matches)
+                } else {
+                    stage0.set(it, [matches])
+                }
+            }
         }
     }
-    return res
+    const stage1 = []
+    for (const [it, matches] of stage0.entries()) {
+        state1.push({ ...it, matches })
+    }
+    return stage1
 }
 
 const selectClosest = (items, word) => {
