@@ -124,7 +124,7 @@ const handleAssist = (action) => {
     console.log("fragments", fragments)
     console.log("scripts", scripts)
     console.log("sites", sites)
-    log("subjects", subjects)
+    console.log("subjects", subjects)
 
     let answer = "Ага!"
     action.payload.message = answer
@@ -190,22 +190,19 @@ const markupWords = (words, items, position = 0) => {
 const selectClosest = (items, word) => {
     // State 0: Select closest items by distance
     const stage0 = []
-    const close = []
     let minDistance = Number.MAX_SAFE_INTEGER;
-    for (let i = 0; i < items.length; i += 1) {
-        const it = items[i]
+    for (const it of items) {
         let distance = Number.MAX_SAFE_INTEGER;
         for (const form of it.forms) {
             const c = closest(word, form)
             if (c.distance < distance) {
                 distance = c.distance
-                close[i] = c;
+                it.closest = c;
             }
         }
-        const c = close[i]
-        if (c.similarity > threshold) {
-            if (c.distance < minDistance) {
-                minDistance = c.distance
+        if (it.closest.similarity > threshold) {
+            if (it.closest.distance < minDistance) {
+                minDistance = it.closest.distance
             }
             stage0.push(it)
         }
@@ -213,15 +210,15 @@ const selectClosest = (items, word) => {
     // State 1: filter by the minimum distance
     const stage1 = []
     let maxScore = 0
-    for (let i = 0; i < stage0.length; i += 1) {
-        const it = stage0[i]
-        if (close[i].distance === minDistance) {
+    for (const it of stage0) {
+        if (it.closest.distance === minDistance) {
             it.score += 1
             if (it.score > maxScore) {
                 maxScore = it.score
             }
             stage1.push(it)
         }
+        delete it.closest
     }
     // State 2: filter by the maximum score
     const stage2 = []
