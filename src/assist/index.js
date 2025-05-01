@@ -121,7 +121,7 @@ const handleAssist = (action) => {
     const sites = markupFragments(fragments, allSites)
     const subjects = markupFragments(fragments, allSubjects)
 
-    const actions = combine(commands, subjects)
+    const actions = combine(commands, subjects, sites)
 
     console.log("commands", commands)
     console.log("fragments", fragments)
@@ -135,21 +135,28 @@ const handleAssist = (action) => {
     return action
 }
 
-const combine = (commands, subjects) => {
+const combine = (commands, subjects, sites) => {
     const res = []
+    let where = []
     for (let i = 0; i < commands.length; i += 1) {
         const command = commands[i];
         const its = subjects[i];
+        where = sites[i]
         res.push({
             command,
-            subjects: its ? its : []
+            subjects: its ? its : [],
+            sites: where ? where : [],
         })
     }
     const last = res[commands.length - 1]
     for (let i = commands.length; i < subjects.length; i += 1) {
-        const its = subjects[i];
-        for (it of its) {
+        for (it of subjects[i]) {
             last.subjects.push(it)
+        }
+    }
+    for (let i = commands.length; i < sites.length; i += 1) {
+        for (it of sites[i]) {
+            last.sites.push(it)
         }
     }
     return res
