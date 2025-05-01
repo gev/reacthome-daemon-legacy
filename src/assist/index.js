@@ -135,8 +135,24 @@ const handleAssist = (action) => {
     return action
 }
 
-const combine = (commands, actions) => {
-
+const combine = (commands, subjects) => {
+    const res = []
+    for (let i = 0; i < commands.length; i += 1) {
+        const command = commands[i];
+        const its = subjects[i];
+        res.push({
+            command,
+            subjects: its ? its : []
+        })
+    }
+    const last = res[actions.length - 1]
+    for (let i = commands.length; i < subjects.length; i += 1) {
+        const its = subjects[i];
+        for (it of its) {
+            last.subjects.push(it)
+        }
+    }
+    return res
 }
 
 const sliceFragments = (words, items) => {
