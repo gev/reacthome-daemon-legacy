@@ -170,6 +170,7 @@ const markupWords = (words, items) => {
         const word = words[i]
         const closestItems = selectClosest(its, word)
         for (const it of closestItems) {
+            delete it.closest
             res.add(it)
         }
     }
