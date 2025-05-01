@@ -143,7 +143,7 @@ const handleAssist = (action) => {
     console.log("commands", commands)
     console.log("fragments", fragments)
     // console.log("scripts", scripts)
-    log("sites", sites)
+    console.log("sites", sites)
     console.log("subjects", subjects)
     // log("actions", res)
 
