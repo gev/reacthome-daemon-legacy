@@ -12,9 +12,9 @@ const { getAllForms } = require("./lang/ru")
 const { closest } = require("./levenshtein")
 const { command } = require("reacthome-ircodes/ircodes/TV/LG/group1")
 
-const allScripts = []
-const allSubjects = []
-const allSites = []
+let allScripts = []
+let allSubjects = []
+let allSites = []
 
 const allCommands = [
     {
@@ -40,6 +40,9 @@ const allCommands = [
 let timeout
 
 const initAssist = () => {
+    allScripts = []
+    allSubjects = []
+    allSites = []
     const { mac } = state()
     applySite(mac, (site) => {
         for ([key, value] of Object.entries(site)) {
