@@ -147,14 +147,14 @@ const handleAssist = (action) => {
     const subjects = markupFragments(fragments, allSubjects, false)
 
     const actions = combine(commands, subjects, sites)
-    // const res = resolve(actions)
+    const res = resolve(actions)
 
     // console.log("commands", commands)
     // console.log("fragments", fragments)
     // console.log("scripts", scripts)
     // console.log("sites", sites)
     // console.log("subjects", subjects)
-    console.log("actions", actions)
+    console.log("actions", res)
 
     let answer = "Ага!"
     action.payload.message = answer
@@ -164,6 +164,16 @@ const handleAssist = (action) => {
 const resolve = (actions) => {
     const res = []
     for (const it of actions) {
+        if (it.sites.size > 0) {
+            const subjects = []
+            for (const subject of it.subjects) {
+                if (it.sites.has(subject.site)) {
+                    subjects.push(subject)
+                }
+            }
+            it.subjects = subjects
+        }
+        it.subjects = filterClosest(it.subjects)
         res.push(it)
     }
     return res
@@ -187,14 +197,14 @@ const combine = (commands, subjects, sites) => {
             }
             res.push({
                 command,
-                subjects: new Set(its ? its : []),
+                subjects: its ? its : [],
                 sites: where,
             })
         }
         const last = res[commands.length - 1]
         for (let i = commands.length; i < subjects.length; i += 1) {
             for (const it of subjects[i]) {
-                last.subjects.add(it)
+                last.subjects.push(it)
             }
         }
         for (let i = commands.length; i < sites.length; i += 1) {
