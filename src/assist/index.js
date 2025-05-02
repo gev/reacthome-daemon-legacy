@@ -264,9 +264,6 @@ const markupWords = (words, items, position = 0, shouldFilterClosest) => {
     const stage2 = [...stage1]
     if (shouldFilterClosest) {
         const stage3 = filterClosest(stage2)
-        for (const it of stage3) {
-            delete it.closest
-        }
         return stage3
     } else {
         return stage2
