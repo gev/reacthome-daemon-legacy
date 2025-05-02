@@ -10,7 +10,6 @@ const { run } = require("../controllers/service")
 const { applySite } = require("../actions")
 const { getAllForms } = require("./lang/ru")
 const { closest } = require("./levenshtein")
-const { command } = require("reacthome-ircodes/ircodes/TV/LG/group1")
 
 let allScripts = []
 let allSubjects = []
