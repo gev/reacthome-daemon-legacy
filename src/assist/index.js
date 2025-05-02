@@ -93,12 +93,12 @@ const push = (items, item) => {
 
 const prepare = (id) => {
     const it = get(id) || {}
-    const words = getParentTitles(it);
+    const words = getAllTitles(it);
     const forms = getForms(words)
     return { ...it, words, forms }
 }
 
-const getParentTitles = (it, titles = []) => {
+const getAllTitles = (it, titles = []) => {
     if (it.title) {
         for (const t of it.title.split(" ")) {
             titles.push(t)
@@ -106,7 +106,7 @@ const getParentTitles = (it, titles = []) => {
     }
     const parent = it.parent && get(it.parent)
     if (parent) {
-        getParentTitles(parent, titles)
+        getAllTitles(parent, titles)
     }
     return titles
 }
