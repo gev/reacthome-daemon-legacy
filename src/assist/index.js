@@ -230,7 +230,7 @@ const markupFragments = (fragments, items) => {
 
 const threshold = 0.7
 
-const markupWords = (words, items, position = 0, filter = a => a) => {
+const markupWords = (words, items, position = 0, shouldFilterClosest = true) => {
     const stage1 = new Set()
     const its = items.map(item => ({ ...item, matches: [], score: 0 }))
     for (let i = 0; i < words.length; i++) {
@@ -241,14 +241,16 @@ const markupWords = (words, items, position = 0, filter = a => a) => {
             stage1.add(it)
         }
     }
-    const stage2 = filter([...stage1])
-    const stage3 = filterClosest(stage2)
-    const stage4 = []
-    for (const it of stage3) {
-        delete it.closest
-        stage4.push(it)
+    const stage2 = [...stage1]
+    if (shouldFilterClosest) {
+        const stage3 = filterClosest(stage2)
+        for (const it of stage3) {
+            delete it.closest
+        }
+        return stage3
+    } else {
+        return stage2
     }
-    return stage4
 }
 
 const selectClosest = (items, word) => {
