@@ -143,8 +143,8 @@ const handleAssist = (action) => {
     const fragments = sliceFragments(words, commands)
 
     // const scripts = markupFragments(fragments, allScripts)
-    const sites = markupFragments(fragments, allSites)
-    const subjects = markupFragments(fragments, allSubjects)
+    const sites = markupFragments(fragments, allSites, true)
+    const subjects = markupFragments(fragments, allSubjects, true)
 
     const actions = combine(commands, subjects, sites)
     const res = resolve(actions)
@@ -217,10 +217,10 @@ const sliceFragments = (words, items) => {
     return res
 }
 
-const markupFragments = (fragments, items) => {
+const markupFragments = (fragments, items, shouldFilterClosest) => {
     res = []
     for (const fragment of fragments) {
-        const its = markupWords(fragment.words, items, fragment.position)
+        const its = markupWords(fragment.words, items, fragment.position, shouldFilterClosest)
         if (its.length > 0) {
             res.push(its)
         }
@@ -230,7 +230,7 @@ const markupFragments = (fragments, items) => {
 
 const threshold = 0.7
 
-const markupWords = (words, items, position = 0, shouldFilterClosest = true) => {
+const markupWords = (words, items, position = 0, shouldFilterClosest) => {
     const stage1 = new Set()
     const its = items.map(item => ({ ...item, matches: [], score: 0 }))
     for (let i = 0; i < words.length; i++) {
