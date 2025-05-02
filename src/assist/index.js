@@ -154,7 +154,7 @@ const handleAssist = (action) => {
     // console.log("scripts", scripts)
     // console.log("sites", sites)
     // console.log("subjects", subjects)
-    console.log("actions", res)
+    log("actions", res)
 
     let answer = "Ага!"
     action.payload.message = answer
