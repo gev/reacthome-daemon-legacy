@@ -75,7 +75,7 @@ module.exports.apply = (id, action) => {
 const applySite = (id, action) => {
   const o = state.get(id);
   if (!o) return;
-  action(o);
+  action(o, id);
   if (o.project) {
     applySite(o.project, action);
   }

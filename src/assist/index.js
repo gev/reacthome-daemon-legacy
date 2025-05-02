@@ -53,11 +53,15 @@ const initAssist = () => {
                     }
                     break
                 case PROJECT:
-                    push(allSites, prepare(value))
+                    const project = prepare(value)
+                    addSites(project)
+                    push(allSites, project)
                     break
                 case SITE:
                     for (const id of value) {
-                        push(allSites, prepare(id))
+                        const site = prepare(id)
+                        addSites(site)
+                        push(allSites, site)
                     }
                     break
                 case LIGHT_220:
@@ -91,11 +95,16 @@ const push = (items, item) => {
     }
 }
 
+const addSites = (it) => {
+    it.sites = new Set()
+    applySite(it.id, (_, id) => it.sites.add(id))
+}
+
 const prepare = (id) => {
     const it = get(id) || {}
     const words = getAllTitles(it);
     const forms = getForms(words)
-    return { ...it, words, forms }
+    return { ...it, id, words, forms }
 }
 
 const getAllTitles = (it, titles = []) => {
