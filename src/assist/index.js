@@ -187,14 +187,14 @@ const combine = (commands, subjects, sites) => {
             }
             res.push({
                 command,
-                subjects: its ? its : [],
+                subjects: new Set(its ? its : []),
                 sites: where,
             })
         }
         const last = res[commands.length - 1]
         for (let i = commands.length; i < subjects.length; i += 1) {
             for (const it of subjects[i]) {
-                last.subjects.push(it)
+                last.subjects.add(it)
             }
         }
         for (let i = commands.length; i < sites.length; i += 1) {
