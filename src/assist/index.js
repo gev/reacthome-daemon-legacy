@@ -172,11 +172,19 @@ const resolve = (actions) => {
 const combine = (commands, subjects, sites) => {
     const res = []
     if (commands.length > 0) {
-        let where = []
+        let where = new Set()
         for (let i = 0; i < commands.length; i += 1) {
             const command = commands[i]
             const its = subjects[i]
-            where = sites[i] || where
+            const sites_ = sites[i]
+            if (sites_) {
+                where = new Set()
+                for (const it of sites_) {
+                    for (const id of it.sites) {
+                        where.add(id)
+                    }
+                }
+            }
             res.push({
                 command,
                 subjects: its ? its : [],
@@ -191,7 +199,9 @@ const combine = (commands, subjects, sites) => {
         }
         for (let i = commands.length; i < sites.length; i += 1) {
             for (const it of sites[i]) {
-                last.sites.push(it)
+                for (const id of it.sites) {
+                    last.sites.add(id)
+                }
             }
         }
     }
