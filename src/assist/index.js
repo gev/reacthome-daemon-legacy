@@ -147,14 +147,14 @@ const handleAssist = (action) => {
     const subjects = markupFragments(fragments, allSubjects, false)
 
     const actions = combine(commands, subjects, sites)
-    const res = resolve(actions)
+    // const res = resolve(actions)
 
     // console.log("commands", commands)
     // console.log("fragments", fragments)
     // console.log("scripts", scripts)
     // console.log("sites", sites)
     // console.log("subjects", subjects)
-    log("actions", res)
+    console.log("actions", actions)
 
     let answer = "Ага!"
     action.payload.message = answer
