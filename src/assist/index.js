@@ -168,7 +168,8 @@ const handleAssist = (action) => {
         }
         answer = answers.join(". ")
     }
-    action.payload.message = answer
+    action.payload.message = answers.join(". ")
+    console.log(action.payload.message)
     return action
 }
 
