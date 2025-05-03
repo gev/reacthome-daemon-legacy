@@ -136,26 +136,38 @@ const handleAssist = (action) => {
     console.log(action)
 
     const words = action.payload.message.split(" ")
+    const scripts = markupWords(words, allScripts, true)
 
-    const commands = markupWords(words, allCommands)
+    let answer = "Пожалуйста, уточните что сделать"
 
-    const fragments = sliceFragments(words, commands)
-
-    // const scripts = markupFragments(fragments, allScripts)
-    const sites = markupFragments(fragments, allSites, true)
-    const subjects = markupFragments(fragments, allSubjects, false)
-
-    const actions = combine(commands, subjects, sites)
-    const res = resolve(actions)
-
-    // console.log("commands", commands)
-    // console.log("fragments", fragments)
-    // console.log("scripts", scripts)
-    // console.log("sites", sites)
-    // console.log("subjects", subjects)
-    log("actions", res)
-
-    let answer = "Ага!"
+    if (scripts.length > 0) {
+        titles = []
+        for (const script of scripts) {
+            titles.push(getTitle(script))
+            run({ type: ACTION_SCRIPT_RUN, id: script.id })
+        }
+        answer = "Выполняю: " + titles.join(", ")
+    } else {
+        const commands = markupWords(words, allCommands)
+        const fragments = sliceFragments(words, commands)
+        const sites = markupFragments(fragments, allSites, true)
+        const subjects = markupFragments(fragments, allSubjects, false)
+        const actions = combine(commands, subjects, sites)
+        const res = resolve(actions)
+        const answers = []
+        for (const it of res) {
+            if (it.subjects.length > 0) {
+                const titles = []
+                for (const subject of it.subjects) {
+                    run({ type: it.action.type, id: subject.id })
+                    titles.push(subject.title)
+                }
+                const answer = it.action.answer.pc + " " + titles.join(", ")
+                answers.push(answer)
+            }
+        }
+        answer = answers.join(". ")
+    }
     action.payload.message = answer
     return action
 }
@@ -329,7 +341,7 @@ const filterClosest = (items) => {
     return stage2
 }
 
-// const getTitle = ({ title, code }) => title || code
+const getTitle = ({ title, code }) => title || code
 
 const log = (...its) =>
     its.forEach(it =>
