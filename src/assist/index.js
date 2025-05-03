@@ -159,10 +159,10 @@ const handleAssist = (action) => {
             if (it.subjects.length > 0) {
                 const titles = []
                 for (const subject of it.subjects) {
-                    run({ type: it.action.type, id: subject.id })
+                    run({ type: it.command.id, id: subject.id })
                     titles.push(subject.title)
                 }
-                answers.push(it.action.answer.pc + " " + titles.join(", "))
+                answers.push(it.command.answer.pc + " " + titles.join(", "))
             }
         }
         answer = answers.join(". ")
