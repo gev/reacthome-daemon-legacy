@@ -138,7 +138,7 @@ const handleAssist = (action) => {
     const words = action.payload.message.split(" ")
     const scripts = markupWords(words, allScripts, true)
 
-    let answer = "Пожалуйста, уточните что сделать"
+    let answer = "Пожалуйста, уточните что сделать!"
 
     if (scripts.length > 0) {
         titles = []
@@ -162,14 +162,13 @@ const handleAssist = (action) => {
                     run({ type: it.action.type, id: subject.id })
                     titles.push(subject.title)
                 }
-                const answer = it.action.answer.pc + " " + titles.join(", ")
-                answers.push(answer)
+                answers.push(it.action.answer.pc + " " + titles.join(", "))
             }
         }
         answer = answers.join(". ")
     }
-    action.payload.message = answers.join(". ")
-    console.log(action.payload.message)
+    console.log(answer)
+    action.payload.message = answer
     return action
 }
 
