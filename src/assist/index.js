@@ -176,6 +176,7 @@ const handleAssist = (action) => {
         const actions = combine(commands, subjects, sites)
         const res = resolve(actions)
         const answers = []
+        console.log(res)
         for (const it of res) {
             switch (it.command.type) {
                 case ACTION_REMEMBER_SITE: {
