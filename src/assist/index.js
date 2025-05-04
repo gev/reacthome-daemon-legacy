@@ -172,6 +172,14 @@ const handleAssist = (action) => {
         const commands = markupWords(words, allCommands)
         const fragments = sliceFragments(words, commands)
         const sites = markupFragments(fragments, allSites, true)
+
+        if (sites.length === 0) {
+            const skill = get(action.payload.skill_application) || { sites: [] }
+            for (const site of skill.sites) {
+                sites.push(site)
+            }
+        }
+
         const subjects = markupFragments(fragments, allSubjects, false)
         const actions = combine(commands, subjects, sites)
         const res = resolve(actions)
