@@ -174,8 +174,9 @@ const handleAssist = (action) => {
         const sites = markupFragments(fragments, allSites, true)
 
         if (sites.length === 0) {
-            const skill = get(action.payload.skill_application) || { sites: [] }
-            sites.push(skill.sites)
+            const skill = get(action.payload.skill_application) || {}
+            const where = new Set(skill.sites || [])
+            sites.push(allSites.filter(site => where.has(site.id)))
         }
 
         const subjects = markupFragments(fragments, allSubjects, false)
