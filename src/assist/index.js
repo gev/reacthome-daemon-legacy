@@ -11,11 +11,32 @@ const { applySite } = require("../actions")
 const { getAllForms } = require("./lang/ru")
 const { closest } = require("./levenshtein")
 
+const ACTION_REMEMBER_SITE = "ACTION_REMEMBER_SITE"
+const ACTION_FORGET_SITE = "ACTION_FORGET_SITE"
+
 let allScripts = []
 let allSubjects = []
 let allSites = []
 
 const allCommands = [
+    {
+        id: ACTION_FORGET_SITE,
+        type: "command",
+        forms: [["забыть", "забывать", "забудь"]],
+        answer: {
+            inf: "забыть",
+            pc: "забываю",
+        }
+    },
+    {
+        id: ACTION_REMEMBER_SITE,
+        type: 'command',
+        forms: [["мы", "я", "ты", "вы", "управлять", "управляешь", "управляем", "находишься", "находиться", "находимся"]],
+        answer: {
+            inf: "управлять",
+            pc: "управляю",
+        }
+    },
     {
         id: ACTION_ON,
         type: "command",
@@ -156,13 +177,16 @@ const handleAssist = (action) => {
         const res = resolve(actions)
         const answers = []
         for (const it of res) {
-            if (it.subjects.length > 0) {
-                const titles = []
-                for (const subject of it.subjects) {
-                    run({ type: it.command.id, id: subject.id })
-                    titles.push(subject.title)
-                }
-                answers.push(it.command.answer.pc + " " + titles.join(", "))
+            switch (it.type) {
+                default:
+                    if (it.subjects.length > 0) {
+                        const titles = []
+                        for (const subject of it.subjects) {
+                            run({ type: it.command.id, id: subject.id })
+                            titles.push(subject.title)
+                        }
+                        answers.push(it.command.answer.pc + " " + titles.join(", "))
+                    }
             }
         }
         answer = answers.join(". ")
@@ -175,10 +199,10 @@ const handleAssist = (action) => {
 const resolve = (actions) => {
     const res = []
     for (const it of actions) {
-        if (it.sites.size > 0) {
+        if (it.allSites.size > 0) {
             const subjects = []
             for (const subject of it.subjects) {
-                if (it.sites.has(subject.site)) {
+                if (it.allSites.has(subject.site)) {
                     subjects.push(subject)
                 }
             }
@@ -193,22 +217,26 @@ const resolve = (actions) => {
 const combine = (commands, subjects, sites) => {
     const res = []
     if (commands.length > 0) {
-        let where = new Set()
+        let where = []
+        let allWhere = new Set()
         for (let i = 0; i < commands.length; i += 1) {
             const command = commands[i]
             const its = subjects[i]
             const sites_ = sites[i]
             if (sites_) {
-                where = new Set()
+                where = []
+                allWhere = new Set()
                 for (const it of sites_) {
+                    where.push(it)
                     for (const id of it.sites) {
-                        where.add(id)
+                        allWhere.add(id)
                     }
                 }
             }
             res.push({
                 command,
                 subjects: its ? its : [],
+                allSites: allWhere,
                 sites: where,
             })
         }
@@ -221,7 +249,7 @@ const combine = (commands, subjects, sites) => {
         for (let i = commands.length; i < sites.length; i += 1) {
             for (const it of sites[i]) {
                 for (const id of it.sites) {
-                    last.sites.add(id)
+                    last.allSites.add(id)
                 }
             }
         }
