@@ -186,12 +186,12 @@ const handleAssist = (action) => {
                         titles.push(getTitle(site))
                     }
                     set(action.payload.skill_application, { sites: where })
-                    answer = "Я теперь " + it.command.answer.pc + " " + titles.join(", ")
+                    answers.push("Я теперь " + it.command.answer.pc + " " + titles.join(", "))
                     break;
                 }
                 case ACTION_FORGET_SITE: {
                     set(action.payload.skill_application, { sites: [] })
-                    answer = "Хорошо"
+                    answers.push("Хорошо")
                     break;
                 }
                 case ACTION_FORGET_SITE: {
