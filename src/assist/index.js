@@ -7,7 +7,7 @@ const { PROJECT, SITE, LIGHT_220, LIGHT_LED
 } = require("../constants")
 const { state, get } = require("../controllers/state")
 const { run } = require("../controllers/service")
-const { applySite } = require("../actions")
+const { applySite, set } = require("../actions")
 const { getAllForms } = require("./lang/ru")
 const { closest } = require("./levenshtein")
 
@@ -177,13 +177,32 @@ const handleAssist = (action) => {
         const res = resolve(actions)
         const answers = []
         for (const it of res) {
-            switch (it.type) {
+            switch (it.command.type) {
+                case ACTION_REMEMBER_SITE: {
+                    const where = []
+                    const titles = []
+                    for (const site of it.sites) {
+                        where.push(site.id)
+                        titles.push(getTitle(site))
+                    }
+                    set(action.payload.skill_application, { sites: where })
+                    answer = "Я теперь " + it.command.answer.pc + " " + titles.join(", ")
+                    break;
+                }
+                case ACTION_FORGET_SITE: {
+                    set(action.payload.skill_application, { sites: [] })
+                    answer = "Хорошо"
+                    break;
+                }
+                case ACTION_FORGET_SITE: {
+                    break;
+                }
                 default:
                     if (it.subjects.length > 0) {
                         const titles = []
                         for (const subject of it.subjects) {
                             run({ type: it.command.id, id: subject.id })
-                            titles.push(subject.title)
+                            titles.push(getTitle(subject))
                         }
                         answers.push(it.command.answer.pc + " " + titles.join(", "))
                     }
