@@ -175,9 +175,7 @@ const handleAssist = (action) => {
 
         if (sites.length === 0) {
             const skill = get(action.payload.skill_application) || { sites: [] }
-            for (const site of skill.sites) {
-                sites.push(site)
-            }
+            sites.push(skill.sites)
         }
 
         const subjects = markupFragments(fragments, allSubjects, false)
