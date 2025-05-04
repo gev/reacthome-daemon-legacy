@@ -178,7 +178,7 @@ const handleAssist = (action) => {
         const answers = []
         console.log(res)
         for (const it of res) {
-            switch (it.command.type) {
+            switch (it.command.id) {
                 case ACTION_REMEMBER_SITE: {
                     const where = []
                     const titles = []
