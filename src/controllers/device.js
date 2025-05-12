@@ -624,17 +624,16 @@ module.exports.manage = () => {
         }
         case ACTION_TEMPERATURE: {
           const temperature_raw = data.readUInt16LE(7) / 100;
-          const { onTemperature, site, display, temperature_correct = 0, humidity_raw, humidity_correct, onHumidity } = get(id) || {};
+          const { onTemperature, site, display, temperature_correct = 0, humidity_absolute, humidity_correct, onHumidity } = get(id) || {};
           const temperature = temperature_raw + temperature_correct;
           set(id, { temperature, temperature_raw });
           if (site) calcTemperature(site);
           if (onTemperature) {
             run({ type: ACTION_SCRIPT_RUN, id: onTemperature });
           }
-          if (humidity_raw) {
-            const humidity_absolute = toAbsoluteHumidity(humidity_raw, toKelvin(temperature_raw));
+          if (humidity_raw >= 0) {
             const humidity = toRelativeHumidity(humidity_absolute, toKelvin(temperature)) + humidity_correct;
-            set(id, { humidity, humidity_absolute, humidity_raw });
+            set(id, { humidity });
             if (site) calcHumidity(site);
             if (onHumidity) {
               run({ type: ACTION_SCRIPT_RUN, id: onHumidity });
@@ -696,7 +695,7 @@ module.exports.manage = () => {
         case ACTION_HUMIDITY: {
           const humidity_raw = data.readUInt16LE(7) / 100;
           const { onHumidity, site, humidity_correct = 0, temperature, temperature_raw } = get(id) || {};
-          if (temperature) {
+          if (temperature && temperature_raw) {
             const humidity_absolute = toAbsoluteHumidity(humidity_raw, toKelvin(temperature_raw));
             const humidity = toRelativeHumidity(humidity_absolute, toKelvin(temperature)) + humidity_correct;
             set(id, { humidity, humidity_absolute, humidity_raw });
