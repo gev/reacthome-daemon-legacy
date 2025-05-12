@@ -639,7 +639,6 @@ module.exports.manage = () => {
               run({ type: ACTION_SCRIPT_RUN, id: onHumidity });
             }
           }
-          console.log(ACTION_TEMPERATURE, get(id))
           if (display) {
             const { lock } = get(display) || {};
             if (!lock) {
@@ -708,7 +707,6 @@ module.exports.manage = () => {
           if (onHumidity) {
             run({ type: ACTION_SCRIPT_RUN, id: onHumidity });
           }
-          console.log(ACTION_HUMIDITY, get(id))
           break;
         }
         case ACTION_ILLUMINATION: {
