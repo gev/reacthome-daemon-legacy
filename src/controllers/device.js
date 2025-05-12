@@ -631,7 +631,7 @@ module.exports.manage = () => {
           if (onTemperature) {
             run({ type: ACTION_SCRIPT_RUN, id: onTemperature });
           }
-          if (humidity_raw >= 0) {
+          if (humidity_absolute >= 0) {
             const humidity = toRelativeHumidity(humidity_absolute, toKelvin(temperature)) + humidity_correct;
             set(id, { humidity });
             if (site) calcHumidity(site);
