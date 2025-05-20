@@ -195,6 +195,7 @@ const {
   ACTION_SHELL_STOP,
   DEVICE_TYPE_DI_4_LA,
   DEVICE_TYPE_SMART_TOP_A4TD,
+  ACTION_CORRECT,
 } = require("../constants");
 const { NOTIFY } = require("../notification/constants");
 const notification = require("../notification");
