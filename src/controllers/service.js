@@ -208,7 +208,7 @@ const { device } = require("../sockets");
 const mac = require("../mac");
 const { ac } = require("../drivers");
 const { RING } = require("../ring/constants");
-const { ip2int } = require("../util");
+const { ip2int, toRelativeHumidity, toKelvin } = require("../util");
 const { char2image } = require("../drivers/display");
 const childProcess = require("child_process");
 
