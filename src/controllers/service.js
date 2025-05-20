@@ -3072,6 +3072,29 @@ const run = (action) => {
         }
         break;
       }
+      case ACTION_CORRECT: {
+        const { id, temperature_correct, humidity_correct, illumination_correct, co2_correct } = action;
+        const dev = get(id) || {};
+        const { temperature = 0, humidity = 0, illumination = 0, co2 = 0 } = dev;
+        const { temperature_raw = temperature, humidity_raw = humidity, illumination_raw = illumination, co2_raw = co2 } = dev;
+        if (temperature_correct !== undefined) {
+          const t = temperature_raw + temperature_correct;
+          set(id, { temperature_correct, temperature: t });
+          if (dev.humidity_absolute >= 0) {
+            const humidity = toRelativeHumidity(dev.humidity_absolute, toKelvin(t)) + (dev.humidity_correct || 0);
+            set(id, { humidity });
+          }
+        }
+        if (humidity_correct !== undefined) {
+          set(id, { humidity_correct, humidity: humidity_raw + humidity_correct });
+        }
+        if (illumination_correct !== undefined) {
+          set(id, { illumination_correct, illumination: illumination_raw + illumination_correct });
+        }
+        if (co2_correct !== undefined) {
+          set(id, { co2_correct, co2: co2_raw + co2_correct });
+        }
+      }
       case ACTION_ERROR: {
         const dev = get(action.id);
         switch (dev.type) {
