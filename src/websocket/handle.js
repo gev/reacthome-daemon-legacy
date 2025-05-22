@@ -28,7 +28,8 @@ module.exports = (session, message) => {
     const action = JSON.parse(message);
     switch (action.type) {
       case ACTION_SET: {
-        const { id, payload } = action;
+        console.log(action);
+        const { id, payload = {} } = action;
         if (payload.title || payload.code) {
           initAssistDelayed()
         }
