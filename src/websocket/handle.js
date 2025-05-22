@@ -27,17 +27,6 @@ module.exports = (session, message) => {
     peer.timestamp = Date.now();
     const action = JSON.parse(message);
     switch (action.type) {
-      case ACTION_SET: {
-        console.log(action);
-        const { id, payload = {} } = action;
-        if (payload.title || payload.code) {
-          initAssistDelayed()
-        }
-        if (id !== POOL) {
-          set(id, payload);
-        }
-        break;
-      }
       case ACTION_ADD: {
         const { id, ref, value } = action;
         add(id, ref, value);
