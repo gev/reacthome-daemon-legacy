@@ -163,6 +163,7 @@ module.exports.ACTION_DEL = "ACTION_DEL";
 module.exports.ACTION_ASSET = "ACTION_ASSET";
 module.exports.ACTION_INIT = "ACTION_INIT";
 module.exports.ACTION_DOWNLOAD = "ACTION_DOWNLOAD";
+module.exports.ACTION_CORRECT = "ACTION_CORRECT";
 
 module.exports.ACTION_RGB_DIM = "ACTION_RGB_DIM";
 module.exports.ACTION_RGB_BUTTON_SET = "ACTION_RGB_BUTTON_SET";

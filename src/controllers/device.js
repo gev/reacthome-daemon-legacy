@@ -119,7 +119,7 @@ const { device } = require("../sockets");
 const { run } = require("./service");
 const drivers = require("../drivers");
 const mac = require("../mac");
-const { int2ip } = require("../util");
+const { int2ip, toAbsoluteHumidity, toKelvin, toRelativeHumidity } = require("../util");
 const { image2char } = require("../drivers/display");
 const { on } = require("events");
 
@@ -624,12 +624,20 @@ module.exports.manage = () => {
         }
         case ACTION_TEMPERATURE: {
           const temperature_raw = data.readUInt16LE(7) / 100;
-          const { onTemperature, site, display, temperature_correct = 0 } = get(id) || {};
+          const { onTemperature, site, display, temperature_correct = 0, humidity_absolute, humidity_correct, onHumidity } = get(id) || {};
           const temperature = temperature_raw + temperature_correct;
-          if (site) calcTemperature(site);
           set(id, { temperature, temperature_raw });
+          if (site) calcTemperature(site);
           if (onTemperature) {
             run({ type: ACTION_SCRIPT_RUN, id: onTemperature });
+          }
+          if (humidity_absolute >= 0) {
+            const humidity = toRelativeHumidity(humidity_absolute, toKelvin(temperature)) + humidity_correct;
+            set(id, { humidity });
+            if (site) calcHumidity(site);
+            if (onHumidity) {
+              run({ type: ACTION_SCRIPT_RUN, id: onHumidity });
+            }
           }
           if (display) {
             const { lock } = get(display) || {};
@@ -686,10 +694,16 @@ module.exports.manage = () => {
         }
         case ACTION_HUMIDITY: {
           const humidity_raw = data.readUInt16LE(7) / 100;
-          const { onHumidity, site, humidity_correct = 0 } = get(id) || {};
-          const humidity = humidity_raw + humidity_correct;
+          const { onHumidity, site, humidity_correct = 0, temperature, temperature_raw } = get(id) || {};
+          if (temperature && temperature_raw) {
+            const humidity_absolute = toAbsoluteHumidity(humidity_raw, toKelvin(temperature_raw));
+            const humidity = toRelativeHumidity(humidity_absolute, toKelvin(temperature)) + humidity_correct;
+            set(id, { humidity, humidity_absolute, humidity_raw });
+          } else {
+            const humidity = humidity_raw + humidity_correct;
+            set(id, { humidity, humidity_raw });
+          }
           if (site) calcHumidity(site);
-          set(id, { humidity, humidity_raw });
           if (onHumidity) {
             run({ type: ACTION_SCRIPT_RUN, id: onHumidity });
           }
@@ -699,8 +713,8 @@ module.exports.manage = () => {
           const illumination_raw = data.readUInt32LE(7) / 100;
           const { onIllumination, illumination_correct = 0, site } = get(id) || {};
           const illumination = illumination_raw + illumination_correct;
-          if (site) calcIllumination(site);
           set(id, { illumination, illumination_raw });
+          if (site) calcIllumination(site);
           if (onIllumination) {
             run({ type: ACTION_SCRIPT_RUN, id: onIllumination });
           }
@@ -710,8 +724,8 @@ module.exports.manage = () => {
           const co2_raw = data.readUInt16LE(7);
           const { onCO2, co2_correct = 0, site } = get(id) || {};
           const co2 = co2_raw + co2_correct;
-          if (site) calcCO2(site);
           set(id, { co2, co2_raw });
+          if (site) calcCO2(site);
           if (onCO2) {
             run({ type: ACTION_SCRIPT_RUN, id: onCO2 });
           }

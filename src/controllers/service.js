@@ -1,31 +1,17 @@
 const { CronJob } = require("cron");
-const { exists, createWriteStream } = require("fs");
-const fetch = require("node-fetch");
-const crypto = require("crypto");
 const color = require("color-convert");
 const ircodes = require("reacthome-ircodes");
 const drivers = require("../drivers");
 const {
-  VERSION,
   AC,
-  TV,
-  DO,
-  DIM,
   GROUP,
-  ARTNET,
   ACTION_DO,
   ACTION_GROUP,
   ACTION_DI_RELAY_SYNC,
   ACTION_DOPPLER0,
   ACTION_DIMMER,
   ACTION_ARTNET,
-  ACTION_DISCOVERY,
   ACTION_FIND_ME,
-  ACTION_BOOTLOAD,
-  ACTION_INIT,
-  ACTION_SET,
-  ACTION_ASSET,
-  ACTION_DOWNLOAD,
   ACTION_RGB,
   ACTION_IR,
   ACTION_IR_CONFIG,
@@ -56,11 +42,6 @@ const {
   ACTION_TV,
   ACTION_LEAKAGE_RESET,
   ACTION_SCRIPT_RUN,
-  ACTION_MOVE_TO_HUE,
-  ACTION_MOVE_TO_SATURATION,
-  ACTION_MOVE_TO_HUE_SATURATION,
-  ACTION_MOVE_TO_LEVEL,
-  DEVICE_PORT,
   DEVICE_TYPE_DIM4,
   DEVICE_TYPE_DIM_4,
   DEVICE_TYPE_DIM8,
@@ -69,7 +50,6 @@ const {
   DEVICE_TYPE_RELAY_2_DIN,
   DEVICE_TYPE_RELAY_6,
   DEVICE_TYPE_RELAY_12,
-  DEVICE_TYPE_RELAY_24,
   DEVICE_TYPE_IR_4,
   DEVICE_TYPE_SENSOR4,
   DRIVER_TYPE_ARTNET,
@@ -120,11 +100,6 @@ const {
   ACTION_LANAMP,
   ACTION_RTP,
   ACTION_MULTIROOM_ZONE,
-  ACTION_ADD,
-  ACTION_DEL,
-  ACTION_MAKE_BIND,
-  ACTION_ADD_BIND,
-  BIND,
   DEVICE_TYPE_AO_4_DIN,
   SITE,
   DEVICE_TYPE_SMART_4G,
@@ -142,7 +117,6 @@ const {
   DEVICE_TYPE_DIM_12_AC_RS,
   DEVICE_TYPE_DIM_12_DC_RS,
   DEVICE_TYPE_DIM_1_AC_RS,
-  POOL,
   ACTION_SITE_LIGHT_ON,
   DEVICE_TYPE_RELAY_12_RS,
   ACTION_SCREEN,
@@ -203,7 +177,6 @@ const {
   ACTION_ALED_COLOR_ANIMATION_PLAY,
   DEVICE_TYPE_DOPPLER_1_DI_4,
   DEVICE_TYPE_DOPPLER_5_DI_4,
-  DEVICE_TYPE_DI_4,
   ACTION_SET_POSITION,
   ACTION_UP,
   DRIVER_TYPE_DAUERHAFT,
@@ -222,34 +195,23 @@ const {
   ACTION_SHELL_STOP,
   DEVICE_TYPE_DI_4_LA,
   DEVICE_TYPE_SMART_TOP_A4TD,
+  ACTION_CORRECT,
 } = require("../constants");
-const { LIST } = require("../init/constants");
 const { NOTIFY } = require("../notification/constants");
 const notification = require("../notification");
 const {
   get,
   set,
-  add,
-  del,
   makeBind,
-  addBind,
-  offline,
-  online,
   applySite,
-  pendingFirmware,
-  updateFirmware,
 } = require("../actions");
 const { device } = require("../sockets");
 const mac = require("../mac");
 const { ac } = require("../drivers");
-const { broadcast } = require("../websocket/peer");
-const { asset, writeFile } = require("../fs");
 const { RING } = require("../ring/constants");
-const { ip2int } = require("../util");
+const { ip2int, toRelativeHumidity, toKelvin } = require("../util");
 const { char2image } = require("../drivers/display");
 const childProcess = require("child_process");
-const { error } = require("console");
-const { stdout } = require("process");
 
 const timers = {};
 const schedules = {};
@@ -261,45 +223,10 @@ const ARTNET_VELOCITY = 1;
 const bind = ["r", "g", "b", "bind"];
 const rgb = ["r", "g", "b"];
 
+
 const run = (action) => {
   try {
     switch (action.type) {
-      case ACTION_SET: {
-        const { id, payload } = action;
-        if (id !== POOL) {
-          set(id, payload);
-        }
-        break;
-      }
-      case ACTION_ADD: {
-        const { id, ref, value } = action;
-        add(id, ref, value);
-        break;
-      }
-      case ACTION_DEL: {
-        const { id, ref, value } = action;
-        del(id, ref, value);
-        break;
-      }
-      case ACTION_MAKE_BIND: {
-        const { id, ref, value, bind } = action;
-        makeBind(id, ref, value, bind);
-        break;
-      }
-      case ACTION_ADD_BIND: {
-        const { id, ref, value, bind } = action;
-        addBind(id, ref, value, bind);
-        break;
-      }
-      case ACTION_ASSET: {
-        const { name, payload } = action;
-        writeFile(asset(name), Buffer.from(payload, "base64"))
-          .then(() => {
-            broadcast({ type: LIST, assets: [name] });
-          })
-          .catch(console.error);
-        break;
-      }
       case ACTION_FIND_ME: {
         const dev = get(action.id);
         switch (dev.type) {
@@ -1327,7 +1254,7 @@ const run = (action) => {
         }
         const { last = {} } = o;
         const isOn = last.r > 0 || last.g > 0 || last.b > 0 || last.value > 0;
-        switch(o.type){
+        switch (o.type) {
           case DEVICE_TYPE_SMART_TOP_A6P:
           case DEVICE_TYPE_SMART_TOP_G4D:
           case DEVICE_TYPE_SMART_TOP_A4T:
@@ -1471,7 +1398,7 @@ const run = (action) => {
               }
             }
           }
-        } 
+        }
         break;
       }
       case ACTION_DISABLE: {
@@ -1526,7 +1453,7 @@ const run = (action) => {
             );
             break;
           }
-          default : {
+          default: {
             for (const i of bind) {
               if (!o[i]) continue;
               const { type } = get(o[i]) || {};
@@ -1694,7 +1621,7 @@ const run = (action) => {
               const dimVelocity = action.velocity === undefined ? DIM_VELOCITY : action.velocity
               switch (deviceType) {
                 case DEVICE_TYPE_SERVER:
-                  case DEVICE_TYPE_RS_HUB4:
+                case DEVICE_TYPE_RS_HUB4:
                 case DEVICE_TYPE_DIM4:
                 case DEVICE_TYPE_DIM_4:
                 case DEVICE_TYPE_DIM8:
@@ -3145,6 +3072,29 @@ const run = (action) => {
           }
         }
         break;
+      }
+      case ACTION_CORRECT: {
+        const { id, temperature_correct, humidity_correct, illumination_correct, co2_correct } = action;
+        const dev = get(id) || {};
+        const { temperature = 0, humidity = 0, illumination = 0, co2 = 0 } = dev;
+        const { temperature_raw = temperature, humidity_raw = humidity, illumination_raw = illumination, co2_raw = co2 } = dev;
+        if (temperature_correct !== undefined) {
+          const t = temperature_raw + temperature_correct;
+          set(id, { temperature_correct, temperature: t });
+          if (dev.humidity_absolute >= 0) {
+            const humidity = toRelativeHumidity(dev.humidity_absolute, toKelvin(t)) + (dev.humidity_correct || 0);
+            set(id, { humidity });
+          }
+        }
+        if (humidity_correct !== undefined) {
+          set(id, { humidity_correct, humidity: humidity_raw + humidity_correct });
+        }
+        if (illumination_correct !== undefined) {
+          set(id, { illumination_correct, illumination: illumination_raw + illumination_correct });
+        }
+        if (co2_correct !== undefined) {
+          set(id, { co2_correct, co2: co2_raw + co2_correct });
+        }
       }
       case ACTION_ERROR: {
         const dev = get(action.id);
