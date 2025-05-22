@@ -196,6 +196,8 @@ const {
   DEVICE_TYPE_DI_4_LA,
   DEVICE_TYPE_SMART_TOP_A4TD,
   ACTION_CORRECT,
+  ACTION_SET,
+  POOL,
 } = require("../constants");
 const { NOTIFY } = require("../notification/constants");
 const notification = require("../notification");
@@ -212,6 +214,7 @@ const { RING } = require("../ring/constants");
 const { ip2int, toRelativeHumidity, toKelvin } = require("../util");
 const { char2image } = require("../drivers/display");
 const childProcess = require("child_process");
+const { initAssistDelayed } = require("../assist");
 
 const timers = {};
 const schedules = {};
@@ -2875,6 +2878,16 @@ const run = (action) => {
           } catch (e) {
             set(id, { pid: null, value: false });
           }
+        }
+        break;
+      }
+      case ACTION_SET: {
+        const { id, payload = {} } = action;
+        if (payload.title || payload.code) {
+          initAssistDelayed()
+        }
+        if (id !== POOL) {
+          set(id, payload);
         }
         break;
       }
