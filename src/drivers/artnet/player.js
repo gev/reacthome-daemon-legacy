@@ -67,7 +67,7 @@ module.exports = class {
             try {
                 const a = [];
                 let changed = false;
-                scripts.forEach((s, i) => {
+                for (const [i, s] of scripts.entries()) {
                     const v0 = get(i);
                     // const v1 = s.script(v0, s.tick++, process.hrtime(s.time));
                     const v1 = s.script(v0, s.tick++);
@@ -79,7 +79,7 @@ module.exports = class {
                         changed = true;
                         set(i, v1);
                     }
-                });
+                };
                 if (changed) send();
             } catch (err) {
                 console.error(err)

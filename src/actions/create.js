@@ -75,9 +75,15 @@ module.exports.apply = (id, action) => {
 const applySite = (id, action) => {
   const o = state.get(id);
   if (!o) return;
-  action(o);
-  if (!o.site || o.site.length === 0) return;
-  o.site.forEach((i) => applySite(i, action));
+  action(o, id);
+  if (o.project) {
+    applySite(o.project, action);
+  }
+  if (o.site && o.site.length > 0) {
+    for (const i of o.site) {
+      applySite(i, action);
+    }
+  }
 };
 
 module.exports.applySite = applySite;

@@ -86,6 +86,22 @@ const {
   ACTION_ON,
   ACTION_OFF,
   ACTION_INTENSITY,
+  ACTION_ALED_BRIGHTNESS,
+  ACTION_ALED_ON,
+  ACTION_ALED_OFF,
+  ACTION_ALED_CONFIG_GROUP,
+  ACTION_ALED_COLOR_ANIMATION_PLAY,
+  ACTION_ALED_MASK_ANIMATION_PLAY,
+  ACTION_ALED_COLOR_ANIMATION_STOP,
+  ACTION_ALED_MASK_ANIMATION_STOP,
+  ACTION_ALED_CLIP,
+  DEVICE_TYPE_SMART_TOP_A4T,
+  DEVICE_TYPE_SMART_TOP_A6T,
+  DEVICE_TYPE_SMART_TOP_G6,
+  DEVICE_TYPE_SMART_TOP_G4,
+  DEVICE_TYPE_SMART_TOP_G2,
+  DEVICE_TYPE_SMART_TOP_A4P,
+  DEVICE_TYPE_SMART_TOP_A4TD,
 } = require("../constants");
 const {
   get,
@@ -103,7 +119,7 @@ const { device } = require("../sockets");
 const { run } = require("./service");
 const drivers = require("../drivers");
 const mac = require("../mac");
-const { int2ip } = require("../util");
+const { int2ip, toAbsoluteHumidity, toKelvin, toRelativeHumidity } = require("../util");
 const { image2char } = require("../drivers/display");
 const { on } = require("events");
 
@@ -117,9 +133,10 @@ const hold = {};
 const timestamp = {}
 
 module.exports.manage = () => {
-  ((get(mac()) || {}).device || []).forEach((id) => {
+  const devices = (get(mac()) || {}).device || [];
+  for (const id of devices) {
     offline(id);
-  });
+  }
 
   const handleData = (data, { address }, { hub = null } = {}) => {
     try {
@@ -130,6 +147,9 @@ module.exports.manage = () => {
         online(id, { ip: address, hub, type: dev.type });
       }
       const action = data[6];
+      if (hub && action !== ACTION_DISCOVERY && action !== ACTION_READY) {
+        // console.log('receive', data, address, hub);
+      }
       switch (action) {
         case DEVICE_TYPE_PLC: {
           for (let i = 1; i <= 36; i++) {
@@ -225,6 +245,7 @@ module.exports.manage = () => {
                   };
                 }
               };
+              clearTimeout(hold[channel].timeout);
               hold[channel].timeout = setTimeout(handleHold_, parseInt(chan.timeout || 1000), true);
             } else {
               clearTimeout(timeout);
@@ -240,7 +261,17 @@ module.exports.manage = () => {
         }
         case ACTION_DO: {
           const { type } = get(id) || {};
-          if (type === DEVICE_TYPE_SMART_TOP_A6P || type === DEVICE_TYPE_SMART_TOP_G4D) {
+          if (
+            type === DEVICE_TYPE_SMART_TOP_A6P ||
+            type === DEVICE_TYPE_SMART_TOP_G4D ||
+            type === DEVICE_TYPE_SMART_TOP_A4T ||
+            type === DEVICE_TYPE_SMART_TOP_A6T ||
+            type === DEVICE_TYPE_SMART_TOP_G6 ||
+            type === DEVICE_TYPE_SMART_TOP_G4 ||
+            type === DEVICE_TYPE_SMART_TOP_G2 ||
+            type === DEVICE_TYPE_SMART_TOP_A4P ||
+            type === DEVICE_TYPE_SMART_TOP_A4TD
+          ) {
             set(id, { state: data[7] })
             return;
           }
@@ -353,7 +384,8 @@ module.exports.manage = () => {
               set(id, { top: top_id, topDetected: true });
               online(top_id, { type, bottom: id, version: `${data[15]}.${data[16]}`, ip: address, ready: true });
               switch (type) {
-                case DEVICE_TYPE_SMART_TOP_G4D: {
+                case DEVICE_TYPE_SMART_TOP_G4D:
+                case DEVICE_TYPE_SMART_TOP_A4TD: {
                   const ts = timestamp[top_id] || 0;
                   const { timeout = 0, mode, defaultMode } = get(top_id) || {};
                   if (Date.now() - ts > (timeout || 10_000)) {
@@ -444,7 +476,14 @@ module.exports.manage = () => {
               break;
             }
             case DEVICE_TYPE_SMART_TOP_A6P:
-            case DEVICE_TYPE_SMART_TOP_G4D: {
+            case DEVICE_TYPE_SMART_TOP_G4D:
+            case DEVICE_TYPE_SMART_TOP_A4T:
+            case DEVICE_TYPE_SMART_TOP_A6T:
+            case DEVICE_TYPE_SMART_TOP_G6:
+            case DEVICE_TYPE_SMART_TOP_G4:
+            case DEVICE_TYPE_SMART_TOP_G2:
+            case DEVICE_TYPE_SMART_TOP_A4P:
+            case DEVICE_TYPE_SMART_TOP_A4TD: {
               set(id, { brightness: data[7] });
               break;
             }
@@ -492,18 +531,29 @@ module.exports.manage = () => {
           const { type } = get(id) || {};
           switch (type) {
             case DEVICE_TYPE_SMART_TOP_A6P:
-            case DEVICE_TYPE_SMART_TOP_G4D: {
+            case DEVICE_TYPE_SMART_TOP_G4D:
+            case DEVICE_TYPE_SMART_TOP_A4T:
+            case DEVICE_TYPE_SMART_TOP_A6T:
+            case DEVICE_TYPE_SMART_TOP_G6:
+            case DEVICE_TYPE_SMART_TOP_G4:
+            case DEVICE_TYPE_SMART_TOP_G2:
+            case DEVICE_TYPE_SMART_TOP_A4P:
+            case DEVICE_TYPE_SMART_TOP_A4TD: {
               let [, , , , , , , palette, index] = data;
               if (index === 0) {
                 index = 1;
               }
               for (let i = 0; i < (data.length - 9) / 3; i++) {
                 const chan = `${id}/rgb/${palette}.${index + i}`;
-                set(chan, {
+                const payload = {
                   r: data[i * 3 + 9],
                   g: data[i * 3 + 10],
                   b: data[i * 3 + 11],
-                });
+                };
+                set(chan, payload);
+                if (palette === 1) {
+                  set(`${id}/rgb/${index + i}`, payload); /// fucking hack
+                }
               }
               break;
             }
@@ -524,7 +574,14 @@ module.exports.manage = () => {
           const { type } = get(id) || {};
           switch (type) {
             case DEVICE_TYPE_SMART_TOP_A6P:
-            case DEVICE_TYPE_SMART_TOP_G4D: {
+            case DEVICE_TYPE_SMART_TOP_G4D:
+            case DEVICE_TYPE_SMART_TOP_A4T:
+            case DEVICE_TYPE_SMART_TOP_A6T:
+            case DEVICE_TYPE_SMART_TOP_G6:
+            case DEVICE_TYPE_SMART_TOP_G4:
+            case DEVICE_TYPE_SMART_TOP_G2:
+            case DEVICE_TYPE_SMART_TOP_A4P:
+            case DEVICE_TYPE_SMART_TOP_A4TD: {
               const image = Array.from(data.slice(7, 15))
               set(id, { image });
               break;
@@ -541,7 +598,14 @@ module.exports.manage = () => {
           const { type } = get(id) || {};
           switch (type) {
             case DEVICE_TYPE_SMART_TOP_A6P:
-            case DEVICE_TYPE_SMART_TOP_G4D: {
+            case DEVICE_TYPE_SMART_TOP_G4D:
+            case DEVICE_TYPE_SMART_TOP_A4T:
+            case DEVICE_TYPE_SMART_TOP_A6T:
+            case DEVICE_TYPE_SMART_TOP_G6:
+            case DEVICE_TYPE_SMART_TOP_G4:
+            case DEVICE_TYPE_SMART_TOP_G2:
+            case DEVICE_TYPE_SMART_TOP_A4P:
+            case DEVICE_TYPE_SMART_TOP_A4TD: {
               const blink = Array.from(data.slice(7, 15))
               set(id, { blink });
               break;
@@ -560,12 +624,20 @@ module.exports.manage = () => {
         }
         case ACTION_TEMPERATURE: {
           const temperature_raw = data.readUInt16LE(7) / 100;
-          const { onTemperature, site, display, temperature_correct = 0 } = get(id) || {};
+          const { onTemperature, site, display, temperature_correct = 0, humidity_absolute, humidity_correct, onHumidity } = get(id) || {};
           const temperature = temperature_raw + temperature_correct;
-          if (site) calcTemperature(site);
           set(id, { temperature, temperature_raw });
+          if (site) calcTemperature(site);
           if (onTemperature) {
             run({ type: ACTION_SCRIPT_RUN, id: onTemperature });
+          }
+          if (humidity_absolute >= 0) {
+            const humidity = toRelativeHumidity(humidity_absolute, toKelvin(temperature)) + humidity_correct;
+            set(id, { humidity });
+            if (site) calcHumidity(site);
+            if (onHumidity) {
+              run({ type: ACTION_SCRIPT_RUN, id: onHumidity });
+            }
           }
           if (display) {
             const { lock } = get(display) || {};
@@ -622,10 +694,16 @@ module.exports.manage = () => {
         }
         case ACTION_HUMIDITY: {
           const humidity_raw = data.readUInt16LE(7) / 100;
-          const { onHumidity, site, humidity_correct = 0 } = get(id) || {};
-          const humidity = humidity_raw + humidity_correct;
+          const { onHumidity, site, humidity_correct = 0, temperature, temperature_raw } = get(id) || {};
+          if (temperature && temperature_raw) {
+            const humidity_absolute = toAbsoluteHumidity(humidity_raw, toKelvin(temperature_raw));
+            const humidity = toRelativeHumidity(humidity_absolute, toKelvin(temperature)) + humidity_correct;
+            set(id, { humidity, humidity_absolute, humidity_raw });
+          } else {
+            const humidity = humidity_raw + humidity_correct;
+            set(id, { humidity, humidity_raw });
+          }
           if (site) calcHumidity(site);
-          set(id, { humidity, humidity_raw });
           if (onHumidity) {
             run({ type: ACTION_SCRIPT_RUN, id: onHumidity });
           }
@@ -635,8 +713,8 @@ module.exports.manage = () => {
           const illumination_raw = data.readUInt32LE(7) / 100;
           const { onIllumination, illumination_correct = 0, site } = get(id) || {};
           const illumination = illumination_raw + illumination_correct;
-          if (site) calcIllumination(site);
           set(id, { illumination, illumination_raw });
+          if (site) calcIllumination(site);
           if (onIllumination) {
             run({ type: ACTION_SCRIPT_RUN, id: onIllumination });
           }
@@ -646,8 +724,8 @@ module.exports.manage = () => {
           const co2_raw = data.readUInt16LE(7);
           const { onCO2, co2_correct = 0, site } = get(id) || {};
           const co2 = co2_raw + co2_correct;
-          if (site) calcCO2(site);
           set(id, { co2, co2_raw });
+          if (site) calcCO2(site);
           if (onCO2) {
             run({ type: ACTION_SCRIPT_RUN, id: onCO2 });
           }
@@ -796,6 +874,52 @@ module.exports.manage = () => {
           updateFirmware(id);
           break;
         }
+        case ACTION_ALED_ON: {
+          const index = data[7];
+          const ch = `${id}/LA/${index}`;
+          set(ch, { value: true });
+          const { bind } = get(ch) || {};
+          if (bind) {
+            set(bind, { value: true });
+          }
+          break;
+        }
+        case ACTION_ALED_OFF: {
+          const index = data[7];
+          const ch = `${id}/LA/${index}`;
+          set(ch, { value: false });
+          const { bind } = get(ch) || {};
+          if (bind) {
+            set(bind, { value: false });
+          }
+          break;
+        }
+        case ACTION_ALED_BRIGHTNESS: {
+          const index = data[7];
+          const brightness = data[8];
+          set(`${id}/LA/${index}`, { brightness });
+          break;
+        }
+        // case ACTION_ALED_COLOR_ANIMATION_PLAY:
+        // case ACTION_ALED_MASK_ANIMATION_PLAY:
+        // case ACTION_ALED_COLOR_ANIMATION_STOP:
+        // case ACTION_ALED_MASK_ANIMATION_STOP:
+        // case ACTION_ALED_CLIP: {
+        //   break;
+        // }
+        case ACTION_ALED_CONFIG_GROUP: {
+          const index = data[7];
+          const colors = data[8];
+          const segments = Array(data[9]);
+          for (let i = 0; i < segments.length; i++) {
+            segments[i] = {
+              direction: data[10 + i * 2],
+              size: data[11 + i * 2],
+            };
+          }
+          set(`${id}/LA/${index}`, { colors, segments });
+          break;
+        }
         case ACTION_ERROR: {
           const reason = data[7];
           switch (reason) {
@@ -821,23 +945,23 @@ const calcTemperature = site => {
   const { sensor = [], thermostat = [] } = get(site) || {};
   let temperature = 0;
   let n = 0;
-  sensor.forEach(id => {
+  for (const id of sensor) {
     const dev = get(id) || {};
     if (dev.online && typeof dev.temperature === 'number') {
       temperature += dev.temperature;
       n++;
     }
-  });
+  }
   if (n > 0) {
     temperature /= n;
     set(site, { temperature });
-    thermostat.forEach(id => {
+    for (const id of thermostat) {
       run({
         ...get(id),
         type: ACTION_THERMOSTAT_HANDLE,
         id
       });
-    })
+    }
   }
 }
 
@@ -845,23 +969,23 @@ const calcHumidity = site => {
   const { sensor = [], hygrostat = [] } = get(site) || {};
   let humidity = 0;
   let n = 0;
-  sensor.forEach(id => {
+  for (const id of sensor) {
     const dev = get(id) || {};
     if (dev.online && typeof dev.humidity === 'number') {
       humidity += dev.humidity;
       n++;
     }
-  });
+  }
   if (n > 0) {
     humidity /= n;
     set(site, { humidity });
-    hygrostat.forEach(id => {
+    for (const id of hygrostat) {
       run({
         ...get(id),
         type: ACTION_HYGROSTAT_HANDLE,
         id
       });
-    })
+    }
   }
 }
 
@@ -869,13 +993,13 @@ const calcIllumination = site => {
   const { sensor = [] } = get(site) || {};
   let illumination = 0;
   let n = 0;
-  sensor.forEach(id => {
+  for (const id of sensor) {
     const dev = get(id) || {};
     if (dev.online && typeof dev.illumination === 'number') {
       illumination += dev.illumination;
       n++;
     }
-  });
+  }
   if (n > 0) {
     illumination /= n;
     set(site, { illumination });
@@ -886,23 +1010,23 @@ const calcCO2 = site => {
   const { sensor = [], co2_stat = [] } = get(site) || {};
   let co2 = 0;
   let n = 0;
-  sensor.forEach(id => {
+  for (const id of sensor) {
     const dev = get(id) || {};
     if (dev.online && typeof dev.co2 === 'number') {
       co2 += dev.co2;
       n++;
     }
-  });
+  }
   if (n > 0) {
     co2 /= n;
     set(site, { co2 });
-    co2_stat.forEach(id => {
+    for (const id of co2_stat) {
       run({
         ...get(id),
         type: ACTION_CO2_STAT_HANDLE,
         id
       });
-    })
+    }
   }
 }
 
@@ -910,7 +1034,7 @@ const calcWarmFloorTemperature = site => {
   const { warm_floor = [] } = get(site) || {};
   let temperature = 0;
   let n = 0;
-  warm_floor.forEach(id => {
+  for (const id of warm_floor) {
     const dev = get(id) || {};
     if (dev.sensor) {
       const sensor = get(dev.sensor) || {};
@@ -919,7 +1043,7 @@ const calcWarmFloorTemperature = site => {
         n++;
       }
     }
-  });
+  }
   if (n > 0) {
     return temperature /= n;
   }
@@ -948,7 +1072,8 @@ const handleDefaultOff = handleDefault('onOff', 'onOffCount');
 const handle = (handleSmartTop, handleDefault) => (id, index, chan) => {
   const dev = get(id) || {};
   switch (dev.type) {
-    case DEVICE_TYPE_SMART_TOP_G4D: {
+    case DEVICE_TYPE_SMART_TOP_G4D:
+    case DEVICE_TYPE_SMART_TOP_A4TD: {
       const { mode = 0, modes = [] } = dev;
       if (modes.length > 0) {
         const cid = modes[mode % modes.length];
@@ -1155,9 +1280,9 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
                 case 1: {
                   const value = min + 0.5;
                   if (value < 40 && value > 5 && value < max) {
-                    warm_floor.forEach(id => {
-                      set(id, { min: value })
-                    })
+                    for (const id of warm_floor) {
+                      set(id, { min: value });
+                    }
                     renderSmartTop(id);
                   }
                   break;
@@ -1165,9 +1290,9 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
                 case 2: {
                   const value = max + 0.5;
                   if (value < 40 && value > 5 && value > min) {
-                    warm_floor.forEach(id => {
-                      set(id, { max: value })
-                    })
+                    for (const id of warm_floor) {
+                      set(id, { max: value });
+                    }
                     renderSmartTop(id);
                   }
                   break;
@@ -1180,9 +1305,9 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
                 case 1: {
                   const value = min - 0.5;
                   if (value < 40 && value > 5 && value < max) {
-                    warm_floor.forEach(id => {
-                      set(id, { min: min - 0.5 })
-                    })
+                    for (const id of warm_floor) {
+                      set(id, { min: min - 0.5 });
+                    }
                     renderSmartTop(id);
                   }
                   break;
@@ -1190,9 +1315,9 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
                 case 2: {
                   const value = max - 0.5;
                   if (value < 40 && value > 5 && value > min) {
-                    warm_floor.forEach(id => {
-                      set(id, { max: max - 0.5 })
-                    })
+                    for (const id of warm_floor) {
+                      set(id, { max: max - 0.5 });
+                    }
                     renderSmartTop(id);
                   }
                   break;
@@ -1202,14 +1327,14 @@ const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
             }
             case 'power': {
               const on = isWarmFloorOn(warm_floor);
-              warm_floor.forEach(id => {
+              for (const id of warm_floor) {
                 const { inverse } = get(id) || {};
                 if (inverse) {
                   run({ type: on ? ACTION_ON : ACTION_OFF, id });
                 } else {
                   run({ type: on ? ACTION_OFF : ACTION_ON, id });
                 }
-              })
+              }
               setTimeout(renderSmartTop, 300, id);
               break;
             }
@@ -1374,9 +1499,9 @@ const handleSmartTopHold = (id, dev, chan, current) => {
                   case 1: {
                     const value = min + 0.5;
                     if (value < 40 && value > 5 && value < max) {
-                      warm_floor.forEach(id => {
-                        set(id, { min: value })
-                      })
+                      for (const id of warm_floor) {
+                        set(id, { min: value });
+                      }
                       renderSmartTop(id);
                       return true;
                     }
@@ -1385,9 +1510,9 @@ const handleSmartTopHold = (id, dev, chan, current) => {
                   case 2: {
                     const value = max + 0.5;
                     if (value < 40 && value > 5 && value > min) {
-                      warm_floor.forEach(id => {
-                        set(id, { max: value })
-                      })
+                      for (const id of warm_floor) {
+                        set(id, { max: value });
+                      }
                       renderSmartTop(id);
                       return true;
                     }
@@ -1401,9 +1526,9 @@ const handleSmartTopHold = (id, dev, chan, current) => {
                   case 1: {
                     const value = min - 0.5;
                     if (value < 40 && value > 5 && value < max) {
-                      warm_floor.forEach(id => {
-                        set(id, { min: min - 0.5 })
-                      })
+                      for (const id of warm_floor) {
+                        set(id, { min: min - 0.5 });
+                      }
                       renderSmartTop(id);
                       return true;
                     }
@@ -1412,9 +1537,9 @@ const handleSmartTopHold = (id, dev, chan, current) => {
                   case 2: {
                     const value = max - 0.5;
                     if (value < 40 && value > 5 && value > min) {
-                      warm_floor.forEach(id => {
-                        set(id, { max: max - 0.5 })
-                      })
+                      for (const id of warm_floor) {
+                        set(id, { max: max - 0.5 });
+                      }
                       renderSmartTop(id);
                       return true;
                     }
@@ -1455,19 +1580,19 @@ const handleSmartTopHold = (id, dev, chan, current) => {
           }
           case 'MODE_WARM_FLOOR': {
             let on = false;
-            warm_floor.forEach((id) => {
+            for (const id of warm_floor) {
               const { bind, inverse } = get(id) || {};
               const { value } = get(bind) || {};
               on ||= inverse ? !value : value;
-            })
-            warm_floor.forEach(id => {
+            }
+            for (const id of warm_floor) {
               const { inverse } = get(id) || {};
               if (inverse) {
                 run({ type: on ? ACTION_ON : ACTION_OFF, id });
               } else {
                 run({ type: on ? ACTION_OFF : ACTION_ON, id });
               }
-            })
+            }
             setTimeout(renderSmartTop, 300, id);
             break;
           }
@@ -1488,7 +1613,6 @@ const handleOff = handle(handleSmartTop, handleDefaultOff);
 
 
 const renderSmartTop = (id) => {
-
   timestamp[id] = Date.now();
 
   const dev = get(id) || {};
@@ -1496,20 +1620,36 @@ const renderSmartTop = (id) => {
   const { mode = 0, modes = [], configuring } = dev;
   const image = [...(dev.image || [0, 0, 0, 0, 0, 0, 0, 0])];
   const blink = [...(dev.blink || [0, 0, 0, 0, 0, 0, 0, 0])];
-  image[1] &= 0b0000_1111;
-  image[2] &= 0b1111_1100;
-  blink[1] &= 0b0000_1111;
-  blink[2] &= 0b1111_1100;
   const current = get(modes[mode % modes.length]) || {};
-  if (current.indicator > 0 && current.indicator <= 4) {
-    image[1] |= 1 << (current.indicator + 3);
-    if (configuring) {
-      blink[1] |= 1 << (current.indicator + 3);
+  switch (dev.type) {
+    case DEVICE_TYPE_SMART_TOP_G4D: {
+      image[1] &= 0b0000_1111;
+      image[2] &= 0b1111_1100;
+      blink[1] &= 0b0000_1111;
+      blink[2] &= 0b1111_1100;
+      if (current.indicator > 0 && current.indicator <= 4) {
+        image[1] |= 1 << (current.indicator + 3);
+        if (configuring) {
+          blink[1] |= 1 << (current.indicator + 3);
+        }
+      } else if (current.indicator <= 6) {
+        image[2] |= 1 << (current.indicator - 5);
+        if (configuring) {
+          blink[2] |= 1 << (current.indicator - 5);
+        }
+      }
+      break;
     }
-  } else if (current.indicator <= 6) {
-    image[2] |= 1 << (current.indicator - 5);
-    if (configuring) {
-      blink[2] |= 1 << (current.indicator - 5);
+    case DEVICE_TYPE_SMART_TOP_A4TD: {
+      image[1] &= 0b0000_0011;
+      blink[1] &= 0b0000_0011;
+      if (current.indicator > 0 && current.indicator <= 6) {
+        image[1] |= 1 << (current.indicator + 1);
+        if (configuring) {
+          blink[1] |= 1 << (current.indicator + 1);
+        }
+      }
+      break;
     }
   }
   const site = current.site || dev.site;
@@ -1658,37 +1798,37 @@ const format = (value, min, max, fixed) =>
 
 const isWarmFloorOn = (warm_floor = []) => {
   let on = false;
-  warm_floor.forEach((id) => {
+  for (const id of warm_floor) {
     const { bind, inverse } = get(id) || {};
     const { value } = get(bind) || {};
     on ||= inverse ? !value : value;
-  })
+  }
   return on;
 }
 
 const maxCoolIntensity = (thermostat = []) => {
   let max = 0;
-  thermostat.forEach((id) => {
+  for (const id of thermostat) {
     const { onCoolIntensity = [] } = get(id) || {};
     max = Math.max(max, onCoolIntensity.length - 1);
-  })
+  }
   return max;
 }
 
 const maxHeatIntensity = (thermostat = []) => {
   let max = 0;
-  thermostat.forEach((id) => {
+  for (const id of thermostat) {
     const { onHeatIntensity = [] } = get(id) || {};
     max = Math.max(max, onHeatIntensity.length - 1);
-  })
+  }
   return max;
 }
 
 const maxVentilationIntensity = (co2_stat = []) => {
   let max = 0;
-  co2_stat.forEach((id) => {
+  for (const id of co2_stat) {
     const { onVentilationIntensity = [] } = get(id) || {};
     max = Math.max(max, onVentilationIntensity.length - 1);
-  })
+  }
   return max;
 }

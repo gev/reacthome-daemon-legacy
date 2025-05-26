@@ -57,7 +57,10 @@ module.exports.LEAKAGE_SENSOR = "leakage_sensor";
 module.exports.CLIMATE_SENSOR = "climate_sensor";
 module.exports.VALVE_HEATING = "valve_heating";
 module.exports.VALVE_WATER = "valve_water";
+module.exports.WARM_FLOOR = "warm_floor";
 module.exports.LIGHT_RGB = "light_RGB";
+module.exports.LIGHT_220 = "light_220";
+module.exports.LIGHT_LED = "light_led"
 module.exports.SOCKET_220 = "socket_220";
 module.exports.BOILER = "boiler";
 module.exports.PUMP = "pump";
@@ -81,6 +84,15 @@ module.exports.ACTION_LANAMP = 0x20;
 module.exports.ACTION_RTP = 0x21;
 module.exports.ACTION_SMART_TOP = 0x30;
 module.exports.ACTION_SMART_TOP_DETECT = 0x31;
+module.exports.ACTION_ALED_OFF = 0x40;
+module.exports.ACTION_ALED_ON = 0x41;
+module.exports.ACTION_ALED_COLOR_ANIMATION_PLAY = 0x42;
+module.exports.ACTION_ALED_COLOR_ANIMATION_STOP = 0x43;
+module.exports.ACTION_ALED_MASK_ANIMATION_PLAY = 0x44;
+module.exports.ACTION_ALED_MASK_ANIMATION_STOP = 0x45;
+module.exports.ACTION_ALED_CLIP = 0x46;
+module.exports.ACTION_ALED_BRIGHTNESS = 0x47;
+module.exports.ACTION_ALED_CONFIG_GROUP = 0x48;
 module.exports.ACTION_RS485_MODE = 0xa0;
 module.exports.ACTION_RBUS_TRANSMIT = 0xa1;
 module.exports.ACTION_RS485_TRANSMIT = 0xa2;
@@ -131,6 +143,14 @@ module.exports.ACTION_MULTIROOM_ZONE = "ACTION_MULTIROOM_ZONE";
 module.exports.ACTION_STOP = "ACTION_STOP";
 module.exports.ACTION_OPEN = "ACTION_OPEN";
 module.exports.ACTION_CLOSE = "ACTION_CLOSE";
+module.exports.ACTION_UP = "ACTION_UP";
+module.exports.ACTION_DOWN = "ACTION_DOWN";
+
+module.exports.ACTION_LIMIT_UP = 'ACTION_LIMIT_UP';
+module.exports.ACTION_LIMIT_DOWN = 'ACTION_LIMIT_DOWN';
+
+module.exports.ACTION_LEARN = 'ACTION_LEARN';
+module.exports.ACTION_DELETE_ADDRESS = "ACTION_DELETE_ADDRESS";
 
 module.exports.OPEN_CLOSE = "open_close";
 module.exports.CLOSE_OPEN = "close_open";
@@ -143,6 +163,7 @@ module.exports.ACTION_DEL = "ACTION_DEL";
 module.exports.ACTION_ASSET = "ACTION_ASSET";
 module.exports.ACTION_INIT = "ACTION_INIT";
 module.exports.ACTION_DOWNLOAD = "ACTION_DOWNLOAD";
+module.exports.ACTION_CORRECT = "ACTION_CORRECT";
 
 module.exports.ACTION_RGB_DIM = "ACTION_RGB_DIM";
 module.exports.ACTION_RGB_BUTTON_SET = "ACTION_RGB_BUTTON_SET";
@@ -181,6 +202,8 @@ module.exports.ACTION_TOGGLE = "ACTION_TOGGLE";
 module.exports.ACTION_SCREEN = "ACTION_SCREEN";
 module.exports.ACTION_TV = "ACTION_TV";
 module.exports.ACTION_LEAKAGE_RESET = "ACTION_LEAKAGE_RESET";
+module.exports.ACTION_SHELL_START = "ACTION_SHELL_START";
+module.exports.ACTION_SHELL_STOP = "ACTION_SHELL_STOP";
 module.exports.ACTION_SCRIPT_RUN = "ACTION_SCRIPT_RUN";
 
 module.exports.ACTION_MOVE_TO_HUE = "ACTION_MOVE_TO_HUE";
@@ -192,6 +215,7 @@ module.exports.ACTION_SET_ADDRESS = "ACTION_SET_ADDRESS";
 module.exports.ACTION_SET_FAN_SPEED = "ACTION_SET_FAN_SPEED";
 module.exports.ACTION_SET_MODE = "ACTION_SET_MODE";
 module.exports.ACTION_SET_DIRECTION = "ACTION_SET_DIRECTION";
+module.exports.ACTION_SET_POSITION = "ACTION_SET_POSITION";
 
 module.exports.ACTION_PRINT = "ACTION_PRINT";
 
@@ -206,6 +230,8 @@ module.exports.ACTION_STOP_HEAT = "ACTION_STOP_HEAT";
 module.exports.ACTION_STOP_FAN = "ACTION_STOP_FAN";
 module.exports.ACTION_STOP_VENTILATION = "ACTION_STOP_VENTILATION";
 module.exports.ACTION_STOP_WET = "ACTION_STOP_WET";
+
+module.exports.ACTION_ASSIST = "ACTION_ASSIST";
 
 module.exports.TEMPERATURE_EXT = "temperature_ext";
 
@@ -279,9 +305,18 @@ module.exports.DEVICE_TYPE_SMART_6_PUSH = 0x2c;
 module.exports.DEVICE_TYPE_DOPPLER_1_DI_4 = 0x2d;
 module.exports.DEVICE_TYPE_DOPPLER_5_DI_4 = 0x2e;
 module.exports.DEVICE_TYPE_DI_4_RSM = 0x2f;
+module.exports.DEVICE_TYPE_DI_4_LA = 0x40;
 
 module.exports.DEVICE_TYPE_SMART_TOP_A6P = 0x30;
 module.exports.DEVICE_TYPE_SMART_TOP_G4D = 0x31;
+module.exports.DEVICE_TYPE_SMART_TOP_A4T = 0x32;
+module.exports.DEVICE_TYPE_SMART_TOP_A6T = 0x33;
+module.exports.DEVICE_TYPE_SMART_TOP_G6 = 0x34;
+module.exports.DEVICE_TYPE_SMART_TOP_G4 = 0x35;
+module.exports.DEVICE_TYPE_SMART_TOP_G2 = 0x36;
+module.exports.DEVICE_TYPE_SMART_TOP_A4P = 0x37
+module.exports.DEVICE_TYPE_SMART_TOP_A4TD = 0x38
+
 module.exports.DEVICE_TYPE_SMART_BOTTOM_1 = 0x3a;
 module.exports.DEVICE_TYPE_SMART_BOTTOM_2 = 0x3b;
 
@@ -306,6 +341,7 @@ module.exports.DEVICE_TYPE_RS_HUB4_LEGACY = 0xb2;
 module.exports.DEVICE_TYPE_DIM_12_AC_RS = 0xb3;
 module.exports.DEVICE_TYPE_DIM_12_DC_RS = 0xb4;
 module.exports.DEVICE_TYPE_MIX_6x12_RS = 0xb5;
+module.exports.DEVICE_TYPE_DIM_1_AC_RS = 0xb6;
 
 module.exports.DEVICE_TYPE_SERVER = 0xc0;
 module.exports.DEVICE_TYPE_RS_HUB4 = 0xc1;
@@ -361,6 +397,7 @@ module.exports.BIND = "BIND";
 module.exports.DRIVER_TYPE_RS21 = "RS21";
 module.exports.DRIVER_TYPE_ARTNET = "ARTNET";
 module.exports.DRIVER_TYPE_DALI_GW = "DALI_GW";
+module.exports.DRIVER_TYPE_DALI_DLC = "DALI_DLC";
 module.exports.DRIVER_TYPE_BB_PLC1 = "BB_PLC1";
 module.exports.DRIVER_TYPE_BB_PLC2 = "BB_PLC2";
 module.exports.DRIVER_TYPE_M206 = "M206";
@@ -373,9 +410,13 @@ module.exports.DRIVER_TYPE_SWIFT = "SWIFT";
 module.exports.DRIVER_TYPE_COMFOVENT = "COMFOVENT";
 module.exports.DRIVER_TYPE_VARMANN = "VARMANN";
 module.exports.DRIVER_TYPE_INTESIS_BOX = "INTESIS_BOX";
+module.exports.DRIVER_TYPE_MD_CCM18_AN_E = 'MD_CCM18_AN_E';
+module.exports.DRIVER_TYPE_TICA = 'TICA';
 module.exports.DRIVER_TYPE_RTD_RA = "RT_DA";
 module.exports.DRIVER_TYPE_ALINK = "ALINK";
 module.exports.DRIVER_TYPE_ME210_701 = "ME210_710";
+module.exports.DRIVER_TYPE_DAUERHAFT = 'DAUERHAFT';
 
 module.exports.DALI_LIGHT = 'dali_light';
 module.exports.DALI_GROUP = 'dali_group';
+module.exports.DALI_SCENE = 'dali_scene';

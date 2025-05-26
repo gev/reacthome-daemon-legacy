@@ -14,6 +14,14 @@ const {
   DEVICE_TYPE_SMART_TOP_A6P,
   DEVICE_TYPE_DI_4,
   DEVICE_TYPE_DI_4_RSM,
+  DEVICE_TYPE_SMART_TOP_A4T,
+  DEVICE_TYPE_SMART_TOP_A6T,
+  DEVICE_TYPE_SMART_TOP_G6,
+  DEVICE_TYPE_SMART_TOP_G4,
+  DEVICE_TYPE_SMART_TOP_G2,
+  DEVICE_TYPE_SMART_TOP_A4P,
+  DEVICE_TYPE_DI_4_LA,
+  DEVICE_TYPE_SMART_TOP_A4TD,
 } = require("../constants");
 const { device } = require("../sockets");
 
@@ -29,6 +37,7 @@ const online = (id, props) => {
   if (!dev.online) {
     switch (props.type) {
       case DEVICE_TYPE_DI_4:
+      case DEVICE_TYPE_DI_4_LA:
       case DEVICE_TYPE_DI_4_RSM:
       case DEVICE_TYPE_RELAY_2:
       case DEVICE_TYPE_MIX_1_RS:
@@ -46,8 +55,15 @@ const online = (id, props) => {
         );
         break;
       }
+      case DEVICE_TYPE_SMART_TOP_A6P:
       case DEVICE_TYPE_SMART_TOP_G4D:
-      case DEVICE_TYPE_SMART_TOP_A6P: {
+      case DEVICE_TYPE_SMART_TOP_A4T:
+      case DEVICE_TYPE_SMART_TOP_A6T:
+      case DEVICE_TYPE_SMART_TOP_G6:
+      case DEVICE_TYPE_SMART_TOP_G4:
+      case DEVICE_TYPE_SMART_TOP_G2:
+      case DEVICE_TYPE_SMART_TOP_A4P:
+      case DEVICE_TYPE_SMART_TOP_A4TD: {
         device.sendTOP(
           Buffer.from([
             ACTION_GET_STATE,
@@ -67,6 +83,7 @@ const online = (id, props) => {
     }
   }
   set(id, { ...props, online: true });
+  clearTimeout(timeout[id]);
   timeout[id] = setTimeout(() => {
     offline(id);
     delete timeout[id];

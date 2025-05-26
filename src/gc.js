@@ -13,7 +13,7 @@ const build = (id, pool, state, assets) => {
   const subject = pool[id];
   if (!subject) return;
   state[id] = subject;
-  Object.entries(subject).forEach(([k, v]) => {
+  for (const [k, v] of Object.entries(subject)) {
     if (isNumber(k)) {
       delete subject[k];
       db.put(id, JSON.stringify(subject));
@@ -34,23 +34,20 @@ const build = (id, pool, state, assets) => {
         switch (k) {
           case SITE:
           case SCRIPT: {
-            v.forEach(i => {
+            for (const i of v) {
               build(i, pool, state, assets);
-            });
+            }
             break;
           }
           case DEVICE: {
-            v.forEach(d => {
-              // if (typeof d === 'string') {
-              Object
-                .keys(pool)
-                .filter(i => i.startsWith(`${d}/`))
-                .forEach(i => {
-                  state[i] = pool[i];
-                });
+            for (const d of v) {
+              for (const i of d) {
+                if (i.startsWith(`${d}/`)) {
+                  state[i] = pool[i]
+                }
+              }
               state[d] = pool[d];
-              // }
-            });
+            }
             break;
           }
           default: {
@@ -59,12 +56,9 @@ const build = (id, pool, state, assets) => {
               case PROJECT:
               case SITE:
               case SCRIPT: {
-                v.forEach(i => {
-                  // if (typeof i === 'string') {
+                for (const i of v) {
                   build(i, pool, state, assets);
-                  //state[i] = pool[i];
-                  // }
-                });
+                }
                 break;
               }
             }
@@ -73,28 +67,27 @@ const build = (id, pool, state, assets) => {
         }
       }
     }
-  });
+  }
 };
 
 module.exports.cleanup = (pool) => {
   const state = {};
   const assets = [];
   build(pool.mac, pool, state, assets);
-  Object.keys(pool).forEach(k => {
-    if (k === 'mac') return;
-    if (k === POOL) return;
+  for (const k of Object.keys(pool)) {
+    if (k === 'mac') continue;
+    if (k === POOL) continue;
     if (state[k] === undefined) {
       delete pool[k];
       db.del(k);
     }
-  });
-  readdirSync(ASSETS).forEach(i => {
+  }
+  for (const i of readdirSync(ASSETS)) {
     if (!assets.includes(i)) {
       const a = asset(i);
       if (existsSync(a)) {
         unlinkSync(a);
       }
     }
-  });
+  }
 };
-

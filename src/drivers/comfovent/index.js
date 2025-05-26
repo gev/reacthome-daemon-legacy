@@ -16,10 +16,12 @@ const sync = async (id) => {
   if (synced) {
     readHoldingRegisters(modbus, address, 0x0, 10);
   } else {
-    writeRegister(modbus, address, 0x0, dev.value);
-    await delay(100);
+    writeRegister(modbus, address, 0x1, 0);
+    await delay(500);
     writeRegister(modbus, address, 0x4, dev.mode);
-    await delay(100);
+    await delay(500);
+    writeRegister(modbus, address, 0x0, dev.value);
+    await delay(500);
     set(id, { synced: true });
   }
 };
@@ -35,7 +37,8 @@ module.exports.run = (action) => {
       set(id, { value: false, synced: false });
       break;
     }
-    case ACTION_SET_MODE: {
+    case ACTION_SET_MODE:
+    case ACTION_SET_FAN_SPEED: {
       set(id, { mode: action.value, synced: false });
       break;
     }

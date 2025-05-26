@@ -6,6 +6,7 @@ const { READ_HOLDING_REGISTERS, WRITE_REGISTER } = require('../modbus/constants'
 const { BROADCAST_ADDRESS, TIMEOUT } = require('./constants');
 const { del } = require('../../db');
 const { delay } = require('../../util');
+const { timeout } = require('cron');
 
 const instance = new Set();
 
@@ -16,15 +17,16 @@ const sync = async (id) => {
   if (synced) {
     readHoldingRegisters(modbus, address, 0x1, 5);
   } else {
-    writeRegister(modbus, address, 0x5, dev.value);
-    await delay(100);
-    writeRegister(modbus, address, 0x3, dev.mode);
-    await delay(100);
-    writeRegister(modbus, address, 0x2, dev.fan_speed);
-    await delay(100);
-    writeRegister(modbus, address, 0x4, dev.direction);
-    await delay(100);
-    writeRegister(modbus, address, 0x1, dev.setpoint);
+    writeRegisters(modbus, address, 0x1, [dev.setpoint, dev.fan_speed, dev.mode, dev.direction, dev.value]);
+    // writeRegister(modbus, address, 0x3, dev.mode);
+    // await delay(300);
+    // writeRegister(modbus, address, 0x2, dev.fan_speed);
+    // await delay(300);
+    // writeRegister(modbus, address, 0x4, dev.direction);
+    // await delay(300);
+    // writeRegister(modbus, address, 0x1, dev.setpoint);
+    // await delay(300);
+    // writeRegister(modbus, address, 0x5, dev.value);
     set(id, { synced: true });
   }
 };
@@ -61,6 +63,7 @@ module.exports.run = (action) => {
 
 module.exports.handle = (action) => {
   const { id, data } = action;
+  console.log(action);
   switch (data[0]) {
     case READ_HOLDING_REGISTERS: {
       const dev = get(id) || {};

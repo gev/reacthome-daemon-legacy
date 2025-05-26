@@ -1,3 +1,5 @@
+const fs = require("fs");
+
 process.on("uncaughtException", function (err) {
   console.error(err);
 });
@@ -8,6 +10,21 @@ const {
   ACTION_SCRIPT_RUN,
   ACTION_SCHEDULE_START,
   ACTION_TIMER_START,
+  ACTION_SHELL_STOP,
+  PROJECT,
+  LIGHT_220,
+  LIGHT_RGB,
+  LIGHT_LED,
+  VALVE_WATER,
+  VALVE_HEATING,
+  WARM_FLOOR,
+  AC,
+  FAN,
+  SOCKET_220,
+  BOILER,
+  PUMP,
+  SITE,
+  SCRIPT,
 } = require("./src/constants");
 const { state, device, service, cpu, weather } = require("./src/controllers");
 const { get, set, count } = require("./src/actions");
@@ -19,6 +36,7 @@ const janus = require("./src/janus");
 const sip = require("./src/sip");
 const db = require("./src/db");
 const { cleanup } = require("./src/gc");
+const { initAssist } = require("./src/assist");
 
 const init = {};
 
@@ -27,14 +45,17 @@ const start = (id) => {
   const { project } = get(id) || {};
   if (project) {
     count(project);
-    const { timer = [], schedule = [] } = get(project) || {};
-    schedule.forEach((id) => {
+    const { timer = [], schedule = [], shell = [] } = get(project) || {};
+    for (const id of schedule) {
       const { script, state, schedule } = get(id) || {};
       if (state && schedule && script) {
         service.run({ id, type: ACTION_SCHEDULE_START, schedule, script });
       }
-    });
-    timer.forEach((id) => {
+    }
+    for (const id of shell) {
+      service.run({ id, type: ACTION_SHELL_STOP });
+    }
+    for (const id of timer) {
       const { script, state, time = 0, timestamp = 0 } = get(id) || {};
       if (state && script) {
         let dt = Date.now() - timestamp;
@@ -45,7 +66,7 @@ const start = (id) => {
           service.run({ id, type: ACTION_TIMER_START, time: dt, script });
         }
       }
-    });
+    }
     const { onStart } = get(project) || {};
     if (onStart) {
       setTimeout(() => {
@@ -69,13 +90,14 @@ const load = async () => {
     set(init.mac, d);
   }
   // cleanup(init);
-  console.log(init.mac);
-  await assets.init();
+  assets.init();
   state.init(init);
+  initAssist();
   weather.manage();
   device.manage();
   drivers.manage();
   cpu.manage();
+  console.log(init.mac);
   discovery.start(init.mac);
   websocket.start(init.mac);
   // janus.start();

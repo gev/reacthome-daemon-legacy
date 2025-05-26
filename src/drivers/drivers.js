@@ -6,8 +6,8 @@ module.exports.get = (id) => instances[id];
 module.exports.add = (id, instance) => instances[id] = instance;
 
 module.exports.clear = () => {
-    Object.entries(instances).forEach(([_, instance]) => {
+    for (const instance of Object.values(instances)) {
         if (instance.stop) instance.stop();
-    });
+    }
     instances = {};
 }

@@ -1,7 +1,7 @@
-
 const { get, set } = require('../../actions');
 const { DALI_GROUP, DALI_LIGHT } = require('../../constants');
 const { writeRegister } = require('../modbus');
+const { delay } = require('../../util');
 
 const instance = new Map();
 
@@ -12,18 +12,20 @@ const sync = async (id, kind, modbus, address, r, n) => {
     if (!synced) {
       writeRegister(modbus, address, r + i * 5, value > 254 ? 254 : value);
       set(ch, { synced: true });
-      await (50);
+      await delay(50);
     }
   }
 }
 
 const loop = (id) => async () => {
   const dev = get(id) || {};
-  const { bind } = dev;
-  const [modbus, , address] = bind.split('/');
-  await sync(id, DALI_GROUP, modbus, address, 2000, 16);
-  await sync(id, DALI_LIGHT, modbus, address, 3000, 64);
-  instance.set(id, setImmediate(loop(id)));
+  const { bind, numberGroups = 16, numberLights = 64 } = dev;
+  if (bind) {
+    const [modbus, , address] = bind.split('/');
+    await sync(id, DALI_GROUP, modbus, address, 2000, numberGroups);
+    await sync(id, DALI_LIGHT, modbus, address, 3000, numberLights);
+  }
+  instance.set(id, setTimeout(loop(id), 50));
 }
 
 module.exports.run = (a) => {
@@ -37,13 +39,15 @@ module.exports.handle = (data) => {
 
 
 module.exports.clear = () => {
-  instance.forEach(i => clearImmediate(i))
+  for (const i of instance.values()) {
+    clearTimeout(i);
+  }
   instance.clear();
 }
 
 module.exports.add = (id) => {
   if (instance.has(id)) {
-    clearImmediate(instance.get(id))
+    clearTimeout(instance.get(id))
   }
-  instance.set(id, setImmediate(loop(id)));
+  instance.set(id, setTimeout(loop(id), 50));
 };

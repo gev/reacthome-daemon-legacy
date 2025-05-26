@@ -34,3 +34,8 @@ module.exports.writeRegisters = (id, address, register, data) => {
     const instance = instances.get(id);
     if (instance) instance.writeRegisters(id, address, register, data);
 }
+
+module.exports.readWriteRegisters = (id, address, readRegister, readRegistersNumber, writeRegister, data) => {
+    const instance = instances.get(id);
+    if (instance) instance.readWriteRegisters(id, address, readRegister, readRegistersNumber, writeRegister, data);
+}
