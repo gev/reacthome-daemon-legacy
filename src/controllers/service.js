@@ -214,7 +214,6 @@ const { RING } = require("../ring/constants");
 const { ip2int, toRelativeHumidity, toKelvin } = require("../util");
 const { char2image } = require("../drivers/display");
 const childProcess = require("child_process");
-const { initAssistDelayed } = require("../assist");
 
 const timers = {};
 const schedules = {};
@@ -2883,9 +2882,6 @@ const run = (action) => {
       }
       case ACTION_SET: {
         const { id, payload = {} } = action;
-        if (payload.title || payload.code) {
-          initAssistDelayed()
-        }
         if (id !== POOL) {
           set(id, payload);
         }
