@@ -100,7 +100,7 @@ const load = async () => {
   console.log(init.mac);
   discovery.start(init.mac);
   websocket.start(init.mac);
-  // janus.start();
+  janus.start();
   sip.start();
   start(init.mac);
   set(init.mac, { token: [] });
