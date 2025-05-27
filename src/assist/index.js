@@ -66,6 +66,7 @@ const initAssist = () => {
     const { mac } = state()
     applySite(mac, (site) => {
         for ([key, value] of Object.entries(site)) {
+            if (value === undefined || value === null) continue;
             switch (key) {
                 case SCRIPT:
                     for (const id of value) {
