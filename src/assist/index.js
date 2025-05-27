@@ -162,7 +162,8 @@ const handleAssist = (action) => {
 
     let answer = "Пожалуйста, уточните что сделать!"
 
-    if (scripts.length > 0) {
+    // if (scripts.length > 0) {
+    if (false) {
         titles = []
         for (const script of scripts) {
             titles.push(getTitle(script))
