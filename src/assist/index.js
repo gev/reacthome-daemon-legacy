@@ -66,6 +66,7 @@ const initAssist = () => {
     const { mac } = state()
     applySite(mac, (site) => {
         for ([key, value] of Object.entries(site)) {
+            if (value === undefined || value === null) continue;
             switch (key) {
                 case SCRIPT:
                     for (const id of value) {
@@ -161,7 +162,8 @@ const handleAssist = (action) => {
 
     let answer = "Пожалуйста, уточните что сделать!"
 
-    if (scripts.length > 0) {
+    // if (scripts.length > 0) {
+    if (false) {
         titles = []
         for (const script of scripts) {
             titles.push(getTitle(script))
