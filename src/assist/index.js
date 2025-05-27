@@ -78,6 +78,7 @@ const initAssist = () => {
                     push(allSites, project)
                     break
                 case SITE:
+                    console.log(value)
                     for (const id of value) {
                         const site = prepare(id)
                         addSites(site)
