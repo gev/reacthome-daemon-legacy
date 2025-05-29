@@ -14,8 +14,6 @@ const handlers = new Map();
 
 let socket;
 
-const sessions = new Map();
-
 const connect = () => {
   socket = new WebSocket('ws://localhost:8188', 'janus-protocol');
   socket.on('message', (message) => {
@@ -35,7 +33,7 @@ const connect = () => {
       console.error(e);
     }
   });
-  socket.on('close', () => {
+  socket.on('error', () => {
     setTimeout(connect, TIMEOUT_RECONNECT);
   });
   callbacks.clear();
