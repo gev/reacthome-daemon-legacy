@@ -942,10 +942,11 @@ module.exports.manage = () => {
 
 
 const calcTemperature = site => {
-  const { sensor = [], thermostat = [] } = get(site) || {};
+  const { sensor = [], temperature_sensor = [], thermostat = [] } = get(site) || {};
   let temperature = 0;
   let n = 0;
-  for (const id of sensor) {
+  const s = temperature_sensor.length > 0 ? temperature_sensor : sensor;
+  for (const id of s) {
     const dev = get(id) || {};
     if (dev.online && typeof dev.temperature === 'number') {
       temperature += dev.temperature;
@@ -966,10 +967,11 @@ const calcTemperature = site => {
 }
 
 const calcHumidity = site => {
-  const { sensor = [], hygrostat = [] } = get(site) || {};
+  const { sensor = [], humidity_sensor = [], hygrostat = [] } = get(site) || {};
   let humidity = 0;
   let n = 0;
-  for (const id of sensor) {
+  const s = humidity_sensor.length > 0 ? humidity_sensor : sensor;
+  for (const id of s) {
     const dev = get(id) || {};
     if (dev.online && typeof dev.humidity === 'number') {
       humidity += dev.humidity;
@@ -990,10 +992,11 @@ const calcHumidity = site => {
 }
 
 const calcIllumination = site => {
-  const { sensor = [] } = get(site) || {};
+  const { sensor = [], illumination_sensor = [] } = get(site) || {};
   let illumination = 0;
   let n = 0;
-  for (const id of sensor) {
+  const s = illumination_sensor.length > 0 ? illumination_sensor : sensor;
+  for (const id of s) {
     const dev = get(id) || {};
     if (dev.online && typeof dev.illumination === 'number') {
       illumination += dev.illumination;
@@ -1007,10 +1010,11 @@ const calcIllumination = site => {
 }
 
 const calcCO2 = site => {
-  const { sensor = [], co2_stat = [] } = get(site) || {};
+  const { sensor = [], co2_sensor = [], co2_stat = [] } = get(site) || {};
   let co2 = 0;
   let n = 0;
-  for (const id of sensor) {
+  const s = co2_sensor.length > 0 ? co2_sensor : sensor;
+  for (const id of s) {
     const dev = get(id) || {};
     if (dev.online && typeof dev.co2 === 'number') {
       co2 += dev.co2;
