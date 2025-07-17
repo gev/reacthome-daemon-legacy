@@ -1234,7 +1234,7 @@ const run = (action) => {
         break;
       }
       case ACTION_ON: {
-        const [id_, t_, index] = action.id.split("/");
+        const [id_, t_, index] = action.id ? action.id.split("/") : [];
         if (t_ === 'ac') {
           action.id = id_;
           action.index = index;
@@ -1418,7 +1418,7 @@ const run = (action) => {
         break;
       }
       case ACTION_OFF: {
-        const [id_, t_, index] = action.id.split("/");
+        const [id_, t_, index] = action.id ? action.id.split("/") : [];
         if (t_ === 'ac') {
           action.id = id_;
           action.index = index;
@@ -2012,7 +2012,7 @@ const run = (action) => {
         break;
       }
       case ACTION_SETPOINT: {
-        const [id_, t_, index] = action.id.split("/");
+        const [id_, t_, index] = action.id ? action.id.split("/") : [];
         if (t_ === 'ac') {
           action.id = id_;
           action.index = index;
@@ -2731,7 +2731,7 @@ const run = (action) => {
         break;
       }
       case ACTION_SET_POSITION: {
-        const [id, type, index] = action.id.split("/");
+        const [id, type, index] = action.id ? action.id.split("/") : [];
         if (type === 'curtain') {
           drivers.run({
             type: ACTION_SET_POSITION,
@@ -2754,7 +2754,7 @@ const run = (action) => {
       case ACTION_SET_MODE:
       case ACTION_SET_DIRECTION:
       case ACTION_SET_FAN_SPEED: {
-        const [id_, t_, index] = action.id.split("/");
+        const [id_, t_, index] = action.id ? action.id.split("/") : [];
         if (t_ === 'ac') {
           action.id = id_;
           action.index = index;
