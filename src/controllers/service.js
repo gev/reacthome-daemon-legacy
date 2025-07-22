@@ -129,6 +129,7 @@ const {
   DRIVER_TYPE_ALINK,
   ACTION_SETPOINT_MIN_MAX,
   DEVICE_TYPE_MIX_6x12_RS,
+  DEVICE_TYPE_MIX_H,
   ACTION_ATS_MODE,
   DEVICE_TYPE_SERVER,
   ACTION_ERROR,
@@ -288,6 +289,7 @@ const run = (action) => {
           case DEVICE_TYPE_AO_4_DIN:
           case DEVICE_TYPE_MIX_1_RS:
           case DEVICE_TYPE_MIX_6x12_RS:
+          case DEVICE_TYPE_MIX_H:
           case DEVICE_TYPE_RELAY_2:
           case DEVICE_TYPE_RELAY_2_DIN:
           case DEVICE_TYPE_RELAY_12_RS: {
@@ -522,6 +524,7 @@ const run = (action) => {
         switch (dev.type) {
           case DEVICE_TYPE_MIX_1_RS:
           case DEVICE_TYPE_MIX_6x12_RS:
+          case DEVICE_TYPE_MIX_H:
           case DEVICE_TYPE_RELAY_2:
           case DEVICE_TYPE_RELAY_2_DIN:
           case DEVICE_TYPE_RELAY_12_RS: {
@@ -538,6 +541,7 @@ const run = (action) => {
         switch (dev.type) {
           case DEVICE_TYPE_MIX_1_RS:
           case DEVICE_TYPE_MIX_6x12_RS:
+          case DEVICE_TYPE_MIX_H:
           case DEVICE_TYPE_RELAY_2:
           case DEVICE_TYPE_RELAY_2_DIN: {
             device.sendRBUS(Buffer.from([
@@ -1313,7 +1317,8 @@ const run = (action) => {
                 case DEVICE_TYPE_DIM_12_LED_RS:
                 case DEVICE_TYPE_DIM_12_AC_RS:
                 case DEVICE_TYPE_DIM_12_DC_RS:
-                case DEVICE_TYPE_DIM_1_AC_RS: {
+                case DEVICE_TYPE_DIM_1_AC_RS:
+                case DEVICE_TYPE_MIX_H: {
                   switch (type) {
                     case DIM_TYPE_PWM:
                     case DIM_TYPE_RISING_EDGE:
@@ -1345,6 +1350,7 @@ const run = (action) => {
                 case DEVICE_TYPE_AO_4_DIN:
                 case DEVICE_TYPE_MIX_1_RS:
                 case DEVICE_TYPE_MIX_6x12_RS:
+                case DEVICE_TYPE_MIX_H:
                 case DEVICE_TYPE_RELAY_2:
                 case DEVICE_TYPE_RELAY_2_DIN:
                 case DEVICE_TYPE_RELAY_12_RS: {
@@ -1522,6 +1528,7 @@ const run = (action) => {
                 case DEVICE_TYPE_AO_4_DIN:
                 case DEVICE_TYPE_MIX_1_RS:
                 case DEVICE_TYPE_MIX_6x12_RS:
+                case DEVICE_TYPE_MIX_H:
                 case DEVICE_TYPE_RELAY_2:
                 case DEVICE_TYPE_RELAY_2_DIN:
                 case DEVICE_TYPE_RELAY_12_RS: {
