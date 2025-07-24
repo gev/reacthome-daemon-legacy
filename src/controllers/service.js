@@ -200,6 +200,7 @@ const {
   ACTION_SET,
   POOL,
   DIM,
+  DO,
 } = require("../constants");
 const { NOTIFY } = require("../notification/constants");
 const notification = require("../notification");
@@ -1576,7 +1577,6 @@ const run = (action) => {
                 case DEVICE_TYPE_AO_4_DIN:
                 case DEVICE_TYPE_MIX_1_RS:
                 case DEVICE_TYPE_MIX_6x12_RS:
-                case DEVICE_TYPE_MIX_H:
                 case DEVICE_TYPE_RELAY_2:
                 case DEVICE_TYPE_RELAY_2_DIN:
                 case DEVICE_TYPE_RELAY_12_RS: {
