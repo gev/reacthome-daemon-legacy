@@ -1544,7 +1544,6 @@ const run = (action) => {
                 }
                 case DEVICE_TYPE_DIM_8_RS:
                 case DEVICE_TYPE_DIM_12_LED_RS:
-                case DEVICE_TYPE_MIX_H:
                 case DEVICE_TYPE_DIM_12_AC_RS:
                 case DEVICE_TYPE_DIM_12_DC_RS:
                 case DEVICE_TYPE_DIM_1_AC_RS: {
