@@ -546,7 +546,6 @@ const run = (action) => {
           case DEVICE_TYPE_MIX_H:
           case DEVICE_TYPE_RELAY_2:
           case DEVICE_TYPE_RELAY_2_DIN: {
-            console.log(action);
             device.sendRBUS(Buffer.from([
               ACTION_DI_RELAY_SYNC,
               action.index,
