@@ -50,6 +50,7 @@ const {
   DEVICE_TYPE_SMART_4AM,
   DEVICE_TYPE_SMART_6_PUSH,
   DEVICE_TYPE_MIX_6x12_RS,
+  DEVICE_TYPE_MIX_H,
   DEVICE_TYPE_DI_4_RSM,
   DEVICE_TYPE_SMART_BOTTOM_1,
   DEVICE_TYPE_SMART_BOTTOM_2,
@@ -308,6 +309,38 @@ module.exports.initialize = (id) => {
         a[6 * i + 28] = (timeout >> 8) & 0xff;
         a[6 * i + 29] = (timeout >> 16) & 0xff;
         a[6 * i + 30] = (timeout >> 24) & 0xff;
+      }
+      device.sendRBUS(Buffer.from(a), id);
+      break;
+    }
+    case DEVICE_TYPE_MIX_H: {
+      const mac = id.split(":").map((i) => parseInt(i, 16));
+      let k=0;
+      a[k++] = ACTION_INITIALIZE;
+      for (let i = 1; i <= 2; i++) {
+        const channel = get(`${id}/${GROUP}/${i}`) || {};
+        const { enabled = 0, delay = 0 } = channel;
+        a[k++] = enabled;
+        a[k++] = delay & 0xff;
+        a[k++] = (delay >> 8) & 0xff;
+        a[k++] = (delay >> 16) & 0xff;
+        a[k++] = (delay >> 24) & 0xff;
+      }
+      for (let i = 1; i <= 2; i++) {
+        const channel = get(`${id}/${DO}/${i}`) || {};
+        const { value = 0, timeout = 0, group = i } = channel;
+        a[k++] = value;
+        a[k++] = group;
+        a[k++] = timeout & 0xff;
+        a[k++] = (timeout >> 8) & 0xff;
+        a[k++] = (timeout >> 16) & 0xff;
+        a[k++] = (timeout >> 24) & 0xff;
+      }
+      for (let i = 1; i <= 6; i++) {
+        const channel = get(`${id}/${DIM}/${i}`);
+        a[k++] = (channel && channel.group) || i;
+        a[k++] = (channel && channel.type) || 0;
+        a[k++] = (channel && channel.value) || 0;
       }
       device.sendRBUS(Buffer.from(a), id);
       break;
