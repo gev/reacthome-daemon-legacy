@@ -34,6 +34,7 @@ const {
   DEVICE_TYPE_IR_4,
   TV,
   DEVICE_TYPE_LANAMP,
+  DEVICE_TYPE_SOUNDBOX,
   AO,
   DEVICE_TYPE_AO_4_DIN,
   DEVICE_TYPE_DIM_12_LED_RS,
@@ -802,6 +803,55 @@ module.exports.initialize = (id) => {
         a[14 * i + 146] = (header[1] >> 8) & 0xff;
         a[14 * i + 147] = trail & 0xff;
         a[14 * i + 148] = (trail >> 8) & 0xff;
+      }
+      device.send(Buffer.from(a), dev.ip);
+      break;
+    }
+    case DEVICE_TYPE_SOUNDBOX: {
+      for (let i = 0; i < 2; i++) {
+        const index = i + 1;
+        const { mode, volume = [] } = get(`${id}/lanamp/${index}`) || {};
+        let source = [[], []];
+        switch (mode) {
+          case 0b01:
+          case 0b10: {
+            const zone = get(`${id}/stereo/${index}`);
+            source[0] = zone.source || [];
+            break;
+          }
+          case 0b11: {
+            const zone0 = get(`${id}/mono/${2 * index - 1}`);
+            source[0] = zone0.source || [];
+            const zone1 = get(`${id}/mono/${2 * index}`);
+            source[1] = zone1.source || [];
+            break;
+          }
+        }
+        a[39 * i + 1] = mode;
+        for (let j = 0; j < 2; j++) {
+          a[39 * i + j + 2] = volume[j];
+          for (let k = 0; k < 9; k++) {
+            const { active = 0, volume = 0 } = source[j][k] || {};
+            a[39 * i + j * 9 + k + 4] = active;
+            a[39 * i + j * 9 + k + 4 + 9 * 2] = volume;
+          }
+        }
+      }
+      for (let i = 0; i < 8; i++) {
+        const index = i + 1;
+        const {
+          active,
+          group = "",
+          port = 0,
+        } = get(`${id}/rtp/${index}`) || {};
+        const ip = ip2int(group);
+        a[79 + i * 7] = active;
+        a[80 + i * 7] = (ip >> 24) & 0xff;
+        a[81 + i * 7] = (ip >> 16) & 0xff;
+        a[82 + i * 7] = (ip >> 8) & 0xff;
+        a[83 + i * 7] = ip & 0xff;
+        a[84 + i * 7] = (port >> 8) & 0xff;
+        a[85 + i * 7] = port & 0xff;
       }
       device.send(Buffer.from(a), dev.ip);
       break;
