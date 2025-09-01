@@ -807,7 +807,8 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_RTP: {
-          switch (dev){
+          const { type } = get(id) || {};
+          switch (type){
             case DEVICE_TYPE_LANAMP: {
               const index = data[7];
               const active = data[8];
