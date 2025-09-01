@@ -123,7 +123,7 @@ module.exports.ACTION_FIND_ME = 0xfa;
 module.exports.ACTION_BOOTLOAD = 0xfb;
 module.exports.ACTION_MAC_ADDRESS = 0xfc;
 module.exports.ACTION_IP_ADDRESS = 0xfd;
-module.exports.ACTION_ERROR = 0xff;
+module.exports.ACTION_LOG = 0xff;
 
 module.exports.RELAY_OFF = 0;
 module.exports.RELAY_ON = 1;

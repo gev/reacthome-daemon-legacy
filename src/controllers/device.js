@@ -28,7 +28,7 @@ const {
   ACTION_READY,
   ACTION_INITIALIZE,
   ACTION_INITIALIZED,
-  ACTION_ERROR,
+  ACTION_LOG,
   ACTION_FIND_ME,
   ACTION_BOOTLOAD,
   DIM_TYPE_FALLING_EDGE,
@@ -920,17 +920,8 @@ module.exports.manage = () => {
           set(`${id}/LA/${index}`, { colors, segments });
           break;
         }
-        case ACTION_ERROR: {
-          const reason = data[7];
-          switch (reason) {
-            case ACTION_BOOTLOAD:
-              set(id, { pending: false, updating: false });
-              console.error(data);
-              break;
-            default: {
-              console.error(data);
-            }
-          }
+        case ACTION_LOG: {
+          console.error(data);
         }
       }
     } catch (e) {
