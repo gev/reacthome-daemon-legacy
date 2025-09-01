@@ -779,7 +779,6 @@ module.exports.manage = () => {
           const mode = data[8];
           const volume = [];
           const source = []; 
-          console.log(data);         
           for (let i = 0; i < 2; i++) {
             volume[i] = data[i + 9];
             source[i] = [];

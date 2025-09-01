@@ -2892,7 +2892,6 @@ const run = (action) => {
             buffer.writeUInt8(volume || 0, i * 9 + j + 5 + 9 * 2);
           }
         }
-        console.log(buffer);
         device.send(buffer, ip);
         break;
       }
