@@ -102,6 +102,8 @@ const {
   DEVICE_TYPE_SMART_TOP_G2,
   DEVICE_TYPE_SMART_TOP_A4P,
   DEVICE_TYPE_SMART_TOP_A4TD,
+  DEVICE_TYPE_LANAMP,
+  DEVICE_TYPE_SOUNDBOX,
 } = require("../constants");
 const {
   get,
@@ -778,7 +780,7 @@ module.exports.manage = () => {
           const index = data[7];
           const mode = data[8];
           const volume = [];
-          const source = [];
+          const source = []; 
           for (let i = 0; i < 2; i++) {
             volume[i] = data[i + 9];
             source[i] = [];
@@ -805,13 +807,27 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_RTP: {
-          const index = data[7];
-          const active = data[8];
-          const group = int2ip(data.readUInt32BE(9));
-          const port = data.readUInt16LE(13);
-          const chan = `${id}/rtp/${index}`;
-          set(chan, { active, group, port });
-          break;
+          const { type } = get(id) || {};
+          switch (type){
+            case DEVICE_TYPE_LANAMP: {
+              const index = data[7];
+              const active = data[8];
+              const group = int2ip(data.readUInt32BE(9));
+              const port = data.readUInt16LE(13);
+              const chan = `${id}/rtp/${index}`;
+              set(chan, { active, group, port });
+              break;
+            }
+            case DEVICE_TYPE_SOUNDBOX: {
+              const index = data[7];
+              const active = data[8];
+              const group = int2ip(data.readUInt32BE(9));
+              const port = data.readUInt16BE(13);
+              const chan = `${id}/rtp/${index}`;
+              set(chan, { active, group, port });
+              break;
+            }
+          }
         }
         case ACTION_INITIALIZE: {
           initialize(id);

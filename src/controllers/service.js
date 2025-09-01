@@ -602,13 +602,13 @@ const run = (action) => {
           case DEVICE_TYPE_AO_4_DIN: {
             const velocity =
               dev.type === DEVICE_TYPE_DIM_12_LED_RS ||
-              dev.type === DEVICE_TYPE_MIX_H ||
-              dev.type === DEVICE_TYPE_DIM_12_AC_RS ||
-              dev.type === DEVICE_TYPE_DIM_12_DC_RS ||
-              dev.type === DEVICE_TYPE_DIM_1_AC_RS ||
-              dev.type === DEVICE_TYPE_DIM_8_RS
-              ? DIM_VELOCITY
-              : AO_VELOCITY;
+                dev.type === DEVICE_TYPE_MIX_H ||
+                dev.type === DEVICE_TYPE_DIM_12_AC_RS ||
+                dev.type === DEVICE_TYPE_DIM_12_DC_RS ||
+                dev.type === DEVICE_TYPE_DIM_1_AC_RS ||
+                dev.type === DEVICE_TYPE_DIM_8_RS
+                ? DIM_VELOCITY
+                : AO_VELOCITY;
             switch (action.action) {
               case DIM_TYPE:
               case DIM_GROUP: {
@@ -814,13 +814,13 @@ const run = (action) => {
                     DIM_FADE,
                     v,
                     dev.type === DEVICE_TYPE_DIM_12_LED_RS ||
-                    dev.type === DEVICE_TYPE_MIX_H ||
-                    dev.type === DEVICE_TYPE_DIM_12_AC_RS ||
-                    dev.type === DEVICE_TYPE_DIM_12_DC_RS ||
-                    dev.type === DEVICE_TYPE_DIM_1_AC_RS ||
-                    dev.type === DEVICE_TYPE_DIM_8_RS
-                    ? DIM_VELOCITY
-                    : AO_VELOCITY,
+                      dev.type === DEVICE_TYPE_MIX_H ||
+                      dev.type === DEVICE_TYPE_DIM_12_AC_RS ||
+                      dev.type === DEVICE_TYPE_DIM_12_DC_RS ||
+                      dev.type === DEVICE_TYPE_DIM_1_AC_RS ||
+                      dev.type === DEVICE_TYPE_DIM_8_RS
+                      ? DIM_VELOCITY
+                      : AO_VELOCITY,
                   ]),
                     dev
                   );
@@ -1848,13 +1848,13 @@ const run = (action) => {
                 DIM_FADE,
                 v,
                 deviceType === DEVICE_TYPE_DIM_12_LED_RS ||
-                deviceType === DEVICE_TYPE_MIX_H ||
-                deviceType === DEVICE_TYPE_DIM_12_AC_RS ||
-                deviceType === DEVICE_TYPE_DIM_12_DC_RS ||
-                deviceType === DEVICE_TYPE_DIM_1_AC_RS ||
-                deviceType === DEVICE_TYPE_DIM_8_RS
-                ? DIM_VELOCITY
-                : AO_VELOCITY
+                  deviceType === DEVICE_TYPE_MIX_H ||
+                  deviceType === DEVICE_TYPE_DIM_12_AC_RS ||
+                  deviceType === DEVICE_TYPE_DIM_12_DC_RS ||
+                  deviceType === DEVICE_TYPE_DIM_1_AC_RS ||
+                  deviceType === DEVICE_TYPE_DIM_8_RS
+                  ? DIM_VELOCITY
+                  : AO_VELOCITY
               ]),
                 dev
               );

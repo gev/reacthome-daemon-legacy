@@ -346,6 +346,7 @@ module.exports.DEVICE_TYPE_DIM_1_AC_RS = 0xb6;
 
 module.exports.DEVICE_TYPE_SERVER = 0xc0;
 module.exports.DEVICE_TYPE_RS_HUB4 = 0xc1;
+module.exports.DEVICE_TYPE_SOUNDBOX = 0xc2;
 
 
 module.exports.DEVICE_TYPE_TEMPERATURE_EXT = 0xf0;
