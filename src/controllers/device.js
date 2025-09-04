@@ -941,7 +941,7 @@ module.exports.manage = () => {
           const { type } = get(id) || {};
           switch (type) {
             case DEVICE_TYPE_SMART_TOP_G6: {
-              const value = [...data.slice(7)]
+              const value = [...data.slice(8)];
               console.log(value);
               set(id, { log: value });
               break;
