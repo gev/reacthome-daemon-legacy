@@ -940,10 +940,10 @@ module.exports.manage = () => {
         }
         case ACTION_LOG: {
           const { type } = get(id) || {};
-          console.log(data);
+          const value = [...data.slice(7)];
+          console.log(value);
           switch (type) {
             case DEVICE_TYPE_SMART_TOP_G6: {
-              const value = [...data.slice(7)];
               // console.log(value);
                 set(id, { value });
                 break;
