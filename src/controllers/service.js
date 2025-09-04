@@ -132,7 +132,7 @@ const {
   DEVICE_TYPE_MIX_H,
   ACTION_ATS_MODE,
   DEVICE_TYPE_SERVER,
-  ACTION_LOG,
+  ACTION_ERROR,
   DRIVER_TYPE_DALI_GW,
   DALI_FADE,
   ACTION_DALI,
@@ -3204,12 +3204,12 @@ const run = (action) => {
           set(id, { co2_correct, co2: co2_raw + co2_correct });
         }
       }
-      case ACTION_LOG: {
+      case ACTION_ERROR: {
         const dev = get(action.id);
         switch (dev.type) {
           case DEVICE_TYPE_MIX_6x12_RS: {
             device.sendRBUS(Buffer.from([
-              ACTION_LOG,
+              ACTION_ERROR,
             ]),
               action.id
             );
