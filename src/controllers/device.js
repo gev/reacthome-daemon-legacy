@@ -745,6 +745,7 @@ module.exports.manage = () => {
         }
         case ACTION_DOPPLER1: {
           const value = [...data.slice(7)];
+          console.log(value);
           const { onDoppler } = get(id) || {};
           set(id, { value });
           if (onDoppler) {
@@ -942,6 +943,7 @@ module.exports.manage = () => {
           switch (type) {
             case DEVICE_TYPE_SMART_TOP_G6: {
                 const value = [...data.slice(8)];
+                console.log(value);
                 set(id, { value });
                 break;
               }
