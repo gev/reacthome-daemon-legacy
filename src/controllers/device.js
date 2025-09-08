@@ -942,6 +942,7 @@ module.exports.manage = () => {
           const { type } = get(id) || {};
           switch (type) {
             case DEVICE_TYPE_SMART_TOP_G6: {
+              console.log(data);
               const log = [];
               for (let i = 0; i < 6; i++) {
                 log[i] = data.readInt16BE(8 + 2 * i);
