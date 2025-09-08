@@ -945,7 +945,7 @@ module.exports.manage = () => {
               console.log(data);
               const log = [];
               for (let i = 0; i < 6; i++) {
-                log[i] = data.readInt16BE(8 + 2 * i);
+                log[i] = data.readUint16BE(8 + 2 * i);
               }
               console.log(log);
               set(id, { log });
