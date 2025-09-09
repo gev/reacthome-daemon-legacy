@@ -104,7 +104,6 @@ const {
   DEVICE_TYPE_SMART_TOP_A4TD,
   DEVICE_TYPE_LANAMP,
   DEVICE_TYPE_SOUNDBOX,
-  ACTION_LOG,
 } = require("../constants");
 const {
   get,
@@ -938,7 +937,7 @@ module.exports.manage = () => {
           set(`${id}/LA/${index}`, { colors, segments });
           break;
         }
-        case ACTION_LOG: {
+        case ACTION_ERROR: {
           const { type } = get(id) || {};
           switch (type) {
             case DEVICE_TYPE_SMART_TOP_G6: {
@@ -952,9 +951,6 @@ module.exports.manage = () => {
               break;
             }
           }
-          break;
-        }
-        case ACTION_ERROR: {
           const reason = data[7];
           switch (reason) {
             case ACTION_BOOTLOAD:
