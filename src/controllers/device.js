@@ -950,15 +950,17 @@ module.exports.manage = () => {
               set(id, { log });
               break;
             }
-          }
-          const reason = data[7];
-          switch (reason) {
-            case ACTION_BOOTLOAD:
-              set(id, { pending: false, updating: false });
-              console.error(data);
-              break;
             default: {
-              console.error(data);
+              const reason = data[7];
+              switch (reason) {
+                case ACTION_BOOTLOAD:
+                  set(id, { pending: false, updating: false });
+                  console.error(data);
+                  break;
+                default: {
+                  console.error(data);
+                }
+              }
             }
           }
         }
