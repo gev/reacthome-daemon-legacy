@@ -1288,7 +1288,7 @@ const run = (action) => {
               if (!o[i]) continue;
               const { type } = get(o[i]) || {};
               const [dev, kind, index] = o[i].split("/");
-              const { ip, type: deviceType, protocol } = get(dev);
+              const { ip, type: deviceType, protocol } = get(dev) || {};
               const value = isOn ? (i === "bind" ? last.value : last[i]) : 255;
               switch (deviceType) {
                 case DEVICE_TYPE_SERVER:
@@ -1709,7 +1709,7 @@ const run = (action) => {
               const c = bind[i];
               if (!o[c]) continue;
               const [dev, kind, index] = o[c].split("/");
-              const { ip, type: deviceType } = get(dev);
+              const { ip, type: deviceType } = get(dev) || {};
               let v;
               if (c === "bind") {
                 v = value;
