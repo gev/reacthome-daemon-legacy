@@ -2471,9 +2471,9 @@ const run = (action) => {
               startCool();
             } else if (temperature > setpoint - (- heat_hysteresis)) {
               stopCool();
-              stopHeat();
+              // stopHeat();
             } else if (temperature < setpoint - heat_hysteresis) {
-              stopCool();
+              // stopCool();
               startHeat();
             }
             break;
@@ -2485,9 +2485,9 @@ const run = (action) => {
               startHeat();
             } else if (temperature < setpoint - cool_hysteresis) {
               stopHeat();
-              stopCool();
+              // stopCool();
             } else if (temperature > setpoint - (- cool_hysteresis)) {
-              stopHeat();
+              // stopHeat();
               startCool();
             }
             break;
