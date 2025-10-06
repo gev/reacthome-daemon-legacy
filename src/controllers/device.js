@@ -187,6 +187,7 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_DI: {
+          console.log(data);
           const index = data[7];
           const value = data[8] ? 1 : 0;
           const channel = `${id}/${DI}/${index}`;
@@ -780,7 +781,7 @@ module.exports.manage = () => {
           const index = data[7];
           const mode = data[8];
           const volume = [];
-          const source = []; 
+          const source = [];
           for (let i = 0; i < 2; i++) {
             volume[i] = data[i + 9];
             source[i] = [];
@@ -808,7 +809,7 @@ module.exports.manage = () => {
         }
         case ACTION_RTP: {
           const { type } = get(id) || {};
-          switch (type){
+          switch (type) {
             case DEVICE_TYPE_LANAMP: {
               const index = data[7];
               const active = data[8];
@@ -937,14 +938,29 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_ERROR: {
-          const reason = data[7];
-          switch (reason) {
-            case ACTION_BOOTLOAD:
-              set(id, { pending: false, updating: false });
-              console.error(data);
+          const { type } = get(id) || {};
+          switch (type) {
+            case DEVICE_TYPE_SMART_TOP_G6: {
+              console.log(data);
+              const log = [];
+              for (let i = 0; i < 6; i++) {
+                log[i] = data.readInt16BE(8 + 2 * i);
+              }
+              console.log(log);
+              set(id, { log });
               break;
+            }
             default: {
-              console.error(data);
+              const reason = data[7];
+              switch (reason) {
+                case ACTION_BOOTLOAD:
+                  set(id, { pending: false, updating: false });
+                  console.error(data);
+                  break;
+                default: {
+                  console.error(data);
+                }
+              }
             }
           }
         }
