@@ -602,13 +602,13 @@ const run = (action) => {
           case DEVICE_TYPE_AO_4_DIN: {
             const velocity =
               dev.type === DEVICE_TYPE_DIM_12_LED_RS ||
-              dev.type === DEVICE_TYPE_MIX_H ||
-              dev.type === DEVICE_TYPE_DIM_12_AC_RS ||
-              dev.type === DEVICE_TYPE_DIM_12_DC_RS ||
-              dev.type === DEVICE_TYPE_DIM_1_AC_RS ||
-              dev.type === DEVICE_TYPE_DIM_8_RS
-              ? DIM_VELOCITY
-              : AO_VELOCITY;
+                dev.type === DEVICE_TYPE_MIX_H ||
+                dev.type === DEVICE_TYPE_DIM_12_AC_RS ||
+                dev.type === DEVICE_TYPE_DIM_12_DC_RS ||
+                dev.type === DEVICE_TYPE_DIM_1_AC_RS ||
+                dev.type === DEVICE_TYPE_DIM_8_RS
+                ? DIM_VELOCITY
+                : AO_VELOCITY;
             switch (action.action) {
               case DIM_TYPE:
               case DIM_GROUP: {
@@ -814,13 +814,13 @@ const run = (action) => {
                     DIM_FADE,
                     v,
                     dev.type === DEVICE_TYPE_DIM_12_LED_RS ||
-                    dev.type === DEVICE_TYPE_MIX_H ||
-                    dev.type === DEVICE_TYPE_DIM_12_AC_RS ||
-                    dev.type === DEVICE_TYPE_DIM_12_DC_RS ||
-                    dev.type === DEVICE_TYPE_DIM_1_AC_RS ||
-                    dev.type === DEVICE_TYPE_DIM_8_RS
-                    ? DIM_VELOCITY
-                    : AO_VELOCITY,
+                      dev.type === DEVICE_TYPE_MIX_H ||
+                      dev.type === DEVICE_TYPE_DIM_12_AC_RS ||
+                      dev.type === DEVICE_TYPE_DIM_12_DC_RS ||
+                      dev.type === DEVICE_TYPE_DIM_1_AC_RS ||
+                      dev.type === DEVICE_TYPE_DIM_8_RS
+                      ? DIM_VELOCITY
+                      : AO_VELOCITY,
                   ]),
                     dev
                   );
@@ -1288,7 +1288,7 @@ const run = (action) => {
               if (!o[i]) continue;
               const { type } = get(o[i]) || {};
               const [dev, kind, index] = o[i].split("/");
-              const { ip, type: deviceType, protocol } = get(dev);
+              const { ip, type: deviceType, protocol } = get(dev) || {};
               const value = isOn ? (i === "bind" ? last.value : last[i]) : 255;
               switch (deviceType) {
                 case DEVICE_TYPE_SERVER:
@@ -1709,7 +1709,7 @@ const run = (action) => {
               const c = bind[i];
               if (!o[c]) continue;
               const [dev, kind, index] = o[c].split("/");
-              const { ip, type: deviceType } = get(dev);
+              const { ip, type: deviceType } = get(dev) || {};
               let v;
               if (c === "bind") {
                 v = value;
@@ -1848,13 +1848,13 @@ const run = (action) => {
                 DIM_FADE,
                 v,
                 deviceType === DEVICE_TYPE_DIM_12_LED_RS ||
-                deviceType === DEVICE_TYPE_MIX_H ||
-                deviceType === DEVICE_TYPE_DIM_12_AC_RS ||
-                deviceType === DEVICE_TYPE_DIM_12_DC_RS ||
-                deviceType === DEVICE_TYPE_DIM_1_AC_RS ||
-                deviceType === DEVICE_TYPE_DIM_8_RS
-                ? DIM_VELOCITY
-                : AO_VELOCITY
+                  deviceType === DEVICE_TYPE_MIX_H ||
+                  deviceType === DEVICE_TYPE_DIM_12_AC_RS ||
+                  deviceType === DEVICE_TYPE_DIM_12_DC_RS ||
+                  deviceType === DEVICE_TYPE_DIM_1_AC_RS ||
+                  deviceType === DEVICE_TYPE_DIM_8_RS
+                  ? DIM_VELOCITY
+                  : AO_VELOCITY
               ]),
                 dev
               );
@@ -2471,9 +2471,9 @@ const run = (action) => {
               startCool();
             } else if (temperature > setpoint - (- heat_hysteresis)) {
               stopCool();
-              stopHeat();
+              // stopHeat();
             } else if (temperature < setpoint - heat_hysteresis) {
-              stopCool();
+              // stopCool();
               startHeat();
             }
             break;
@@ -2485,9 +2485,9 @@ const run = (action) => {
               startHeat();
             } else if (temperature < setpoint - cool_hysteresis) {
               stopHeat();
-              stopCool();
+              // stopCool();
             } else if (temperature > setpoint - (- cool_hysteresis)) {
-              stopHeat();
+              // stopHeat();
               startCool();
             }
             break;

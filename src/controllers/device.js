@@ -102,6 +102,8 @@ const {
   DEVICE_TYPE_SMART_TOP_G2,
   DEVICE_TYPE_SMART_TOP_A4P,
   DEVICE_TYPE_SMART_TOP_A4TD,
+  DEVICE_TYPE_LANAMP,
+  DEVICE_TYPE_SOUNDBOX,
 } = require("../constants");
 const {
   get,
@@ -185,6 +187,7 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_DI: {
+          console.log(data);
           const index = data[7];
           const value = data[8] ? 1 : 0;
           const channel = `${id}/${DI}/${index}`;
@@ -805,13 +808,27 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_RTP: {
-          const index = data[7];
-          const active = data[8];
-          const group = int2ip(data.readUInt32BE(9));
-          const port = data.readUInt16LE(13);
-          const chan = `${id}/rtp/${index}`;
-          set(chan, { active, group, port });
-          break;
+          const { type } = get(id) || {};
+          switch (type) {
+            case DEVICE_TYPE_LANAMP: {
+              const index = data[7];
+              const active = data[8];
+              const group = int2ip(data.readUInt32BE(9));
+              const port = data.readUInt16LE(13);
+              const chan = `${id}/rtp/${index}`;
+              set(chan, { active, group, port });
+              break;
+            }
+            case DEVICE_TYPE_SOUNDBOX: {
+              const index = data[7];
+              const active = data[8];
+              const group = int2ip(data.readUInt32BE(9));
+              const port = data.readUInt16BE(13);
+              const chan = `${id}/rtp/${index}`;
+              set(chan, { active, group, port });
+              break;
+            }
+          }
         }
         case ACTION_INITIALIZE: {
           initialize(id);
@@ -921,14 +938,29 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_ERROR: {
-          const reason = data[7];
-          switch (reason) {
-            case ACTION_BOOTLOAD:
-              set(id, { pending: false, updating: false });
-              console.error(data);
+          const { type } = get(id) || {};
+          switch (type) {
+            case DEVICE_TYPE_SMART_TOP_G6: {
+              console.log(data);
+              const log = [];
+              for (let i = 0; i < 6; i++) {
+                log[i] = data.readInt16BE(8 + 2 * i);
+              }
+              console.log(log);
+              set(id, { log });
               break;
+            }
             default: {
-              console.error(data);
+              const reason = data[7];
+              switch (reason) {
+                case ACTION_BOOTLOAD:
+                  set(id, { pending: false, updating: false });
+                  console.error(data);
+                  break;
+                default: {
+                  console.error(data);
+                }
+              }
             }
           }
         }
