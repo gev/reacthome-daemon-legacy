@@ -1357,7 +1357,7 @@ const run = (action) => {
                 setBit(offset[2], (mask >> 0) & 1);
               } else {
                 for (let k = 0; k < 7; k++) {
-                  setBit(offset[k], (mask >> (12 - k)) & 1);
+                  setBit(offset[k], (mask >> (7 - k)) & 1);
                 }
               }
             }
