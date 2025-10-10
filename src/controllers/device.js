@@ -150,9 +150,9 @@ module.exports.manage = () => {
         online(id, { ip: address, hub, type: dev.type });
       }
       const action = data[6];
-      if (hub && action !== ACTION_DISCOVERY && action !== ACTION_READY) {
-        // console.log('receive', data, address, hub);
-      }
+      // if (hub && action !== ACTION_DISCOVERY && action !== ACTION_READY) {
+      //   console.log('receive', data, address, hub);
+      // }
       switch (action) {
         case DEVICE_TYPE_PLC: {
           for (let i = 1; i <= 36; i++) {
@@ -188,7 +188,7 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_DI: {
-          console.log(data);
+          // console.log(data);
           const index = data[7];
           const value = data[8] ? 1 : 0;
           const channel = `${id}/${DI}/${index}`;
@@ -948,12 +948,12 @@ module.exports.manage = () => {
           const { type } = get(id) || {};
           switch (type) {
             case DEVICE_TYPE_SMART_TOP_G6: {
-              console.log(data);
+              // console.log(data);
               const log = [];
               for (let i = 0; i < 6; i++) {
                 log[i] = data.readInt16BE(8 + 2 * i);
               }
-              console.log(log);
+              // console.log(log);
               set(id, { log });
               break;
             }
