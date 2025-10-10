@@ -104,6 +104,7 @@ const {
   DEVICE_TYPE_SMART_TOP_A4TD,
   DEVICE_TYPE_LANAMP,
   DEVICE_TYPE_SOUNDBOX,
+  DEVICE_TYPE_SMART_TOP_A4TD_7S,
 } = require("../constants");
 const {
   get,
@@ -388,7 +389,8 @@ module.exports.manage = () => {
               online(top_id, { type, bottom: id, version: `${data[15]}.${data[16]}`, ip: address, ready: true });
               switch (type) {
                 case DEVICE_TYPE_SMART_TOP_G4D:
-                case DEVICE_TYPE_SMART_TOP_A4TD: {
+                case DEVICE_TYPE_SMART_TOP_A4TD:
+                case DEVICE_TYPE_SMART_TOP_A4TD_7S: {
                   const ts = timestamp[top_id] || 0;
                   const { timeout = 0, mode, defaultMode } = get(top_id) || {};
                   if (Date.now() - ts > (timeout || 10_000)) {
@@ -486,7 +488,8 @@ module.exports.manage = () => {
             case DEVICE_TYPE_SMART_TOP_G4:
             case DEVICE_TYPE_SMART_TOP_G2:
             case DEVICE_TYPE_SMART_TOP_A4P:
-            case DEVICE_TYPE_SMART_TOP_A4TD: {
+            case DEVICE_TYPE_SMART_TOP_A4TD:
+            case DEVICE_TYPE_SMART_TOP_A4TD_7S: {
               set(id, { brightness: data[7] });
               break;
             }
@@ -541,7 +544,8 @@ module.exports.manage = () => {
             case DEVICE_TYPE_SMART_TOP_G4:
             case DEVICE_TYPE_SMART_TOP_G2:
             case DEVICE_TYPE_SMART_TOP_A4P:
-            case DEVICE_TYPE_SMART_TOP_A4TD: {
+            case DEVICE_TYPE_SMART_TOP_A4TD:
+            case DEVICE_TYPE_SMART_TOP_A4TD_7S: {
               let [, , , , , , , palette, index] = data;
               if (index === 0) {
                 index = 1;
@@ -589,6 +593,11 @@ module.exports.manage = () => {
               set(id, { image });
               break;
             }
+            case DEVICE_TYPE_SMART_TOP_A4TD_7S: {
+              const image = Array.from(data.slice(7, 14))
+              set(id, { image });
+              break;
+            }
             default:
               const [, , , , , , , level, i2, i1] = data;
               const c2 = image2char[i2] || " ";
@@ -610,6 +619,11 @@ module.exports.manage = () => {
             case DEVICE_TYPE_SMART_TOP_A4P:
             case DEVICE_TYPE_SMART_TOP_A4TD: {
               const blink = Array.from(data.slice(7, 15))
+              set(id, { blink });
+              break;
+            }
+            case DEVICE_TYPE_SMART_TOP_A4TD_7S: {
+              const blink = Array.from(data.slice(7, 14))
               set(id, { blink });
               break;
             }
@@ -1109,7 +1123,8 @@ const handle = (handleSmartTop, handleDefault) => (id, index, chan) => {
   const dev = get(id) || {};
   switch (dev.type) {
     case DEVICE_TYPE_SMART_TOP_G4D:
-    case DEVICE_TYPE_SMART_TOP_A4TD: {
+    case DEVICE_TYPE_SMART_TOP_A4TD:
+    case DEVICE_TYPE_SMART_TOP_A4TD_7S: {
       const { mode = 0, modes = [] } = dev;
       if (modes.length > 0) {
         const cid = modes[mode % modes.length];
@@ -1676,7 +1691,8 @@ const renderSmartTop = (id) => {
       }
       break;
     }
-    case DEVICE_TYPE_SMART_TOP_A4TD: {
+    case DEVICE_TYPE_SMART_TOP_A4TD:
+    case DEVICE_TYPE_SMART_TOP_A4TD_7S: {
       image[1] &= 0b0000_0011;
       blink[1] &= 0b0000_0011;
       if (current.indicator > 0 && current.indicator <= 6) {
