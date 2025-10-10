@@ -1033,11 +1033,19 @@ const run = (action) => {
             device.sendTOP(buff, action.id);
             break;
           case DEVICE_TYPE_SMART_TOP_G4D:
-          case DEVICE_TYPE_SMART_TOP_A4TD:
-          case DEVICE_TYPE_SMART_TOP_A4TD_7S: {
+          case DEVICE_TYPE_SMART_TOP_A4TD: {
             const buff = Buffer.alloc(9);
             buff[0] = ACTION_BLINK;
             for (let i = 0; i < 8; i++) {
+              buff[i + 1] = value[i] || 0;
+            }
+            device.sendTOP(buff, action.id);
+            break;
+          }
+          case DEVICE_TYPE_SMART_TOP_A4TD_7S: {
+            const buff = Buffer.alloc(7);
+            buff[0] = ACTION_BLINK;
+            for (let i = 0; i < 6; i++) {
               buff[i + 1] = value[i] || 0;
             }
             device.sendTOP(buff, action.id);
