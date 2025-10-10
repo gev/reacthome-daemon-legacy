@@ -1383,6 +1383,7 @@ const run = (action) => {
                 setBit(7, 1);
                 setBit(8, 1);
             }
+            console.log(image);
             run({ type: ACTION_IMAGE, id, value: image })
             break;
           }
