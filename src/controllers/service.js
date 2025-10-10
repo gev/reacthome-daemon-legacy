@@ -1352,9 +1352,9 @@ const run = (action) => {
               const mask = dict[c] || 0;
               const offset = offsets[i];
               if (i === 3) {
-                setBit(offset[0], (mask >> 4) & 1);
+                setBit(offset[0], (mask >> 3) & 1);
                 setBit(offset[1], (mask >> 2) & 1);
-                setBit(offset[2], (mask >> 0) & 1);
+                setBit(offset[2], (mask >> 1) & 1);
               } else {
                 for (let k = 0; k < 7; k++) {
                   setBit(offset[k], (mask >> (6 - k)) & 1);
