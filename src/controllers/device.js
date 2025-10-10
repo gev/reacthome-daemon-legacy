@@ -589,13 +589,9 @@ module.exports.manage = () => {
             case DEVICE_TYPE_SMART_TOP_G4:
             case DEVICE_TYPE_SMART_TOP_G2:
             case DEVICE_TYPE_SMART_TOP_A4P:
-            case DEVICE_TYPE_SMART_TOP_A4TD: {
-              const image = Array.from(data.slice(7, 15))
-              set(id, { image });
-              break;
-            }
+            case DEVICE_TYPE_SMART_TOP_A4TD:
             case DEVICE_TYPE_SMART_TOP_A4TD_7S: {
-              const image = Array.from(data.slice(7, 14))
+              const image = Array.from(data.slice(7, 15))
               set(id, { image });
               break;
             }
@@ -618,13 +614,9 @@ module.exports.manage = () => {
             case DEVICE_TYPE_SMART_TOP_G4:
             case DEVICE_TYPE_SMART_TOP_G2:
             case DEVICE_TYPE_SMART_TOP_A4P:
-            case DEVICE_TYPE_SMART_TOP_A4TD: {
-              const blink = Array.from(data.slice(7, 15))
-              set(id, { blink });
-              break;
-            }
+            case DEVICE_TYPE_SMART_TOP_A4TD:
             case DEVICE_TYPE_SMART_TOP_A4TD_7S: {
-              const blink = Array.from(data.slice(7, 14))
+              const blink = Array.from(data.slice(7, 15))
               set(id, { blink });
               break;
             }
