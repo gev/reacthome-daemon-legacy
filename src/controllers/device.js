@@ -274,7 +274,8 @@ module.exports.manage = () => {
             type === DEVICE_TYPE_SMART_TOP_G4 ||
             type === DEVICE_TYPE_SMART_TOP_G2 ||
             type === DEVICE_TYPE_SMART_TOP_A4P ||
-            type === DEVICE_TYPE_SMART_TOP_A4TD
+            type === DEVICE_TYPE_SMART_TOP_A4TD ||
+            type === DEVICE_TYPE_SMART_TOP_A4TD_7S
           ) {
             set(id, { state: data[7] })
             return;
