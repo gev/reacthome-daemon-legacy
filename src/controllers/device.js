@@ -957,6 +957,14 @@ module.exports.manage = () => {
               set(id, { log });
               break;
             }
+            case DEVICE_TYPE_SMART_TOP_A4TD_7S: {
+              const log = [];
+              for (let i = 0; i < 4; i++) {
+                log[i] = data.readInt16BE(8 + 2 * i);
+              }
+              set(id, { log });
+              break;
+            }
             default: {
               const reason = data[7];
               switch (reason) {
