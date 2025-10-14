@@ -947,6 +947,7 @@ module.exports.manage = () => {
         case ACTION_ERROR: {
           const { type } = get(id) || {};
           switch (type) {
+            case DEVICE_TYPE_SMART_TOP_A6T:
             case DEVICE_TYPE_SMART_TOP_G6: {
               // console.log(data);
               const log = [];
@@ -957,6 +958,8 @@ module.exports.manage = () => {
               set(id, { log });
               break;
             }
+            case DEVICE_TYPE_SMART_TOP_A4T:
+            case DEVICE_TYPE_SMART_TOP_G4D:
             case DEVICE_TYPE_SMART_TOP_A4TD_7S: {
               const log = [];
               for (let i = 0; i < 4; i++) {
