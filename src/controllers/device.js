@@ -947,6 +947,25 @@ module.exports.manage = () => {
         case ACTION_ERROR: {
           const { type } = get(id) || {};
           switch (type) {
+            case DEVICE_TYPE_SMART_TOP_G2: {
+              const log = [];
+              for (let i = 0; i < 2; i++) {
+                log[i] = data.readInt16BE(8 + 2 * i);
+              }
+              set(id, { log });
+              break;
+            }
+            case DEVICE_TYPE_SMART_TOP_G4:
+            case DEVICE_TYPE_SMART_TOP_G4D:
+            case DEVICE_TYPE_SMART_TOP_A4T:
+            case DEVICE_TYPE_SMART_TOP_A4TD_7S: {
+              const log = [];
+              for (let i = 0; i < 4; i++) {
+                log[i] = data.readInt16BE(8 + 2 * i);
+              }
+              set(id, { log });
+              break;
+            }
             case DEVICE_TYPE_SMART_TOP_A6T:
             case DEVICE_TYPE_SMART_TOP_G6: {
               // console.log(data);
@@ -955,16 +974,6 @@ module.exports.manage = () => {
                 log[i] = data.readInt16BE(8 + 2 * i);
               }
               // console.log(log);
-              set(id, { log });
-              break;
-            }
-            case DEVICE_TYPE_SMART_TOP_A4T:
-            case DEVICE_TYPE_SMART_TOP_G4D:
-            case DEVICE_TYPE_SMART_TOP_A4TD_7S: {
-              const log = [];
-              for (let i = 0; i < 4; i++) {
-                log[i] = data.readInt16BE(8 + 2 * i);
-              }
               set(id, { log });
               break;
             }
