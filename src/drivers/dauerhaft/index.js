@@ -175,7 +175,6 @@ module.exports.run = (action) => {
 
 module.exports.handle = ({ id, data }) => {
   const ch = indexes.get(id);
-  console.log("Resived", ch, data);
   switch (data[0]) {
     case 0xd8: {
       if (ch) {
