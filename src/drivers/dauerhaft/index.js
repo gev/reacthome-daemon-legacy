@@ -125,7 +125,7 @@ const loop = (id) => async () => {
     await sync(id, i);
     await delay(150);
   }
-  timers.set(id, setTimeout(loop(id), 150));
+  timers.set(id, setTimeout(loop(id), 0));
 }
 
 module.exports.run = (action) => {
