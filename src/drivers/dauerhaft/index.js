@@ -123,7 +123,7 @@ const loop = (id) => async () => {
   const { numberCurtain = 0 } = get(id) || {};
   for (let i = 1; i <= numberCurtain; i += 1) {
     await sync(id, i);
-    await delay(50);
+    await delay(150);
   }
   timers.set(id, setTimeout(loop(id), numberCurtain * 200));
 }
