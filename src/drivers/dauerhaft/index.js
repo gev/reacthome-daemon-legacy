@@ -180,7 +180,8 @@ module.exports.handle = ({ id, data }) => {
     case 0xd8: {
       if (ch) {
         const { address, channel } = get(ch) || {};
-        if (address == data[1] && channel == data[2]) {
+        const k = 1 << (channel - 1);
+        if (address == data[1] && k == data[2]) {
           set(ch, { value: data[7] });
         }
       }
