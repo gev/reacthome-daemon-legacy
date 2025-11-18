@@ -3000,21 +3000,20 @@ const run = (action) => {
         }
         break;
       }
-      // case ACTION_SET_POSITION: {
-      //   const [id, type, index] = action.id ? action.id.split("/") : [];
-      //   if (type === 'curtain') {
-      //     drivers.run({
-      //       type: ACTION_SET_POSITION,
-      //       id,
-      //       index,
-      //       position: action.value
-      //     })
-      //   } else {
-      //     drivers.run(action);
-      //   }
-      //   break;
-      // }
-      case ACTION_SET_POSITION:
+      case ACTION_SET_POSITION: {
+        const [id, type, index] = action.id ? action.id.split("/") : [];
+        if (type === 'curtain') {
+          drivers.run({
+            type: ACTION_SET_POSITION,
+            id,
+            index,
+            position: action.value
+          })
+        } else {
+          drivers.run(action);
+        }
+        break;
+      }
       case ACTION_SET_ADDRESS:
       case ACTION_DELETE_ADDRESS:
       case ACTION_UP:

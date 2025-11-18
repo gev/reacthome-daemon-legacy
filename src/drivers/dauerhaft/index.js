@@ -167,8 +167,8 @@ module.exports.run = (action) => {
       break;
     }
     case ACTION_SET_POSITION: {
-      const { value } = action;
-      set(ch, { shouldSetPosition: true, position: value });
+      const { position } = action;
+      set(ch, { shouldSetPosition: true, position });
       break;
     }
   }
