@@ -66,7 +66,7 @@
 
 
 const { get, set } = require('../../actions');
-const { ACTION_SET_ADDRESS, ACTION_SET_POSITION, DEVICE_TYPE_DI_4_RSM, DEVICE_TYPE_RS_HUB1_RS, ACTION_RS485_TRANSMIT, ACTION_UP, ACTION_DOWN, ACTION_STOP, ACTION_LIMIT_UP, ACTION_LIMIT_DOWN, ACTION_LEARN, ACTION_DELETE_ADDRESS } = require('../../constants');
+const { ACTION_SET_ADDRESS, ACTION_SET_POSITION, DEVICE_TYPE_DI_4_RSM, DEVICE_TYPE_RS_HUB1_RS, ACTION_RS485_TRANSMIT, ACTION_UP, ACTION_DOWN, ACTION_STOP, ACTION_LIMIT_UP, ACTION_LIMIT_DOWN, ACTION_LEARN, ACTION_DELETE_ADDRESS, ACTION_OPEN, ACTION_CLOSE } = require('../../constants');
 const { device } = require('../../sockets');
 const { delay } = require('../../util');
 
@@ -136,10 +136,12 @@ module.exports.run = (action) => {
       set(ch, { shouldSetAddress: true, address, channel });
       break;
     }
+    case ACTION_OPEN:
     case ACTION_UP: {
       set(ch, { shouldUp: true });
       break;
     }
+    case ACTION_CLOSE:
     case ACTION_DOWN: {
       set(ch, { shouldDown: true });
       break;
@@ -165,8 +167,8 @@ module.exports.run = (action) => {
       break;
     }
     case ACTION_SET_POSITION: {
-      const { position } = action;
-      set(ch, { shouldSetPosition: true, position });
+      const { value } = action;
+      set(ch, { shouldSetPosition: true, position: value });
       break;
     }
   }
