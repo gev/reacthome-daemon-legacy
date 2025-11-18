@@ -37,7 +37,7 @@ const connect = () => {
     console.error('Error. Reconnecting to janus');
   });
   socket.on('close', () => {
-    console.log('Disconnect. Reconnecting to janus');
+    // console.log('Disconnect. Reconnecting to janus');
     setTimeout(connect, TIMEOUT_RECONNECT);
   });
   callbacks.clear();

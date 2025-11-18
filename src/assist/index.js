@@ -155,7 +155,7 @@ const getForms = (words) => {
 }
 
 const handleAssist = (action) => {
-    console.log(action)
+    // console.log(action)
 
     const words = action.payload.message.split(" ")
     const scripts = markupWords(words, allScripts, true)
@@ -219,7 +219,7 @@ const handleAssist = (action) => {
         }
         answer = answers.join(". ")
     }
-    console.log(answer)
+    // console.log(answer)
     action.payload.message = answer
     return action
 }
