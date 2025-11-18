@@ -261,6 +261,8 @@ const run = (action) => {
         }
         break;
       }
+      case ACTION_UP:
+      case ACTION_DOWN:
       case ACTION_OPEN:
       case ACTION_STOP:
       case ACTION_CLOSE: {
@@ -304,6 +306,8 @@ const run = (action) => {
           case DEVICE_TYPE_RELAY_2_DIN:
           case DEVICE_TYPE_RELAY_12_RS: {
             switch (action.value) {
+              case ACTION_UP:
+              case ACTION_DOWN:
               case ACTION_OPEN:
               case ACTION_CLOSE:
               case ACTION_STOP: {
@@ -327,6 +331,7 @@ const run = (action) => {
                     );
                     break;
                   }
+                  case ACTION_UP:
                   case ACTION_OPEN: {
                     if (group.type === CLOSE_OPEN) {
                       device.sendRBUS(Buffer.from([
@@ -347,6 +352,7 @@ const run = (action) => {
                     }
                     break;
                   }
+                  case ACTION_DOWN:
                   case ACTION_CLOSE: {
                     if (group.type === CLOSE_OPEN) {
                       device.sendRBUS(Buffer.from([
@@ -3016,8 +3022,6 @@ const run = (action) => {
       }
       case ACTION_SET_ADDRESS:
       case ACTION_DELETE_ADDRESS:
-      case ACTION_UP:
-      case ACTION_DOWN:
       case ACTION_LIMIT_UP:
       case ACTION_LIMIT_DOWN:
       case ACTION_LEARN:
