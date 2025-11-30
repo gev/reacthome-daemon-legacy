@@ -6,16 +6,11 @@ const { HYGROSTAT, DRIVER_TYPE_DAUERHAFT } = require('../../constants');
 const timers = new Map();
 
 const sync = (id, i) => {
-  console.log('Sync', id, i);
   const ch = `${id}/proxy/${i}`;
-  console.log('Channel', ch);
   const proxy = get(ch) || {};
-  console.log('Proxy', proxy);
   if (!proxy.proxy || !proxy.bind) return;
   const source = get(proxy.bind) || {};
   const target = get(proxy.proxy) || {};
-  console.log('Source', source);
-  console.log('Target', target);
   switch (target.type) {
     case HYGROSTAT:
       syncHygrostat(ch, proxy, source, target);
@@ -57,7 +52,6 @@ const syncCurtains = (ch, proxy, source, target) => {
 
 const loop = (id) => () => {
   const driver = get(id) || {};
-  console.log('Driver', driver);
   for (let i = 0; i < driver.numberProxy; i++) {
     sync(id, i + 1);
   }
