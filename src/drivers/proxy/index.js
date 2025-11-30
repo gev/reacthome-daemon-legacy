@@ -5,8 +5,12 @@ const { get, set } = require('../../actions');
 const timers = new Map();
 
 const loop = (id) => () => {
-  proxy = get(id);
+  proxy = get(id) || {};
+  source = get(proxy.bind) || {};
+  target = get(proxy.proxy) || {};
   console.log('Proxy driver loop', id, proxy);
+  console.log('Bind', source);
+  console.log('Proxy', target);
 }
 
 
