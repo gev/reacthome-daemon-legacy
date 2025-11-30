@@ -82,5 +82,5 @@ module.exports.add = (id) => {
   if (timers.has(id)) {
     clearInterval(timers.get(id))
   }
-  timers.set(id, setInterval(loop(id), 1000));
+  timers.set(id, setInterval(loop(id), 300));
 };
