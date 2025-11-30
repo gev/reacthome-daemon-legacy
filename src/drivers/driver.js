@@ -21,6 +21,7 @@ const {
   DRIVER_TYPE_MD_CCM18_AN_E,
   DRIVER_TYPE_TICA,
   DRIVER_TYPE_DAUERHAFT,
+  DRIVER_TYPE_PROXY,
 } = require("../constants");
 const { get } = require("../actions");
 const RS21 = require("./RS21");
@@ -43,6 +44,7 @@ const alink = require("./alink");
 const dali_gw = require("./dali-gw");
 const dali_dlc = require("./dali-dlc");
 const dauerhaft = require("./dauerhaft");
+const proxy = require("./proxy");
 
 const mac = require("../mac");
 
@@ -70,6 +72,10 @@ module.exports.manage = () => {
   for (const id of driver) {
     const { type } = get(id) || {};
     switch (type) {
+      case DRIVER_TYPE_PROXY:
+        instances.add(id, proxy);
+        proxy.add(id);
+        break;
       case DRIVER_TYPE_RS21:
         instances.add(id, new RS21(id));
         break;
