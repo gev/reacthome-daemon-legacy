@@ -43,9 +43,9 @@ const syncCurtains = (ch, proxy, source, target) => {
     if (!source.last) return;
     const value = source.last.value;
     set(ch, { value })
-    set(proxy.proxy, { position: value })
+    set(proxy.proxy, { position: value / 2.55 })
   } else {
-    const value = target.value;
+    const value = target.value * 2.55;
     set(ch, { value })
   }
 }
