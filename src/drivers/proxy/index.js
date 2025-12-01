@@ -27,17 +27,17 @@ const sync = (id, index) => {
 }
 
 const syncHygrostat = (ch, source, target) => {
-  if (source.timestamp < target.timestamp) {
-    const value = target.setpoint * 2.55;
-    set(ch, { value })
-  }
+  // if (source.timestamp < target.timestamp) {
+  const value = target.setpoint * 2.55;
+  set(ch, { value })
+  // }
 }
 
 const syncCurtains = (ch, source, target) => {
-  if (source.timestamp < target.timestamp) {
-    const value = target.value * 2.55;
-    set(ch, { value })
-  }
+  // if (source.timestamp < target.timestamp) {
+  const value = target.value * 2.55;
+  set(ch, { value })
+  // }
 }
 
 const loop = (id) => () => {
@@ -66,5 +66,5 @@ module.exports.add = (id) => {
   if (timers.has(id)) {
     clearInterval(timers.get(id))
   }
-  timers.set(id, setInterval(loop(id), 300));
+  timers.set(id, setInterval(loop(id), 500));
 };

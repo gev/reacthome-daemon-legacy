@@ -1628,8 +1628,8 @@ const run = (action) => {
                 }
                 case DRIVER_TYPE_PROXY: {
                   const proxy = get(o[c]) || {};
-                  const target = get(proxy.bind) || {};
-                  run({ id: o[i], type: ACTION_ON });
+                  const target = get(proxy.proxy) || {};
+                  // run({ id: o[i], type: ACTION_ON });
                   break;
                 }
                 default: {
@@ -1855,7 +1855,7 @@ const run = (action) => {
                 }
                 case DRIVER_TYPE_PROXY: {
                   const proxy = get(o[c]) || {};
-                  const target = get(proxy.bind) || {};
+                  const target = get(proxy.proxy) || {};
                   // run({ id: o[i], type: ACTION_OFF });
                   break;
                 }
@@ -1967,14 +1967,15 @@ const run = (action) => {
                 }
                 case DRIVER_TYPE_PROXY: {
                   const proxy = get(o[c]) || {};
-                  const target = get(proxy.bind) || {};
+                  const target = get(proxy.proxy) || {};
+                  console.log(proxy, target)
                   switch (target.type) {
                     case HYGROSTAT: {
-                      run({ id: o[c], type: ACTION_SETPOINT, humidity: v / 2.55 });
+                      run({ id: proxy.proxy, type: ACTION_SETPOINT, humidity: v / 2.55 });
                       break;
                     }
                     default: {
-                      const [id, type, index] = action.id ? action.id.split("/") : [];
+                      const [id, type, index] = proxy.proxy.split("/");
                       if (type === 'curtain') {
                         drivers.run({
                           type: ACTION_SET_POSITION,
