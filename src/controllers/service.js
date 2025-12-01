@@ -1627,6 +1627,8 @@ const run = (action) => {
                   break;
                 }
                 case DRIVER_TYPE_PROXY: {
+                  const proxy = get(o[c]) || {};
+                  const target = get(proxy.bind) || {};
                   run({ id: o[i], type: ACTION_ON });
                   break;
                 }
@@ -1852,7 +1854,9 @@ const run = (action) => {
                   break;
                 }
                 case DRIVER_TYPE_PROXY: {
-                  run({ id: o[i], type: ACTION_OFF });
+                  const proxy = get(o[c]) || {};
+                  const target = get(proxy.bind) || {};
+                  // run({ id: o[i], type: ACTION_OFF });
                   break;
                 }
                 default: {
@@ -1962,7 +1966,8 @@ const run = (action) => {
                   break;
                 }
                 case DRIVER_TYPE_PROXY: {
-                  const target = get(o[c]) || {};
+                  const proxy = get(o[c]) || {};
+                  const target = get(proxy.bind) || {};
                   switch (target.type) {
                     case HYGROSTAT: {
                       run({ id: o[c], type: ACTION_SETPOINT, humidity: v / 2.55 });
