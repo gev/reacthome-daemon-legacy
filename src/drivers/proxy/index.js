@@ -37,7 +37,7 @@ const syncHygrostat = (ch, source, target) => {
 const syncCurtains = (ch, source, target) => {
   // if (source.timestamp < target.timestamp) {
   const now = Date.now();
-  const value = now - target.timestamp > 1000
+  const value = now - source.timestamp > 1000
     ? target.value
     : target.position;
   set(ch, { value: value * 2.55 })
