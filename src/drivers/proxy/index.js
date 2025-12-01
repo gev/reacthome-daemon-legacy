@@ -33,10 +33,14 @@ const syncHygrostat = (ch, source, target) => {
   // }
 }
 
+
 const syncCurtains = (ch, source, target) => {
   // if (source.timestamp < target.timestamp) {
-  const value = target.value * 2.55;
-  set(ch, { value })
+  const now = Date.now();
+  const value = now - target.timestamp > 1000
+    ? target.value
+    : target.position;
+  set(ch, { value: value * 2.55 })
   // }
 }
 
@@ -66,5 +70,5 @@ module.exports.add = (id) => {
   if (timers.has(id)) {
     clearInterval(timers.get(id))
   }
-  timers.set(id, setInterval(loop(id), 500));
+  timers.set(id, setInterval(loop(id), 100));
 };
