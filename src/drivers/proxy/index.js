@@ -5,46 +5,36 @@ const { HYGROSTAT, DRIVER_TYPE_DAUERHAFT } = require('../../constants');
 
 const timers = new Map();
 
-const sync = (id, i) => {
-  const ch = `${id}/proxy/${i}`;
+const sync = (id, index) => {
+  const ch = `${id}/proxy/${index}`;
   const proxy = get(ch) || {};
   if (!proxy.proxy || !proxy.bind) return;
   const source = get(proxy.bind) || {};
   const target = get(proxy.proxy) || {};
   switch (target.type) {
     case HYGROSTAT:
-      syncHygrostat(ch, proxy, source, target);
+      syncHygrostat(ch, source, target);
       break;
     default:
       const segments = proxy.proxy.split('/');
       const dev = get(segments[0]) || {};
       switch (dev.type) {
         case DRIVER_TYPE_DAUERHAFT:
-          syncCurtains(ch, proxy, source, target);
+          syncCurtains(ch, source, target);
           break;
       }
   }
 }
 
-const syncHygrostat = (ch, proxy, source, target) => {
-  if (source.timestamp > target.timestamp) {
-    if (!source.last) return;
-    const value = source.last.value;
-    set(ch, { value })
-    set(proxy.proxy, { setpoint: value / 2.55 })
-  } else {
+const syncHygrostat = (ch, source, target) => {
+  if (source.timestamp < target.timestamp) {
     const value = target.setpoint * 2.55;
     set(ch, { value })
   }
 }
 
-const syncCurtains = (ch, proxy, source, target) => {
-  if (source.timestamp > target.timestamp) {
-    if (!source.last) return;
-    const value = source.last.value;
-    set(ch, { value })
-    set(proxy.proxy, { position: value / 2.55 })
-  } else {
+const syncCurtains = (ch, source, target) => {
+  if (source.timestamp < target.timestamp) {
     const value = target.value * 2.55;
     set(ch, { value })
   }
