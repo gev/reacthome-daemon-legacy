@@ -9,12 +9,24 @@ const port = 3000;
 
 module.exports = () => {
   const server = new Server({ port });
-  server.on("connection", (socket, req) => {    const session = uuid();    const clientIP = req.socket.remoteAddress || req.headers["x-forwarded-for"] || "unknown";    console.log("[WebSocket] Новое подключение:", session, "IP:", clientIP);        socket.on("close", (code, reason) => {      console.log("[WebSocket] Соединение закрыто:", session, "код:", code, "причина:", reason ? reason.toString() : "нет");      peers.delete(session);      deleteSession(session);    });        socket.on("error", (error) => {      console.error("[WebSocket] Ошибка соединения", session + ":", error.message || error);    });
+  server.on("connection", (socket, req) => {
     const session = uuid();
+    const clientIP = req.socket.remoteAddress || req.headers["x-forwarded-for"] || "unknown";
+    console.log("[WebSocket] Новое подключение:", session, "IP:", clientIP);
+    
+    socket.on("close", (code, reason) => {
+      console.log("[WebSocket] Соединение закрыто:", session, "код:", code, "причина:", reason ? reason.toString() : "нет");
+      peers.delete(session);
+      deleteSession(session);
+    });
+    
+    socket.on("error", (error) => {
+      console.error("[WebSocket] Ошибка соединения", session + ":", error.message || error);
+    });
+    
     socket.on("message", (message) => {
       handle(session, message);
     });
-    socket.on("error", console.error);
     peers.set(session, {
       session,
       online: true,
