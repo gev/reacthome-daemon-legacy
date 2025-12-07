@@ -3206,13 +3206,27 @@ const run = (action) => {
         const script = get(id);
         if (script && Array.isArray(script.action)) {
           if (script.disabled) return;
+          const contextStore = require('../logging/context');
+          const currentContext = contextStore.getStore() || {};
+          const scriptContext = {
+            ...currentContext,
+            type: currentContext.type || 'script',
+            ref: id
+          };
+
           for (const i of script.action) {
             const { type, payload, delay } = get(i);
             const a = { action: i, type, ...payload };
             if (delay > 0) {
-              setTimeout(run, delay, a);
+              setTimeout(() => {
+                contextStore.run(scriptContext, () => {
+                  run(a);
+                });
+              }, delay);
             } else {
-              run(a);
+              contextStore.run(scriptContext, () => {
+                run(a);
+              });
             }
           }
         }
