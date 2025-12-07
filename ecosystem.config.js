@@ -34,7 +34,7 @@ module.exports = {
       max_memory_restart: '200M',
       env: {
         NODE_ENV: 'production',
-        DAEMON_WS_URL: 'ws://localhost:3000',
+        DAEMON_WS_URL: "ws://192.168.88.4:3000",
         OPENSEARCH_ENABLED: 'true',
         OPENSEARCH_INDEX_PREFIX: 'reacthome-events-test', // Временно для тестирования
         // Остальные переменные берутся из .env файла или системного окружения
