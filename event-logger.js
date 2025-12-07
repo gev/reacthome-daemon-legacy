@@ -556,7 +556,7 @@ const connect = () => {
   ws = new WebSocket(DAEMON_WS_URL);
   
   ws.on('open', () => {
-    log('WebSocket подключен');
+    log('WebSocket подключен', 'URL:', DAEMON_WS_URL, 'readyState:', ws.readyState);
     isConnected = true;
     reconnectAttempts = 0;
     stateRequested = false;
@@ -616,7 +616,7 @@ const connect = () => {
   });
   
   ws.on('error', (error) => {
-    logError('WebSocket ошибка:', error.message);
+    logError('WebSocket ошибка:', error.message || error.toString() || JSON.stringify(error), error);
     isConnected = false;
   });
   
