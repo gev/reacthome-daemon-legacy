@@ -27,6 +27,10 @@ const {
 const filters = require('./src/logging/filters');
 const opensearch = require('./src/logging/opensearch');
 
+// === EVENT-LOGGER ПЕРЕЗАПУСК ===
+log("=== EVENT-LOGGER ПЕРЕЗАПУСК ===", new Date().toISOString());
+
+
 // Конфигурация
 const DAEMON_WS_URL = process.env.DAEMON_WS_URL || 'ws://localhost:3000';
 const RECONNECT_DELAY = 5000; // 5 секунд
@@ -526,7 +530,6 @@ const handleList = (message) => {
 };
 
 // Флаг для отслеживания получения начального состояния
-let isInitialStateReceived = false;
 let pendingGetRequests = 0; // Счётчик ожидаемых ACTION_SET ответов на GET
 
 // Запрос полного состояния при подключении
