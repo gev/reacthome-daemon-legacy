@@ -620,8 +620,8 @@ const connect = () => {
     isConnected = false;
   });
   
-  ws.on('close', () => {
-    log('WebSocket соединение закрыто');
+  ws.on("close", (code, reason) => {
+    log("WebSocket соединение закрыто, код:", code, "причина:", reason ? reason.toString() : "нет");
     isConnected = false;
     stateRequested = false;
     isInitialStateReceived = false;
@@ -634,6 +634,9 @@ const connect = () => {
       setTimeout(connect, RECONNECT_DELAY);
     } else {
       logError(`Достигнуто максимальное количество попыток переподключения (${MAX_RECONNECT_ATTEMPTS})`);
+      process.exit(1);
+    }
+  });`);
       process.exit(1);
     }
   });
