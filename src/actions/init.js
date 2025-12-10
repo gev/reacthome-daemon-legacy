@@ -354,6 +354,7 @@ module.exports.initialize = (id) => {
         const channel = get(`${id}/${AO}/${i}`) || {};
         a[i] = channel.value || 0;
       }
+      console.log(a);
       device.sendRBUS(Buffer.from(a), id);
       break;
     }
