@@ -105,6 +105,7 @@ const {
   DEVICE_TYPE_LANAMP,
   DEVICE_TYPE_SOUNDBOX,
   DEVICE_TYPE_SMART_TOP_A4TD_7S,
+  DEVICE_TYPE_MIX_V,
 } = require("../constants");
 const {
   get,
@@ -425,6 +426,7 @@ module.exports.manage = () => {
         case ACTION_DIMMER: {
           const device = get(id) || {};
           switch (device.type) {
+            case DEVICE_TYPE_MIX_V:
             case DEVICE_TYPE_DI_4_RSM:
             case DEVICE_TYPE_AO_4_DIN: {
               const [, , , , , , , index, value, velocity] = data;
