@@ -59,6 +59,7 @@ const {
   DEVICE_TYPE_DOPPLER_5_DI_4,
   DEVICE_TYPE_DI_4,
   DEVICE_TYPE_DI_4_LA,
+  DEVICE_TYPE_MIX_V,
 } = require("../constants");
 const { get, set, add } = require("./create");
 const { device } = require("../sockets");
@@ -342,6 +343,16 @@ module.exports.initialize = (id) => {
         a[k++] = (channel && channel.group) || i;
         a[k++] = (channel && channel.type) || 0;
         a[k++] = (channel && channel.value) || 0;
+      }
+      device.sendRBUS(Buffer.from(a), id);
+      break;
+    }
+    case DEVICE_TYPE_MIX_V: {
+      const mac = id.split(":").map((i) => parseInt(i, 16));
+      a[0] = ACTION_INITIALIZE;
+      for (let i = 1; i <= 5; i++) {
+        const channel = get(`${id}/${AO}/${i}`) || {};
+        a[i] = channel.value || 0;
       }
       device.sendRBUS(Buffer.from(a), id);
       break;

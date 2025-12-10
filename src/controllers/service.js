@@ -203,6 +203,7 @@ const {
   DO,
   DEVICE_TYPE_SMART_TOP_A4TD_7S,
   DRIVER_TYPE_PROXY,
+  DEVICE_TYPE_MIX_V,
 } = require("../constants");
 const { NOTIFY } = require("../notification/constants");
 const notification = require("../notification");
@@ -303,6 +304,7 @@ const run = (action) => {
           case DEVICE_TYPE_MIX_1_RS:
           case DEVICE_TYPE_MIX_6x12_RS:
           case DEVICE_TYPE_MIX_H:
+          case DEVICE_TYPE_MIX_V:
           case DEVICE_TYPE_RELAY_2:
           case DEVICE_TYPE_RELAY_2_DIN:
           case DEVICE_TYPE_RELAY_12_RS: {
@@ -614,6 +616,7 @@ const run = (action) => {
         switch (dev.type) {
           case DEVICE_TYPE_DIM_8_RS:
           case DEVICE_TYPE_MIX_H:
+          case DEVICE_TYPE_MIX_V:
           case DEVICE_TYPE_DIM_12_LED_RS:
           case DEVICE_TYPE_DIM_12_AC_RS:
           case DEVICE_TYPE_DIM_12_DC_RS:
@@ -632,7 +635,7 @@ const run = (action) => {
             switch (action.action) {
               case DIM_TYPE:
               case DIM_GROUP: {
-                if (dev.type === DEVICE_TYPE_AO_4_DIN || dev.type === DEVICE_TYPE_DI_4_RSM) {
+                if (dev.type === DEVICE_TYPE_AO_4_DIN || dev.type === DEVICE_TYPE_DI_4_RSM || DEVICE_TYPE_MIX_V) {
                   break;
                 }
               }
@@ -826,6 +829,7 @@ const run = (action) => {
                 case DEVICE_TYPE_AO_4_DIN:
                 case DEVICE_TYPE_DIM_8_RS:
                 case DEVICE_TYPE_MIX_H:
+                case DEVICE_TYPE_MIX_V:
                 case DEVICE_TYPE_DIM_12_LED_RS:
                 case DEVICE_TYPE_DIM_12_AC_RS:
                 case DEVICE_TYPE_DIM_12_DC_RS:
@@ -1532,6 +1536,7 @@ const run = (action) => {
                 }
                 case DEVICE_TYPE_DI_4_RSM:
                 case DEVICE_TYPE_AO_4_DIN:
+                case DEVICE_TYPE_MIX_V:
                 case DEVICE_TYPE_MIX_1_RS:
                 case DEVICE_TYPE_MIX_6x12_RS:
                 case DEVICE_TYPE_RELAY_2:
@@ -1926,6 +1931,7 @@ const run = (action) => {
                 case DEVICE_TYPE_DIM_8_RS:
                 case DEVICE_TYPE_DIM_12_LED_RS:
                 case DEVICE_TYPE_MIX_H:
+                case DEVICE_TYPE_MIX_V:
                 case DEVICE_TYPE_DIM_12_AC_RS:
                 case DEVICE_TYPE_DIM_12_DC_RS:
                 case DEVICE_TYPE_DIM_1_AC_RS:
@@ -1937,7 +1943,8 @@ const run = (action) => {
                     DIM_FADE,
                     v,
                     deviceType === DEVICE_TYPE_DI_4_RSM ||
-                      deviceType === DEVICE_TYPE_AO_4_DIN
+                      deviceType === DEVICE_TYPE_AO_4_DIN ||
+                      deviceType === DEVICE_TYPE_MIX_V
                       ? AO_VELOCITY
                       : dimVelocity,
                   ]),
@@ -2053,6 +2060,7 @@ const run = (action) => {
             case DEVICE_TYPE_DIM_8_RS:
             case DEVICE_TYPE_DIM_12_LED_RS:
             case DEVICE_TYPE_MIX_H:
+            case DEVICE_TYPE_MIX_V:
             case DEVICE_TYPE_DIM_12_AC_RS:
             case DEVICE_TYPE_DIM_12_DC_RS:
             case DEVICE_TYPE_DIM_1_AC_RS:
