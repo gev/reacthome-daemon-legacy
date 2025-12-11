@@ -397,6 +397,7 @@ module.exports.SITE = "site";
 
 module.exports.BIND = "BIND";
 
+module.exports.DRIVER_TYPE_PROXY = "PROXY";
 module.exports.DRIVER_TYPE_RS21 = "RS21";
 module.exports.DRIVER_TYPE_ARTNET = "ARTNET";
 module.exports.DRIVER_TYPE_DALI_GW = "DALI_GW";

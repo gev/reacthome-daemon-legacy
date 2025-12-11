@@ -202,6 +202,7 @@ const {
   DIM,
   DO,
   DEVICE_TYPE_SMART_TOP_A4TD_7S,
+  DRIVER_TYPE_PROXY,
 } = require("../constants");
 const { NOTIFY } = require("../notification/constants");
 const notification = require("../notification");
@@ -1625,6 +1626,12 @@ const run = (action) => {
                   drivers.run({ id: dev, index, value: ON });
                   break;
                 }
+                case DRIVER_TYPE_PROXY: {
+                  const proxy = get(o[c]) || {};
+                  const target = get(proxy.proxy) || {};
+                  // run({ id: o[i], type: ACTION_ON });
+                  break;
+                }
                 default: {
                   device.send(Buffer.from([ACTION_DO, index, ON]), ip);
                 }
@@ -1846,6 +1853,12 @@ const run = (action) => {
                   drivers.run({ id: dev, index, value: OFF });
                   break;
                 }
+                case DRIVER_TYPE_PROXY: {
+                  const proxy = get(o[c]) || {};
+                  const target = get(proxy.proxy) || {};
+                  // run({ id: o[i], type: ACTION_OFF });
+                  break;
+                }
                 default: {
                   device.send(Buffer.from([ACTION_DO, index, OFF]), ip);
                 }
@@ -1950,6 +1963,29 @@ const run = (action) => {
                     index,
                     value: v,
                   });
+                  break;
+                }
+                case DRIVER_TYPE_PROXY: {
+                  const proxy = get(o[c]) || {};
+                  const target = get(proxy.proxy) || {};
+                  console.log(proxy, target)
+                  switch (target.type) {
+                    case HYGROSTAT: {
+                      run({ id: proxy.proxy, type: ACTION_SETPOINT, humidity: v / 2.55 });
+                      break;
+                    }
+                    default: {
+                      const [id, type, index] = proxy.proxy.split("/");
+                      if (type === 'curtain') {
+                        drivers.run({
+                          type: ACTION_SET_POSITION,
+                          id,
+                          index,
+                          position: action.value / 2.55
+                        });
+                      }
+                    }
+                  }
                   break;
                 }
               }
