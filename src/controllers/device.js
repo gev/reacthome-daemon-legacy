@@ -1001,6 +1001,13 @@ module.exports.manage = () => {
 
 
 const calcTemperature = site => {
+  if (!site) return;
+  if (Array.isArray(site)) {
+    for (const s of site) {
+      calcTemperature(s);
+    }
+    return;
+  }
   const { sensor = [], temperature_sensor = [], thermostat = [] } = get(site) || {};
   let temperature = 0;
   let n = 0;
@@ -1026,6 +1033,13 @@ const calcTemperature = site => {
 }
 
 const calcHumidity = site => {
+  if (!site) return;
+  if (Array.isArray(site)) {
+    for (const s of site) {
+      calcHumidity(s);
+    }
+    return;
+  }
   const { sensor = [], humidity_sensor = [], hygrostat = [] } = get(site) || {};
   let humidity = 0;
   let n = 0;
@@ -1051,6 +1065,13 @@ const calcHumidity = site => {
 }
 
 const calcIllumination = site => {
+  if (!site) return;
+  if (Array.isArray(site)) {
+    for (const s of site) {
+      calcIllumination(s);
+    }
+    return;
+  }
   const { sensor = [], illumination_sensor = [] } = get(site) || {};
   let illumination = 0;
   let n = 0;
@@ -1069,6 +1090,13 @@ const calcIllumination = site => {
 }
 
 const calcCO2 = site => {
+  if (!site) return;
+  if (Array.isArray(site)) {
+    for (const s of site) {
+      calcCO2(s);
+    }
+    return;
+  }
   const { sensor = [], co2_sensor = [], co2_stat = [] } = get(site) || {};
   let co2 = 0;
   let n = 0;
