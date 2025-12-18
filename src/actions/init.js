@@ -365,21 +365,21 @@ module.exports.initialize = (id) => {
       for (let i = 1; i <= 1; i++) {
         const channel = get(`${id}/${GROUP}/${i}`) || {};
         const { enabled = 0, delay = 0 } = channel;
-        a[5 * i - 4] = enabled;
-        a[5 * i - 3] = delay & 0xff;
-        a[5 * i - 2] = (delay >> 8) & 0xff;
-        a[5 * i - 1] = (delay >> 16) & 0xff;
-        a[5 * i - 0] = (delay >> 24) & 0xff;
+        a[8 + 5 * i - 4] = enabled;
+        a[8 + 5 * i - 3] = delay & 0xff;
+        a[8 + 5 * i - 2] = (delay >> 8) & 0xff;
+        a[8 + 5 * i - 1] = (delay >> 16) & 0xff;
+        a[8 + 5 * i - 0] = (delay >> 24) & 0xff;
       }
       for (let i = 1; i <= 1; i++) {
         const channel = get(`${id}/${DO}/${i}`) || {};
         const { value = 0, timeout = 0, group = i } = channel;
-        a[6 * i + 55] = value;
-        a[6 * i + 56] = group;
-        a[6 * i + 57] = timeout & 0xff;
-        a[6 * i + 58] = (timeout >> 8) & 0xff;
-        a[6 * i + 59] = (timeout >> 16) & 0xff;
-        a[6 * i + 60] = (timeout >> 24) & 0xff;
+        a[13 + 6 * i - 5] = value;
+        a[13 + 6 * i - 4] = group;
+        a[13 + 6 * i - 3] = timeout & 0xff;
+        a[13 + 6 * i - 2] = (timeout >> 8) & 0xff;
+        a[13 + 6 * i - 1] = (timeout >> 16) & 0xff;
+        a[13 + 6 * i - 0] = (timeout >> 24) & 0xff;
       }
 
       console.log(a);
