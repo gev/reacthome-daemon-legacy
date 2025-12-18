@@ -612,8 +612,12 @@ const run = (action) => {
         const { version = "" } = dev;
         const [major, minor] = version.split(".");
         switch (dev.type) {
-          case DEVICE_TYPE_DI_4_RSM:
           case DEVICE_TYPE_MIX_V: {
+            console.log('ACTION_AO on MIX_V rbus', Buffer.from([
+              ACTION_AO,
+              action.index,
+              action.value,
+            ]));
             device.sendRBUS(Buffer.from([
               ACTION_AO,
               action.index,
