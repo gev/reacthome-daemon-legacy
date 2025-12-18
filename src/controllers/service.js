@@ -2962,7 +2962,6 @@ const run = (action) => {
               case DEVICE_TYPE_SMART_4GD:
               case DEVICE_TYPE_SMART_6_PUSH: {
                 const [major] = version.split(".");
-                console.log(Buffer.from([ACTION_IR, index, ...c]));
                 device.sendRBUS(
                   major < 2 ? legacy(c) : Buffer.from([ACTION_IR, index, ...c]),
                   dev
