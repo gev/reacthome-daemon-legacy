@@ -18,6 +18,7 @@
     "level": "^8.0.0",
     "node-fetch": "^2.6.0",
     "node-pty": "^0.10.1",
+    "node-telegram-bot-api": "^0.67.0",
     "reacthome-ircodes": "github:gev/reacthome-ircodes",
     "sdp-transform": "^2.13.0",
     "serialport": "^10.4.0",

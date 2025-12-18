@@ -1,5 +1,3 @@
-
-
 const { get, set } = require('../../actions');
 const { HYGROSTAT, DRIVER_TYPE_DAUERHAFT } = require('../../constants');
 

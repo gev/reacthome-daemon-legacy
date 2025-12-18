@@ -2989,11 +2989,12 @@ const run = (action) => {
       }
       case NOTIFY: {
         notification.broadcastNotification(action);
+        drivers.run(action);
         break;
       }
       case RING: {
         notification.broadcastAction(action);
-        childProcess.exec("./ring.sh");
+        drivers.run(action);
         break;
       }
       case CLOSURE: {
