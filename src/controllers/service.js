@@ -204,6 +204,7 @@ const {
   DEVICE_TYPE_SMART_TOP_A4TD_7S,
   DRIVER_TYPE_PROXY,
   DEVICE_TYPE_MIX_V,
+  ACTION_AO,
 } = require("../constants");
 const { NOTIFY } = require("../notification/constants");
 const notification = require("../notification");
@@ -606,6 +607,25 @@ const run = (action) => {
         }
         break;
       }
+      case ACTION_AO: {
+        const dev = get(action.id);
+        const { version = "" } = dev;
+        const [major, minor] = version.split(".");
+        switch (dev.type) {
+          case DEVICE_TYPE_DI_4_RSM:
+          case DEVICE_TYPE_MIX_V: {
+            device.sendRBUS(Buffer.from([
+              ACTION_AO,
+              action.index,
+              action.value,
+            ]),
+              action.id
+            );
+            break;
+          }
+        }        
+        break;
+      }
       case ACTION_DOPPLER0: {
         const dev = get(action.id);
         device.send(Buffer.from([ACTION_DOPPLER0, action.gain]), dev.ip);
@@ -635,7 +655,7 @@ const run = (action) => {
             switch (action.action) {
               case DIM_TYPE:
               case DIM_GROUP: {
-                if (dev.type === DEVICE_TYPE_AO_4_DIN || dev.type === DEVICE_TYPE_DI_4_RSM || DEVICE_TYPE_MIX_V) {
+                if (dev.type === DEVICE_TYPE_AO_4_DIN || dev.type === DEVICE_TYPE_DI_4_RSM) {
                   break;
                 }
               }
@@ -1536,7 +1556,6 @@ const run = (action) => {
                 }
                 case DEVICE_TYPE_DI_4_RSM:
                 case DEVICE_TYPE_AO_4_DIN:
-                case DEVICE_TYPE_MIX_V:
                 case DEVICE_TYPE_MIX_1_RS:
                 case DEVICE_TYPE_MIX_6x12_RS:
                 case DEVICE_TYPE_RELAY_2:
@@ -1551,6 +1570,7 @@ const run = (action) => {
                   );
                   break;
                 }
+                case DEVICE_TYPE_MIX_V: 
                 case DEVICE_TYPE_MIX_H: {
                   switch (kind) {
                     case DIM: {

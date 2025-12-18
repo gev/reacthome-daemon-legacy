@@ -105,7 +105,7 @@ const {
   DEVICE_TYPE_LANAMP,
   DEVICE_TYPE_SOUNDBOX,
   DEVICE_TYPE_SMART_TOP_A4TD_7S,
-  DEVICE_TYPE_MIX_V,
+  ACTION_AO,
 } = require("../constants");
 const {
   get,
@@ -344,6 +344,14 @@ module.exports.manage = () => {
           });
           break;
         }
+        case ACTION_AO: {
+          const index = data[7];
+          const value = data[8];
+          const channel = `${id}/${AO}/${index}`;
+          const chan = get(channel);
+          set(channel, { value });
+          break;
+        }
         case ACTION_RS485_MODE: {
           const index = data[7];
           const is_rbus = data[8];
@@ -426,7 +434,6 @@ module.exports.manage = () => {
         case ACTION_DIMMER: {
           const device = get(id) || {};
           switch (device.type) {
-            case DEVICE_TYPE_MIX_V:
             case DEVICE_TYPE_DI_4_RSM:
             case DEVICE_TYPE_AO_4_DIN: {
               const [, , , , , , , index, value, velocity] = data;
