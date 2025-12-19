@@ -608,6 +608,7 @@ const run = (action) => {
         break;
       }
       case ACTION_AO: {
+        console.log('ACTION_AO', action);
         const dev = get(action.id);
         const { version = "" } = dev;
         const [major, minor] = version.split(".");
