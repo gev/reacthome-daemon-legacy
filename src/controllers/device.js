@@ -348,7 +348,6 @@ module.exports.manage = () => {
           const index = data[7];
           const value = data[8];
           const channel = `${id}/${AO}/${index}`;
-          console.log('AO device', channel, value);
           set(channel, { value });
           break;
         }
