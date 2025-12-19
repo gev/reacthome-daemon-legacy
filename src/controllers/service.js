@@ -1796,6 +1796,7 @@ const run = (action) => {
                   );
                   break;
                 }
+                case DEVICE_TYPE_MIX_V:
                 case DEVICE_TYPE_MIX_H: {
                   switch (kind) {
                     case DIM: {
