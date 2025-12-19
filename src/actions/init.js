@@ -382,7 +382,6 @@ module.exports.initialize = (id) => {
         a[13 + 6 * i - 0] = (timeout >> 24) & 0xff;
       }
 
-      console.log(a);
       device.sendRBUS(Buffer.from(a), id);
       break;
     }

@@ -235,7 +235,6 @@ const rgb = ["r", "g", "b"];
 
 const run = (action) => {
   try {
-    console.log('ACTION', action);
     switch (action.type) {
       case ACTION_FIND_ME: {
         const dev = get(action.id);
@@ -609,17 +608,11 @@ const run = (action) => {
         break;
       }
       case ACTION_AO: {
-        console.log('ACTION_AO', action);
         const dev = get(action.id);
         const { version = "" } = dev;
         const [major, minor] = version.split(".");
         switch (dev.type) {
           case DEVICE_TYPE_MIX_V: {
-            console.log('ACTION_AO on MIX_V rbus', Buffer.from([
-              ACTION_AO,
-              action.index,
-              action.value,
-            ]));
             device.sendRBUS(Buffer.from([
               ACTION_AO,
               action.index,
