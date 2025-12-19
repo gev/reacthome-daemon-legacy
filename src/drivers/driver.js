@@ -79,7 +79,6 @@ module.exports.manage = () => {
         proxy.add(id);
         break;
       case DRIVER_TYPE_TELEGRAM:
-        console.log('Adding telegram driver', id);
         instances.add(id, telegram);
         telegram.add(id);
         break;

@@ -32,12 +32,18 @@ module.exports.handle = (action) => {
 module.exports.clear = () => {
 }
 
-module.exports.add = (id) => {
+const connect = (id) => {
     const { token } = get(id) || {};
     if (token) {
         if (!bots.has(id)) {
             const bot = new TelegramBot(token, { polling: true });
             bots.set(id, bot);
+            bot.on('polling_error', (error) => {
+                bots.delete(id);
+                setTimeout(() => {
+                    connect(id);
+                }, 3000);
+            });
             bot.on('message', (msg, match) => {
                 const [cmd, daemon] = msg.text.normalize().split(' ');
                 switch (cmd) {
@@ -65,4 +71,9 @@ module.exports.add = (id) => {
             });
         }
     }
-};
+
+}
+
+module.exports.add = (id) => {
+    connect(id);
+};  
