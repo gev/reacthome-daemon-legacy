@@ -1890,6 +1890,10 @@ const run = (action) => {
         break;
       }
       case ACTION_DIM: {
+        const dev = get(action.id);
+        const { version = "" } = dev;
+        const [major, minor] = version.split(".");
+        
         const { id, value } = action;
         const o = get(id) || {};
         const { last } = o;
@@ -1950,20 +1954,40 @@ const run = (action) => {
                 case DEVICE_TYPE_DIM_12_AC_RS:
                 case DEVICE_TYPE_DIM_12_DC_RS:
                 case DEVICE_TYPE_DIM_1_AC_RS:
-                case DEVICE_TYPE_DI_4_RSM:
                 case DEVICE_TYPE_AO_4_DIN: {
                   device.sendRBUS(Buffer.from([
                     ACTION_DIMMER,
                     index,
                     DIM_FADE,
                     v,
-                    deviceType === DEVICE_TYPE_DI_4_RSM ||
                       deviceType === DEVICE_TYPE_AO_4_DIN
                       ? AO_VELOCITY
                       : dimVelocity,
                   ]),
                     dev
                   );
+                  break;
+                }
+                case DEVICE_TYPE_DI_4_RSM: {
+                  if (major >= 3) {
+                    device.sendRBUS(Buffer.from([
+                      ACTION_AO,
+                      index,
+                      v,
+                    ]),
+                      dev
+                    );
+                  } else {
+                    device.sendRBUS(Buffer.from([
+                      ACTION_DIMMER,
+                      index,
+                      DIM_FADE,
+                      v,
+                      AO_VELOCITY
+                    ]),
+                      dev
+                    );
+                  }
                   break;
                 }
                 case DEVICE_TYPE_AO_4: {
