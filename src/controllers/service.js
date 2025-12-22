@@ -610,22 +610,13 @@ const run = (action) => {
         break;
       }
       case ACTION_AO: {
-        const dev = get(action.id);
-        const { version = "" } = dev;
-        const [major, minor] = version.split(".");
-        switch (dev.type) {
-          case DEVICE_TYPE_AO_4:
-          case DEVICE_TYPE_MIX_V: {
-            device.sendRBUS(Buffer.from([
-              ACTION_AO,
-              action.index,
-              action.value,
-            ]),
-              action.id
-            );
-            break;
-          }
-        }
+        device.sendRBUS(Buffer.from([
+          ACTION_AO,
+          action.index,
+          action.value,
+        ]),
+          action.id
+        );
         break;
       }
       case ACTION_DOPPLER0: {
@@ -635,6 +626,8 @@ const run = (action) => {
       }
       case ACTION_DIMMER: {
         const dev = get(action.id) || {};
+        const { version = "" } = dev;
+        const [major, minor] = version.split(".");
         switch (dev.type) {
           case DEVICE_TYPE_DIM_8_RS:
           case DEVICE_TYPE_MIX_H:
@@ -1972,16 +1965,16 @@ const run = (action) => {
                   );
                   break;
                 }
-                case DEVICE_TYPE_AO_4:{
+                case DEVICE_TYPE_AO_4: {
                   device.sendRBUS(Buffer.from([
-                        ACTION_AO,
-                        index,
-                        v,
-                      ]),
-                        dev
-                      );
-                      break;
-                    }
+                    ACTION_AO,
+                    index,
+                    v,
+                  ]),
+                    dev
+                  );
+                  break;
+                }
                 case DEVICE_TYPE_MIX_V: {
                   switch (kind) {
                     case DIM: {
