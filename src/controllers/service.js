@@ -622,7 +622,7 @@ const run = (action) => {
             );
             break;
           }
-        }        
+        }
         break;
       }
       case ACTION_DOPPLER0: {
@@ -1568,7 +1568,7 @@ const run = (action) => {
                   );
                   break;
                 }
-                case DEVICE_TYPE_MIX_V: 
+                case DEVICE_TYPE_MIX_V:
                 case DEVICE_TYPE_MIX_H: {
                   switch (kind) {
                     case DIM: {
@@ -1970,15 +1970,30 @@ const run = (action) => {
                   break;
                 }
                 case DEVICE_TYPE_MIX_V: {
-                  device.sendRBUS(Buffer.from([
-                    ACTION_AO,
-                    index,
-                    v
-                  ]),
-                    dev
-                  );
-                  break;
-                }
+                  switch (kind) {
+                    case DIM: {
+                      device.sendRBUS(Buffer.from([
+                        ACTION_DIMMER,
+                        index,
+                        DIM_FADE,
+                        v,
+                        dimVelocity,
+                      ]),
+                        dev
+                      );
+                      break;
+                    }
+                    case AO: {
+                      device.sendRBUS(Buffer.from([
+                        ACTION_DIMMER,
+                        index,
+                        ON,
+                      ]),
+                        dev
+                      );
+                    }
+                      break;
+                  }
                 case DRIVER_TYPE_ARTNET: {
                   drivers.run({
                     id: dev,
