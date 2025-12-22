@@ -1994,6 +1994,7 @@ const run = (action) => {
                     }
                       break;
                   }
+                }
                 case DRIVER_TYPE_ARTNET: {
                   drivers.run({
                     id: dev,
