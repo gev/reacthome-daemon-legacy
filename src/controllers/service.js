@@ -237,7 +237,6 @@ const rgb = ["r", "g", "b"];
 
 const run = (action) => {
   try {
-    console.log("Action:", action);
     switch (action.type) {
       case ACTION_FIND_ME: {
         const dev = get(action.id);
@@ -1889,6 +1888,7 @@ const run = (action) => {
       }
       case ACTION_DIM: {
         const dev = get(action.id);
+        console.log("dev: ", dev)
         const { version = "" } = dev;
         const [major, minor] = version.split(".");
 
