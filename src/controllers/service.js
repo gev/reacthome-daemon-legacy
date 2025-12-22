@@ -1985,7 +1985,7 @@ const run = (action) => {
                     }
                     case AO: {
                       device.sendRBUS(Buffer.from([
-                        ACTION_DIMMER,
+                        ACTION_AO,
                         index,
                         v,
                       ]),
