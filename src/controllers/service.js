@@ -1973,6 +1973,7 @@ const run = (action) => {
                   break;
                 }
                 case DEVICE_TYPE_AO_4:{
+                  console.log('AO_4 set', v);
                   device.sendRBUS(Buffer.from([
                         ACTION_AO,
                         index,
