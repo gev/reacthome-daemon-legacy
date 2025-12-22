@@ -627,8 +627,6 @@ const run = (action) => {
       }
       case ACTION_DIMMER: {
         const dev = get(action.id) || {};
-        const { version = "" } = dev;
-        const [major, minor] = version.split(".");
         switch (dev.type) {
           case DEVICE_TYPE_DIM_8_RS:
           case DEVICE_TYPE_MIX_H:
@@ -1893,7 +1891,7 @@ const run = (action) => {
         const dev = get(action.id);
         const { version = "" } = dev;
         const [major, minor] = version.split(".");
-        
+
         const { id, value } = action;
         const o = get(id) || {};
         const { last } = o;
@@ -1969,6 +1967,7 @@ const run = (action) => {
                   break;
                 }
                 case DEVICE_TYPE_DI_4_RSM: {
+                  console.log(major);
                   if (major >= 3) {
                     device.sendRBUS(Buffer.from([
                       ACTION_AO,
