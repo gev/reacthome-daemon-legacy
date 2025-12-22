@@ -309,6 +309,7 @@ module.exports.DEVICE_TYPE_DI_4_RSM = 0x2f;
 module.exports.DEVICE_TYPE_DI_4_LA = 0x40;
 module.exports.DEVICE_TYPE_MIX_H = 0x41;
 module.exports.DEVICE_TYPE_MIX_V = 0x42;
+module.exports.DEVICE_TYPE_AO_4 = 0x43;
 
 module.exports.DEVICE_TYPE_SMART_TOP_A6P = 0x30;
 module.exports.DEVICE_TYPE_SMART_TOP_G4D = 0x31;

@@ -206,6 +206,7 @@ const {
   DEVICE_TYPE_MIX_V,
   ACTION_AO,
   AO,
+  DEVICE_TYPE_AO_4,
 } = require("../constants");
 const { NOTIFY } = require("../notification/constants");
 const notification = require("../notification");
@@ -613,6 +614,7 @@ const run = (action) => {
         const { version = "" } = dev;
         const [major, minor] = version.split(".");
         switch (dev.type) {
+          case DEVICE_TYPE_AO_4:
           case DEVICE_TYPE_MIX_V: {
             device.sendRBUS(Buffer.from([
               ACTION_AO,
@@ -1970,6 +1972,16 @@ const run = (action) => {
                   );
                   break;
                 }
+                case DEVICE_TYPE_AO_4:{
+                  device.sendRBUS(Buffer.from([
+                        ACTION_AO,
+                        index,
+                        v,
+                      ]),
+                        dev
+                      );
+                      break;
+                    }
                 case DEVICE_TYPE_MIX_V: {
                   switch (kind) {
                     case DIM: {
@@ -1995,6 +2007,7 @@ const run = (action) => {
                     }
                       break;
                   }
+                  break;
                 }
                 case DRIVER_TYPE_ARTNET: {
                   drivers.run({

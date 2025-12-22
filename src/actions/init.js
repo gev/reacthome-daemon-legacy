@@ -60,6 +60,7 @@ const {
   DEVICE_TYPE_DI_4,
   DEVICE_TYPE_DI_4_LA,
   DEVICE_TYPE_MIX_V,
+  DEVICE_TYPE_AO_4,
 } = require("../constants");
 const { get, set, add } = require("./create");
 const { device } = require("../sockets");
@@ -739,6 +740,7 @@ module.exports.initialize = (id) => {
       device.sendRBUS(Buffer.from(a), id);
       break;
     }
+    case DEVICE_TYPE_AO_4:
     case DEVICE_TYPE_AO_4_DIN: {
       const mac = id.split(":").map((i) => parseInt(i, 16));
       a[0] = ACTION_INITIALIZE;
