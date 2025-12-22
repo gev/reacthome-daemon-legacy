@@ -1887,12 +1887,12 @@ const run = (action) => {
         break;
       }
       case ACTION_DIM: {
-        const dev = get(action.id);
-        const { version = "" } = dev;
-        const [major, minor] = version.split(".");
-        console. log("major",major);
         const { id, value } = action;
         const o = get(id) || {};
+        console.log(o);
+        const { version = "" } = o; 
+        const [major] = version.split(".");
+        console. log("major",major);
         const { last } = o;
         const R = o.r ? (get(o.r) || {}).value || 0 : 0;
         const G = o.g ? (get(o.g) || {}).value || 0 : 0;
