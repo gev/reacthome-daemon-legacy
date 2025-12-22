@@ -1971,6 +1971,16 @@ const run = (action) => {
                   );
                   break;
                 }
+                case DEVICE_TYPE_MIX_V: {
+                  device.sendRBUS(Buffer.from([
+                    ACTION_AO,
+                    index,
+                    v
+                  ]),
+                    dev
+                  );
+                  break;
+                }
                 case DRIVER_TYPE_ARTNET: {
                   drivers.run({
                     id: dev,
