@@ -237,6 +237,7 @@ const rgb = ["r", "g", "b"];
 
 const run = (action) => {
   try {
+    console.log("Service action:", action);
     switch (action.type) {
       case ACTION_FIND_ME: {
         const dev = get(action.id);
@@ -1973,7 +1974,7 @@ const run = (action) => {
                   break;
                 }
                 case DEVICE_TYPE_AO_4:{
-                  console.log('AO_4 set', v);
+                  console.log('AO_4 set', index, v);
                   device.sendRBUS(Buffer.from([
                         ACTION_AO,
                         index,
