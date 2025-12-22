@@ -237,6 +237,7 @@ const rgb = ["r", "g", "b"];
 
 const run = (action) => {
   try {
+    console.log("Action:", action);
     switch (action.type) {
       case ACTION_FIND_ME: {
         const dev = get(action.id);
@@ -1889,10 +1890,6 @@ const run = (action) => {
       case ACTION_DIM: {
         const { id, value } = action;
         const o = get(id) || {};
-        console.log(o);
-        const { version = "" } = o; 
-        const [major] = version.split(".");
-        console. log("major",major);
         const { last } = o;
         const R = o.r ? (get(o.r) || {}).value || 0 : 0;
         const G = o.g ? (get(o.g) || {}).value || 0 : 0;
