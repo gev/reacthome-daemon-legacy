@@ -1950,7 +1950,6 @@ const run = (action) => {
                 case DEVICE_TYPE_DIM_8_RS:
                 case DEVICE_TYPE_DIM_12_LED_RS:
                 case DEVICE_TYPE_MIX_H:
-                case DEVICE_TYPE_MIX_V:
                 case DEVICE_TYPE_DIM_12_AC_RS:
                 case DEVICE_TYPE_DIM_12_DC_RS:
                 case DEVICE_TYPE_DIM_1_AC_RS:
@@ -1962,8 +1961,7 @@ const run = (action) => {
                     DIM_FADE,
                     v,
                     deviceType === DEVICE_TYPE_DI_4_RSM ||
-                      deviceType === DEVICE_TYPE_AO_4_DIN ||
-                      deviceType === DEVICE_TYPE_MIX_V
+                      deviceType === DEVICE_TYPE_AO_4_DIN
                       ? AO_VELOCITY
                       : dimVelocity,
                   ]),
