@@ -237,7 +237,6 @@ const rgb = ["r", "g", "b"];
 
 const run = (action) => {
   try {
-    console.log("action:", action);
     switch (action.type) {
       case ACTION_FIND_ME: {
         const dev = get(action.id);
@@ -1967,7 +1966,7 @@ const run = (action) => {
                   break;
                 }
                 case DEVICE_TYPE_DI_4_RSM: {
-                  console.log(major);
+                  console.log("major",major);
                   if (major >= 3) {
                     device.sendRBUS(Buffer.from([
                       ACTION_AO,
