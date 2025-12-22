@@ -1890,7 +1890,7 @@ const run = (action) => {
         const dev = get(action.id);
         const { version = "" } = dev;
         const [major, minor] = version.split(".");
-
+        console. log("major",major);
         const { id, value } = action;
         const o = get(id) || {};
         const { last } = o;
