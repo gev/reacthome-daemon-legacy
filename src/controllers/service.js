@@ -1987,7 +1987,7 @@ const run = (action) => {
                       device.sendRBUS(Buffer.from([
                         ACTION_DIMMER,
                         index,
-                        ON,
+                        v,
                       ]),
                         dev
                       );
