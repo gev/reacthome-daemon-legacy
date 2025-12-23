@@ -1890,13 +1890,13 @@ const run = (action) => {
         const dev = get(action.id);
         console.log("action: ", action);
         console.log("id: ", action.id);
-        console.log("get id: ", get(id) || {});
         console.log("dev: ", action.dev);
         const { version = "" } = dev;
         const [major, minor] = version.split(".");
-
+        
         const { id, value } = action;
         const o = get(id) || {};
+        console.log("get id: ", o);
         const { last } = o;
         const R = o.r ? (get(o.r) || {}).value || 0 : 0;
         const G = o.g ? (get(o.g) || {}).value || 0 : 0;
