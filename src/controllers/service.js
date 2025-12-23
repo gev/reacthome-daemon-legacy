@@ -1888,7 +1888,7 @@ const run = (action) => {
       }
       case ACTION_DIM: {
         const dev = get(action.id);
-        console.log("dev: ", dev)
+        console.log("dev: ", action)
         const { version = "" } = dev;
         const [major, minor] = version.split(".");
 
