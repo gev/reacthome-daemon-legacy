@@ -395,7 +395,7 @@ module.exports.CLOSE = "close";
 
 module.exports.SITE = "site";
 
-module.exports.BIND = "BIND";
+module.exports.BIND = "bind";
 
 module.exports.DRIVER_TYPE_PROXY = "PROXY";
 module.exports.DRIVER_TYPE_RS21 = "RS21";
