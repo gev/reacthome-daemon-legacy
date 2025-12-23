@@ -1962,7 +1962,8 @@ const run = (action) => {
                   break;
                 }
                 case DEVICE_TYPE_DI_4_RSM: {
-                  const { major = 0 } = get(dev) || {};
+                  const { version = "" } = get(dev) || {};
+                  const [major] = version.split(".");
                   console.log("major",major);
                   if (major >= 3) {
                     device.sendRBUS(Buffer.from([
