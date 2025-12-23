@@ -1887,11 +1887,6 @@ const run = (action) => {
         break;
       }
       case ACTION_DIM: {
-        const dev = get(action.id);
-        console.log("dev: ", dev);
-        const { version = "" } = dev;
-        const [major, minor] = version.split(".");
-        
         const { id, value } = action;
         const o = get(id) || {};
         const { last } = o;
@@ -1967,6 +1962,7 @@ const run = (action) => {
                   break;
                 }
                 case DEVICE_TYPE_DI_4_RSM: {
+                  const { major = 0 } = get(dev) || {};
                   console.log("major",major);
                   if (major >= 3) {
                     device.sendRBUS(Buffer.from([
