@@ -59,6 +59,8 @@ const {
   DEVICE_TYPE_DOPPLER_5_DI_4,
   DEVICE_TYPE_DI_4,
   DEVICE_TYPE_DI_4_LA,
+  DEVICE_TYPE_MIX_V,
+  DEVICE_TYPE_AO_4,
 } = require("../constants");
 const { get, set, add } = require("./create");
 const { device } = require("../sockets");
@@ -343,6 +345,44 @@ module.exports.initialize = (id) => {
         a[k++] = (channel && channel.type) || 0;
         a[k++] = (channel && channel.value) || 0;
       }
+      device.sendRBUS(Buffer.from(a), id);
+      break;
+    }
+    case DEVICE_TYPE_MIX_V: {
+      const mac = id.split(":").map((i) => parseInt(i, 16));
+      a[0] = ACTION_INITIALIZE;
+      for (let i = 1; i <= 2; i++) {
+        const channel = get(`${id}/${AO}/${i}`) || {};
+        a[i] = channel.value || 0;
+      }
+
+      for (let i = 1; i <= 2; i++) {
+        const channel = get(`${id}/${DIM}/${i}`);
+        a[2 + 3 * i - 2] = (channel && channel.group) || i;
+        a[2 + 3 * i - 1] = (channel && channel.type) || 0;
+        a[2 + 3 * i - 0] = (channel && channel.value) || 0;
+      }
+
+      for (let i = 1; i <= 1; i++) {
+        const channel = get(`${id}/${GROUP}/${i}`) || {};
+        const { enabled = 0, delay = 0 } = channel;
+        a[8 + 5 * i - 4] = enabled;
+        a[8 + 5 * i - 3] = delay & 0xff;
+        a[8 + 5 * i - 2] = (delay >> 8) & 0xff;
+        a[8 + 5 * i - 1] = (delay >> 16) & 0xff;
+        a[8 + 5 * i - 0] = (delay >> 24) & 0xff;
+      }
+      for (let i = 1; i <= 1; i++) {
+        const channel = get(`${id}/${DO}/${i}`) || {};
+        const { value = 0, timeout = 0, group = i } = channel;
+        a[13 + 6 * i - 5] = value;
+        a[13 + 6 * i - 4] = group;
+        a[13 + 6 * i - 3] = timeout & 0xff;
+        a[13 + 6 * i - 2] = (timeout >> 8) & 0xff;
+        a[13 + 6 * i - 1] = (timeout >> 16) & 0xff;
+        a[13 + 6 * i - 0] = (timeout >> 24) & 0xff;
+      }
+
       device.sendRBUS(Buffer.from(a), id);
       break;
     }
@@ -700,6 +740,7 @@ module.exports.initialize = (id) => {
       device.sendRBUS(Buffer.from(a), id);
       break;
     }
+    case DEVICE_TYPE_AO_4:
     case DEVICE_TYPE_AO_4_DIN: {
       const mac = id.split(":").map((i) => parseInt(i, 16));
       a[0] = ACTION_INITIALIZE;
@@ -708,6 +749,7 @@ module.exports.initialize = (id) => {
         a[i] = channel.value || 0;
       }
       device.sendRBUS(Buffer.from(a), id);
+      console.log("Initializing AO_4 device:", (Buffer.from(a), id));
       break;
     }
     case DEVICE_TYPE_DI_4_RSM: {
@@ -719,7 +761,7 @@ module.exports.initialize = (id) => {
         case 1:
           a[1] = channel.value || 0;
           break;
-        case 2: {
+        default : {
           const { baud = 0, line_control = 0 } = get(`${id}/${RS485}/1`) || {};
           a[1] = baud & 0xff;
           a[2] = (baud >> 8) & 0xff;
