@@ -749,7 +749,6 @@ module.exports.initialize = (id) => {
         a[i] = channel.value || 0;
       }
       device.sendRBUS(Buffer.from(a), id);
-      console.log("Initializing AO_4 device:", (Buffer.from(a), id));
       break;
     }
     case DEVICE_TYPE_DI_4_RSM: {
