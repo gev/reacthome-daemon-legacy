@@ -1,21 +1,22 @@
-let state = {};
+const db = require("../db");
 
-module.exports.init = (s) => (state = s);
+let state = new Map;
 
-module.exports.get = (id) => state[id];
+module.exports.get = (id) => state.get(id);
+
+module.exports.has = (id) => state.has(id);
 
 module.exports.set = (id, payload) => {
-  if (state[id] === undefined) {
-    state[id] = payload;
+  if (state.has(id)) {
+    Object.assign(state.get(id), payload);
   } else {
-    Object.assign(state[id], payload);
+    state.set(id, payload);
   }
 };
 
-module.exports.state = () => state;
 
 module.exports.list = () =>
-  Object.entries(state)
+  state.entries()
     .filter(
       ([id, payload]) =>
         !(payload instanceof Array) &&
@@ -25,7 +26,7 @@ module.exports.list = () =>
     .map(([id, { timestamp }]) => [id, timestamp]);
 
 module.exports.assets = () =>
-  Object.values(state).reduce((assets, { image }) => {
+  Array.from(state.values()).reduce((assets, { image }) => {
     if (image && !assets.includes(image)) {
       assets.push(image);
     }

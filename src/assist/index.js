@@ -5,7 +5,7 @@ const { PROJECT, SITE, LIGHT_220, LIGHT_LED
     ACTION_OFF,
     ACTION_SCRIPT_RUN
 } = require("../constants")
-const { state, get } = require("../controllers/state")
+const { get } = require("../controllers/state")
 const { run } = require("../controllers/service")
 const { applySite, set } = require("../actions")
 const { getAllForms } = require("./lang/ru")
@@ -63,7 +63,7 @@ const initAssist = () => {
     allScripts = []
     allSubjects = []
     allSites = []
-    const { mac } = state()
+    const mac = get("mac")
     applySite(mac, (site) => {
         for ([key, value] of Object.entries(site)) {
             if (value === undefined || value === null) continue;

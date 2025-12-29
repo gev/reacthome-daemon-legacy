@@ -38,7 +38,6 @@ const db = require("./src/db");
 const { cleanup } = require("./src/gc");
 const { initAssist } = require("./src/assist");
 
-const init = {};
 
 const start = (id) => {
   set(id, { type: DAEMON });
@@ -77,33 +76,34 @@ const start = (id) => {
 };
 const load = async () => {
   for await (const [key, value] of db.iterator()) {
-    init[key] = value;
+    state.set(key, value);
   }
 
-  if (!init.mac) {
-    init.mac = v4();
-    db.put("mac", init.mac);
+  let mac = get("mac");
+  if (!mac) {
+    mac = v4();
+    db.put("mac", mac);
+    state.set("mac", mac);
   }
-  const d = init[init.mac];
+  const d = get(mac);
   if (d) {
     delete d.ip;
-    set(init.mac, d);
+    set(mac, d);
   }
-  cleanup(init);
+  // cleanup(init);
   assets.init();
-  state.init(init);
   initAssist();
   weather.manage();
   device.manage();
   drivers.manage();
   cpu.manage();
-  console.log(init.mac);
-  discovery.start(init.mac);
-  websocket.start(init.mac);
+  console.log(mac);
+  discovery.start(mac);
+  websocket.start(mac);
   janus.start();
   sip.start();
-  start(init.mac);
-  set(init.mac, { token: [] });
+  start(mac);
+  set(mac, { token: [] });
 };
 
 load();
