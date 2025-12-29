@@ -89,7 +89,7 @@ const load = async () => {
     delete d.ip;
     set(init.mac, d);
   }
-  // cleanup(init);
+  cleanup(init);
   assets.init();
   state.init(init);
   initAssist();
