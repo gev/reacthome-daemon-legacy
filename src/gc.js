@@ -70,10 +70,41 @@ const build = (id, pool, state, assets) => {
   }
 };
 
+const buildAll = (id, pool, state, assets) => {
+  if (state[id]) return;
+  const subject = pool[id];
+  if (!subject) return;
+  state[id] = subject;
+  for (const [k, v] of Object.entries(subject)) {
+    if (isNumber(k)) {
+      delete subject[k];
+      db.put(id, JSON.stringify(subject));
+    } else if (v) {
+      if (typeof v === 'string') {
+        switch (k) {
+          case IMAGE: {
+            if (!assets.includes(v)) {
+              assets.push(v);
+              break;
+            }
+          }
+          default: {
+            build(v, pool, state, assets);
+          }
+        }
+      } else if (Array.isArray(v)) {
+        for (const i of v) {
+          build(i, pool, state, assets);
+        }
+      }
+    }
+  }
+};
+
 module.exports.cleanup = (pool) => {
   const state = {};
   const assets = [];
-  build(pool.mac, pool, state, assets);
+  buildAll(pool.mac, pool, state, assets);
   for (const k of Object.keys(pool)) {
     if (k === 'mac') continue;
     if (k === POOL) continue;
