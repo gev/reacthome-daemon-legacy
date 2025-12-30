@@ -86,10 +86,10 @@ const buildAll = (id, pool, state, assets) => {
       }
       default: {
         if (typeof v === 'string') {
-          build(v, pool, state, assets);
+          buildAll(v, pool, state, assets);
         } else if (Array.isArray(v)) {
           for (const i of v) {
-            build(i, pool, state, assets);
+            buildAll(i, pool, state, assets);
           }
         }
       }
