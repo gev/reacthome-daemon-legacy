@@ -1953,7 +1953,7 @@ const run = (action) => {
                     index,
                     DIM_FADE,
                     v,
-                      deviceType === DEVICE_TYPE_AO_4_DIN
+                    deviceType === DEVICE_TYPE_AO_4_DIN
                       ? AO_VELOCITY
                       : dimVelocity,
                   ]),
@@ -3286,7 +3286,7 @@ const run = (action) => {
         if (script && Array.isArray(script.action)) {
           if (script.disabled) return;
           for (const i of script.action) {
-            const { type, payload, delay } = get(i);
+            const { type, payload, delay } = get(i) || {};
             const a = { action: i, type, ...payload };
             if (delay > 0) {
               setTimeout(run, delay, a);
