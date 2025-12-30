@@ -75,7 +75,6 @@ const buildAll = (id, pool, state, assets) => {
   const subject = pool[id];
   if (!subject) return;
   state[id] = subject;
-  console.log(subject);
   for (const [k, v] of Object.entries(subject)) {
     if (!v) break;
     switch (k) {
