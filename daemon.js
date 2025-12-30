@@ -89,9 +89,7 @@ const load = async () => {
     delete d.ip;
     set(init.mac, d);
   }
-  console.log("Before cleanup:", Object.keys(init).length);
   cleanup(init);
-  console.log("After cleanup:", Object.keys(init).length);
   assets.init();
   state.init(init);
   initAssist();
