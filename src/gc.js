@@ -76,25 +76,21 @@ const buildAll = (id, pool, state, assets) => {
   if (!subject) return;
   state[id] = subject;
   for (const [k, v] of Object.entries(subject)) {
-    if (isNumber(k)) {
-      delete subject[k];
-      db.put(id, JSON.stringify(subject));
-    } else if (v) {
-      if (typeof v === 'string') {
-        switch (k) {
-          case IMAGE: {
-            if (!assets.includes(v)) {
-              assets.push(v);
-              break;
-            }
-          }
-          default: {
-            build(v, pool, state, assets);
-          }
+    if (!v) break;
+    switch (k) {
+      case IMAGE: {
+        if (!assets.includes(v)) {
+          assets.push(v);
+          break;
         }
-      } else if (Array.isArray(v)) {
-        for (const i of v) {
-          build(i, pool, state, assets);
+      }
+      default: {
+        if (typeof v === 'string') {
+          build(v, pool, state, assets);
+        } else if (Array.isArray(v)) {
+          for (const i of v) {
+            build(i, pool, state, assets);
+          }
         }
       }
     }
