@@ -75,6 +75,7 @@ const buildAll = (id, pool, state, assets) => {
   const subject = pool[id];
   if (!subject) return;
   state[id] = subject;
+  console.log(subject);
   for (const [k, v] of Object.entries(subject)) {
     if (!v) break;
     switch (k) {
@@ -85,12 +86,12 @@ const buildAll = (id, pool, state, assets) => {
         }
       }
       default: {
-        if (typeof v === 'string') {
-          buildAll(v, pool, state, assets);
-        } else if (Array.isArray(v)) {
+        if (Array.isArray(v)) {
           for (const i of v) {
             buildAll(i, pool, state, assets);
           }
+        } else if (typeof v === 'string') {
+          buildAll(v, pool, state, assets);
         }
       }
     }
