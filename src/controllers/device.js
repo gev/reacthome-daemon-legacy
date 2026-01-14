@@ -332,6 +332,7 @@ module.exports.manage = () => {
               break;
             }
           }
+          break;
         }
         case ACTION_GROUP: {
           const index = data[7];
