@@ -321,10 +321,12 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_GET_STATE: {
+          console.log("GET STATE", data);
           const { type } = get(id) || {};
           switch (type) {
             case DEVICE_TYPE_RELAY_12_RS: {
               const values = data.readUInt16LE(7);
+              console.log("values", values);
               for (let i = 1; i <= 12; i++) {
                 const channel = `${id}/${DO}/${i}`;
                 set(channel, { value: (values & (1 << (i - 1))) ? 1 : 0 });
