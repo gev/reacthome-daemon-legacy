@@ -106,6 +106,8 @@ const {
   DEVICE_TYPE_SOUNDBOX,
   DEVICE_TYPE_SMART_TOP_A4TD_7S,
   ACTION_AO,
+  ACTION_GET_STATE,
+  DEVICE_TYPE_RELAY_12_RS,
 } = require("../constants");
 const {
   get,
@@ -317,6 +319,19 @@ module.exports.manage = () => {
             }
           }
           break;
+        }
+        case ACTION_GET_STATE: {
+          const { type } = get(id) || {};
+          switch (type) {
+            case DEVICE_TYPE_RELAY_12_RS: {
+              const values = data.readUInt16LE(7);
+              for (let i = 1; i <= 12; i++) {
+                const channel = `${id}/${DO}/${i}`;
+                set(channel, { value: (values & (1 << (i - 1))) ? 1 : 0 });
+              }
+              break;
+            }
+          }
         }
         case ACTION_GROUP: {
           const index = data[7];
