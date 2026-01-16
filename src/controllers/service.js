@@ -202,7 +202,6 @@ const {
   DIM,
   DO,
   DEVICE_TYPE_SMART_TOP_A4TD_7S,
-  DRIVER_TYPE_PROXY,
 } = require("../constants");
 const { NOTIFY } = require("../notification/constants");
 const notification = require("../notification");
@@ -230,8 +229,24 @@ const ARTNET_VELOCITY = 1;
 const bind = ["r", "g", "b", "bind"];
 const rgb = ["r", "g", "b"];
 
+// Защита от бесконечной рекурсии (фатальное падение 16.01.2026 04:49)
+// Проблема: циклические зависимости скриптов через onOff/onOn устройств
+// Решение: ограничение глубины вложенных вызовов ACTION_SCRIPT_RUN
+const MAX_RECURSION_DEPTH = 100;
+let recursionDepth = 0;
 
 const run = (action) => {
+  // Проверка глубины рекурсии перед выполнением
+  if (recursionDepth >= MAX_RECURSION_DEPTH) {
+    console.error('[service] Maximum recursion depth exceeded', {
+      action,
+      depth: recursionDepth,
+      timestamp: new Date().toISOString()
+    });
+    return;
+  }
+  
+  recursionDepth++;
   try {
     switch (action.type) {
       case ACTION_FIND_ME: {
@@ -262,18 +277,9 @@ const run = (action) => {
         }
         break;
       }
-      case ACTION_UP:
-      case ACTION_DOWN:
       case ACTION_OPEN:
       case ACTION_STOP:
       case ACTION_CLOSE: {
-        const [id_, t_, index] = action.id ? action.id.split("/") : [];
-        if (t_ === 'curtain') {
-          action.id = id_;
-          action.index = index;
-          drivers.run(action);
-          return;
-        }
         const o = get(action.id) || {};
         if (o.type === DRIVER_TYPE_DAUERHAFT) {
           drivers.run(action);
@@ -307,8 +313,6 @@ const run = (action) => {
           case DEVICE_TYPE_RELAY_2_DIN:
           case DEVICE_TYPE_RELAY_12_RS: {
             switch (action.value) {
-              case ACTION_UP:
-              case ACTION_DOWN:
               case ACTION_OPEN:
               case ACTION_CLOSE:
               case ACTION_STOP: {
@@ -332,7 +336,6 @@ const run = (action) => {
                     );
                     break;
                   }
-                  case ACTION_UP:
                   case ACTION_OPEN: {
                     if (group.type === CLOSE_OPEN) {
                       device.sendRBUS(Buffer.from([
@@ -353,7 +356,6 @@ const run = (action) => {
                     }
                     break;
                   }
-                  case ACTION_DOWN:
                   case ACTION_CLOSE: {
                     if (group.type === CLOSE_OPEN) {
                       device.sendRBUS(Buffer.from([
@@ -410,8 +412,6 @@ const run = (action) => {
           case DEVICE_TYPE_RELAY_12: {
             if (major >= 2) {
               switch (action.value) {
-                case ACTION_UP:
-                case ACTION_DOWN:
                 case ACTION_OPEN:
                 case ACTION_CLOSE:
                 case ACTION_STOP: {
@@ -429,7 +429,6 @@ const run = (action) => {
                       );
                       break;
                     }
-                    case ACTION_UP:
                     case ACTION_OPEN: {
                       if (group.type === CLOSE_OPEN) {
                         device.send(
@@ -444,7 +443,6 @@ const run = (action) => {
                       }
                       break;
                     }
-                    case ACTION_DOWN:
                     case ACTION_CLOSE: {
                       if (group.type === CLOSE_OPEN) {
                         device.send(
@@ -1626,12 +1624,6 @@ const run = (action) => {
                   drivers.run({ id: dev, index, value: ON });
                   break;
                 }
-                case DRIVER_TYPE_PROXY: {
-                  const proxy = get(o[c]) || {};
-                  const target = get(proxy.proxy) || {};
-                  // run({ id: o[i], type: ACTION_ON });
-                  break;
-                }
                 default: {
                   device.send(Buffer.from([ACTION_DO, index, ON]), ip);
                 }
@@ -1853,12 +1845,6 @@ const run = (action) => {
                   drivers.run({ id: dev, index, value: OFF });
                   break;
                 }
-                case DRIVER_TYPE_PROXY: {
-                  const proxy = get(o[c]) || {};
-                  const target = get(proxy.proxy) || {};
-                  // run({ id: o[i], type: ACTION_OFF });
-                  break;
-                }
                 default: {
                   device.send(Buffer.from([ACTION_DO, index, OFF]), ip);
                 }
@@ -1963,29 +1949,6 @@ const run = (action) => {
                     index,
                     value: v,
                   });
-                  break;
-                }
-                case DRIVER_TYPE_PROXY: {
-                  const proxy = get(o[c]) || {};
-                  const target = get(proxy.proxy) || {};
-                  console.log(proxy, target)
-                  switch (target.type) {
-                    case HYGROSTAT: {
-                      run({ id: proxy.proxy, type: ACTION_SETPOINT, humidity: v / 2.55 });
-                      break;
-                    }
-                    default: {
-                      const [id, type, index] = proxy.proxy.split("/");
-                      if (type === 'curtain') {
-                        drivers.run({
-                          type: ACTION_SET_POSITION,
-                          id,
-                          index,
-                          position: action.value / 2.55
-                        });
-                      }
-                    }
-                  }
                   break;
                 }
               }
@@ -3062,6 +3025,8 @@ const run = (action) => {
       }
       case ACTION_SET_ADDRESS:
       case ACTION_DELETE_ADDRESS:
+      case ACTION_UP:
+      case ACTION_DOWN:
       case ACTION_LIMIT_UP:
       case ACTION_LIMIT_DOWN:
       case ACTION_LEARN:
@@ -3069,7 +3034,7 @@ const run = (action) => {
       case ACTION_SET_DIRECTION:
       case ACTION_SET_FAN_SPEED: {
         const [id_, t_, index] = action.id ? action.id.split("/") : [];
-        if (t_ === 'ac' || t_ === 'curtain') {
+        if (t_ === 'ac') {
           action.id = id_;
           action.index = index;
         }
@@ -3437,6 +3402,9 @@ const run = (action) => {
   } catch (e) {
     console.error(action);
     console.error(e);
+  } finally {
+    // Уменьшаем счетчик при выходе из функции (успешном или с ошибкой)
+    recursionDepth--;
   }
 };
 
