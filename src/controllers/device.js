@@ -321,15 +321,15 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_GET_STATE: {
-          console.log("GET STATE", data);
+          const mac = data.slice(0, 6);
           const { type } = get(id) || {};
           switch (type) {
             case DEVICE_TYPE_RELAY_12_RS: {
               const values = data.readUInt16LE(7);
-              console.log("values", values);
               for (let i = 1; i <= 12; i++) {
-                const channel = `${id}/${DO}/${i}`;
-                set(channel, { value: (values & (1 << (i - 1))) ? 1 : 0 });
+                let value = (values & (1 << (i - 1))) ? 1 : 0;
+                handleData(Buffer.concat([mac, ACTION_DO, Buffer.from([i, value])]), { address }, { hub });
+                console.log("handle relay", mac, i, value);
               }
               break;
             }
