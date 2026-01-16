@@ -335,16 +335,16 @@ module.exports.manage = () => {
               break;
             }
             case DEVICE_TYPE_MIX_6x12_RS: {
-              const valuesDO = data.readUInt16LE(7);
+              const valuesDI = data.readUInt16LE(7);
               for (let i = 1; i <= 12; i++) {
-                let value = (valuesDO & (1 << (i - 1))) ? 1 : 0;
-                let payload = Buffer.from([ACTION_DO, i, value]);
-                handleData(Buffer.concat([mac, payload]), { address }, { hub });
-              }
-              const valuesDI = data.readUInt8(9);
-              for (let i = 1; i <= 6; i++) {
                 let value = (valuesDI & (1 << (i - 1))) ? 1 : 0;
                 let payload = Buffer.from([ACTION_DI, i, value]);
+                handleData(Buffer.concat([mac, payload]), { address }, { hub });
+              }
+              const valuesDO = data.readUInt8(9);
+              for (let i = 1; i <= 6; i++) {
+                let value = (valuesDO & (1 << (i - 1))) ? 1 : 0;
+                let payload = Buffer.from([ACTION_DO, i, value]);
                 handleData(Buffer.concat([mac, payload]), { address }, { hub });
               }
               break;
