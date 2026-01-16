@@ -328,7 +328,8 @@ module.exports.manage = () => {
               const values = data.readUInt16LE(7);
               for (let i = 1; i <= 12; i++) {
                 let value = (values & (1 << (i - 1))) ? 1 : 0;
-                handleData(Buffer.concat([mac, ACTION_DO, i, value]), { address }, { hub });
+                let payload = Buffer.from([ACTION_DO, i, value]);
+                handleData(Buffer.concat([mac, payload]), { address }, { hub });
                 console.log("handle relay", mac, i, value);
               }
               break;
