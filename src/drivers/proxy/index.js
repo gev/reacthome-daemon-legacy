@@ -41,7 +41,7 @@ const syncVent = (ch, proxy, source, target) => {
   // if (source.timestamp < target.timestamp) {
   switch (proxy.mode) {
     case 'speed': {
-      const value = target.setpoint * 25.5;
+      const value = target.fan_speed * 25.5;
       set(ch, { value })
       break;
     }
