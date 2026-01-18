@@ -1,5 +1,5 @@
 const { get, set } = require('../../actions');
-const { HYGROSTAT, DRIVER_TYPE_DAUERHAFT } = require('../../constants');
+const { HYGROSTAT, DRIVER_TYPE_DAUERHAFT, DRIVER_TYPE_SWIFT } = require('../../constants');
 
 const timers = new Map();
 
@@ -16,6 +16,9 @@ const sync = (id, index) => {
     case HYGROSTAT:
       syncHygrostat(ch, source, target);
       break;
+    case DRIVER_TYPE_SWIFT:
+      syncVent(ch, proxy, source, target);
+      break;
     default:
       const segments = proxy.proxy.split('/');
       const dev = get(segments[0]) || {};
@@ -31,6 +34,23 @@ const syncHygrostat = (ch, source, target) => {
   // if (source.timestamp < target.timestamp) {
   const value = target.setpoint * 2.55;
   set(ch, { value })
+  // }
+}
+
+const syncVent = (ch, proxy, source, target) => {
+  // if (source.timestamp < target.timestamp) {
+  switch (proxy.mode) {
+    case 'speed': {
+      const value = target.setpoint * 25.5;
+      set(ch, { value })
+      break;
+    }
+    case 'setpoint': {
+      const value = target.setpoint * 2.55;
+      set(ch, { value })
+      break;
+    }
+  }
   // }
 }
 
