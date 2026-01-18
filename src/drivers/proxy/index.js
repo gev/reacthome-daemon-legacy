@@ -9,6 +9,7 @@ const sync = (id, index) => {
   if (!proxy.proxy || !proxy.bind) return;
   const source = get(proxy.bind) || {};
   const target = get(proxy.proxy) || {};
+  console.log('proxy', proxy);
   console.log('source', source);
   console.log('target', target);
   switch (target.type) {
