@@ -2058,7 +2058,7 @@ const run = (action) => {
                           break;
                         }
                         case 'speed': {
-                          drivers.run({ id: proxy.proxy, type: ACTION_SET_FAN_SPEED, value: v / 25.5 });
+                          drivers.run({ id: proxy.proxy, type: ACTION_SET_FAN_SPEED, value: Math.round(v / 25.5) });
                           break;
                         }
                       }
