@@ -22,6 +22,7 @@ const {
   DRIVER_TYPE_TICA,
   DRIVER_TYPE_DAUERHAFT,
   DRIVER_TYPE_PROXY,
+  DRIVER_TYPE_TELEGRAM,
 } = require("../constants");
 const { get } = require("../actions");
 const RS21 = require("./RS21");
@@ -45,6 +46,7 @@ const dali_gw = require("./dali-gw");
 const dali_dlc = require("./dali-dlc");
 const dauerhaft = require("./dauerhaft");
 const proxy = require("./proxy");
+const telegram = require("./telegram");
 
 const mac = require("../mac");
 
@@ -75,6 +77,10 @@ module.exports.manage = () => {
       case DRIVER_TYPE_PROXY:
         instances.add(id, proxy);
         proxy.add(id);
+        break;
+      case DRIVER_TYPE_TELEGRAM:
+        instances.add(id, telegram);
+        telegram.add(id);
         break;
       case DRIVER_TYPE_RS21:
         instances.add(id, new RS21(id));
@@ -158,9 +164,17 @@ module.exports.manage = () => {
 };
 
 module.exports.run = (action) => {
-  const instance = instances.get(action.id)
-  if (instance && instance.run) {
-    instance.run(action);
+  if (action.id) {
+    const instance = instances.get(action.id)
+    if (instance && instance.run) {
+      instance.run(action);
+    }
+  } else {
+    for (const instance of instances.getAll()) {
+      if (instance.acceptBroadcast && instance.run) {
+        instance.run(action);
+      }
+    }
   }
 };
 

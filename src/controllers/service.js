@@ -203,6 +203,10 @@ const {
   DO,
   DEVICE_TYPE_SMART_TOP_A4TD_7S,
   DRIVER_TYPE_PROXY,
+  DEVICE_TYPE_MIX_V,
+  ACTION_AO,
+  AO,
+  DEVICE_TYPE_AO_4,
 } = require("../constants");
 const { NOTIFY } = require("../notification/constants");
 const notification = require("../notification");
@@ -303,6 +307,7 @@ const run = (action) => {
           case DEVICE_TYPE_MIX_1_RS:
           case DEVICE_TYPE_MIX_6x12_RS:
           case DEVICE_TYPE_MIX_H:
+          case DEVICE_TYPE_MIX_V:
           case DEVICE_TYPE_RELAY_2:
           case DEVICE_TYPE_RELAY_2_DIN:
           case DEVICE_TYPE_RELAY_12_RS: {
@@ -604,6 +609,16 @@ const run = (action) => {
         }
         break;
       }
+      case ACTION_AO: {
+        device.sendRBUS(Buffer.from([
+          ACTION_AO,
+          action.index,
+          action.value,
+        ]),
+          action.id
+        );
+        break;
+      }
       case ACTION_DOPPLER0: {
         const dev = get(action.id);
         device.send(Buffer.from([ACTION_DOPPLER0, action.gain]), dev.ip);
@@ -614,6 +629,7 @@ const run = (action) => {
         switch (dev.type) {
           case DEVICE_TYPE_DIM_8_RS:
           case DEVICE_TYPE_MIX_H:
+          case DEVICE_TYPE_MIX_V:
           case DEVICE_TYPE_DIM_12_LED_RS:
           case DEVICE_TYPE_DIM_12_AC_RS:
           case DEVICE_TYPE_DIM_12_DC_RS:
@@ -1546,6 +1562,7 @@ const run = (action) => {
                   );
                   break;
                 }
+                case DEVICE_TYPE_MIX_V:
                 case DEVICE_TYPE_MIX_H: {
                   switch (kind) {
                     case DIM: {
@@ -1627,7 +1644,7 @@ const run = (action) => {
                   break;
                 }
                 case DRIVER_TYPE_PROXY: {
-                  const proxy = get(o[c]) || {};
+                  const proxy = get(o.bind) || {};
                   const target = get(proxy.proxy) || {};
                   // run({ id: o[i], type: ACTION_ON });
                   break;
@@ -1773,6 +1790,7 @@ const run = (action) => {
                   );
                   break;
                 }
+                case DEVICE_TYPE_MIX_V:
                 case DEVICE_TYPE_MIX_H: {
                   switch (kind) {
                     case DIM: {
@@ -1854,7 +1872,7 @@ const run = (action) => {
                   break;
                 }
                 case DRIVER_TYPE_PROXY: {
-                  const proxy = get(o[c]) || {};
+                  const proxy = get(o.bind) || {};
                   const target = get(proxy.proxy) || {};
                   // run({ id: o[i], type: ACTION_OFF });
                   break;
@@ -1929,20 +1947,79 @@ const run = (action) => {
                 case DEVICE_TYPE_DIM_12_AC_RS:
                 case DEVICE_TYPE_DIM_12_DC_RS:
                 case DEVICE_TYPE_DIM_1_AC_RS:
-                case DEVICE_TYPE_DI_4_RSM:
                 case DEVICE_TYPE_AO_4_DIN: {
                   device.sendRBUS(Buffer.from([
                     ACTION_DIMMER,
                     index,
                     DIM_FADE,
                     v,
-                    deviceType === DEVICE_TYPE_DI_4_RSM ||
-                      deviceType === DEVICE_TYPE_AO_4_DIN
+                    deviceType === DEVICE_TYPE_AO_4_DIN
                       ? AO_VELOCITY
                       : dimVelocity,
                   ]),
                     dev
                   );
+                  break;
+                }
+                case DEVICE_TYPE_DI_4_RSM: {
+                  const { version = "" } = get(dev) || {};
+                  const [major] = version.split(".");
+                  if (major >= 3) {
+                    device.sendRBUS(Buffer.from([
+                      ACTION_AO,
+                      index,
+                      v,
+                    ]),
+                      dev
+                    );
+                  } else {
+                    device.sendRBUS(Buffer.from([
+                      ACTION_DIMMER,
+                      index,
+                      DIM_FADE,
+                      v,
+                      AO_VELOCITY
+                    ]),
+                      dev
+                    );
+                  }
+                  break;
+                }
+                case DEVICE_TYPE_AO_4: {
+                  device.sendRBUS(Buffer.from([
+                    ACTION_AO,
+                    index,
+                    v,
+                  ]),
+                    dev
+                  );
+                  break;
+                }
+                case DEVICE_TYPE_MIX_V: {
+                  switch (kind) {
+                    case DIM: {
+                      device.sendRBUS(Buffer.from([
+                        ACTION_DIMMER,
+                        index,
+                        DIM_FADE,
+                        v,
+                        dimVelocity,
+                      ]),
+                        dev
+                      );
+                      break;
+                    }
+                    case AO: {
+                      device.sendRBUS(Buffer.from([
+                        ACTION_AO,
+                        index,
+                        v,
+                      ]),
+                        dev
+                      );
+                    }
+                      break;
+                  }
                   break;
                 }
                 case DRIVER_TYPE_ARTNET: {
@@ -1972,6 +2049,19 @@ const run = (action) => {
                   switch (target.type) {
                     case HYGROSTAT: {
                       run({ id: proxy.proxy, type: ACTION_SETPOINT, humidity: v / 2.55 });
+                      break;
+                    }
+                    case DRIVER_TYPE_SWIFT: {
+                      switch (proxy.mode) {
+                        case 'setpoint': {
+                          drivers.run({ id: proxy.proxy, type: ACTION_SETPOINT, value: v / 2.55 });
+                          break;
+                        }
+                        case 'speed': {
+                          drivers.run({ id: proxy.proxy, type: ACTION_SET_FAN_SPEED, value: Math.round(v / 25.5) });
+                          break;
+                        }
+                      }
                       break;
                     }
                     default: {
@@ -2053,6 +2143,7 @@ const run = (action) => {
             case DEVICE_TYPE_DIM_8_RS:
             case DEVICE_TYPE_DIM_12_LED_RS:
             case DEVICE_TYPE_MIX_H:
+            case DEVICE_TYPE_MIX_V:
             case DEVICE_TYPE_DIM_12_AC_RS:
             case DEVICE_TYPE_DIM_12_DC_RS:
             case DEVICE_TYPE_DIM_1_AC_RS:
@@ -2989,11 +3080,12 @@ const run = (action) => {
       }
       case NOTIFY: {
         notification.broadcastNotification(action);
+        drivers.run(action);
         break;
       }
       case RING: {
         notification.broadcastAction(action);
-        childProcess.exec("./ring.sh");
+        drivers.run(action);
         break;
       }
       case CLOSURE: {
@@ -3207,7 +3299,7 @@ const run = (action) => {
         if (script && Array.isArray(script.action)) {
           if (script.disabled) return;
           for (const i of script.action) {
-            const { type, payload, delay } = get(i);
+            const { type, payload, delay } = get(i) || {};
             const a = { action: i, type, ...payload };
             if (delay > 0) {
               setTimeout(run, delay, a);
