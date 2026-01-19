@@ -106,6 +106,9 @@ const {
   DEVICE_TYPE_SOUNDBOX,
   DEVICE_TYPE_SMART_TOP_A4TD_7S,
   ACTION_AO,
+  ACTION_GET_STATE,
+  DEVICE_TYPE_RELAY_12_RS,
+  DEVICE_TYPE_MIX_6x12_RS,
 } = require("../constants");
 const {
   get,
@@ -144,8 +147,8 @@ module.exports.manage = () => {
 
   const handleData = (data, { address }, { hub = null } = {}) => {
     try {
-      const dev_mac = Array.from(data.slice(0, 6));
-      const id = dev_mac.map((i) => `0${i.toString(16)}`.slice(-2)).join(":");
+      const dev_mac = data.slice(0, 6);
+      const id = Array.from(dev_mac).map((i) => `0${i.toString(16)}`.slice(-2)).join(":");
       const dev = get(id) || {};
       if (dev) {
         online(id, { ip: address, hub, type: dev.type });
@@ -314,6 +317,36 @@ module.exports.manage = () => {
                 }
                 count[value](bind);
               }
+            }
+          }
+          break;
+        }
+        case ACTION_GET_STATE: {
+          const { type } = get(id) || {};
+          switch (type) {
+            case DEVICE_TYPE_RELAY_12_RS: {
+              const valuesDO = data.readUInt16LE(7);
+              for (let i = 1; i <= 12; i++) {
+                let value = (valuesDO & (1 << (i - 1))) ? 1 : 0;
+                let payload = Buffer.from([ACTION_DO, i, value]);
+                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              }
+              break;
+            }
+            case DEVICE_TYPE_MIX_6x12_RS: {
+              const valuesDI = data.readUInt16LE(7);
+              for (let i = 1; i <= 12; i++) {
+                let value = (valuesDI & (1 << (i - 1))) ? 1 : 0;
+                let payload = Buffer.from([ACTION_DI, i, value]);
+                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              }
+              const valuesDO = data.readUInt8(9);
+              for (let i = 1; i <= 6; i++) {
+                let value = (valuesDO & (1 << (i - 1))) ? 1 : 0;
+                let payload = Buffer.from([ACTION_DO, i, value]);
+                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              }
+              break;
             }
           }
           break;
@@ -858,14 +891,14 @@ module.exports.manage = () => {
           if (lookup) {
             const buff = Buffer.alloc(15);
             buff.writeUInt8(ACTION_IP_ADDRESS, 0);
-            Buffer.from(dev_mac).copy(buff, 1, 0, 6);
+            dev_mac.copy(buff, 1, 0, 6);
             buff.writeUInt32BE(lookup, 7);
             buff.writeUInt32BE(SUB_NET_MASK, 11);
             device.send(buff, DEVICE_GROUP);
           } else if (last_ip < IP_ADDRESS_POOL_END) {
             const buff = Buffer.alloc(15);
             buff.writeUInt8(ACTION_IP_ADDRESS, 0);
-            Buffer.from(dev_mac).copy(buff, 1, 0, 6);
+            dev_mac.copy(buff, 1, 0, 6);
             const pool = Object.values(get(POOL) || {});
             while (last_ip < IP_ADDRESS_POOL_END) {
               if (!pool.includes(last_ip)) break;
