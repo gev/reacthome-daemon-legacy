@@ -641,7 +641,7 @@ module.exports.initialize = (id) => {
         } else {
           for (i = 1; i <= 4; i++) {
             const {
-              rs485_mode = 0,
+              rs485_mode = 1,
               baud,
               line_control,
             } = get(`${id}/${RS485}/${i}`) || {};
