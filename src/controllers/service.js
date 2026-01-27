@@ -2224,9 +2224,9 @@ const run = (action) => {
         break;
       }
       case ACTION_RS485_MODE: {
+        const { ip, type } = get(id) || {};
         const dev = get(action.id);
         const { version = "" } = dev;
-        const { ip, type } = get(id) || {};
         const [major, minor] = version.split(".");
         if (major <= 5) {
           const { id, index, is_rbus, baud, line_control } = action;
