@@ -2224,24 +2224,23 @@ const run = (action) => {
         break;
       }
       case ACTION_RS485_MODE: {
+        const { id, index, baud, line_control } = action;
         const { ip, type } = get(id) || {};
         const dev = get(action.id);
         const { version = "" } = dev;
         const [major, minor] = version.split(".");
         if (major <= 5) {
-          const { id, index, is_rbus, baud, line_control } = action;
           const buffer = Buffer.alloc(8);
           buffer[0] = ACTION_RS485_MODE;
           buffer[1] = index;
-          buffer[2] = is_rbus;
+          buffer[2] = action.is_rbus;
           buffer.writeUInt32LE(baud, 3);
           buffer[7] = line_control;
         } else {
-          const { id, index, rs485_mode, baud, line_control } = action;
           const buffer = Buffer.alloc(8);
           buffer[0] = ACTION_RS485_MODE;
           buffer[1] = index;
-          buffer[2] = rs485_mode;
+          buffer[2] = action.rs485_mode;
           buffer.writeUInt32LE(baud, 3);
           buffer[7] = line_control;
         }
