@@ -641,11 +641,11 @@ module.exports.initialize = (id) => {
         } else {
           for (i = 1; i <= 4; i++) {
             const {
-              rs_mode = 0,
+              rs485_mode = 0,
               baud,
               line_control,
             } = get(`${id}/${RS485}/${i}`) || {};
-            a[i * 6 - 5] = rs_mode;
+            a[i * 6 - 5] = rs485_mode;
             a[i * 6 - 4] = baud & 0xff;
             a[i * 6 - 3] = (baud >> 8) & 0xff;
             a[i * 6 - 2] = (baud >> 16) & 0xff;
