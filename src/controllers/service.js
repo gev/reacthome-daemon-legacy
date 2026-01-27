@@ -2229,15 +2229,14 @@ const run = (action) => {
         const dev = get(action.id);
         const { version = "" } = dev;
         const [major, minor] = version.split(".");
+        const buffer = Buffer.alloc(8);
         if (major <= 5) {
-          const buffer = Buffer.alloc(8);
           buffer[0] = ACTION_RS485_MODE;
           buffer[1] = index;
           buffer[2] = action.is_rbus;
           buffer.writeUInt32LE(baud, 3);
           buffer[7] = line_control;
         } else {
-          const buffer = Buffer.alloc(8);
           buffer[0] = ACTION_RS485_MODE;
           buffer[1] = index;
           buffer[2] = action.rs485_mode;
