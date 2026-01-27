@@ -354,19 +354,15 @@ module.exports.manage = () => {
         case ACTION_RS485_MODE: {
           const { version = "" } = get(id) || {};
           const major = parseInt(version.split(".")[0], 10);
+          const index = data[7];
+          const baud = data.readUInt32LE(9);
+          const line_control = data[13];
+          const channel = `${id}/${RS485}/${index}`;
           if (major <= 5) {
-            const index = data[7];
             const is_rbus = data[8];
-            const baud = data.readUInt32LE(9);
-            const line_control = data[13];
-            const channel = `${id}/${RS485}/${index}`;
             set(channel, { is_rbus, baud, line_control });
           } else {
-            const index = data[7];
             const rs485_mode = data[8];
-            const baud = data.readUInt32LE(9);
-            const line_control = data[13];
-            const channel = `${id}/${RS485}/${index}`;
             set(channel, { rs485_mode, baud, line_control });
           }
           break;
