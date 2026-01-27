@@ -2225,7 +2225,7 @@ const run = (action) => {
       }
       case ACTION_RS485_MODE: {
         console.log('action', action);
-        const { id, index, baud, line_control } = action;
+        const { id, is_rbus, rs485_mode, index, baud, line_control } = action;
         const { ip, type } = get(id) || {};
         const dev = get(action.id);
         const { version = "" } = dev;
@@ -2234,9 +2234,9 @@ const run = (action) => {
         buffer[0] = ACTION_RS485_MODE;
         buffer[1] = index;
         if (major <= 5) {
-          buffer[2] = action.is_rbus;
+          buffer[2] = is_rbus;
         } else {
-          buffer[2] = action.rs485_mode;
+          buffer[2] = rs485_mode;
         }
         buffer.writeUInt32LE(baud, 3);
         buffer[7] = line_control;
