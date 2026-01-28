@@ -359,12 +359,12 @@ module.exports.manage = () => {
           const baud = data.readUInt32LE(9);
           const line_control = data[13];
           const channel = `${id}/${RS485}/${index}`;
-          if (major <= 5) {
-            const is_rbus = data[8];
-            set(channel, { is_rbus, baud, line_control });
-          } else {
+          if (major > 5) {
             const rs485_mode = data[8];
-            set(channel, { rs485_mode, baud, line_control });
+            set(channel, { rs485_mode, is_rbus: rs485_mode === 1 ? 1 : 0, baud, line_control });
+          } else {
+            const is_rbus = data[8];
+            set(channel, { is_rbus, rs485_mode: is_rbus, baud, line_control });
           }
           break;
         }

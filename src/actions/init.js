@@ -318,7 +318,7 @@ module.exports.initialize = (id) => {
     }
     case DEVICE_TYPE_MIX_H: {
       const mac = id.split(":").map((i) => parseInt(i, 16));
-      let k=0;
+      let k = 0;
       a[k++] = ACTION_INITIALIZE;
       for (let i = 1; i <= 2; i++) {
         const channel = get(`${id}/${GROUP}/${i}`) || {};
@@ -624,7 +624,21 @@ module.exports.initialize = (id) => {
     case DEVICE_TYPE_RS_HUB4: {
       const { version = "" } = get(id) || {};
       const major = parseInt(version.split(".")[0], 10);
-      if (major <= 5) {
+      if (major > 5) {
+        for (i = 1; i <= 4; i++) {
+          const {
+            rs485_mode = 1,
+            baud,
+            line_control,
+          } = get(`${id}/${RS485}/${i}`) || {};
+          a[i * 6 - 5] = rs485_mode;
+          a[i * 6 - 4] = baud & 0xff;
+          a[i * 6 - 3] = (baud >> 8) & 0xff;
+          a[i * 6 - 2] = (baud >> 16) & 0xff;
+          a[i * 6 - 1] = (baud >> 24) & 0xff;
+          a[i * 6] = line_control;
+        }
+      } else {
         for (i = 1; i <= 4; i++) {
           const {
             is_rbus = true,
@@ -638,21 +652,7 @@ module.exports.initialize = (id) => {
           a[i * 6 - 1] = (baud >> 24) & 0xff;
           a[i * 6] = line_control;
         }
-        } else {
-          for (i = 1; i <= 4; i++) {
-            const {
-              rs485_mode = 1,
-              baud,
-              line_control,
-            } = get(`${id}/${RS485}/${i}`) || {};
-            a[i * 6 - 5] = rs485_mode;
-            a[i * 6 - 4] = baud & 0xff;
-            a[i * 6 - 3] = (baud >> 8) & 0xff;
-            a[i * 6 - 2] = (baud >> 16) & 0xff;
-            a[i * 6 - 1] = (baud >> 24) & 0xff;
-            a[i * 6] = line_control;
-          }
-        }
+      }
       for (let i = 1; i <= 3; i++) {
         const channel = get(`${id}/${DIM}/${i}`);
         a[3 * i + 22] = (channel && channel.group) || i;
@@ -776,7 +776,7 @@ module.exports.initialize = (id) => {
         case 1:
           a[1] = channel.value || 0;
           break;
-        default : {
+        default: {
           const { baud = 0, line_control = 0 } = get(`${id}/${RS485}/1`) || {};
           a[1] = baud & 0xff;
           a[2] = (baud >> 8) & 0xff;

@@ -2233,10 +2233,10 @@ const run = (action) => {
         const buffer = Buffer.alloc(8);
         buffer[0] = ACTION_RS485_MODE;
         buffer[1] = index;
-        if (major <= 5) {
-          buffer[2] = is_rbus;
-        } else {
+        if (major > 5) {
           buffer[2] = rs485_mode;
+        } else {
+          buffer[2] = is_rbus;
         }
         buffer.writeUInt32LE(baud, 3);
         buffer[7] = line_control;
