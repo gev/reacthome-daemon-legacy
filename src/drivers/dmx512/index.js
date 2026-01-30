@@ -11,6 +11,7 @@ module.exports.run = (action) => {
   const {value = 0, velocity = 180} = get(`${id}/${DMX512}/${index}`)|| {};
   const [dev_id, , dev_index] = bind.split("");
   const dev = get(dev_id) || {};
+  console.log(action);
   switch (type) {
     case DIM_FADE: {
       const buffer = Buffer.alloc(7);
