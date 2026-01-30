@@ -641,6 +641,7 @@ module.exports.initialize = (id) => {
           a.push((size_dmx >> 8) & 0xff);
           a.push(size_dmx & 0xff);
         }
+        console.log(a);
       } else {
         for (i = 1; i <= 4; i++) {
           const {
