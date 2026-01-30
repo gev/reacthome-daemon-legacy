@@ -2254,8 +2254,8 @@ const run = (action) => {
               buffer.writeUInt32LE(baud, 3);
               buffer[7] = line_control;
               device.sendRBUS(buffer, action.id);
-              break;
             }
+            break;
           }
           case DEVICE_TYPE_DI_4_RSM:
           case DEVICE_TYPE_RS_HUB1_RS: {
@@ -2268,7 +2268,6 @@ const run = (action) => {
               device.sendRBUS(buffer, action.id);
               break;
             }
-          }
           default: {
             // device.send(buffer, ip); // ?
           }
