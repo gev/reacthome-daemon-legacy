@@ -41,15 +41,15 @@ module.exports.add = (id) => {
 };
 
 send = (id, payload) => {
-  const { bind } = get(id);
-  if (!bind) return;
-  const { rs485_mode } = get(bind);
-  if (rs485_mode = DMX12_MODE) return;
-  const [dev, , index] = bind.split('/');
-  const { ip, type } = get(dev);
-  const header = Buffer.from([ACTION_DMX512, index, channel]);
-  const buffer = Buffer.concat([header, payload]);
-  device.send(buffer, ip);
+  // const { bind } = get(id);
+  // if (!bind) return;
+  // const { rs485_mode } = get(bind);
+  // if (rs485_mode === DMX12_MODE) return;
+  // const [dev, , index] = bind.split('/');
+  // const { ip, type } = get(dev);
+  // const header = Buffer.from([ACTION_DMX512, index, channel]);
+  // const buffer = Buffer.concat([header, payload]);
+  // device.send(buffer, ip);
 };
 
 query = (address, channel, a, b) => {
