@@ -2246,6 +2246,7 @@ const run = (action) => {
               buffer[7] = line_control;
               buffer.writeUInt16BE(size_dmx, 8);
               device.sendRBUS(buffer, action.id);
+              console.log ('buff 10', buffer);
             } else {
               const buffer = Buffer.alloc(8);
               buffer[0] = ACTION_RS485_MODE;
@@ -2254,6 +2255,7 @@ const run = (action) => {
               buffer.writeUInt32LE(baud, 3);
               buffer[7] = line_control;
               device.sendRBUS(buffer, action.id);
+              console.log ('buff 8', buffer);
             }
             break;
           }
