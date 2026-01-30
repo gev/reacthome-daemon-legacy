@@ -1,5 +1,5 @@
-const { get, set } = require('../../actions');
-const { ACTION_SET_ADDRESS, ACTION_SET_POSITION, DEVICE_TYPE_DI_4_RSM, DEVICE_TYPE_RS_HUB1_RS, ACTION_RS485_TRANSMIT, ACTION_UP, ACTION_DOWN, ACTION_STOP, ACTION_LIMIT_UP, ACTION_LIMIT_DOWN, ACTION_LEARN, ACTION_DELETE_ADDRESS, ACTION_OPEN, ACTION_CLOSE, ACTION_DMX512, DIM_FADE, DIM_OFF, DEVICE_TYPE_RS_HUB4, DEVICE_TYPE_SERVER, DMX512, DIM_SET, DIM_ON } = require('../../constants');
+const { get, set } = require('../../buffers');
+const { buffer_SET_ADDRESS, buffer_SET_POSITION, DEVICE_TYPE_DI_4_RSM, DEVICE_TYPE_RS_HUB1_RS, buffer_RS485_TRANSMIT, buffer_UP, buffer_DOWN, buffer_STOP, buffer_LIMIT_UP, buffer_LIMIT_DOWN, buffer_LEARN, buffer_DELETE_ADDRESS, buffer_OPEN, buffer_CLOSE, buffer_DMX512, DIM_FADE, DIM_OFF, DEVICE_TYPE_RS_HUB4, DEVICE_TYPE_SERVER, DMX512, DIM_SET, DIM_ON } = require('../../constants');
 const { device } = require('../../sockets');
 const { delay } = require('../../util');
 
@@ -15,42 +15,42 @@ module.exports.run = (action) => {
   const dev = get(dev_id) || {};
   switch (type) {
     case DIM_FADE: {
-      const action = Buffer.alloc(7);
-      buffer[0] = ACTION_DMX512;
+      const buffer = Buffer.alloc(7);
+      buffer[0] = buffer_DMX512;
       buffer[1] = dev_index;      
       buffer.writeUInt16BE(index, 2);
       buffer[4] = DIM_FADE;
       buffer[5] = value
       buffer[6] = velocity
-      device.send(action, dev.ip);
+      device.send(buffer, dev.ip);
       break;
     }
     case DIM_SET: {
-      const action = Buffer.alloc(6);
-      buffer[0] = ACTION_DMX512;
+      const buffer = Buffer.alloc(6);
+      buffer[0] = buffer_DMX512;
       buffer[1] = dev_index;      
       buffer.writeUInt16BE(index, 2);
       buffer[4] = DIM_SET;
       buffer[5] = value
-      device.send(action, dev.ip);
+      device.send(buffer, dev.ip);
       break
     }
     case DIM_ON: {
-      const action = Buffer.alloc(5);
-      buffer[0] = ACTION_DMX512;
+      const buffer = Buffer.alloc(5);
+      buffer[0] = buffer_DMX512;
       buffer[1] = dev_index;      
       buffer.writeUInt16BE(index, 2);
       buffer[4] = DIM_ON;
-      device.send(action, dev.ip);
+      device.send(buffer, dev.ip);
       break;
     }
     case DIM_OFF: {
-      const action = Buffer.alloc(5);
-      buffer[0] = ACTION_DMX512;
+      const buffer = Buffer.alloc(5);
+      buffer[0] = buffer_DMX512;
       buffer[1] = dev_index;      
       buffer.writeUInt16BE(index, 2);
       buffer[4] = DIM_OFF;
-      device.send(action, dev.ip);
+      device.send(buffer, dev.ip);
       break
     }
   }
@@ -76,7 +76,7 @@ send = (id, payload) => {
   // if (rs485_mode === DMX12_MODE) return;
   // const [dev, , index] = bind.split('/');
   // const { ip, type } = get(dev);
-  // const header = Buffer.from([ACTION_DMX512, index, channel]);
+  // const header = Buffer.from([buffer_DMX512, index, channel]);
   // const buffer = Buffer.concat([header, payload]);
   // device.send(buffer, ip);
 };
