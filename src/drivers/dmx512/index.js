@@ -5,12 +5,12 @@ const { delay } = require('../../util');
 
 
 module.exports.run = (action) => {
-  const { id, index } = action;
+  const { id, index, value = 0, velocity = 180 } = action;
   const { bind } = get(id) || {};
   console.log(get(id));
   if (!bind) return;
-  const {value = 0, velocity = 180} = get(`${id}/${DMX512}/${index}`)|| {};
-  const [dev_id, , dev_index] = bind.split("");
+  const [dev_id, , dev_index_s] = bind.split("");
+  const dev_index = parseInt(dev_index_s, 10);
   const dev = get(dev_id) || {};
   console.log(action);
   switch (action.action) {
