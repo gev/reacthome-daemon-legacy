@@ -207,6 +207,7 @@ const {
   ACTION_AO,
   AO,
   DEVICE_TYPE_AO_4,
+  ACTION_DMX512,
 } = require("../constants");
 const { NOTIFY } = require("../notification/constants");
 const notification = require("../notification");
@@ -753,6 +754,9 @@ const run = (action) => {
             }
           }
         }
+        break;
+      }
+      case ACTION_DMX512: {
         break;
       }
       case ACTION_ARTNET: {
@@ -2225,21 +2229,27 @@ const run = (action) => {
       }
       case ACTION_RS485_MODE: {
         console.log('action', action);
-        const { id, is_rbus, rs485_mode, index, baud, line_control } = action;
+        const { id, is_rbus, rs485_mode, index, baud, line_control, size_dmx } = action;
         const { ip, type } = get(id) || {};
         const dev = get(action.id);
         const { version = "" } = dev;
         const [major, minor] = version.split(".");
-        const buffer = Buffer.alloc(8);
-        buffer[0] = ACTION_RS485_MODE;
-        buffer[1] = index;
         if (major > 5) {
+          const buffer = Buffer.alloc(10);
+          buffer[0] = ACTION_RS485_MODE;
+          buffer[1] = index;
           buffer[2] = rs485_mode;
+          buffer.writeUInt32BE(baud, 3);
+          buffer[7] = line_control;
+          buffer.writeUInt16BE(size_dmx, 7);
         } else {
+          const buffer = Buffer.alloc(8);
+          buffer[0] = ACTION_RS485_MODE;
+          buffer[1] = index;
           buffer[2] = is_rbus;
+          buffer.writeUInt32LE(baud, 3);
+          buffer[7] = line_control;
         }
-        buffer.writeUInt32LE(baud, 3);
-        buffer[7] = line_control;
         switch (type) {
           case DEVICE_TYPE_DI_4_RSM:
           case DEVICE_TYPE_RS_HUB1_RS: {

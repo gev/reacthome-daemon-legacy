@@ -630,13 +630,16 @@ module.exports.initialize = (id) => {
             rs485_mode = 1,
             baud,
             line_control,
+            size_dmx,
           } = get(`${id}/${RS485}/${i}`) || {};
-          a[i * 6 - 5] = rs485_mode;
-          a[i * 6 - 4] = baud & 0xff;
-          a[i * 6 - 3] = (baud >> 8) & 0xff;
-          a[i * 6 - 2] = (baud >> 16) & 0xff;
-          a[i * 6 - 1] = (baud >> 24) & 0xff;
-          a[i * 6] = line_control;
+          a[i * 8 - 7] = rs485_mode;
+          a[i * 8 - 6] = (baud >> 24) & 0xff;
+          a[i * 8 - 5] = (baud >> 16) & 0xff;
+          a[i * 8 - 4] = (baud >> 8) & 0xff;
+          a[i * 8 - 3] = baud & 0xff;
+          a[i * 8 - 2] = line_control;
+          a[i * 8 - 1] = (size_dmx >> 8) & 0xff;
+          a[i * 8    ] = size_dmx & 0xff;
         }
       } else {
         for (i = 1; i <= 4; i++) {
