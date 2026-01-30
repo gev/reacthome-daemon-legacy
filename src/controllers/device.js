@@ -361,7 +361,7 @@ module.exports.manage = () => {
             const rs485_mode = data[8];
             const baud = data.readUInt32BE(9);
             const line_control = data[13];
-            const size_dmx = data.readUInt16BE(14);
+            const size_dmx = Math.min(data.readUInt16BE(14), 512);
             set(channel, { rs485_mode, is_rbus: rs485_mode === 1 ? 1 : 0, baud, line_control, size_dmx });
           } else {
             const is_rbus = data[8];
