@@ -106,6 +106,7 @@ const {
   DEVICE_TYPE_SOUNDBOX,
   DEVICE_TYPE_SMART_TOP_A4TD_7S,
   ACTION_AO,
+  ACTION_DMX512,
 } = require("../constants");
 const {
   get,
@@ -370,7 +371,8 @@ module.exports.manage = () => {
           }
           break;
         }
-        case ACTION_RS485_TRANSMIT: {
+        case ACTION_RS485_TRANSMIT: 
+        case ACTION_DMX512: {
           const index = data[7];
           const channel = `${id}/${RS485}/${index}`;
           const { bind } = get(channel) || {};

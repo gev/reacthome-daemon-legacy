@@ -400,6 +400,7 @@ module.exports.CLOSE = "close";
 module.exports.SITE = "site";
 
 module.exports.BIND = "bind";
+module.exports.DMX512 = "dmx512";
 
 module.exports.DRIVER_TYPE_PROXY = "PROXY";
 module.exports.DRIVER_TYPE_RS21 = "RS21";

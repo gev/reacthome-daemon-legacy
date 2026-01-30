@@ -1,5 +1,5 @@
 const { get, set } = require('../../actions');
-const { ACTION_SET_ADDRESS, ACTION_SET_POSITION, DEVICE_TYPE_DI_4_RSM, DEVICE_TYPE_RS_HUB1_RS, ACTION_RS485_TRANSMIT, ACTION_UP, ACTION_DOWN, ACTION_STOP, ACTION_LIMIT_UP, ACTION_LIMIT_DOWN, ACTION_LEARN, ACTION_DELETE_ADDRESS, ACTION_OPEN, ACTION_CLOSE, ACTION_DMX512 } = require('../../constants');
+const { ACTION_SET_ADDRESS, ACTION_SET_POSITION, DEVICE_TYPE_DI_4_RSM, DEVICE_TYPE_RS_HUB1_RS, ACTION_RS485_TRANSMIT, ACTION_UP, ACTION_DOWN, ACTION_STOP, ACTION_LIMIT_UP, ACTION_LIMIT_DOWN, ACTION_LEARN, ACTION_DELETE_ADDRESS, ACTION_OPEN, ACTION_CLOSE, ACTION_DMX512, DIM_FADE, DIM_OFF, DEVICE_TYPE_RS_HUB4, DEVICE_TYPE_SERVER, DMX512 } = require('../../constants');
 const { device } = require('../../sockets');
 const { delay } = require('../../util');
 
@@ -8,27 +8,56 @@ const indexes = new Map();
 
 module.exports.run = (action) => {
   const { id, index, type } = action;
-  console.log(action);
+  const { bind } = get(id) || {};
+  if (!bind) return;
+  const {value = 0, velocity = 180} = get(`${id}/${DMX512}/${index}`)|| {};
+  const [dev_id, , dev_index] = bind.split("");
+  const dev = get(dev_id) || {};
   switch (type) {
-
+    case DIM_FADE: {
+      const action = Buffer.alloc(7);
+      buffer[0] = ACTION_DMX512;
+      buffer[1] = dev_index;      
+      buffer.writeUInt16BE(index, 2);
+      buffer[4] = DIM_FADE;
+      buffer[5] = value
+      buffer[6] = velocity
+      device.send(action, dev.ip);
+      break;
+    }
+    case DIM_SET: {
+      const action = Buffer.alloc(6);
+      buffer[0] = ACTION_DMX512;
+      buffer[1] = dev_index;      
+      buffer.writeUInt16BE(index, 2);
+      buffer[4] = DIM_SET;
+      buffer[5] = value
+      device.send(action, dev.ip);
+      break
+    }
+    case DIM_ON: {
+      const action = Buffer.alloc(5);
+      buffer[0] = ACTION_DMX512;
+      buffer[1] = dev_index;      
+      buffer.writeUInt16BE(index, 2);
+      buffer[4] = DIM_ON;
+      device.send(action, dev.ip);
+      break;
+    }
+    case DIM_OFF: {
+      const action = Buffer.alloc(5);
+      buffer[0] = ACTION_DMX512;
+      buffer[1] = dev_index;      
+      buffer.writeUInt16BE(index, 2);
+      buffer[4] = DIM_OFF;
+      device.send(action, dev.ip);
+      break
+    }
   }
-
 }
 
 module.exports.handle = ({ id, data }) => {
-  const ch = indexes.get(id);
-  switch (data[0]) {
-    case 0xd8: {
-      if (ch) {
-        const { address, channel } = get(ch) || {};
-        const k = 1 << (channel - 1);
-        if (address == data[1] && k == data[2]) {
-          set(ch, { value: data[7] });
-        }
-      }
-      break;
-    }
-  }
+  console.log(id, data);
 }
 
 
