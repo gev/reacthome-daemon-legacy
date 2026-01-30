@@ -757,6 +757,7 @@ const run = (action) => {
         break;
       }
       case ACTION_DMX512: {
+        console.log(action);
         drivers.run(action);
         break;
       }
