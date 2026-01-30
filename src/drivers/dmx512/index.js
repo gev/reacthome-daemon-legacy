@@ -1,9 +1,7 @@
-const { get, set } = require('../../buffers');
+const { get, set } = require('../../actions');
 const { buffer_SET_ADDRESS, buffer_SET_POSITION, DEVICE_TYPE_DI_4_RSM, DEVICE_TYPE_RS_HUB1_RS, buffer_RS485_TRANSMIT, buffer_UP, buffer_DOWN, buffer_STOP, buffer_LIMIT_UP, buffer_LIMIT_DOWN, buffer_LEARN, buffer_DELETE_ADDRESS, buffer_OPEN, buffer_CLOSE, buffer_DMX512, DIM_FADE, DIM_OFF, DEVICE_TYPE_RS_HUB4, DEVICE_TYPE_SERVER, DMX512, DIM_SET, DIM_ON } = require('../../constants');
 const { device } = require('../../sockets');
 const { delay } = require('../../util');
-
-const indexes = new Map();
 
 
 module.exports.run = (action) => {
