@@ -2234,26 +2234,27 @@ const run = (action) => {
         const dev = get(action.id);
         const { version = "" } = dev;
         const [major, minor] = version.split(".");
-        if (major > 5) {
-          const buffer = Buffer.alloc(10);
-          buffer[0] = ACTION_RS485_MODE;
-          buffer[1] = index;
-          buffer[2] = rs485_mode;
-          buffer.writeUInt32BE(baud, 3);
-          buffer[7] = line_control;
-          buffer.writeUInt16BE(size_dmx, 8);
-        } else {
-          const buffer = Buffer.alloc(8);
-          buffer[0] = ACTION_RS485_MODE;
-          buffer[1] = index;
-          buffer[2] = is_rbus;
-          buffer.writeUInt32LE(baud, 3);
-          buffer[7] = line_control;
-        }
         switch (type) {
           case DEVICE_TYPE_DI_4_RSM:
           case DEVICE_TYPE_RS_HUB1_RS: {
-            device.sendRBUS(buffer, action.id);
+            if (major > 5) {
+              const buffer = Buffer.alloc(10);
+              buffer[0] = ACTION_RS485_MODE;
+              buffer[1] = index;
+              buffer[2] = rs485_mode;
+              buffer.writeUInt32BE(baud, 3);
+              buffer[7] = line_control;
+              buffer.writeUInt16BE(size_dmx, 8);
+              device.sendRBUS(buffer, action.id);
+            } else {
+              const buffer = Buffer.alloc(8);
+              buffer[0] = ACTION_RS485_MODE;
+              buffer[1] = index;
+              buffer[2] = is_rbus;
+              buffer.writeUInt32LE(baud, 3);
+              buffer[7] = line_control;
+              device.sendRBUS(buffer, action.id);
+            }
             break;
           }
           default: {
