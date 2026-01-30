@@ -2241,7 +2241,7 @@ const run = (action) => {
           buffer[2] = rs485_mode;
           buffer.writeUInt32BE(baud, 3);
           buffer[7] = line_control;
-          buffer.writeUInt16BE(size_dmx, 7);
+          buffer.writeUInt16BE(size_dmx, 8);
         } else {
           const buffer = Buffer.alloc(8);
           buffer[0] = ACTION_RS485_MODE;
