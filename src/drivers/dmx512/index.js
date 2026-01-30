@@ -5,14 +5,14 @@ const { delay } = require('../../util');
 
 
 module.exports.run = (action) => {
-  const { id, index, type } = action;
+  const { id, index } = action;
   const { bind } = get(id) || {};
   if (!bind) return;
   const {value = 0, velocity = 180} = get(`${id}/${DMX512}/${index}`)|| {};
   const [dev_id, , dev_index] = bind.split("");
   const dev = get(dev_id) || {};
   console.log(action);
-  switch (type) {
+  switch (action.action) {
     case DIM_FADE: {
       const buffer = Buffer.alloc(7);
       buffer[0] = buffer_DMX512;
