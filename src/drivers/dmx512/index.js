@@ -1,5 +1,5 @@
 const { get, set } = require('../../actions');
-const { buffer_SET_ADDRESS, buffer_SET_POSITION, DEVICE_TYPE_DI_4_RSM, DEVICE_TYPE_RS_HUB1_RS, buffer_RS485_TRANSMIT, buffer_UP, buffer_DOWN, buffer_STOP, buffer_LIMIT_UP, buffer_LIMIT_DOWN, buffer_LEARN, buffer_DELETE_ADDRESS, buffer_OPEN, buffer_CLOSE, buffer_DMX512, DIM_FADE, DIM_OFF, DEVICE_TYPE_RS_HUB4, DEVICE_TYPE_SERVER, DMX512, DIM_SET, DIM_ON } = require('../../constants');
+const { buffer_SET_ADDRESS, buffer_SET_POSITION, DEVICE_TYPE_DI_4_RSM, DEVICE_TYPE_RS_HUB1_RS, buffer_RS485_TRANSMIT, buffer_UP, buffer_DOWN, buffer_STOP, buffer_LIMIT_UP, buffer_LIMIT_DOWN, buffer_LEARN, buffer_DELETE_ADDRESS, buffer_OPEN, buffer_CLOSE, buffer_DMX512, DIM_FADE, DIM_OFF, DEVICE_TYPE_RS_HUB4, DEVICE_TYPE_SERVER, DMX512, DIM_SET, DIM_ON, ACTION_DMX512 } = require('../../constants');
 const { device } = require('../../sockets');
 const { delay } = require('../../util');
 
@@ -7,6 +7,7 @@ const { delay } = require('../../util');
 module.exports.run = (action) => {
   const { id, index } = action;
   const { bind } = get(id) || {};
+  console.log(get(id));
   if (!bind) return;
   const {value = 0, velocity = 180} = get(`${id}/${DMX512}/${index}`)|| {};
   const [dev_id, , dev_index] = bind.split("");
@@ -15,7 +16,7 @@ module.exports.run = (action) => {
   switch (action.action) {
     case DIM_FADE: {
       const buffer = Buffer.alloc(7);
-      buffer[0] = buffer_DMX512;
+      buffer[0] = ACTION_DMX512;
       buffer[1] = dev_index;      
       buffer.writeUInt16BE(index, 2);
       buffer[4] = DIM_FADE;
@@ -27,7 +28,7 @@ module.exports.run = (action) => {
     }
     case DIM_SET: {
       const buffer = Buffer.alloc(6);
-      buffer[0] = buffer_DMX512;
+      buffer[0] = ACTION_DMX512;
       buffer[1] = dev_index;      
       buffer.writeUInt16BE(index, 2);
       buffer[4] = DIM_SET;
@@ -38,7 +39,7 @@ module.exports.run = (action) => {
     }
     case DIM_ON: {
       const buffer = Buffer.alloc(5);
-      buffer[0] = buffer_DMX512;
+      buffer[0] = ACTION_DMX512;
       buffer[1] = dev_index;      
       buffer.writeUInt16BE(index, 2);
       buffer[4] = DIM_ON;
@@ -48,7 +49,7 @@ module.exports.run = (action) => {
     }
     case DIM_OFF: {
       const buffer = Buffer.alloc(5);
-      buffer[0] = buffer_DMX512;
+      buffer[0] = ACTION_DMX512;
       buffer[1] = dev_index;      
       buffer.writeUInt16BE(index, 2);
       buffer[4] = DIM_OFF;
