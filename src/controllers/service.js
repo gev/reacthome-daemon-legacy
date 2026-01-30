@@ -2245,7 +2245,7 @@ const run = (action) => {
               buffer.writeUInt32BE(baud, 3);
               buffer[7] = line_control;
               buffer.writeUInt16BE(size_dmx, 8);
-              device.sendRBUS(buffer, action.id);
+              device.send(buffer, ip);
               console.log ('buff 10', buffer);
             } else {
               const buffer = Buffer.alloc(8);
@@ -2254,7 +2254,7 @@ const run = (action) => {
               buffer[2] = is_rbus;
               buffer.writeUInt32LE(baud, 3);
               buffer[7] = line_control;
-              device.sendRBUS(buffer, action.id);
+              device.send(buffer, ip);
               console.log ('buff 8', buffer);
             }
             break;
