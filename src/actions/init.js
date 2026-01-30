@@ -632,6 +632,7 @@ module.exports.initialize = (id) => {
             line_control,
             size_dmx,
           } = get(`${id}/${RS485}/${i}`) || {};
+          console.log(rs485_mode, size_dmx);
           a.push(rs485_mode);
           a.push((baud >> 24) & 0xff);
           a.push((baud >> 16) & 0xff);
