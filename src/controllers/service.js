@@ -757,6 +757,7 @@ const run = (action) => {
         break;
       }
       case ACTION_DMX512: {
+        drivers.run(action);
         break;
       }
       case ACTION_ARTNET: {
@@ -2270,9 +2271,6 @@ const run = (action) => {
               device.sendRBUS(buffer, action.id);
               break;
             }
-          default: {
-            // device.send(buffer, ip); // ?
-          }
         }
         break;
       }
