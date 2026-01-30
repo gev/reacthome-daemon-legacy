@@ -352,7 +352,6 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_RS485_MODE: {
-          console.log("data", data);
           const { version = "" } = get(id) || {};
           const major = parseInt(version.split(".")[0], 10);
           const index = data[7];

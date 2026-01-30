@@ -2050,7 +2050,6 @@ const run = (action) => {
                 case DRIVER_TYPE_PROXY: {
                   const proxy = get(o[c]) || {};
                   const target = get(proxy.proxy) || {};
-                  console.log(proxy, target)
                   switch (target.type) {
                     case HYGROSTAT: {
                       run({ id: proxy.proxy, type: ACTION_SETPOINT, humidity: v / 2.55 });
@@ -2229,7 +2228,6 @@ const run = (action) => {
         break;
       }
       case ACTION_RS485_MODE: {
-        console.log('action', action);
         const { id, is_rbus, rs485_mode, index, baud, line_control, size_dmx } = action;
         const { ip, type } = get(id) || {};
         const dev = get(action.id);
@@ -2247,7 +2245,6 @@ const run = (action) => {
               buffer[7] = line_control;
               buffer.writeUInt16BE(size_dmx, 8);
               device.send(buffer, ip);
-              console.log ('buff 10', buffer);
             } else {
               const buffer = Buffer.alloc(8);
               buffer[0] = ACTION_RS485_MODE;
@@ -2256,7 +2253,6 @@ const run = (action) => {
               buffer.writeUInt32LE(baud, 3);
               buffer[7] = line_control;
               device.send(buffer, ip);
-              console.log ('buff 8', buffer);
             }
             break;
           }
