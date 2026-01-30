@@ -632,14 +632,14 @@ module.exports.initialize = (id) => {
             line_control,
             size_dmx,
           } = get(`${id}/${RS485}/${i}`) || {};
-          a[i * 8 - 7] = rs485_mode;
-          a[i * 8 - 6] = (baud >> 24) & 0xff;
-          a[i * 8 - 5] = (baud >> 16) & 0xff;
-          a[i * 8 - 4] = (baud >> 8) & 0xff;
-          a[i * 8 - 3] = baud & 0xff;
-          a[i * 8 - 2] = line_control;
-          a[i * 8 - 1] = (size_dmx >> 8) & 0xff;
-          a[i * 8    ] = size_dmx & 0xff;
+          a.push(rs485_mode);
+          a.push((baud >> 24) & 0xff);
+          a.push((baud >> 16) & 0xff);
+          a.push((baud >> 8) & 0xff);
+          a.push(baud & 0xff);
+          a.push(line_control);
+          a.push((size_dmx >> 8) & 0xff);
+          a.push(size_dmx & 0xff);
         }
       } else {
         for (i = 1; i <= 4; i++) {
@@ -648,19 +648,19 @@ module.exports.initialize = (id) => {
             baud,
             line_control,
           } = get(`${id}/${RS485}/${i}`) || {};
-          a[i * 6 - 5] = is_rbus;
-          a[i * 6 - 4] = baud & 0xff;
-          a[i * 6 - 3] = (baud >> 8) & 0xff;
-          a[i * 6 - 2] = (baud >> 16) & 0xff;
-          a[i * 6 - 1] = (baud >> 24) & 0xff;
-          a[i * 6] = line_control;
+          a.push(is_rbus);
+          a.push(baud & 0xff);
+          a.push((baud >> 8) & 0xff);
+          a.push((baud >> 16) & 0xff);
+          a.push((baud >> 24) & 0xff);
+          a.push(line_control);
         }
       }
       for (let i = 1; i <= 3; i++) {
         const channel = get(`${id}/${DIM}/${i}`);
-        a[3 * i + 22] = (channel && channel.group) || i;
-        a[3 * i + 23] = (channel && channel.type) || 0;
-        a[3 * i + 24] = (channel && channel.value) || 0;
+        a.push((channel && channel.group) || i);
+        a.push((channel && channel.type) || 0);
+        a.push((channel && channel.value) || 0);
       }
       if (major >= 5) {
         for (let i = 0; i < 10; i++) {
