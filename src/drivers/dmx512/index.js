@@ -9,7 +9,7 @@ module.exports.run = (action) => {
   const { bind } = get(id) || {};
   console.log(get(id));
   if (!bind) return;
-  const [dev_id, , dev_index_s] = bind.split("");
+  const [dev_id, , dev_index_s] = bind.split("/");
   const dev_index = parseInt(dev_index_s, 10);
   const dev = get(dev_id) || {};
   console.log(action);
