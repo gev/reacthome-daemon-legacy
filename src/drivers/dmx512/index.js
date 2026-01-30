@@ -22,6 +22,7 @@ module.exports.run = (action) => {
       buffer[5] = value
       buffer[6] = velocity
       device.send(buffer, dev.ip);
+      console.log(buffer);
       break;
     }
     case DIM_SET: {
@@ -32,6 +33,7 @@ module.exports.run = (action) => {
       buffer[4] = DIM_SET;
       buffer[5] = value
       device.send(buffer, dev.ip);
+      console.log(buffer);
       break
     }
     case DIM_ON: {
@@ -41,6 +43,7 @@ module.exports.run = (action) => {
       buffer.writeUInt16BE(index, 2);
       buffer[4] = DIM_ON;
       device.send(buffer, dev.ip);
+      console.log(buffer);
       break;
     }
     case DIM_OFF: {
@@ -50,6 +53,7 @@ module.exports.run = (action) => {
       buffer.writeUInt16BE(index, 2);
       buffer[4] = DIM_OFF;
       device.send(buffer, dev.ip);
+      console.log(buffer);
       break
     }
   }
