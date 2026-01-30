@@ -2258,7 +2258,7 @@ const run = (action) => {
             break;
           }
           default: {
-            device.send(buffer, ip);
+            // device.send(buffer, ip); // ?
           }
         }
         break;
