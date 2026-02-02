@@ -17,7 +17,7 @@ module.exports.run = (action) => {
     case DIM_FADE: {
       const buffer = Buffer.alloc(7);
       buffer[0] = ACTION_DMX512;
-      buffer[1] = dev_index;      
+      buffer[1] = dev_index;
       buffer.writeUInt16BE(index, 2);
       buffer[4] = DIM_FADE;
       buffer[5] = value
@@ -29,7 +29,7 @@ module.exports.run = (action) => {
     case DIM_SET: {
       const buffer = Buffer.alloc(6);
       buffer[0] = ACTION_DMX512;
-      buffer[1] = dev_index;      
+      buffer[1] = dev_index;
       buffer.writeUInt16BE(index, 2);
       buffer[4] = DIM_SET;
       buffer[5] = value
@@ -40,7 +40,7 @@ module.exports.run = (action) => {
     case DIM_ON: {
       const buffer = Buffer.alloc(5);
       buffer[0] = ACTION_DMX512;
-      buffer[1] = dev_index;      
+      buffer[1] = dev_index;
       buffer.writeUInt16BE(index, 2);
       buffer[4] = DIM_ON;
       device.send(buffer, dev.ip);
@@ -50,7 +50,7 @@ module.exports.run = (action) => {
     case DIM_OFF: {
       const buffer = Buffer.alloc(5);
       buffer[0] = ACTION_DMX512;
-      buffer[1] = dev_index;      
+      buffer[1] = dev_index;
       buffer.writeUInt16BE(index, 2);
       buffer[4] = DIM_OFF;
       device.send(buffer, dev.ip);
@@ -62,7 +62,13 @@ module.exports.run = (action) => {
 
 module.exports.handle = ({ id, data }) => {
   console.log(id, data);
+  const index = data.readUInt16BE(0);
+  const value = data.readUInt8(2);
+  const velocity = data.readUInt8(3);
+  const ch = `${id}/${DMX512}/${index}`;
+  set(ch, { value, velocity });
 }
+
 
 
 module.exports.clear = () => {
