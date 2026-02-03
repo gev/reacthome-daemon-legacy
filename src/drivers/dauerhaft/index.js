@@ -207,7 +207,7 @@ module.exports.add = (id) => {
   timers.set(id, setTimeout(loop(id), 100));
 };
 
-send = (id, payload) => {
+const send = (id, payload) => {
   console.log(get(id));
   const { bind } = get(id);
   if (!bind) return;
@@ -231,7 +231,7 @@ send = (id, payload) => {
   }
 };
 
-query = (address, channel, a, b) => {
+const query = (address, channel, a, b) => {
   const buffer = Buffer.alloc(7);
   buffer.writeUint8(0x9a, 0);
   buffer.writeUInt8(address, 1);
