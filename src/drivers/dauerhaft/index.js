@@ -208,11 +208,11 @@ module.exports.add = (id) => {
 };
 
 send = (id, payload) => {
+  console.log(get(id));
   const { bind } = get(id);
-  console.log(bind);
   if (!bind) return;
+  console.log(get(bind));
   const { is_rbus } = get(bind);
-  console.log(is_rbus);
   if (is_rbus) return;
   const [dev, , index] = bind.split('/');
   const { ip, type } = get(dev);
