@@ -1892,9 +1892,9 @@ const run = (action) => {
         break;
       }
       case ACTION_DIM: {
-        console.log(action);
         const { id, value } = action;
         const o = get(id) || {};
+        console.log(action, o);
         const { last } = o;
         const R = o.r ? (get(o.r) || {}).value || 0 : 0;
         const G = o.g ? (get(o.g) || {}).value || 0 : 0;
