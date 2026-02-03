@@ -211,6 +211,7 @@ send = (id, payload) => {
   const { bind } = get(id);
   if (!bind) return;
   const { is_rbus } = get(bind);
+  console.log(bind, is_rbus);
   if (is_rbus) return;
   const [dev, , index] = bind.split('/');
   const { ip, type } = get(dev);
