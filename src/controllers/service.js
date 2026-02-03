@@ -1894,7 +1894,8 @@ const run = (action) => {
       case ACTION_DIM: {
         const { id, value } = action;
         const o = get(id) || {};
-        console.log(action, o);
+        const bind = get(o.bind)|| {};
+        console.log(action, o, bind);
         const { last } = o;
         const R = o.r ? (get(o.r) || {}).value || 0 : 0;
         const G = o.g ? (get(o.g) || {}).value || 0 : 0;
