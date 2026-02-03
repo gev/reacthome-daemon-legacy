@@ -358,7 +358,6 @@ module.exports.manage = () => {
           const index = data[7];
           const channel = `${id}/${RS485}/${index}`;
           if (major > 5) {
-            console.log(data);
             const rs485_mode = data[8];
             const baud = data.readUInt32BE(9);
             const line_control = data[13];
@@ -374,7 +373,6 @@ module.exports.manage = () => {
         }
         case ACTION_RS485_TRANSMIT: 
         case ACTION_DMX512: {
-          console.log(data);
           const index = data[7];
           const channel = `${id}/${RS485}/${index}`;
           const { bind } = get(channel) || {};

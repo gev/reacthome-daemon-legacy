@@ -7,12 +7,10 @@ const { delay } = require('../../util');
 module.exports.run = (action) => {
   const { id, index, value = 0, velocity = 180 } = action;
   const { bind } = get(id) || {};
-  console.log(get(id));
   if (!bind) return;
   const [dev_id, , dev_index_s] = bind.split("/");
   const dev_index = parseInt(dev_index_s, 10);
   const dev = get(dev_id) || {};
-  console.log(action);
   switch (action.action) {
     case DIM_FADE: {
       const buffer = Buffer.alloc(7);
@@ -23,7 +21,6 @@ module.exports.run = (action) => {
       buffer[5] = value
       buffer[6] = velocity
       device.send(buffer, dev.ip);
-      console.log(buffer);
       break;
     }
     case DIM_SET: {
@@ -34,7 +31,6 @@ module.exports.run = (action) => {
       buffer[4] = DIM_SET;
       buffer[5] = value
       device.send(buffer, dev.ip);
-      console.log(buffer);
       break
     }
     case DIM_ON: {
@@ -44,7 +40,6 @@ module.exports.run = (action) => {
       buffer.writeUInt16BE(index, 2);
       buffer[4] = DIM_ON;
       device.send(buffer, dev.ip);
-      console.log(buffer);
       break;
     }
     case DIM_OFF: {
@@ -54,14 +49,12 @@ module.exports.run = (action) => {
       buffer.writeUInt16BE(index, 2);
       buffer[4] = DIM_OFF;
       device.send(buffer, dev.ip);
-      console.log(buffer);
       break
     }
   }
 }
 
 module.exports.handle = ({ id, data }) => {
-  console.log(id, data);
   const index = data.readUInt16BE(0);
   const value = data.readUInt8(2);
   const velocity = data.readUInt8(3);

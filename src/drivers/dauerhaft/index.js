@@ -208,10 +208,8 @@ module.exports.add = (id) => {
 };
 
 const send = (id, payload) => {
-  console.log(get(id));
   const { bind } = get(id);
   if (!bind) return;
-  console.log(get(bind));
   const { is_rbus } = get(bind);
   if (is_rbus) return;
   const [dev, , index] = bind.split('/');
@@ -225,7 +223,6 @@ const send = (id, payload) => {
       break;
     }
     default: {
-      console.log(buffer, ip);
       device.send(buffer, ip);
     }
   }
