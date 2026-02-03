@@ -209,9 +209,10 @@ module.exports.add = (id) => {
 
 send = (id, payload) => {
   const { bind } = get(id);
+  console.log(bind);
   if (!bind) return;
   const { is_rbus } = get(bind);
-  console.log(bind, is_rbus);
+  console.log(is_rbus);
   if (is_rbus) return;
   const [dev, , index] = bind.split('/');
   const { ip, type } = get(dev);
