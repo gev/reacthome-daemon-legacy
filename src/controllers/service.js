@@ -1648,7 +1648,9 @@ const run = (action) => {
                   drivers.run({
                     id: dev,
                     index,
-                    action: DIM_ON,
+                    action: DIM_FADE,
+                    value,
+                    velocity: DIM_VELOCITY,
                   });
                   break;
                 }
@@ -1884,7 +1886,9 @@ const run = (action) => {
                   drivers.run({
                     id: dev,
                     index,
-                    action: DIM_OFF,
+                    action: DIM_FADE,
+                    value: 0,
+                    velocity: DIM_VELOCITY,
                   });
                   break;
                 }
