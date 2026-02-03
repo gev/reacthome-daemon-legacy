@@ -115,6 +115,7 @@ const sync = async (id, index) => {
     send(id, query(address, channel, 0x0a, 0xa6));
     set(ch, { shouldDelete: false });
   } else {
+    console.log(id, address, channel);
     send(id, query(address, channel, 0xcc, 0x00));
   }
 }
