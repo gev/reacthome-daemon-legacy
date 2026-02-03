@@ -208,6 +208,7 @@ const {
   AO,
   DEVICE_TYPE_AO_4,
   ACTION_DMX512,
+  DRIVER_TYPE_DMX512,
 } = require("../constants");
 const { NOTIFY } = require("../notification/constants");
 const notification = require("../notification");
@@ -876,6 +877,16 @@ const run = (action) => {
                     action: ARTNET_FADE,
                     value: v,
                     velocity: ARTNET_VELOCITY,
+                  });
+                  break;
+                }
+                case DRIVER_TYPE_DMX512: {
+                  drivers.run({
+                    id: dev,
+                    index,
+                    action: DIM_FADE,
+                    value: v,
+                    velocity: DIM_VELOCITY,
                   });
                   break;
                 }
@@ -1633,6 +1644,14 @@ const run = (action) => {
                   }
                   break;
                 }
+                case DRIVER_TYPE_DMX512: {
+                  drivers.run({
+                    id: dev,
+                    index,
+                    action: DIM_ON,
+                  });
+                  break;
+                }
                 case DRIVER_TYPE_DALI_GW:
                 case DRIVER_TYPE_DALI_DLC: {
                   drivers.run({
@@ -1861,6 +1880,14 @@ const run = (action) => {
                   }
                   break;
                 }
+                case DRIVER_TYPE_DMX512: {
+                  drivers.run({
+                    id: dev,
+                    index,
+                    action: DIM_OFF,
+                  });
+                  break;
+                }
                 case DRIVER_TYPE_DALI_GW:
                 case DRIVER_TYPE_DALI_DLC: {
                   drivers.run({
@@ -1894,8 +1921,6 @@ const run = (action) => {
       case ACTION_DIM: {
         const { id, value } = action;
         const o = get(id) || {};
-        const bind = get(o.bind)|| {};
-        console.log(action, o, bind);
         const { last } = o;
         const R = o.r ? (get(o.r) || {}).value || 0 : 0;
         const G = o.g ? (get(o.g) || {}).value || 0 : 0;
@@ -2039,6 +2064,16 @@ const run = (action) => {
                   });
                   break;
                 }
+                case DRIVER_TYPE_DMX512: {
+                  drivers.run({
+                    id: dev,
+                    index,
+                    action: DIM_FADE,
+                    value: v,
+                    velocity: dimVelocity,
+                  });
+                  break;
+                }
                 case DRIVER_TYPE_DALI_GW:
                 case DRIVER_TYPE_DALI_DLC: {
                   drivers.run({
@@ -2170,6 +2205,16 @@ const run = (action) => {
               });
               break;
             }
+            case DRIVER_TYPE_DMX512: {
+              drivers.run({
+                id: dev,
+                index,
+                action: DIM_FADE,
+                value: v,
+                velocity: DIM_VELOCITY,
+              });
+              break;
+            }
             case DRIVER_TYPE_DALI_GW:
             case DRIVER_TYPE_DALI_DLC: {
               drivers.run({
@@ -2260,15 +2305,15 @@ const run = (action) => {
           }
           case DEVICE_TYPE_DI_4_RSM:
           case DEVICE_TYPE_RS_HUB1_RS: {
-              const buffer = Buffer.alloc(8);
-              buffer[0] = ACTION_RS485_MODE;
-              buffer[1] = index;
-              buffer[2] = is_rbus;
-              buffer.writeUInt32LE(baud, 3);
-              buffer[7] = line_control;
-              device.sendRBUS(buffer, action.id);
-              break;
-            }
+            const buffer = Buffer.alloc(8);
+            buffer[0] = ACTION_RS485_MODE;
+            buffer[1] = index;
+            buffer[2] = is_rbus;
+            buffer.writeUInt32LE(baud, 3);
+            buffer[7] = line_control;
+            device.sendRBUS(buffer, action.id);
+            break;
+          }
         }
         break;
       }
