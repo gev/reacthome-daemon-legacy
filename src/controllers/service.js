@@ -2096,6 +2096,19 @@ const run = (action) => {
                       run({ id: proxy.proxy, type: ACTION_SETPOINT, humidity: v / 2.55 });
                       break;
                     }
+                    case DRIVER_TYPE_SWIFT: {
+                      switch (proxy.mode) {
+                        case 'setpoint': {
+                          drivers.run({ id: proxy.proxy, type: ACTION_SETPOINT, value: v / 2.55 });
+                          break;
+                        }
+                        case 'speed': {
+                          drivers.run({ id: proxy.proxy, type: ACTION_SET_FAN_SPEED, value: Math.round(v / 25.5) });
+                          break;
+                        }
+                      }
+                      break;
+                    }
                     default: {
                       const [id, type, index] = proxy.proxy.split("/");
                       if (type === 'curtain') {
