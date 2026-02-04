@@ -24,6 +24,7 @@ module.exports.handle = (rbus) => {
   }
 
   const receivePreamble = (v) => {
+    console.log(v);
     if (v === PREAMBLE) {
       offset = 0
       size = 0
