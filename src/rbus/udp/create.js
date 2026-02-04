@@ -8,24 +8,31 @@ module.exports.createSocket = (rbus, host) => {
   socket.on('message', handle(rbus));
   const send = (data) => {
     // console.log("UDP send", data)
-    socket.send(
-      data,
-      DEVICE_SERVER_PORT,
-      '127.0.0.1'
-    )
+    if (rbus.mac) {
+      socket.send(
+        Buffer.concat(rbus.mac,data),
+        DEVICE_SERVER_PORT,
+        '127.0.0.1'
+      )
+    }
   }
   rbus.socket = {
     host, send,
     close: socket.close
   }
   setInterval(() => {
-    if (rbus.vesion) {
-      rbus.socket.send(Buffer.from([
+    if (rbus.mac) {
+      send(Buffer.from([
         ...rbus.mac,
-        rbus.ready ? ACTION_READY : ACTION_DISCOVERY,
+        // rbus.ready ? ACTION_READY : ACTION_DISCOVERY,
+        ACTION_DISCOVERY,
         DEVICE_TYPE_SERVER,
         rbus.version.major, rbus.version.minor // Version
       ]))
+      if (!rbus.ready) {
+        send(Buffer.from([ACTION_INITIALIZE]));
+        rbus.ready = true;
+      }
     }
   }, 1_000)
 }

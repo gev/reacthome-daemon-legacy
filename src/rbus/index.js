@@ -1,8 +1,8 @@
 const { createPort } = require('./serial/create');
 const { createSocket } = require('./udp/create');
 
-module.exports.rbus = (mac, host, path) => {
-  const rbus = { mac };
+module.exports.rbus = (host, path) => {
+  const rbus = {};
   createSocket(rbus, host);
   createPort(rbus, path);
 }
