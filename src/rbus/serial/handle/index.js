@@ -19,11 +19,13 @@ module.exports.handle = (rbus) => {
     if (buff[0] === 0xf0) {
       console.log(buff);
       rbus.version = { major: buff[8], minor: buff[9] };
-      if (rbus.version.major >= 6) {
-        //rbus.mac = buff.slice(1, 7);
-      } else {
-        const ifaces = os.networkInterfaces();
-        rbus.mac = (ifaces.eth0 || ifaces.eth1)[0].mac.split(':').map(i => parseInt(i, 16));
+      if (!rbus.mac) {
+        if (rbus.version.major >= 6) {
+          rbus.mac = buff.slice(1, 7);
+        } else {
+          const ifaces = os.networkInterfaces();
+          rbus.mac = (ifaces.eth0 || ifaces.eth1)[0].mac.split(':').map(i => parseInt(i, 16));
+        }
       }
     } else {
       rbus.socket.send(buff)
