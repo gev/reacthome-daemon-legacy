@@ -16,7 +16,7 @@ module.exports.handle = (rbus) => {
     , offset, size, crc
   let buff = Buffer.alloc(512)
 
-  handle = (buff) => {
+  const handle = (buff) => {
     if (buff[0] !== 0xf0) {
       rbus.socket.send(Buffer.concat([mac, buff]))
     }
