@@ -19,6 +19,7 @@ module.exports.createSocket = (rbus, host) => {
     close: socket.close
   }
   setInterval(() => {
+    console.log(rbus)
     if (rbus.vesion) {
       rbus.socket.send(Buffer.from([
         ...rbus.mac,
@@ -28,5 +29,4 @@ module.exports.createSocket = (rbus, host) => {
       ]))
     }
   }, 1_000)
-  rbus.socket.send(Buffer.from([...rbus.mac, ACTION_INITIALIZE]));
 }

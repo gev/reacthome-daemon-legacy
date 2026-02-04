@@ -20,9 +20,6 @@ module.exports.handle = (rbus) => {
     if (buff[0] === 0xf0) {
       console.log(buff);
       rbus.version = { major: buff[8], minor: buff[9] };
-      if (rbus.version.major >= 6) {
-        rbus.mac = [buff[1], buff[2], buff[3], buff[4], buff[5], buff[6]];
-      }
     } else {
       rbus.socket.send(Buffer.concat([mac, buff]))
     }
