@@ -2296,7 +2296,7 @@ const run = (action) => {
         const { ip, type } = get(id) || {};
         const dev = get(action.id);
         const { version = "" } = dev;
-        const [major, minor] = version.split(".");
+        const major = parseInt(version.split(".")[0], 10);
         switch (type) {
           case DEVICE_TYPE_RS_HUB4:
           case DEVICE_TYPE_SERVER: {
