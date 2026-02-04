@@ -21,6 +21,7 @@ module.exports.createSocket = (rbus, host) => {
     close: socket.close
   }
   setInterval(() => {
+    console.log(rbus);
     if (rbus.mac) {
       send(Buffer.from([
         ...rbus.mac,
