@@ -106,9 +106,6 @@ const {
   DEVICE_TYPE_SOUNDBOX,
   DEVICE_TYPE_SMART_TOP_A4TD_7S,
   ACTION_AO,
-  ACTION_GET_STATE,
-  DEVICE_TYPE_RELAY_12_RS,
-  DEVICE_TYPE_MIX_6x12_RS,
 } = require("../constants");
 const {
   get,
@@ -385,15 +382,26 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_RS485_MODE: {
+          const { version = "" } = get(id) || {};
+          const major = parseInt(version.split(".")[0], 10);
           const index = data[7];
-          const is_rbus = data[8];
-          const baud = data.readUInt32LE(9);
-          const line_control = data[13];
           const channel = `${id}/${RS485}/${index}`;
-          set(channel, { is_rbus, baud, line_control });
+          if (major > 5) {
+            const rs485_mode = data[8];
+            const baud = data.readUInt32BE(9);
+            const line_control = data[13];
+            const size_dmx = Math.min(data.readUInt16BE(14), 512);
+            set(channel, { rs485_mode, is_rbus: rs485_mode === 1 ? 1 : 0, baud, line_control, size_dmx });
+          } else {
+            const is_rbus = data[8];
+            const baud = data.readUInt32LE(9);
+            const line_control = data[13];
+            set(channel, { is_rbus, rs485_mode: is_rbus, baud, line_control });
+          }
           break;
         }
-        case ACTION_RS485_TRANSMIT: {
+        case ACTION_RS485_TRANSMIT:
+        case ACTION_DMX512: {
           const index = data[7];
           const channel = `${id}/${RS485}/${index}`;
           const { bind } = get(channel) || {};

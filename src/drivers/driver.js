@@ -23,6 +23,7 @@ const {
   DRIVER_TYPE_DAUERHAFT,
   DRIVER_TYPE_PROXY,
   DRIVER_TYPE_TELEGRAM,
+  DRIVER_TYPE_DMX512,
 } = require("../constants");
 const { get } = require("../actions");
 const RS21 = require("./RS21");
@@ -47,6 +48,7 @@ const dali_dlc = require("./dali-dlc");
 const dauerhaft = require("./dauerhaft");
 const proxy = require("./proxy");
 const telegram = require("./telegram");
+const dmx512 = require("./dmx512")
 
 const mac = require("../mac");
 
@@ -87,6 +89,9 @@ module.exports.manage = () => {
         break;
       case DRIVER_TYPE_ARTNET:
         instances.add(id, new Artnet(id));
+        break;
+      case DRIVER_TYPE_DMX512:
+        instances.add(id, dmx512);
         break;
       case DRIVER_TYPE_BB_PLC1:
         instances.add(id, new Plc1(id));
