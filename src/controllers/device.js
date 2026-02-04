@@ -107,6 +107,7 @@ const {
   DEVICE_TYPE_SMART_TOP_A4TD_7S,
   ACTION_AO,
   ACTION_GET_STATE,
+  ACTION_DMX512,
 } = require("../constants");
 const {
   get,
