@@ -9,6 +9,7 @@ module.exports.createSocket = (rbus, host) => {
   const send = (data) => {
     // console.log("UDP send", data)
     if (rbus.mac) {
+      console.log(rbus, data)
       socket.send(
         Buffer.concat([rbus.mac, data]),
         DEVICE_SERVER_PORT,
