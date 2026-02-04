@@ -24,7 +24,6 @@ module.exports.createSocket = (rbus, host) => {
     console.log(rbus);
     if (rbus.mac) {
       send(Buffer.from([
-        ...rbus.mac,
         // rbus.ready ? ACTION_READY : ACTION_DISCOVERY,
         ACTION_DISCOVERY,
         DEVICE_TYPE_SERVER,
