@@ -108,6 +108,7 @@ const {
   ACTION_AO,
   ACTION_GET_STATE,
   ACTION_DMX512,
+  DEVICE_TYPE_RELAY_12_RS,
 } = require("../constants");
 const {
   get,
