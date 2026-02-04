@@ -106,6 +106,7 @@ const {
   DEVICE_TYPE_SOUNDBOX,
   DEVICE_TYPE_SMART_TOP_A4TD_7S,
   ACTION_AO,
+  ACTION_GET_STATE,
 } = require("../constants");
 const {
   get,
