@@ -19,12 +19,14 @@ module.exports.createSocket = (rbus, host) => {
     close: socket.close
   }
   setInterval(() => {
-    rbus.socket.send(Buffer.from([
-      ...rbus.mac,
-      rbus.ready ? ACTION_READY : ACTION_DISCOVERY,
-      DEVICE_TYPE_SERVER,
-      6, 0 // Version
-    ]))
+    if (rbus.vesion) {
+      rbus.socket.send(Buffer.from([
+        ...rbus.mac,
+        rbus.ready ? ACTION_READY : ACTION_DISCOVERY,
+        DEVICE_TYPE_SERVER,
+        rbus.version.major, rbus.version.minor // Version
+      ]))
+    }
   }, 1_000)
   rbus.socket.send(Buffer.from([...rbus.mac, ACTION_INITIALIZE]));
 }

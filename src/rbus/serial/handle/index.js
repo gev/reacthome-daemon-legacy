@@ -18,13 +18,17 @@ module.exports.handle = (rbus) => {
 
   const handle = (buff) => {
     console.log(buff);
-    if (buff[0] !== 0xf0) {
+    if (buff[0] === 0xf0) {
+      rbus.version = { major: buff[8], minor: buff[9] };
+      if (rbus.version.major >= 6) {
+        rbus.mac = [buff[1], buff[2], buff[3], buff[4], buff[5], buff[6]];
+      }
+    } else {
       rbus.socket.send(Buffer.concat([mac, buff]))
     }
   }
 
   const receivePreamble = (v) => {
-    console.log(v);
     if (v === PREAMBLE) {
       offset = 0
       size = 0
