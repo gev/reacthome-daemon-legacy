@@ -26,7 +26,7 @@ module.exports.run = async (action) => {
 }
 
 module.exports.handle = (action) => {
-    console.log('Handle', action);
+    // console.log('Handle', action);
 }
 
 module.exports.clear = () => {
