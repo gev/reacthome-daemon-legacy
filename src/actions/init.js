@@ -621,7 +621,6 @@ module.exports.initialize = (id) => {
       break;
     }
     case DEVICE_TYPE_SERVER:
-      console.log(get(id));
     case DEVICE_TYPE_RS_HUB4: {
       const { version = "" } = get(id) || {};
       const major = parseInt(version.split(".")[0], 10);
