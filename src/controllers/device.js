@@ -109,6 +109,7 @@ const {
   ACTION_GET_STATE,
   ACTION_DMX512,
   DEVICE_TYPE_RELAY_12_RS,
+  DEVICE_TYPE_MIX_6x12_RS,
 } = require("../constants");
 const {
   get,
