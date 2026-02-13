@@ -151,7 +151,6 @@ module.exports.manage = () => {
   const handleData = (data, { address }, { hub = null } = {}) => {
     try {
       const dev_mac = data.slice(0, 6);
-      console.log(data);
       const id = Array.from(dev_mac).map((i) => `0${i.toString(16)}`.slice(-2)).join(":");
       const dev = get(id) || {};
       if (dev) {
