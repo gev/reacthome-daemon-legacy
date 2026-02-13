@@ -150,6 +150,7 @@ module.exports.manage = () => {
 
   const handleData = (data, { address }, { hub = null } = {}) => {
     try {
+      console.log(data);
       const dev_mac = data.slice(0, 6);
       const id = Array.from(dev_mac).map((i) => `0${i.toString(16)}`.slice(-2)).join(":");
       const dev = get(id) || {};
@@ -195,7 +196,6 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_DI: {
-          // console.log(data);
           const index = data[7];
           const value = data[8] ? 1 : 0;
           const channel = `${id}/${DI}/${index}`;
