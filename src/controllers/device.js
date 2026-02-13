@@ -332,6 +332,7 @@ module.exports.manage = () => {
               for (let i = 1; i <= 12; i++) {
                 let value = (valuesDO & (1 << (i - 1))) ? 1 : 0;
                 let payload = Buffer.from([ACTION_DO, i, value]);
+                console.log(payload);
                 handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
               }
               break;
@@ -353,11 +354,13 @@ module.exports.manage = () => {
             }
             case DEVICE_TYPE_DIM_12_AC_RS:
             case DEVICE_TYPE_DIM_12_DC_RS: {
-              // for (let i = 1; i <= 12; i++) {
-              //   let value = data.readUInt8(7 + i);
-              //   let payload = Buffer.from([ACTION_DIMMER, i, value]);
-              //   handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
-              // }
+              for (let i = 1; i <= 12; i++) {
+                let value = data.readUInt8(7 + i);
+                const channel = `${id}/${DIM}/${i}`;
+                const chan = get(channel);
+                let payload = Buffer.from([ACTION_DIMMER, i, chan.group, chan.type, value, chan.velocity]);
+                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              }
               break;
             }
           }
@@ -570,7 +573,6 @@ module.exports.manage = () => {
               }
               const channel = `${id}/${DIM}/${index}`;
               const chan = get(channel);
-              console.log(chan);
               set(channel, {
                 type,
                 group,
