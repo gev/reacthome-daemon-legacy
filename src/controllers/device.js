@@ -150,7 +150,6 @@ module.exports.manage = () => {
 
   const handleData = (data, { address }, { hub = null } = {}) => {
     try {
-      console.log(data);
       const dev_mac = data.slice(0, 6);
       const id = Array.from(dev_mac).map((i) => `0${i.toString(16)}`.slice(-2)).join(":");
       const dev = get(id) || {};
@@ -325,6 +324,7 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_GET_STATE: {
+          console.log(data);
           const { type } = get(id) || {};
           switch (type) {
             case DEVICE_TYPE_RELAY_12_RS: {
