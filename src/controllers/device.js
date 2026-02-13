@@ -332,7 +332,6 @@ module.exports.manage = () => {
               for (let i = 1; i <= 12; i++) {
                 let value = (valuesDO & (1 << (i - 1))) ? 1 : 0;
                 let payload = Buffer.from([ACTION_DO, i, value]);
-                console.log(payload);
                 handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
               }
               break;
@@ -358,6 +357,7 @@ module.exports.manage = () => {
                 let value = data.readUInt8(7 + i);
                 const channel = `${id}/${DIM}/${i}`;
                 const chan = get(channel);
+                console.log(payload);
                 let payload = Buffer.from([ACTION_DIMMER, i, chan.group, chan.type, value, chan.velocity]);
                 handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
               }
