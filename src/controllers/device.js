@@ -110,6 +110,8 @@ const {
   ACTION_DMX512,
   DEVICE_TYPE_RELAY_12_RS,
   DEVICE_TYPE_MIX_6x12_RS,
+  DEVICE_TYPE_DIM_12_AC_RS,
+  DEVICE_TYPE_DIM_12_DC_RS,
 } = require("../constants");
 const {
   get,
@@ -349,6 +351,15 @@ module.exports.manage = () => {
               }
               break;
             }
+            case DEVICE_TYPE_DIM_12_AC_RS:
+            case DEVICE_TYPE_DIM_12_DC_RS: {
+              // for (let i = 1; i <= 12; i++) {
+              //   let value = data.readUInt8(7 + i);
+              //   let payload = Buffer.from([ACTION_DIMMER, i, value]);
+              //   handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              // }
+              break;
+            }
           }
           break;
         }
@@ -483,6 +494,7 @@ module.exports.manage = () => {
               const [, , , , , , , index, value, velocity] = data;
               const channel = `${id}/${AO}/${index}`;
               const chan = get(channel);
+              console.log(chan);
               set(channel, {
                 value,
                 velocity,
