@@ -354,7 +354,7 @@ module.exports.manage = () => {
             case DEVICE_TYPE_DIM_12_AC_RS:
             case DEVICE_TYPE_DIM_12_DC_RS: {
               for (let i = 1; i <= 12; i++) {
-                let value = data.readUInt8(7 + i);
+                let value = data.readUInt8(6 + i);
                 const channel = `${id}/${DIM}/${i}`;
                 const chan = get(channel);
                 let payload = Buffer.from([ACTION_DIMMER, i, chan.group, chan.type, value, chan.velocity]);
@@ -444,7 +444,6 @@ module.exports.manage = () => {
           });
           handleData(Buffer.concat([mac, buff.slice(8)]), { address }, { hub: id });
           break;
-
         }
         case ACTION_SMART_TOP: {
           const action = data[7];
