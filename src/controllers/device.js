@@ -357,8 +357,8 @@ module.exports.manage = () => {
                 let value = data.readUInt8(7 + i);
                 const channel = `${id}/${DIM}/${i}`;
                 const chan = get(channel);
-                console.log(payload);
                 let payload = Buffer.from([ACTION_DIMMER, i, chan.group, chan.type, value, chan.velocity]);
+                console.log(payload);
                 handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
               }
               break;
