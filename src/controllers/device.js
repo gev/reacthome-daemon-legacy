@@ -494,7 +494,6 @@ module.exports.manage = () => {
               const [, , , , , , , index, value, velocity] = data;
               const channel = `${id}/${AO}/${index}`;
               const chan = get(channel);
-              console.log(chan);
               set(channel, {
                 value,
                 velocity,
@@ -571,6 +570,7 @@ module.exports.manage = () => {
               }
               const channel = `${id}/${DIM}/${index}`;
               const chan = get(channel);
+              console.log(chan);
               set(channel, {
                 type,
                 group,
