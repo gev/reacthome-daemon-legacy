@@ -17,10 +17,12 @@ const driver = require('../../driver');
 const sockets = new Map();
 
 const connect = (host, port, handle) => new Promise((resolve, reject) => {
+  const id = `${host}:${port}`;
   const socket = net.connect({ host, port }, () => {
     resolve(socket);
   });
   socket.on('error', err => {
+    sockets.delete(id);
     socket.destroy();
     reject(err);
   });
