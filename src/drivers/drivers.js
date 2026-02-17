@@ -3,6 +3,9 @@ let instances = {};
 
 module.exports.get = (id) => instances[id];
 
+module.exports.getAll = () => Object.values(instances);
+
+
 module.exports.add = (id, instance) => instances[id] = instance;
 
 module.exports.clear = () => {

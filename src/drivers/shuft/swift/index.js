@@ -22,6 +22,7 @@ const instance = new Set();
 const sync = (id) => {
   const dev = get(id) || {};
   const { bind, synced } = dev;
+  if (!bind) return;
   const [modbus, , address] = bind.split("/");
   if (synced) {
     readInputRegisters(modbus, address, 0x2, 1);

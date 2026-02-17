@@ -77,6 +77,7 @@ module.exports.ACTION_DI = 0x01;
 module.exports.ACTION_GROUP = 0x02;
 module.exports.ACTION_DI_RELAY_SYNC = 0x03;
 module.exports.ACTION_ATS_MODE = 0x04;
+module.exports.ACTION_AO = 0x05;
 module.exports.ACTION_VIBRO = 0x0a;
 module.exports.ACTION_IR = 0x10;
 module.exports.ACTION_IR_CONFIG = 0x11;
@@ -96,6 +97,7 @@ module.exports.ACTION_ALED_CONFIG_GROUP = 0x48;
 module.exports.ACTION_RS485_MODE = 0xa0;
 module.exports.ACTION_RBUS_TRANSMIT = 0xa1;
 module.exports.ACTION_RS485_TRANSMIT = 0xa2;
+module.exports.ACTION_DMX512 = 0xa3;
 module.exports.ACTION_DOPPLER0 = 0xb0;
 module.exports.ACTION_DOPPLER_RAW = 0xb1;
 module.exports.ACTION_DOPPLER1 = 0xb2;
@@ -307,6 +309,8 @@ module.exports.DEVICE_TYPE_DOPPLER_5_DI_4 = 0x2e;
 module.exports.DEVICE_TYPE_DI_4_RSM = 0x2f;
 module.exports.DEVICE_TYPE_DI_4_LA = 0x40;
 module.exports.DEVICE_TYPE_MIX_H = 0x41;
+module.exports.DEVICE_TYPE_MIX_V = 0x42;
+module.exports.DEVICE_TYPE_AO_4 = 0x43;
 
 module.exports.DEVICE_TYPE_SMART_TOP_A6P = 0x30;
 module.exports.DEVICE_TYPE_SMART_TOP_G4D = 0x31;
@@ -395,7 +399,8 @@ module.exports.CLOSE = "close";
 
 module.exports.SITE = "site";
 
-module.exports.BIND = "BIND";
+module.exports.BIND = "bind";
+module.exports.DMX512 = "dmx512";
 
 module.exports.DRIVER_TYPE_PROXY = "PROXY";
 module.exports.DRIVER_TYPE_RS21 = "RS21";
@@ -420,6 +425,8 @@ module.exports.DRIVER_TYPE_RTD_RA = "RT_DA";
 module.exports.DRIVER_TYPE_ALINK = "ALINK";
 module.exports.DRIVER_TYPE_ME210_701 = "ME210_710";
 module.exports.DRIVER_TYPE_DAUERHAFT = 'DAUERHAFT';
+module.exports.DRIVER_TYPE_DMX512 = 'DMX512';
+module.exports.DRIVER_TYPE_TELEGRAM = "TELEGRAM";
 
 module.exports.DALI_LIGHT = 'dali_light';
 module.exports.DALI_GROUP = 'dali_group';

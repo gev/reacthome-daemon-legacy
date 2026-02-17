@@ -1,5 +1,5 @@
 
 const token = require('./token');
-const notyfy = require('./notify');
+const notify = require('./notify');
 
-module.exports = {...token, ...notyfy};
+module.exports = {...token, ...notify};

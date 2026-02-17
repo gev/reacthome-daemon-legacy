@@ -105,6 +105,11 @@ const {
   DEVICE_TYPE_LANAMP,
   DEVICE_TYPE_SOUNDBOX,
   DEVICE_TYPE_SMART_TOP_A4TD_7S,
+  ACTION_AO,
+  ACTION_GET_STATE,
+  ACTION_DMX512,
+  DEVICE_TYPE_RELAY_12_RS,
+  DEVICE_TYPE_MIX_6x12_RS,
 } = require("../constants");
 const {
   get,
@@ -143,8 +148,8 @@ module.exports.manage = () => {
 
   const handleData = (data, { address }, { hub = null } = {}) => {
     try {
-      const dev_mac = Array.from(data.slice(0, 6));
-      const id = dev_mac.map((i) => `0${i.toString(16)}`.slice(-2)).join(":");
+      const dev_mac = data.slice(0, 6);
+      const id = Array.from(dev_mac).map((i) => `0${i.toString(16)}`.slice(-2)).join(":");
       const dev = get(id) || {};
       if (dev) {
         online(id, { ip: address, hub, type: dev.type });
@@ -317,6 +322,36 @@ module.exports.manage = () => {
           }
           break;
         }
+        case ACTION_GET_STATE: {
+          const { type } = get(id) || {};
+          switch (type) {
+            case DEVICE_TYPE_RELAY_12_RS: {
+              const valuesDO = data.readUInt16LE(7);
+              for (let i = 1; i <= 12; i++) {
+                let value = (valuesDO & (1 << (i - 1))) ? 1 : 0;
+                let payload = Buffer.from([ACTION_DO, i, value]);
+                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              }
+              break;
+            }
+            case DEVICE_TYPE_MIX_6x12_RS: {
+              const valuesDI = data.readUInt16LE(7);
+              for (let i = 1; i <= 12; i++) {
+                let value = (valuesDI & (1 << (i - 1))) ? 1 : 0;
+                let payload = Buffer.from([ACTION_DI, i, value]);
+                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              }
+              const valuesDO = data.readUInt8(9);
+              for (let i = 1; i <= 6; i++) {
+                let value = (valuesDO & (1 << (i - 1))) ? 1 : 0;
+                let payload = Buffer.from([ACTION_DO, i, value]);
+                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              }
+              break;
+            }
+          }
+          break;
+        }
         case ACTION_GROUP: {
           const index = data[7];
           const enabled = data[8];
@@ -343,16 +378,34 @@ module.exports.manage = () => {
           });
           break;
         }
-        case ACTION_RS485_MODE: {
+        case ACTION_AO: {
           const index = data[7];
-          const is_rbus = data[8];
-          const baud = data.readUInt32LE(9);
-          const line_control = data[13];
-          const channel = `${id}/${RS485}/${index}`;
-          set(channel, { is_rbus, baud, line_control });
+          const value = data[8];
+          const channel = `${id}/${AO}/${index}`;
+          set(channel, { value });
           break;
         }
-        case ACTION_RS485_TRANSMIT: {
+        case ACTION_RS485_MODE: {
+          const { version = "" } = get(id) || {};
+          const major = parseInt(version.split(".")[0], 10);
+          const index = data[7];
+          const channel = `${id}/${RS485}/${index}`;
+          if (major > 5) {
+            const rs485_mode = data[8];
+            const baud = data.readUInt32BE(9);
+            const line_control = data[13];
+            const size_dmx = Math.min(data.readUInt16BE(14), 512);
+            set(channel, { rs485_mode, is_rbus: rs485_mode === 1 ? 1 : 0, baud, line_control, size_dmx });
+          } else {
+            const is_rbus = data[8];
+            const baud = data.readUInt32LE(9);
+            const line_control = data[13];
+            set(channel, { is_rbus, rs485_mode: is_rbus, baud, line_control });
+          }
+          break;
+        }
+        case ACTION_RS485_TRANSMIT:
+        case ACTION_DMX512: {
           const index = data[7];
           const channel = `${id}/${RS485}/${index}`;
           const { bind } = get(channel) || {};
@@ -850,14 +903,14 @@ module.exports.manage = () => {
           if (lookup) {
             const buff = Buffer.alloc(15);
             buff.writeUInt8(ACTION_IP_ADDRESS, 0);
-            Buffer.from(dev_mac).copy(buff, 1, 0, 6);
+            dev_mac.copy(buff, 1, 0, 6);
             buff.writeUInt32BE(lookup, 7);
             buff.writeUInt32BE(SUB_NET_MASK, 11);
             device.send(buff, DEVICE_GROUP);
           } else if (last_ip < IP_ADDRESS_POOL_END) {
             const buff = Buffer.alloc(15);
             buff.writeUInt8(ACTION_IP_ADDRESS, 0);
-            Buffer.from(dev_mac).copy(buff, 1, 0, 6);
+            dev_mac.copy(buff, 1, 0, 6);
             const pool = Object.values(get(POOL) || {});
             while (last_ip < IP_ADDRESS_POOL_END) {
               if (!pool.includes(last_ip)) break;
@@ -1001,6 +1054,13 @@ module.exports.manage = () => {
 
 
 const calcTemperature = site => {
+  if (!site) return;
+  if (Array.isArray(site)) {
+    for (const s of site) {
+      calcTemperature(s);
+    }
+    return;
+  }
   const { sensor = [], temperature_sensor = [], thermostat = [] } = get(site) || {};
   let temperature = 0;
   let n = 0;
@@ -1026,6 +1086,13 @@ const calcTemperature = site => {
 }
 
 const calcHumidity = site => {
+  if (!site) return;
+  if (Array.isArray(site)) {
+    for (const s of site) {
+      calcHumidity(s);
+    }
+    return;
+  }
   const { sensor = [], humidity_sensor = [], hygrostat = [] } = get(site) || {};
   let humidity = 0;
   let n = 0;
@@ -1051,6 +1118,13 @@ const calcHumidity = site => {
 }
 
 const calcIllumination = site => {
+  if (!site) return;
+  if (Array.isArray(site)) {
+    for (const s of site) {
+      calcIllumination(s);
+    }
+    return;
+  }
   const { sensor = [], illumination_sensor = [] } = get(site) || {};
   let illumination = 0;
   let n = 0;
@@ -1069,6 +1143,13 @@ const calcIllumination = site => {
 }
 
 const calcCO2 = site => {
+  if (!site) return;
+  if (Array.isArray(site)) {
+    for (const s of site) {
+      calcCO2(s);
+    }
+    return;
+  }
   const { sensor = [], co2_sensor = [], co2_stat = [] } = get(site) || {};
   let co2 = 0;
   let n = 0;
