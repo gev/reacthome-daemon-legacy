@@ -2628,6 +2628,18 @@ const run = (action) => {
         } = action;
         const { setpoint, mode, site } = get(id) || {};
         const { temperature } = get(site) || {};
+        // INC-009: В БД setpoint/hysteresis/threshold часто приходят как строки ("0.5", "2").
+        // Арифметика с пустой строкой или нечислом даёт NaN → сравнения дают false → термостат
+        // молча перестаёт включать/выключать контуры. Приводим к числу с безопасными дефолтами.
+        const toNum = (v, def) => {
+          const n = Number(v);
+          return Number.isFinite(n) ? n : def;
+        };
+        const S = toNum(setpoint, 24);
+        const coolH = toNum(cool_hysteresis, 0.5);
+        const coolTh = toNum(cool_threshold, 2);
+        const heatH = toNum(heat_hysteresis, 0.5);
+        const heatTh = toNum(heat_threshold, 2);
         const make = (state, script, mode, enabled, intensity, onIntensity = []) => () => {
           set(id, { state, mode });
           if (!enabled) return;
@@ -2645,13 +2657,13 @@ const run = (action) => {
         switch (mode) {
           case HEAT: {
             // stopCool();
-            if (temperature > setpoint - (- heat_threshold)) {
+            if (temperature > S - (-heatTh)) {
               stopHeat();
               startCool();
-            } else if (temperature > setpoint - (- heat_hysteresis)) {
+            } else if (temperature > S - (-heatH)) {
               // stopCool();
               stopHeat();
-            } else if (temperature < setpoint - heat_hysteresis) {
+            } else if (temperature < S - heatH) {
               // stopCool();
               startHeat();
             }
@@ -2659,23 +2671,23 @@ const run = (action) => {
           }
           case COOL: {
             // stopHeat();
-            if (temperature < setpoint - cool_threshold) {
+            if (temperature < S - coolTh) {
               stopCool();
               startHeat();
-            } else if (temperature < setpoint - cool_hysteresis) {
+            } else if (temperature < S - coolH) {
               // stopHeat();
               stopCool();
-            } else if (temperature > setpoint - (- cool_hysteresis)) {
+            } else if (temperature > S - (-coolH)) {
               // stopHeat();
               startCool();
             }
             break;
           }
           default: {
-            if (temperature > setpoint) {
+            if (temperature > S) {
               stopHeat();
               startCool();
-            } else if (temperature < setpoint) {
+            } else if (temperature < S) {
               stopCool();
               startHeat();
             } else {
@@ -3111,7 +3123,12 @@ const run = (action) => {
         break;
       }
       case ACTION_SHELL_START: {
-        const { id, command } = action;
+        const { id } = action;
+        const command = action.command ?? action.payload?.command ?? (get(id) || {}).command;
+        if (!command || typeof command !== 'string') {
+          set(id, { error: 'command required' });
+          return;
+        }
         const { pid } = get(id) || {};
         if (pid) {
           try {
