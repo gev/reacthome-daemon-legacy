@@ -2626,7 +2626,7 @@ const run = (action) => {
           onCoolIntensity,
           onHeatIntensity,
         } = action;
-        const { setpoint, mode, site } = get(id) || {};
+        const { setpoint, mode, site, auto_hysteresis } = get(id) || {};
         const { temperature } = get(site) || {};
         // INC-009: В БД setpoint/hysteresis/threshold часто приходят как строки ("0.5", "2").
         // Арифметика с пустой строкой или нечислом даёт NaN → сравнения дают false → термостат
@@ -2640,6 +2640,8 @@ const run = (action) => {
         const coolTh = toNum(cool_threshold, 2);
         const heatH = toNum(heat_hysteresis, 0.5);
         const heatTh = toNum(heat_threshold, 2);
+        // INC-010: в AUTO без гистерезиса при шуме датчика дрыгают актуаторы; вводим мёртвую зону.
+        const autoH = toNum(auto_hysteresis, 0.3);
         const make = (state, script, mode, enabled, intensity, onIntensity = []) => () => {
           set(id, { state, mode });
           if (!enabled) return;
@@ -2684,10 +2686,11 @@ const run = (action) => {
             break;
           }
           default: {
-            if (temperature > S) {
+            // INC-010: гистерезис AUTO — в зоне [S - autoH, S + autoH] не переключаем, останавливаем оба.
+            if (temperature > S + autoH) {
               stopHeat();
               startCool();
-            } else if (temperature < S) {
+            } else if (temperature < S - autoH) {
               stopCool();
               startHeat();
             } else {
