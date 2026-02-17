@@ -2667,46 +2667,56 @@ const run = (action) => {
         const stopHeat = make(STOP, onStopHeat, mode, heat);
         const startCool = make(COOL, onStartCool, COOL, cool, cool_intensity, onCoolIntensity);
         const startHeat = make(HEAT, onStartHeat, HEAT, heat, heat_intensity, onHeatIntensity);
+        // INC-014: идемпотентность — не вызываем start/stop повторно, если state уже целевой.
+        const runIfStateChanged = (nextState, fn) => {
+          const { state: currentState } = get(id) || {};
+          if (currentState === nextState) return;
+          fn();
+        };
+        const stopCoolIfNeeded = () => runIfStateChanged(STOP, stopCool);
+        const stopHeatIfNeeded = () => runIfStateChanged(STOP, stopHeat);
+        const startCoolIfNeeded = () => runIfStateChanged(COOL, startCool);
+        const startHeatIfNeeded = () => runIfStateChanged(HEAT, startHeat);
         switch (mode) {
           case HEAT: {
             // stopCool();
             if (temperature > S - (-heatThN)) {
-              stopHeat();
-              startCool();
+              stopHeatIfNeeded();
+              startCoolIfNeeded();
             } else if (temperature > S - (-heatH)) {
               // stopCool();
-              stopHeat();
+              stopHeatIfNeeded();
             } else if (temperature < S - heatH) {
               // stopCool();
-              startHeat();
+              startHeatIfNeeded();
             }
             break;
           }
           case COOL: {
             // stopHeat();
             if (temperature < S - coolThN) {
-              stopCool();
-              startHeat();
+              stopCoolIfNeeded();
+              startHeatIfNeeded();
             } else if (temperature < S - coolH) {
               // stopHeat();
-              stopCool();
+              stopCoolIfNeeded();
             } else if (temperature > S - (-coolH)) {
               // stopHeat();
-              startCool();
+              startCoolIfNeeded();
             }
             break;
           }
           default: {
             // INC-010: гистерезис AUTO — в зоне [S - autoH, S + autoH] не переключаем, останавливаем оба.
             if (temperature > S + autoH) {
-              stopHeat();
-              startCool();
+              stopHeatIfNeeded();
+              startCoolIfNeeded();
             } else if (temperature < S - autoH) {
-              stopCool();
-              startHeat();
+              stopCoolIfNeeded();
+              startHeatIfNeeded();
             } else {
-              stopCool();
-              stopHeat();
+              stopCoolIfNeeded();
+              stopHeatIfNeeded();
             }
           }
         }
