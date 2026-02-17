@@ -202,13 +202,6 @@ const {
   DIM,
   DO,
   DEVICE_TYPE_SMART_TOP_A4TD_7S,
-  DRIVER_TYPE_PROXY,
-  DEVICE_TYPE_MIX_V,
-  ACTION_AO,
-  AO,
-  DEVICE_TYPE_AO_4,
-  ACTION_DMX512,
-  DRIVER_TYPE_DMX512,
 } = require("../constants");
 const { NOTIFY } = require("../notification/constants");
 const notification = require("../notification");
@@ -316,7 +309,6 @@ const run = (action) => {
           case DEVICE_TYPE_MIX_1_RS:
           case DEVICE_TYPE_MIX_6x12_RS:
           case DEVICE_TYPE_MIX_H:
-          case DEVICE_TYPE_MIX_V:
           case DEVICE_TYPE_RELAY_2:
           case DEVICE_TYPE_RELAY_2_DIN:
           case DEVICE_TYPE_RELAY_12_RS: {
@@ -610,16 +602,6 @@ const run = (action) => {
         }
         break;
       }
-      case ACTION_AO: {
-        device.sendRBUS(Buffer.from([
-          ACTION_AO,
-          action.index,
-          action.value,
-        ]),
-          action.id
-        );
-        break;
-      }
       case ACTION_DOPPLER0: {
         const dev = get(action.id);
         device.send(Buffer.from([ACTION_DOPPLER0, action.gain]), dev.ip);
@@ -630,7 +612,6 @@ const run = (action) => {
         switch (dev.type) {
           case DEVICE_TYPE_DIM_8_RS:
           case DEVICE_TYPE_MIX_H:
-          case DEVICE_TYPE_MIX_V:
           case DEVICE_TYPE_DIM_12_LED_RS:
           case DEVICE_TYPE_DIM_12_AC_RS:
           case DEVICE_TYPE_DIM_12_DC_RS:
@@ -756,10 +737,6 @@ const run = (action) => {
         }
         break;
       }
-      case ACTION_DMX512: {
-        drivers.run(action);
-        break;
-      }
       case ACTION_ARTNET: {
         drivers.run(action);
         break;
@@ -876,16 +853,6 @@ const run = (action) => {
                     action: ARTNET_FADE,
                     value: v,
                     velocity: ARTNET_VELOCITY,
-                  });
-                  break;
-                }
-                case DRIVER_TYPE_DMX512: {
-                  drivers.run({
-                    id: dev,
-                    index,
-                    action: DIM_FADE,
-                    value: v,
-                    velocity: DIM_VELOCITY,
                   });
                   break;
                 }
@@ -1577,7 +1544,6 @@ const run = (action) => {
                   );
                   break;
                 }
-                case DEVICE_TYPE_MIX_V:
                 case DEVICE_TYPE_MIX_H: {
                   switch (kind) {
                     case DIM: {
@@ -1643,16 +1609,6 @@ const run = (action) => {
                   }
                   break;
                 }
-                case DRIVER_TYPE_DMX512: {
-                  drivers.run({
-                    id: dev,
-                    index,
-                    action: DIM_FADE,
-                    value,
-                    velocity: DIM_VELOCITY,
-                  });
-                  break;
-                }
                 case DRIVER_TYPE_DALI_GW:
                 case DRIVER_TYPE_DALI_DLC: {
                   drivers.run({
@@ -1666,12 +1622,6 @@ const run = (action) => {
                 case DRIVER_TYPE_BB_PLC1:
                 case DRIVER_TYPE_BB_PLC2: {
                   drivers.run({ id: dev, index, value: ON });
-                  break;
-                }
-                case DRIVER_TYPE_PROXY: {
-                  const proxy = get(o.bind) || {};
-                  const target = get(proxy.proxy) || {};
-                  // run({ id: o[i], type: ACTION_ON });
                   break;
                 }
                 default: {
@@ -1815,7 +1765,6 @@ const run = (action) => {
                   );
                   break;
                 }
-                case DEVICE_TYPE_MIX_V:
                 case DEVICE_TYPE_MIX_H: {
                   switch (kind) {
                     case DIM: {
@@ -1881,16 +1830,6 @@ const run = (action) => {
                   }
                   break;
                 }
-                case DRIVER_TYPE_DMX512: {
-                  drivers.run({
-                    id: dev,
-                    index,
-                    action: DIM_FADE,
-                    value: 0,
-                    velocity: DIM_VELOCITY,
-                  });
-                  break;
-                }
                 case DRIVER_TYPE_DALI_GW:
                 case DRIVER_TYPE_DALI_DLC: {
                   drivers.run({
@@ -1904,12 +1843,6 @@ const run = (action) => {
                 case DRIVER_TYPE_BB_PLC1:
                 case DRIVER_TYPE_BB_PLC2: {
                   drivers.run({ id: dev, index, value: OFF });
-                  break;
-                }
-                case DRIVER_TYPE_PROXY: {
-                  const proxy = get(o.bind) || {};
-                  const target = get(proxy.proxy) || {};
-                  // run({ id: o[i], type: ACTION_OFF });
                   break;
                 }
                 default: {
@@ -1982,79 +1915,20 @@ const run = (action) => {
                 case DEVICE_TYPE_DIM_12_AC_RS:
                 case DEVICE_TYPE_DIM_12_DC_RS:
                 case DEVICE_TYPE_DIM_1_AC_RS:
+                case DEVICE_TYPE_DI_4_RSM:
                 case DEVICE_TYPE_AO_4_DIN: {
                   device.sendRBUS(Buffer.from([
                     ACTION_DIMMER,
                     index,
                     DIM_FADE,
                     v,
-                    deviceType === DEVICE_TYPE_AO_4_DIN
+                    deviceType === DEVICE_TYPE_DI_4_RSM ||
+                      deviceType === DEVICE_TYPE_AO_4_DIN
                       ? AO_VELOCITY
                       : dimVelocity,
                   ]),
                     dev
                   );
-                  break;
-                }
-                case DEVICE_TYPE_DI_4_RSM: {
-                  const { version = "" } = get(dev) || {};
-                  const [major] = version.split(".");
-                  if (major >= 3) {
-                    device.sendRBUS(Buffer.from([
-                      ACTION_AO,
-                      index,
-                      v,
-                    ]),
-                      dev
-                    );
-                  } else {
-                    device.sendRBUS(Buffer.from([
-                      ACTION_DIMMER,
-                      index,
-                      DIM_FADE,
-                      v,
-                      AO_VELOCITY
-                    ]),
-                      dev
-                    );
-                  }
-                  break;
-                }
-                case DEVICE_TYPE_AO_4: {
-                  device.sendRBUS(Buffer.from([
-                    ACTION_AO,
-                    index,
-                    v,
-                  ]),
-                    dev
-                  );
-                  break;
-                }
-                case DEVICE_TYPE_MIX_V: {
-                  switch (kind) {
-                    case DIM: {
-                      device.sendRBUS(Buffer.from([
-                        ACTION_DIMMER,
-                        index,
-                        DIM_FADE,
-                        v,
-                        dimVelocity,
-                      ]),
-                        dev
-                      );
-                      break;
-                    }
-                    case AO: {
-                      device.sendRBUS(Buffer.from([
-                        ACTION_AO,
-                        index,
-                        v,
-                      ]),
-                        dev
-                      );
-                    }
-                      break;
-                  }
                   break;
                 }
                 case DRIVER_TYPE_ARTNET: {
@@ -2067,16 +1941,6 @@ const run = (action) => {
                   });
                   break;
                 }
-                case DRIVER_TYPE_DMX512: {
-                  drivers.run({
-                    id: dev,
-                    index,
-                    action: DIM_FADE,
-                    value: v,
-                    velocity: dimVelocity,
-                  });
-                  break;
-                }
                 case DRIVER_TYPE_DALI_GW:
                 case DRIVER_TYPE_DALI_DLC: {
                   drivers.run({
@@ -2085,41 +1949,6 @@ const run = (action) => {
                     index,
                     value: v,
                   });
-                  break;
-                }
-                case DRIVER_TYPE_PROXY: {
-                  const proxy = get(o[c]) || {};
-                  const target = get(proxy.proxy) || {};
-                  switch (target.type) {
-                    case HYGROSTAT: {
-                      run({ id: proxy.proxy, type: ACTION_SETPOINT, humidity: v / 2.55 });
-                      break;
-                    }
-                    case DRIVER_TYPE_SWIFT: {
-                      switch (proxy.mode) {
-                        case 'setpoint': {
-                          drivers.run({ id: proxy.proxy, type: ACTION_SETPOINT, value: v / 2.55 });
-                          break;
-                        }
-                        case 'speed': {
-                          drivers.run({ id: proxy.proxy, type: ACTION_SET_FAN_SPEED, value: Math.round(v / 25.5) });
-                          break;
-                        }
-                      }
-                      break;
-                    }
-                    default: {
-                      const [id, type, index] = proxy.proxy.split("/");
-                      if (type === 'curtain') {
-                        drivers.run({
-                          type: ACTION_SET_POSITION,
-                          id,
-                          index,
-                          position: action.value / 2.55
-                        });
-                      }
-                    }
-                  }
                   break;
                 }
               }
@@ -2187,7 +2016,6 @@ const run = (action) => {
             case DEVICE_TYPE_DIM_8_RS:
             case DEVICE_TYPE_DIM_12_LED_RS:
             case DEVICE_TYPE_MIX_H:
-            case DEVICE_TYPE_MIX_V:
             case DEVICE_TYPE_DIM_12_AC_RS:
             case DEVICE_TYPE_DIM_12_DC_RS:
             case DEVICE_TYPE_DIM_1_AC_RS:
@@ -2218,16 +2046,6 @@ const run = (action) => {
                 action: ARTNET_FADE,
                 value: v,
                 velocity: ARTNET_VELOCITY,
-              });
-              break;
-            }
-            case DRIVER_TYPE_DMX512: {
-              drivers.run({
-                id: dev,
-                index,
-                action: DIM_FADE,
-                value: v,
-                velocity: DIM_VELOCITY,
               });
               break;
             }
@@ -2291,44 +2109,22 @@ const run = (action) => {
         break;
       }
       case ACTION_RS485_MODE: {
-        const { id, is_rbus, rs485_mode, index, baud, line_control, size_dmx } = action;
+        const { id, index, is_rbus, baud, line_control } = action;
         const { ip, type } = get(id) || {};
-        const dev = get(action.id);
-        const { version = "" } = dev;
-        const major = parseInt(version.split(".")[0], 10);
+        const buffer = Buffer.alloc(8);
+        buffer[0] = ACTION_RS485_MODE;
+        buffer[1] = index;
+        buffer[2] = is_rbus;
+        buffer.writeUInt32LE(baud, 3);
+        buffer[7] = line_control;
         switch (type) {
-          case DEVICE_TYPE_RS_HUB4:
-          case DEVICE_TYPE_SERVER: {
-            if (major > 5) {
-              const buffer = Buffer.alloc(10);
-              buffer[0] = ACTION_RS485_MODE;
-              buffer[1] = index;
-              buffer[2] = rs485_mode;
-              buffer.writeUInt32BE(baud, 3);
-              buffer[7] = line_control;
-              buffer.writeUInt16BE(size_dmx, 8);
-              device.send(buffer, ip);
-            } else {
-              const buffer = Buffer.alloc(8);
-              buffer[0] = ACTION_RS485_MODE;
-              buffer[1] = index;
-              buffer[2] = is_rbus;
-              buffer.writeUInt32LE(baud, 3);
-              buffer[7] = line_control;
-              device.send(buffer, ip);
-            }
-            break;
-          }
           case DEVICE_TYPE_DI_4_RSM:
           case DEVICE_TYPE_RS_HUB1_RS: {
-            const buffer = Buffer.alloc(8);
-            buffer[0] = ACTION_RS485_MODE;
-            buffer[1] = index;
-            buffer[2] = is_rbus;
-            buffer.writeUInt32LE(baud, 3);
-            buffer[7] = line_control;
             device.sendRBUS(buffer, action.id);
             break;
+          }
+          default: {
+            device.send(buffer, ip);
           }
         }
         break;
@@ -2851,6 +2647,9 @@ const run = (action) => {
         const coolTh = toNum(cool_threshold, 2);
         const heatH = toNum(heat_hysteresis, 0.5);
         const heatTh = toNum(heat_threshold, 2);
+        // INC-012: при Th < H зоны неоднозначны; нормализуем threshold >= hysteresis для однозначной интерпретации.
+        const coolThN = Math.max(coolTh, coolH);
+        const heatThN = Math.max(heatTh, heatH);
         // INC-010: в AUTO без гистерезиса при шуме датчика дрыгают актуаторы; вводим мёртвую зону.
         const autoH = toNum(auto_hysteresis, 0.3);
         const make = (state, script, mode, enabled, intensity, onIntensity = []) => () => {
@@ -2870,7 +2669,7 @@ const run = (action) => {
         switch (mode) {
           case HEAT: {
             // stopCool();
-            if (temperature > S - (-heatTh)) {
+            if (temperature > S - (-heatThN)) {
               stopHeat();
               startCool();
             } else if (temperature > S - (-heatH)) {
@@ -2884,7 +2683,7 @@ const run = (action) => {
           }
           case COOL: {
             // stopHeat();
-            if (temperature < S - coolTh) {
+            if (temperature < S - coolThN) {
               stopCool();
               startHeat();
             } else if (temperature < S - coolH) {
@@ -3178,12 +2977,11 @@ const run = (action) => {
       }
       case NOTIFY: {
         notification.broadcastNotification(action);
-        drivers.run(action);
         break;
       }
       case RING: {
         notification.broadcastAction(action);
-        drivers.run(action);
+        childProcess.exec("./ring.sh");
         break;
       }
       case CLOSURE: {
@@ -3404,7 +3202,7 @@ const run = (action) => {
         if (script && Array.isArray(script.action)) {
           if (script.disabled) return;
           for (const i of script.action) {
-            const { type, payload, delay } = get(i) || {};
+            const { type, payload, delay } = get(i);
             const a = { action: i, type, ...payload };
             if (delay > 0) {
               setTimeout(run, delay, a);
