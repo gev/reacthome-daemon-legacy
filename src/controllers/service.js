@@ -2652,9 +2652,10 @@ const run = (action) => {
         const heatThN = Math.max(heatTh, heatH);
         // INC-010: в AUTO без гистерезиса при шуме датчика дрыгают актуаторы; вводим мёртвую зону.
         const autoH = toNum(auto_hysteresis, 0.3);
+        // INC-013: обновляем state/mode только при enabled — иначе рассинхрон БД и актуатора.
         const make = (state, script, mode, enabled, intensity, onIntensity = []) => () => {
-          set(id, { state, mode });
           if (!enabled) return;
+          set(id, { state, mode });
           if (script) {
             run({ type: ACTION_SCRIPT_RUN, id: script });
           }
