@@ -2628,6 +2628,13 @@ const run = (action) => {
         } = action;
         const { setpoint, mode, site, auto_hysteresis } = get(id) || {};
         const { temperature } = get(site) || {};
+        // INC-011: при отсутствии/невалидной температуре не дергаем контуры — не гасим работающее оборудование.
+        if (typeof temperature !== 'number' || !Number.isFinite(temperature)) {
+          if (temperature !== undefined && temperature !== null) {
+            console.warn('[thermostat] invalid temperature', id, temperature);
+          }
+          break;
+        }
         // INC-009: В БД setpoint/hysteresis/threshold часто приходят как строки ("0.5", "2").
         // Арифметика с пустой строкой или нечислом даёт NaN → сравнения дают false → термостат
         // молча перестаёт включать/выключать контуры. Приводим к числу с безопасными дефолтами.
