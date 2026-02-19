@@ -112,6 +112,11 @@ const {
   DEVICE_TYPE_MIX_6x12_RS,
   DEVICE_TYPE_DIM_12_AC_RS,
   DEVICE_TYPE_DIM_12_DC_RS,
+  DEVICE_TYPE_DIM_1_AC_RS,
+  DEVICE_TYPE_SERVER,
+  DEVICE_TYPE_RS_HUB4,
+  DEVICE_TYPE_MIX_H,
+  DEVICE_TYPE_MIX_V,
 } = require("../constants");
 const {
   get,
@@ -324,7 +329,6 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_GET_STATE: {
-          console.log(data);
           const { type } = get(id) || {};
           switch (type) {
             case DEVICE_TYPE_RELAY_12_RS: {
@@ -358,7 +362,81 @@ module.exports.manage = () => {
                 const channel = `${id}/${DIM}/${i}`;
                 const chan = get(channel);
                 let payload = Buffer.from([ACTION_DIMMER, i, chan.group, chan.type, value, chan.velocity]);
+                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              }
+              break;
+            }
+            case DEVICE_TYPE_DIM_1_AC_RS: {
+              const chNum = 1;
+              let value = data.readUInt8(6 + chNum);
+              const channel = `${id}/${DIM}/${chNum}`;
+              const chan = get(channel);
+              let payload = Buffer.from([ACTION_DIMMER, chNum, chan.group, chan.type, value, chan.velocity]);
+              handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              break;
+            }
+            case DEVICE_TYPE_SERVER:
+            case DEVICE_TYPE_RS_HUB4: {
+              const valuesDI = data.readUInt8(7);
+              for (let i = 1; i <= 4; i++) {
+                let value = (valuesDI & (1 << (i - 1))) ? 1 : 0;
+                let payload = Buffer.from([ACTION_DI, i, value]);
+                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              }
+              for (let i = 1; i <= 3; i++) {
+                let value = data.readUInt8(7 + i);
+                const channel = `${id}/${DIM}/${i}`;
+                const chan = get(channel);
+                let payload = Buffer.from([ACTION_DIMMER, i, chan.group, chan.type, value, chan.velocity]);
                 console.log(payload);
+                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              }
+              break;
+            }
+            case DEVICE_TYPE_MIX_H: {
+              const valuesDI = data.readUInt8(7);
+              for (let i = 1; i <= 8; i++) {
+                let value = (valuesDI & (1 << (i - 1))) ? 1 : 0;
+                let payload = Buffer.from([ACTION_DI, i, value]);
+                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              }
+              const valuesDO = data.readUInt8(8);
+              for (let i = 1; i <= 2; i++) {
+                let value = (valuesDO & (1 << (i - 1))) ? 1 : 0;
+                let payload = Buffer.from([ACTION_DO, i, value]);
+                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              }
+              for (let i = 1; i <= 6; i++) {
+                let value = data.readUInt8(8 + i);
+                const channel = `${id}/${DIM}/${i}`;
+                const chan = get(channel);
+                let payload = Buffer.from([ACTION_DIMMER, i, chan.group, chan.type, value, chan.velocity]);
+                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              }
+              break;
+            }
+            case DEVICE_TYPE_MIX_V: {
+              const valuesDI = data.readUInt8(7);
+              for (let i = 1; i <= 8; i++) {
+                let value = (valuesDI & (1 << (i - 1))) ? 1 : 0;
+                let payload = Buffer.from([ACTION_DI, i, value]);
+                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              }
+              const valuesDO = data.readUInt8(8);
+              const chNum = 1;
+              let value = (valuesDO & (1 << (chNum - 1))) ? 1 : 0;
+              let payload = Buffer.from([ACTION_DO, chNum, value]);
+              handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              for (let i = 1; i <= 2; i++) {
+                let value = data.readUInt8(8 + i);
+                const channel = `${id}/${DIM}/${i}`;
+                const chan = get(channel);
+                let payload = Buffer.from([ACTION_DIMMER, i, chan.group, chan.type, value, chan.velocity]);
+                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              }
+              for (let i = 1; i <= 2; i++) {
+                let value = data.readUInt8(10 + i);
+                let payload = Buffer.from([ACTION_AO, i, value]);
                 handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
               }
               break;
