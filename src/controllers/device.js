@@ -119,6 +119,8 @@ const {
   DEVICE_TYPE_MIX_V,
   DEVICE_TYPE_DI_4,
   DEVICE_TYPE_DI_4_LA,
+  DEVICE_TYPE_DOPPLER_1_DI_4,
+  DEVICE_TYPE_DOPPLER_5_DI_4,
 } = require("../constants");
 const {
   get,
@@ -445,7 +447,9 @@ module.exports.manage = () => {
               break;
             }
             case DEVICE_TYPE_DI_4:
-            case DEVICE_TYPE_DI_4_LA: {
+            case DEVICE_TYPE_DI_4_LA:
+            case DEVICE_TYPE_DOPPLER_1_DI_4:
+            case DEVICE_TYPE_DOPPLER_5_DI_4: {
               const valuesDI = data.readUInt8(7);
               for (let i = 1; i <= 4; i++) {
                 let value = (valuesDI & (1 << (i - 1))) ? 1 : 0;
