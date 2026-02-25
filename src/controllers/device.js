@@ -445,7 +445,15 @@ module.exports.manage = () => {
               break;
             }
             case DEVICE_TYPE_DI_4:
-            case DEVICE_TYPE_DI_4_LA:
+            case DEVICE_TYPE_DI_4_LA: {
+              const valuesDI = data.readUInt8(7);
+              for (let i = 1; i <= 4; i++) {
+                let value = (valuesDI & (1 << (i - 1))) ? 1 : 0;
+                let payload = Buffer.from([ACTION_DI, i, value]);
+                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              }
+              break;
+            }
             case DEVICE_TYPE_DI_4_RSM: {
               const valuesDI = data.readUInt8(7);
               for (let i = 1; i <= 4; i++) {
@@ -453,6 +461,10 @@ module.exports.manage = () => {
                 let payload = Buffer.from([ACTION_DI, i, value]);
                 handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
               }
+              const valueAO = data.readUInt8(8);
+              let payload = Buffer.from([ACTION_AO, i, valueAO]);
+              handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              break;
             }
           }
           break;
