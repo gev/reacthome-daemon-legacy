@@ -337,6 +337,46 @@ module.exports.manage = () => {
         case ACTION_GET_STATE: {
           const { type } = get(id) || {};
           switch (type) {
+            case DEVICE_TYPE_SMART_TOP_G2: {
+              const valuesDI = data.readUInt8(7);
+              for (let i = 1; i <= 2; i++) {
+                let value = (valuesDI & (1 << (i - 1))) ? 1 : 0;
+                let payload = Buffer.from([ACTION_DI, i, value]);
+                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              }
+              break;
+            }
+            case DEVICE_TYPE_DI_4:
+            case DEVICE_TYPE_DI_4_LA:
+            case DEVICE_TYPE_DOPPLER_1_DI_4:
+            case DEVICE_TYPE_DOPPLER_5_DI_4:
+            case DEVICE_TYPE_SMART_BOTTOM_1:
+            case DEVICE_TYPE_SMART_BOTTOM_2:
+            case DEVICE_TYPE_SMART_TOP_A4P:
+            case DEVICE_TYPE_SMART_TOP_A4T:
+            case DEVICE_TYPE_SMART_TOP_A4TD:
+            case DEVICE_TYPE_SMART_TOP_A4TD_7S:
+            case DEVICE_TYPE_SMART_TOP_G4:
+            case DEVICE_TYPE_SMART_TOP_G4D: {
+              const valuesDI = data.readUInt8(7);
+              for (let i = 1; i <= 4; i++) {
+                let value = (valuesDI & (1 << (i - 1))) ? 1 : 0;
+                let payload = Buffer.from([ACTION_DI, i, value]);
+                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              }
+              break;
+            }
+            case DEVICE_TYPE_SMART_TOP_G6:
+            case DEVICE_TYPE_SMART_TOP_A6T:
+            case DEVICE_TYPE_SMART_TOP_A6P: {
+              const valuesDI = data.readUInt8(7);
+              for (let i = 1; i <= 6; i++) {
+                let value = (valuesDI & (1 << (i - 1))) ? 1 : 0;
+                let payload = Buffer.from([ACTION_DI, i, value]);
+                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              }
+              break;
+            }
             case DEVICE_TYPE_RELAY_12_RS: {
               const valuesDO = data.readUInt16LE(7);
               for (let i = 1; i <= 12; i++) {
@@ -444,20 +484,6 @@ module.exports.manage = () => {
               for (let i = 1; i <= 2; i++) {
                 let value = data.readUInt8(10 + i);
                 let payload = Buffer.from([ACTION_AO, i, value]);
-                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
-              }
-              break;
-            }
-            case DEVICE_TYPE_DI_4:
-            case DEVICE_TYPE_DI_4_LA:
-            case DEVICE_TYPE_SMART_BOTTOM_1:
-            case DEVICE_TYPE_SMART_BOTTOM_2:
-            case DEVICE_TYPE_DOPPLER_1_DI_4:
-            case DEVICE_TYPE_DOPPLER_5_DI_4: {
-              const valuesDI = data.readUInt8(7);
-              for (let i = 1; i <= 4; i++) {
-                let value = (valuesDI & (1 << (i - 1))) ? 1 : 0;
-                let payload = Buffer.from([ACTION_DI, i, value]);
                 handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
               }
               break;
