@@ -260,8 +260,6 @@ module.exports.manage = () => {
               clearTimeout(timeout);
               const { onOffCount = 0 } = chan;
               set(channel, { onOffCount: onOffCount + 1 });
-              console.log(channel, chan);
-              console.log(id, get(id));
               handleOff(id, index, chan);
             }
           } else {
@@ -1241,6 +1239,7 @@ const handle = (handleSmartTop, handleDefault) => (id, index, chan) => {
 const handleSmartTop = () => false;
 
 const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
+  console.log(id, dev, chan, current, mode);
   if (dev.configuring) {
     const site = current.site || dev.site;
     if (site) {
@@ -1751,11 +1750,11 @@ const handleSmartTopHold = (id, dev, chan, current) => {
 }
 
 const handleOn = handle(handleSmartTop, handleDefaultOn);
-const handleClick1 = handle(handleSmartTopClick1, handleDefaultClick1);
+const handleClick1 = handle(handleSmartTop, handleDefaultClick1);
 const handleClick2 = handle(handleSmartTop, handleDefaultClick2);
 const handleClick3 = handle(handleSmartTop, handleDefaultClick3);
 const handleHold = handle(handleSmartTopHold, handleDefaultHold);
-const handleOff = handle(handleSmartTop, handleDefaultOff);
+const handleOff = handle(handleSmartTopClick1, handleDefaultOff);
 
 
 
