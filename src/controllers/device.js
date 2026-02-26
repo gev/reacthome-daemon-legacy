@@ -1226,7 +1226,9 @@ const handle = (handleSmartTop, handleDefault) => (id, index, chan) => {
         if (current.mode === 'MODE_SCENE' && chan.action !== 'menu') {
           return handleDefault(get(`${cid}/${DI}/${index}`), chan);
         }
-        return handleSmartTop(id, dev, chan, current, mode);
+        if (chan.onHoldCount === chan.onHoldCountPrev) {
+          return handleSmartTop(id, dev, chan, current, mode);
+        }
       }
       return false;
     }
@@ -1237,6 +1239,11 @@ const handle = (handleSmartTop, handleDefault) => (id, index, chan) => {
 }
 
 const handleSmartTop = () => false;
+
+const handleSmartTopOn = (id, dev, chan, current, mode) => {
+  chan.onHoldCountPrev = chan.onHoldCount;
+  return false;
+}
 
 const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
   console.log(id, dev, chan, current, mode);
@@ -1749,7 +1756,7 @@ const handleSmartTopHold = (id, dev, chan, current) => {
   return false;
 }
 
-const handleOn = handle(handleSmartTop, handleDefaultOn);
+const handleOn = handle(handleSmartTopOn, handleDefaultOn);
 const handleClick1 = handle(handleSmartTop, handleDefaultClick1);
 const handleClick2 = handle(handleSmartTop, handleDefaultClick2);
 const handleClick3 = handle(handleSmartTop, handleDefaultClick3);
