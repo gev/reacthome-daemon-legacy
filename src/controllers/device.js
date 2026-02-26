@@ -260,6 +260,7 @@ module.exports.manage = () => {
               clearTimeout(timeout);
               const { onOffCount = 0 } = chan;
               set(channel, { onOffCount: onOffCount + 1 });
+              console.log(channel, chan);
               handleOff(id, index, chan);
             }
           } else {
