@@ -1226,9 +1226,7 @@ const handle = (handleSmartTop, handleDefault) => (id, index, chan) => {
         if (current.mode === 'MODE_SCENE' && chan.action !== 'menu') {
           return handleDefault(get(`${cid}/${DI}/${index}`), chan);
         }
-        // if (chan.onHoldCount === chan.onHoldCountPrev) {
-          return handleSmartTop(id, dev, chan, current, mode);
-        // }
+        return handleSmartTop(id, dev, chan, current, mode);
       }
       return false;
     }
@@ -1247,6 +1245,7 @@ const handleSmartTopOn = (id, dev, chan, current, mode) => {
 
 const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
   console.log(id, dev, chan, current, mode);
+  if (chan.onHoldCount != chan.onHoldCountPrev) return;
   if (dev.configuring) {
     const site = current.site || dev.site;
     if (site) {
