@@ -1243,9 +1243,9 @@ const handleSmartTopOn = (id, dev, chan, current, mode) => {
   return false;
 }
 
-const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
-  console.log(id, dev, chan, current, mode);
+const handleSmartTopOff = (id, dev, chan, current, mode) => {
   if (chan.onHoldCount != chan.onHoldCountPrev) return;
+  console.log(id, dev, chan, current, mode);
   if (dev.configuring) {
     const site = current.site || dev.site;
     if (site) {
@@ -1760,7 +1760,7 @@ const handleClick1 = handle(handleSmartTop, handleDefaultClick1);
 const handleClick2 = handle(handleSmartTop, handleDefaultClick2);
 const handleClick3 = handle(handleSmartTop, handleDefaultClick3);
 const handleHold = handle(handleSmartTopHold, handleDefaultHold);
-const handleOff = handle(handleSmartTopClick1, handleDefaultOff);
+const handleOff = handle(handleSmartTopOff, handleDefaultOff);
 
 
 
