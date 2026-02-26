@@ -1226,9 +1226,9 @@ const handle = (handleSmartTop, handleDefault) => (id, index, chan) => {
         if (current.mode === 'MODE_SCENE' && chan.action !== 'menu') {
           return handleDefault(get(`${cid}/${DI}/${index}`), chan);
         }
-        if (chan.onHoldCount === chan.onHoldCountPrev) {
+        // if (chan.onHoldCount === chan.onHoldCountPrev) {
           return handleSmartTop(id, dev, chan, current, mode);
-        }
+        // }
       }
       return false;
     }
