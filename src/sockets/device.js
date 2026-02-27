@@ -62,7 +62,7 @@ setInterval(() => {
   if (run) {
     run();
   }
-}, 3)
+}, 10)
 
 const push = (run) => {
   queue.push(run);
