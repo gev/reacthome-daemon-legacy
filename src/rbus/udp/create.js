@@ -7,13 +7,12 @@ module.exports.createSocket = (rbus, host) => {
   socket.bind(DEVICE_PORT, host);
   socket.on('message', handle(rbus));
   const send = (data) => {
-    if (rbus.mac) {
-      socket.send(
-        Buffer.concat([rbus.mac, data]),
-        DEVICE_SERVER_PORT,
-        '127.0.0.1'
-      )
-    }
+    // console.log("UDP send", data)
+    socket.send(
+      data,
+      DEVICE_SERVER_PORT,
+      '127.0.0.1'
+    )
   }
   rbus.socket = {
     host, send,
@@ -27,4 +26,5 @@ module.exports.createSocket = (rbus, host) => {
       4, 0 // Version
     ]))
   }, 1_000)
+  rbus.socket.send(Buffer.from([...rbus.mac, ACTION_INITIALIZE]));
 }
