@@ -29,9 +29,9 @@ module.exports = (session, message) => {
     switch (action.type) {
       case ACTION_SET: {
         const { id, payload = {} } = action;
-        if (payload.title || payload.code) {
-          initAssistDelayed()
-        }
+        // if (payload.title || payload.code) {
+        //   initAssistDelayed()
+        // }
         if (id !== POOL) {
           set(id, payload);
         }
@@ -139,7 +139,7 @@ module.exports = (session, message) => {
         break;
       }
       default: {
-        run(action);
+        // run(action);
       }
     }
   } catch (e) {
