@@ -54,15 +54,16 @@ device.sendTOP = (data, id) => {
   });
 }
 
-setInterval(() => {
-  const run = queue.shift();
-  if (run) {
-    run();
-  }
-}, 10)
+// setInterval(() => {
+//   const run = queue.shift();
+//   if (run) {
+//     run();
+//   }
+// }, 10)
 
 const push = (run) => {
-  queue.push(run);
+  run();
+  // queue.push(run);
 }
 
 module.exports = device;
