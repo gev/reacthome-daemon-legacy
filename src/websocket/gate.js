@@ -33,10 +33,10 @@ const connect = (id) => {
       }
       handle(session, message);
     } else {
-      deleteSession(session);
-      sessions.delete(session);
-      peers.delete(session);
-      terminals.delete(session);
+      // deleteSession(session);
+      // sessions.delete(session);
+      // peers.delete(session);
+      // terminals.delete(session);
     }
   });
   socket.on("pong", () => {
@@ -51,6 +51,7 @@ const connect = (id) => {
       peers.delete(session);
       terminals.delete(session);
     }
+    clearTimeout(timeout);
     clearInterval(interval);
     setTimeout(connect, TIMEOUT, id);
   });
