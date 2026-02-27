@@ -716,7 +716,10 @@ module.exports.manage = () => {
         case ACTION_TEMPERATURE_EXT_DEPRECATED:
         case ACTION_TEMPERATURE_EXT_OLD:
         case ACTION_TEMPERATURE_EXT: {
-          if (data.length <= 15) {
+          if (data.length <= 17) {
+            return;
+          }
+          if (data[7] !== 0x28) {
             return;
           }
           const dev_id =
