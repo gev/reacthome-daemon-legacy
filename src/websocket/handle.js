@@ -17,7 +17,7 @@ const onPTY = require('../terminal');
 const janus = require('../janus');
 const { CANDIDATE, KEEPALIVE } = require('../janus/constants');
 const { ACTION_ASSIST, ACTION_SET, POOL, ACTION_ADD, ACTION_MAKE_BIND, ACTION_ADD_BIND, ACTION_ASSET, ACTION_DEL } = require('../constants');
-const { handleAssist, initAssistDelayed } = require('../assist');
+// const { handleAssist, initAssistDelayed } = require('../assist');
 const { set, add, makeBind, addBind, del } = require('../actions');
 const { writeFile, asset } = require('../fs');
 
