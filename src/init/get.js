@@ -4,9 +4,9 @@ const { ACTION_SET, ACTION_ASSET } = require('../constants');
 const { asset, exists, readFile } = require('../fs');
 
 module.exports = async ({ state = [], assets = [] }, session) => {
-  for (const id of state) {
-    send(session, { type: ACTION_SET, id, payload: get(id) });
-  }
+  // for (const id of state) {
+  //   send(session, { type: ACTION_SET, id, payload: get(id) });
+  // }
   // for await (const name of assets) {
   //   try {
   //     if (typeof name !== 'string') continue;
