@@ -92,7 +92,7 @@ const load = async () => {
   // cleanup(init);
   assets.init();
   state.init(init);
-  initAssist();
+  // initAssist();
   weather.manage();
   device.manage();
   drivers.manage();
