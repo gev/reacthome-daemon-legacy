@@ -177,18 +177,18 @@ module.exports.manage = () => {
             const chan = get(channel);
             const value = data[i + 42];
             set(channel, { value });
-            if (chan) {
-              const { bind } = chan;
-              if (bind) {
-                if (chan.value !== value) {
-                  const script = chan[onDO[value]];
-                  if (script) {
-                    run({ type: ACTION_SCRIPT_RUN, id: script });
-                  }
-                  count[value](bind);
-                }
-              }
-            }
+            // if (chan) {
+            //   const { bind } = chan;
+            //   if (bind) {
+            //     if (chan.value !== value) {
+            //       const script = chan[onDO[value]];
+            //       if (script) {
+            //         run({ type: ACTION_SCRIPT_RUN, id: script });
+            //       }
+            //       count[value](bind);
+            //     }
+            //   }
+            // }
           }
           break;
         }
@@ -307,17 +307,17 @@ module.exports.manage = () => {
                 set(gid, { value: index % 2 === 0 });
               }
             }
-          } else if (channel) {
-            const { bind } = channel;
-            if (bind) {
-              if (channel.value !== value) {
-                const script = channel[onDO[value]];
-                if (script) {
-                  run({ type: ACTION_SCRIPT_RUN, id: script });
-                }
-                count[value](bind);
-              }
-            }
+            // } else if (channel) {
+            //   const { bind } = channel;
+            //   if (bind) {
+            //     if (channel.value !== value) {
+            //       const script = channel[onDO[value]];
+            //       if (script) {
+            //         run({ type: ACTION_SCRIPT_RUN, id: script });
+            //       }
+            //       count[value](bind);
+            //     }
+            //   }
           }
           break;
         }
@@ -487,20 +487,20 @@ module.exports.manage = () => {
                 velocity,
                 dimmable: true,
               });
-              if (chan) {
-                const { bind } = chan;
-                if (bind) {
-                  const v = value ? 1 : 0;
-                  const v_ = chan.value ? 1 : 0;
-                  if (v !== v_) {
-                    const script = chan[onDO[v]];
-                    if (script) {
-                      run({ type: ACTION_SCRIPT_RUN, id: script });
-                    }
-                    count[v](bind);
-                  }
-                }
-              }
+              // if (chan) {
+              //   const { bind } = chan;
+              //   if (bind) {
+              //     const v = value ? 1 : 0;
+              //     const v_ = chan.value ? 1 : 0;
+              //     if (v !== v_) {
+              //       const script = chan[onDO[v]];
+              //       if (script) {
+              //         run({ type: ACTION_SCRIPT_RUN, id: script });
+              //       }
+              //       count[v](bind);
+              //     }
+              //   }
+              // }
               break;
             }
             case DEVICE_TYPE_DIM4:
@@ -517,20 +517,20 @@ module.exports.manage = () => {
                   type === DIM_TYPE_RISING_EDGE ||
                   type === DIM_TYPE_PWM,
               });
-              if (chan) {
-                const { bind } = chan;
-                if (bind) {
-                  const v = value ? 1 : 0;
-                  const v_ = chan.value ? 1 : 0;
-                  if (v !== v_) {
-                    const script = chan[onDO[v]];
-                    if (script) {
-                      run({ type: ACTION_SCRIPT_RUN, id: script });
-                    }
-                    count[v](bind);
-                  }
-                }
-              }
+              // if (chan) {
+              //   const { bind } = chan;
+              //   if (bind) {
+              //     const v = value ? 1 : 0;
+              //     const v_ = chan.value ? 1 : 0;
+              //     if (v !== v_) {
+              //       const script = chan[onDO[v]];
+              //       if (script) {
+              //         run({ type: ACTION_SCRIPT_RUN, id: script });
+              //       }
+              //       count[v](bind);
+              //     }
+              //   }
+              // }
               break;
             }
             case DEVICE_TYPE_SMART_TOP_A6P:
@@ -568,20 +568,20 @@ module.exports.manage = () => {
                   type === DIM_TYPE_RISING_EDGE ||
                   type === DIM_TYPE_PWM,
               });
-              if (chan) {
-                const { bind } = chan;
-                if (bind) {
-                  const v = value ? 1 : 0;
-                  const v_ = chan.value ? 1 : 0;
-                  if (v !== v_) {
-                    const script = chan[onDO[v]];
-                    if (script) {
-                      run({ type: ACTION_SCRIPT_RUN, id: script });
-                    }
-                    count[v](bind);
-                  }
-                }
-              }
+              // if (chan) {
+              //   const { bind } = chan;
+              //   if (bind) {
+              //     const v = value ? 1 : 0;
+              //     const v_ = chan.value ? 1 : 0;
+              //     if (v !== v_) {
+              //       const script = chan[onDO[v]];
+              //       if (script) {
+              //         run({ type: ACTION_SCRIPT_RUN, id: script });
+              //       }
+              //       count[v](bind);
+              //     }
+              //   }
+              // }
             }
           }
           break;
