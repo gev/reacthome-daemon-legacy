@@ -57,8 +57,6 @@ device.sendTOP = (data, id) => {
   });
 }
 
-let timeout;
-
 setInterval(() => {
   const run = queue.shift();
   if (run) {
