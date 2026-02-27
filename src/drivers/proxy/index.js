@@ -67,11 +67,11 @@ const loop = (id) => () => {
 }
 
 module.exports.run = (action) => {
-  console.log('Run', action);
+  // console.log('Run', action);
 }
 
 module.exports.handle = (action) => {
-  console.log('Handle', action);
+  // console.log('Handle', action);
 }
 
 module.exports.clear = () => {

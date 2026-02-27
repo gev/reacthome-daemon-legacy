@@ -6,7 +6,7 @@ const handle = require("./handle");
 const { terminals } = require("../terminal");
 
 const PROTOCOL = "listen";
-const TIMEOUT = 1000;
+const TIMEOUT = 5000;
 const gateURL = (id) => `wss://gate.reacthome.net/${id}`;
 
 let interval, timeout;
@@ -43,6 +43,7 @@ const connect = (id) => {
     clearTimeout(timeout);
   });
   socket.on("close", () => {
+    socket.removeAllListeners();
     // console.log("websocket closed");
     for (const session of sessions) {
       deleteSession(session);

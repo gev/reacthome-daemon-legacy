@@ -1,3 +1,4 @@
+const os = require('os');
 const { crc16modbus } = require('crc')
 
 const WAITING_PREAMBLE = 0
@@ -10,15 +11,16 @@ const PREAMBLE = 0xa5
 
 module.exports.handle = (rbus) => {
 
-  const mac = Buffer.from(rbus.mac)
-
   let phase = WAITING_PREAMBLE
     , offset, size, crc
   let buff = Buffer.alloc(512)
 
-  handle = (buff) => {
-    if (buff[0] !== 0xf0) {
-      rbus.socket.send(Buffer.concat([mac, buff]))
+  const handle = (buff) => {
+    if (buff[0] === 0xf0) {
+      rbus.version = { major: buff[8], minor: buff[9] };
+      rbus.mac = Buffer.copyBytesFrom(buff.slice(1, 7));
+    } else {
+      rbus.socket.send(buff)
     }
   }
 

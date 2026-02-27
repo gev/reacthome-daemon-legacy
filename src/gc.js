@@ -98,7 +98,7 @@ const buildAll = (id, pool, state, assets) => {
 };
 
 module.exports.cleanup = (pool) => {
-  console.log("Before cleanup:", Object.keys(pool).length);
+  // console.log("Before cleanup:", Object.keys(pool).length);
   const state = {};
   const assets = [];
   buildAll(pool.mac, pool, state, assets);
@@ -118,5 +118,5 @@ module.exports.cleanup = (pool) => {
       }
     }
   }
-  console.log("After cleanup:", Object.keys(pool).length);
+  // console.log("After cleanup:", Object.keys(pool).length);
 };
