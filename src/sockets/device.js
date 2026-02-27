@@ -20,10 +20,7 @@ const device = socket((socket) => {
   data.writeUInt32BE(IP_ADDRESS, 1);
   data.writeUInt16BE(socket.address().port, 5);
   return () => {
-    push(() => {
-      // console.log("send discovery", data);
-      device.send(data, DEVICE_GROUP);
-    });
+    device.send(data, DEVICE_GROUP);
   };
 }, DISCOVERY_INTERVAL, DEVICE_PORT, DEVICE_SERVER_PORT, '172.16.0.1');
 
