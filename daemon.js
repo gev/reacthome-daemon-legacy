@@ -36,7 +36,7 @@ const janus = require("./src/janus");
 const sip = require("./src/sip");
 const db = require("./src/db");
 const { cleanup } = require("./src/gc");
-// const { initAssist } = require("./src/assist");
+const { initAssist } = require("./src/assist");
 
 const init = {};
 
@@ -92,7 +92,7 @@ const load = async () => {
   // cleanup(init);
   assets.init();
   state.init(init);
-  // initAssist();
+  initAssist();
   weather.manage();
   device.manage();
   drivers.manage();
