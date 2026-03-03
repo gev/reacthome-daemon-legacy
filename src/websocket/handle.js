@@ -135,7 +135,7 @@ module.exports = (session, message) => {
         break;
       }
       case ACTION_ASSIST: {
-        // peer.send(handleAssist(action))
+        peer.send(handleAssist(action))
         break;
       }
       default: {
