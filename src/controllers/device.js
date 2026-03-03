@@ -423,7 +423,6 @@ module.exports.manage = () => {
             }
             case DEVICE_TYPE_SERVER:
             case DEVICE_TYPE_RS_HUB4: {
-              console.log(data);
               const valuesDI = data.readUInt8(7);
               for (let i = 1; i <= 4; i++) {
                 let value = (valuesDI & (1 << (i - 1))) ? 1 : 0;
@@ -435,7 +434,6 @@ module.exports.manage = () => {
                 const channel = `${id}/${DIM}/${i}`;
                 const chan = get(channel);
                 let payload = Buffer.from([ACTION_DIMMER, i, chan.group, chan.type, value, chan.velocity]);
-                console.log(payload);
                 handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
               }
               break;
