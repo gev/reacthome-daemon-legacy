@@ -865,6 +865,7 @@ module.exports.manage = () => {
         case ACTION_TEMPERATURE_EXT_DEPRECATED:
         case ACTION_TEMPERATURE_EXT_OLD:
         case ACTION_TEMPERATURE_EXT: {
+          console.log(data);
           if (data.length <= 17) {
             return;
           }
