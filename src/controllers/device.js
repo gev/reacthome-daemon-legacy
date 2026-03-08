@@ -865,15 +865,12 @@ module.exports.manage = () => {
         case ACTION_TEMPERATURE_EXT_DEPRECATED:
         case ACTION_TEMPERATURE_EXT_OLD:
         case ACTION_TEMPERATURE_EXT: {
-          console.log(data);
           if (data.length < 17) {
             return;
           }
           if (data[7] !== 0x28) {
             return;
           }
-          console.log(data);
-          console.log();
           const dev_id =
             action === ACTION_TEMPERATURE_EXT || action === ACTION_TEMPERATURE_EXT_OLD
               ? Array.from(data)
