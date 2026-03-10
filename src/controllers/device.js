@@ -121,8 +121,8 @@ const {
   DEVICE_TYPE_DI_4_LA,
   DEVICE_TYPE_DOPPLER_1_DI_4,
   DEVICE_TYPE_DOPPLER_5_DI_4,
-  DEVICE_TYPE_SMART_BOTTOM_1,
-  DEVICE_TYPE_SMART_BOTTOM_2,
+  DEVICE_TYPE_SMART_BOTTOM,
+  DEVICE_TYPE_SMART_BOTTOM_CO2,
 } = require("../constants");
 const {
   get,
@@ -350,8 +350,8 @@ module.exports.manage = () => {
             case DEVICE_TYPE_DI_4_LA:
             case DEVICE_TYPE_DOPPLER_1_DI_4:
             case DEVICE_TYPE_DOPPLER_5_DI_4:
-            case DEVICE_TYPE_SMART_BOTTOM_1:
-            case DEVICE_TYPE_SMART_BOTTOM_2:
+            case DEVICE_TYPE_SMART_BOTTOM:
+            case DEVICE_TYPE_SMART_BOTTOM_CO2:
             case DEVICE_TYPE_SMART_TOP_A4P:
             case DEVICE_TYPE_SMART_TOP_A4T:
             case DEVICE_TYPE_SMART_TOP_A4TD:
