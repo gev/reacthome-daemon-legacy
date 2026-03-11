@@ -29,13 +29,15 @@ const sync = (id) => {
   } else {
     writeRegister(modbus, address, 0x2, dev.value ? 1 : 0);
     setTimeout(() => {
-      writeRegister(modbus, address, 0x20, dev.fan_speed);
+      writeRegister(modbus, address, 0x19, dev.setpoint * 10);
     }, 100);
-    // setTimeout(() => {
-    //   writeRegister(modbus, address, 0x21, dev.fan_speed);
-    // }, 200);
+    setTimeout(() => {
+      writeRegister(modbus, address, 0x20, dev.fan_speed);
+    }, 200);
+    setTimeout(() => {
+      writeRegister(modbus, address, 0x21, dev.fan_speed);
+    }, 300);
   }
-  // writeRegister(modbus, address, 0x1, dev.setpoint * 10);
   set(id, { synced: true });
 
 };

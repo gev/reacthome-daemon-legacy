@@ -121,8 +121,8 @@ const {
   DEVICE_TYPE_DI_4_LA,
   DEVICE_TYPE_DOPPLER_1_DI_4,
   DEVICE_TYPE_DOPPLER_5_DI_4,
-  DEVICE_TYPE_SMART_BOTTOM_1,
-  DEVICE_TYPE_SMART_BOTTOM_2,
+  DEVICE_TYPE_SMART_BOTTOM,
+  DEVICE_TYPE_SMART_BOTTOM_CO2,
 } = require("../constants");
 const {
   get,
@@ -350,8 +350,8 @@ module.exports.manage = () => {
             case DEVICE_TYPE_DI_4_LA:
             case DEVICE_TYPE_DOPPLER_1_DI_4:
             case DEVICE_TYPE_DOPPLER_5_DI_4:
-            case DEVICE_TYPE_SMART_BOTTOM_1:
-            case DEVICE_TYPE_SMART_BOTTOM_2:
+            case DEVICE_TYPE_SMART_BOTTOM:
+            case DEVICE_TYPE_SMART_BOTTOM_CO2:
             case DEVICE_TYPE_SMART_TOP_A4P:
             case DEVICE_TYPE_SMART_TOP_A4T:
             case DEVICE_TYPE_SMART_TOP_A4TD:
@@ -865,7 +865,7 @@ module.exports.manage = () => {
         case ACTION_TEMPERATURE_EXT_DEPRECATED:
         case ACTION_TEMPERATURE_EXT_OLD:
         case ACTION_TEMPERATURE_EXT: {
-          if (data.length <= 17) {
+          if (data.length < 17) {
             return;
           }
           if (data[7] !== 0x28) {
@@ -881,9 +881,6 @@ module.exports.manage = () => {
                 .slice(7, 15)
                 .map((i) => `0${i.toString(16)}`.slice(-2))
                 .join(":");
-          if (data.length < 17) {
-            return;
-          }
           const temperature_raw = data.readInt16LE(15) / 100;
           const { temperature_correct = 0 } = get(dev_id) || {};
           const temperature = temperature_raw + temperature_correct;
