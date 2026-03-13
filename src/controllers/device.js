@@ -168,7 +168,7 @@ module.exports.manage = () => {
         online(id, { ip: address, hub, type: dev.type });
         if(!dev.bottom) { 
           add(mac(), DEVICE, id); 
-          console.lod(dev);
+          console.log(dev);
         };
       }
       const action = data[6];
