@@ -166,6 +166,10 @@ module.exports.manage = () => {
       const dev = get(id) || {};
       if (dev) {
         online(id, { ip: address, hub, type: dev.type });
+        if(!dev.bottom) { 
+          add(mac(), DEVICE, id); 
+          console.lod(dev);
+        };
       }
       const action = data[6];
       // if (hub && action !== ACTION_DISCOVERY && action !== ACTION_READY) {
