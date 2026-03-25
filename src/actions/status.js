@@ -25,6 +25,7 @@ const {
   DEVICE_TYPE_SMART_TOP_A4TD,
   DEVICE_TYPE_SMART_TOP_A4TD_7S,
   DEVICE_TYPE_MIX_V,
+  DEVICE_TYPE_SMART_BOTTOM_CLIMATE,
 } = require("../constants");
 const { device } = require("../sockets");
 
@@ -49,6 +50,7 @@ const online = (id, props) => {
       case DEVICE_TYPE_MIX_V:
       case DEVICE_TYPE_RELAY_2_DIN:
       case DEVICE_TYPE_SMART_BOTTOM:
+      case DEVICE_TYPE_SMART_BOTTOM_CLIMATE:
       case DEVICE_TYPE_SMART_BOTTOM_CO2:
       case DEVICE_TYPE_DOPPLER_1_DI_4:
       case DEVICE_TYPE_DOPPLER_5_DI_4: {
