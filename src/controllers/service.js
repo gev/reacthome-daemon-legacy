@@ -210,7 +210,6 @@ const {
   DEVICE_TYPE_AO_4,
   ACTION_DMX512,
   DRIVER_TYPE_DMX512,
-  DEVICE_TYPE_SMART_BOTTOM_CLIMATE,
 } = require("../constants");
 const { NOTIFY } = require("../notification/constants");
 const notification = require("../notification");
