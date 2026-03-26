@@ -325,6 +325,7 @@ module.exports.DEVICE_TYPE_SMART_TOP_A4TD_7S = 0x39;
 
 module.exports.DEVICE_TYPE_SMART_BOTTOM = 0x3a;
 module.exports.DEVICE_TYPE_SMART_BOTTOM_CO2 = 0x3b;
+module.exports.DEVICE_TYPE_SMART_BOTTOM_CLIMATE = 0x3d;
 
 module.exports.DEVICE_TYPE_RELAY_6 = 0xa0;
 module.exports.DEVICE_TYPE_RELAY_12 = 0xa1;

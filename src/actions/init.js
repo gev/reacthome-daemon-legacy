@@ -61,6 +61,7 @@ const {
   DEVICE_TYPE_DI_4_LA,
   DEVICE_TYPE_MIX_V,
   DEVICE_TYPE_AO_4,
+  DEVICE_TYPE_SMART_BOTTOM_CLIMATE,
 } = require("../constants");
 const { get, set, add } = require("./create");
 const { device } = require("../sockets");
@@ -947,6 +948,7 @@ module.exports.initialize = (id) => {
     case DEVICE_TYPE_DI_4_LA:
     case DEVICE_TYPE_SMART_BOTTOM:
     case DEVICE_TYPE_SMART_BOTTOM_CO2:
+    case DEVICE_TYPE_SMART_BOTTOM_CLIMATE:
     case DEVICE_TYPE_DOPPLER_1_DI_4:
     case DEVICE_TYPE_DOPPLER_5_DI_4: {
       for (let i = 0; i < 10; i++) {
