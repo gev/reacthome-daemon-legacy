@@ -255,7 +255,6 @@ const run = (action) => {
           case DEVICE_TYPE_SMART_4GD:
           case DEVICE_TYPE_SMART_6_PUSH:
           case DEVICE_TYPE_SMART_BOTTOM:
-          case DEVICE_TYPE_SMART_BOTTOM_CLIMATE:
           case DEVICE_TYPE_SMART_BOTTOM_CO2: {
             device.sendRBUS(Buffer.from([
               ACTION_FIND_ME,
