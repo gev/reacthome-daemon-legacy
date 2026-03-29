@@ -220,6 +220,112 @@ const { ip2int, toRelativeHumidity, toKelvin } = require("../util");
 const { char2image } = require("../drivers/display");
 const childProcess = require("child_process");
 
+// ============================================================================
+// media-api: управление мультирум-аудио через HTTP API медиасервера
+// ============================================================================
+//
+// Протокол: media:ZONE ACTION [ARG1] [ARG2]
+//
+// Используется в поле command у shell-объектов. Когда демон выполняет
+// ACTION_SHELL_START, tryMediaCommand() перехватывает команды с префиксом
+// media: и отправляет HTTP-запрос на media-api (192.168.88.5:3001).
+// Если команда не начинается с media: — выполняется как обычная shell-команда.
+//
+// Зачем: Заменяет SSH-per-command паттерн (ssh pi@192.168.88.5 'radio ...'),
+// который переполнял auth.log на медиасервере (400MB/день, INC-015).
+// media-api делегирует воспроизведение в /usr/local/bin/radio (safe-radio-start.sh),
+// что обеспечивает единый источник правды для rate, format, presets.
+//
+// ── Поддерживаемые команды ──────────────────────────────────────────────────
+//
+// 1. Запуск радио:
+//    media:ZONE play PRESET [VOLUME]
+//
+//    ZONE    — PulseAudio sink (rtp1..rtp14)
+//    PRESET  — имя станции (chocolate, detskoe, europaplus, bfm, retro, shanson)
+//              или полный URL потока (http://...)
+//    VOLUME  — громкость 0-100, по умолчанию 30
+//
+// 2. Остановка:
+//    media:ZONE stop
+//
+// 3. Громкость:
+//    media:ZONE volume VALUE
+//    VALUE — значение для pactl (например 50%, +10%, -10%, 0.5)
+//
+// ── Настройка в ReactHome Studio ────────────────────────────────────────────
+//
+// Создать shell-объект с command:
+//
+//   Включить шоколад в ванной:     media:rtp5 play chocolate 30
+//   Включить детское в младшей:    media:rtp3 play detskoe 30
+//   Включить Europa+ в спальной:   media:rtp2 play europaplus 50
+//   Включить свой поток:           media:rtp5 play http://stream.example.com/radio.mp3 40
+//   Выключить в ванной:            media:rtp5 stop
+//   Тише в ванной:                 media:rtp5 volume -10%
+//   Громче в ванной:               media:rtp5 volume +10%
+//   Установить громкость:          media:rtp5 volume 50%
+//
+// Затем привязать shell к ACTION_SHELL_START в скрипте, который вызывается
+// по нажатию кнопки (onOn/onOff) или по расписанию.
+//
+// ── Зоны (помещения) ────────────────────────────────────────────────────────
+//
+//   rtp1  — Гостиная          rtp5  — Ванная
+//   rtp2  — Спальная          rtp6  — Душ
+//   rtp3  — Младшая           rtp7  — Лоджия
+//   rtp4  — Старшая           rtp8  — Прихожая
+//   rtp9  — Кухня             rtp10 — Кабинет
+//   rtp11 — Коридор           rtp12..rtp14 — резерв
+//
+// ── Пресеты (радиостанции) ──────────────────────────────────────────────────
+//
+//   chocolate  — Шоколад (MP3)       detskoe    — Детское радио (AAC)
+//   europaplus — Европа Плюс (MP3)   bfm        — Business FM (MP3)
+//   retro      — Ретро FM (MP3)      shanson    — Шансон (MP3)
+//
+// Пресеты определены в /usr/local/bin/radio на медиасервере (192.168.88.5).
+// Для добавления новых — редактировать функцию resolve_preset() в radio.
+//
+// ============================================================================
+const MEDIA_API = "http://192.168.88.5:3001";
+const MEDIA_RE = /^media:(\S+)\s+(\w+)(?:\s+(\S+))?(?:\s+(\d+))?$/;
+
+function sendToMediaApi(path, body, id, command) {
+  fetch(MEDIA_API + path, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  })
+    .then((r) => r.json())
+    .then((data) => {
+      if (data.ok) {
+        set(id, { command, value: true, error: "", pid: data.pid || 1 });
+      } else {
+        set(id, { error: data.error || "media-api error" });
+      }
+    })
+    .catch((e) => {
+      set(id, { error: "media-api unreachable: " + e.message });
+    });
+}
+
+function tryMediaCommand(command, id) {
+  const m = command.match(MEDIA_RE);
+  if (!m) return false;
+  const [, zone, action, arg1, arg2] = m;
+  if (action === "play") {
+    sendToMediaApi("/radio/start", { zone, preset: arg1, volume: parseInt(arg2 || "30") }, id, command);
+  } else if (action === "stop") {
+    sendToMediaApi("/radio/stop", { zone }, id, command);
+  } else if (action === "volume") {
+    sendToMediaApi("/volume", { zone, value: arg1 }, id, command);
+  } else {
+    return false;
+  }
+  return true;
+}
+
 const timers = {};
 const schedules = {};
 
@@ -3162,6 +3268,7 @@ const run = (action) => {
             set(id, { pid: null, value: false });
           }
         }
+        if (tryMediaCommand(command, id)) break;
         const child = childProcess.spawn(command, { detached: true, shell: true });
         // child.stdout.on("data", (data) => {
         //   const { pid } = get(id) || {};
