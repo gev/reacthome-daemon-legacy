@@ -110,6 +110,20 @@ const {
   ACTION_DMX512,
   DEVICE_TYPE_RELAY_12_RS,
   DEVICE_TYPE_MIX_6x12_RS,
+  DEVICE_TYPE_DIM_12_AC_RS,
+  DEVICE_TYPE_DIM_12_DC_RS,
+  DEVICE_TYPE_DIM_1_AC_RS,
+  DEVICE_TYPE_SERVER,
+  DEVICE_TYPE_RS_HUB4,
+  DEVICE_TYPE_MIX_H,
+  DEVICE_TYPE_MIX_V,
+  DEVICE_TYPE_DI_4,
+  DEVICE_TYPE_DI_4_LA,
+  DEVICE_TYPE_DOPPLER_1_DI_4,
+  DEVICE_TYPE_DOPPLER_5_DI_4,
+  DEVICE_TYPE_SMART_BOTTOM,
+  DEVICE_TYPE_SMART_BOTTOM_CO2,
+  DEVICE_TYPE_SMART_BOTTOM_CLIMATE,
 } = require("../constants");
 const {
   get,
@@ -153,6 +167,9 @@ module.exports.manage = () => {
       const dev = get(id) || {};
       if (dev) {
         online(id, { ip: address, hub, type: dev.type });
+        if(!dev.bottom) { 
+          add(mac(), DEVICE, id); 
+        };
       }
       const action = data[6];
       // if (hub && action !== ACTION_DISCOVERY && action !== ACTION_READY) {
@@ -177,23 +194,22 @@ module.exports.manage = () => {
             const chan = get(channel);
             const value = data[i + 42];
             set(channel, { value });
-            if (chan) {
-              const { bind } = chan;
-              if (bind) {
-                if (chan.value !== value) {
-                  const script = chan[onDO[value]];
-                  if (script) {
-                    run({ type: ACTION_SCRIPT_RUN, id: script });
-                  }
-                  count[value](bind);
-                }
-              }
-            }
+            // if (chan) {
+            //   const { bind } = chan;
+            //   if (bind) {
+            //     if (chan.value !== value) {
+            //       const script = chan[onDO[value]];
+            //       if (script) {
+            //         run({ type: ACTION_SCRIPT_RUN, id: script });
+            //       }
+            //       count[value](bind);
+            //     }
+            //   }
+            // }
           }
           break;
         }
         case ACTION_DI: {
-          // console.log(data);
           const index = data[7];
           const value = data[8] ? 1 : 0;
           const channel = `${id}/${DI}/${index}`;
@@ -308,23 +324,64 @@ module.exports.manage = () => {
                 set(gid, { value: index % 2 === 0 });
               }
             }
-          } else if (channel) {
-            const { bind } = channel;
-            if (bind) {
-              if (channel.value !== value) {
-                const script = channel[onDO[value]];
-                if (script) {
-                  run({ type: ACTION_SCRIPT_RUN, id: script });
-                }
-                count[value](bind);
-              }
-            }
+            // } else if (channel) {
+            //   const { bind } = channel;
+            //   if (bind) {
+            //     if (channel.value !== value) {
+            //       const script = channel[onDO[value]];
+            //       if (script) {
+            //         run({ type: ACTION_SCRIPT_RUN, id: script });
+            //       }
+            //       count[value](bind);
+            //     }
+            //   }
           }
           break;
         }
         case ACTION_GET_STATE: {
           const { type } = get(id) || {};
           switch (type) {
+            case DEVICE_TYPE_SMART_TOP_G2: {
+              const valuesDI = data.readUInt8(7);
+              for (let i = 1; i <= 2; i++) {
+                let value = (valuesDI & (1 << (i - 1))) ? 1 : 0;
+                let payload = Buffer.from([ACTION_DI, i, value]);
+                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              }
+              break;
+            }
+            case DEVICE_TYPE_DI_4:
+            case DEVICE_TYPE_DI_4_LA:
+            case DEVICE_TYPE_DOPPLER_1_DI_4:
+            case DEVICE_TYPE_DOPPLER_5_DI_4:
+            case DEVICE_TYPE_SMART_BOTTOM:
+            case DEVICE_TYPE_SMART_BOTTOM_CLIMATE:
+            case DEVICE_TYPE_SMART_BOTTOM_CO2:
+            case DEVICE_TYPE_SMART_TOP_A4P:
+            case DEVICE_TYPE_SMART_TOP_A4T:
+            case DEVICE_TYPE_SMART_TOP_A4TD:
+            case DEVICE_TYPE_SMART_TOP_A4TD_7S:
+            case DEVICE_TYPE_SMART_TOP_G4:
+            case DEVICE_TYPE_SMART_TOP_G4D: {
+              const valuesDI = data.readUInt8(7);
+              for (let i = 1; i <= 4; i++) {
+                let value = (valuesDI & (1 << (i - 1))) ? 1 : 0;
+                let payload = Buffer.from([ACTION_DI, i, value]);
+                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              }
+              break;
+            }
+            case DEVICE_TYPE_SMART_TOP_G6:
+            case DEVICE_TYPE_SMART_TOP_A6T:
+            case DEVICE_TYPE_SMART_TOP_A6P: {
+              const valuesDI = data.readUInt8(7);
+              for (let i = 1; i <= 6; i++) {
+                let value = (valuesDI & (1 << (i - 1))) ? 1 : 0;
+                let payload = Buffer.from([ACTION_DI, i, value]);
+                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              }
+              break;
+            }
             case DEVICE_TYPE_RELAY_12_RS: {
               const valuesDO = data.readUInt16LE(7);
               for (let i = 1; i <= 12; i++) {
@@ -347,6 +404,103 @@ module.exports.manage = () => {
                 let payload = Buffer.from([ACTION_DO, i, value]);
                 handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
               }
+              break;
+            }
+            case DEVICE_TYPE_DIM_12_AC_RS:
+            case DEVICE_TYPE_DIM_12_DC_RS: {
+              for (let i = 1; i <= 12; i++) {
+                let value = data.readUInt8(6 + i);
+                const channel = `${id}/${DIM}/${i}`;
+                const chan = get(channel);
+                let payload = Buffer.from([ACTION_DIMMER, i, chan.group, chan.type, value, chan.velocity]);
+                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              }
+              break;
+            }
+            case DEVICE_TYPE_DIM_1_AC_RS: {
+              const chNum = 1;
+              let value = data.readUInt8(6 + chNum);
+              const channel = `${id}/${DIM}/${chNum}`;
+              const chan = get(channel);
+              let payload = Buffer.from([ACTION_DIMMER, chNum, chan.group, chan.type, value, chan.velocity]);
+              handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              break;
+            }
+            case DEVICE_TYPE_SERVER:
+            case DEVICE_TYPE_RS_HUB4: {
+              const valuesDI = data.readUInt8(7);
+              for (let i = 1; i <= 4; i++) {
+                let value = (valuesDI & (1 << (i - 1))) ? 1 : 0;
+                let payload = Buffer.from([ACTION_DI, i, value]);
+                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              }
+              for (let i = 1; i <= 3; i++) {
+                let value = data.readUInt8(7 + i);
+                const channel = `${id}/${DIM}/${i}`;
+                const chan = get(channel);
+                let payload = Buffer.from([ACTION_DIMMER, i, chan.group, chan.type, value, chan.velocity]);
+                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              }
+              break;
+            }
+            case DEVICE_TYPE_MIX_H: {
+              const valuesDI = data.readUInt8(7);
+              for (let i = 1; i <= 8; i++) {
+                let value = (valuesDI & (1 << (i - 1))) ? 1 : 0;
+                let payload = Buffer.from([ACTION_DI, i, value]);
+                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              }
+              const valuesDO = data.readUInt8(8);
+              for (let i = 1; i <= 2; i++) {
+                let value = (valuesDO & (1 << (i - 1))) ? 1 : 0;
+                let payload = Buffer.from([ACTION_DO, i, value]);
+                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              }
+              for (let i = 1; i <= 6; i++) {
+                let value = data.readUInt8(8 + i);
+                const channel = `${id}/${DIM}/${i}`;
+                const chan = get(channel);
+                let payload = Buffer.from([ACTION_DIMMER, i, chan.group, chan.type, value, chan.velocity]);
+                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              }
+              break;
+            }
+            case DEVICE_TYPE_MIX_V: {
+              const valuesDI = data.readUInt8(7);
+              for (let i = 1; i <= 8; i++) {
+                let value = (valuesDI & (1 << (i - 1))) ? 1 : 0;
+                let payload = Buffer.from([ACTION_DI, i, value]);
+                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              }
+              const valuesDO = data.readUInt8(8);
+              const chNum = 1;
+              let value = (valuesDO & (1 << (chNum - 1))) ? 1 : 0;
+              let payload = Buffer.from([ACTION_DO, chNum, value]);
+              handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              for (let i = 1; i <= 2; i++) {
+                let value = data.readUInt8(8 + i);
+                const channel = `${id}/${DIM}/${i}`;
+                const chan = get(channel);
+                let payload = Buffer.from([ACTION_DIMMER, i, chan.group, chan.type, value, chan.velocity]);
+                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              }
+              for (let i = 1; i <= 2; i++) {
+                let value = data.readUInt8(10 + i);
+                let payload = Buffer.from([ACTION_AO, i, value]);
+                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              }
+              break;
+            }
+            case DEVICE_TYPE_DI_4_RSM: {
+              const valuesDI = data.readUInt8(7);
+              for (let i = 1; i <= 4; i++) {
+                let value = (valuesDI & (1 << (i - 1))) ? 1 : 0;
+                let payload = Buffer.from([ACTION_DI, i, value]);
+                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              }
+              const valueAO = data.readUInt8(8);
+              let payload = Buffer.from([ACTION_AO, i, valueAO]);
+              handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
               break;
             }
           }
@@ -430,7 +584,6 @@ module.exports.manage = () => {
           });
           handleData(Buffer.concat([mac, buff.slice(8)]), { address }, { hub: id });
           break;
-
         }
         case ACTION_SMART_TOP: {
           const action = data[7];
@@ -488,20 +641,20 @@ module.exports.manage = () => {
                 velocity,
                 dimmable: true,
               });
-              if (chan) {
-                const { bind } = chan;
-                if (bind) {
-                  const v = value ? 1 : 0;
-                  const v_ = chan.value ? 1 : 0;
-                  if (v !== v_) {
-                    const script = chan[onDO[v]];
-                    if (script) {
-                      run({ type: ACTION_SCRIPT_RUN, id: script });
-                    }
-                    count[v](bind);
-                  }
-                }
-              }
+              // if (chan) {
+              //   const { bind } = chan;
+              //   if (bind) {
+              //     const v = value ? 1 : 0;
+              //     const v_ = chan.value ? 1 : 0;
+              //     if (v !== v_) {
+              //       const script = chan[onDO[v]];
+              //       if (script) {
+              //         run({ type: ACTION_SCRIPT_RUN, id: script });
+              //       }
+              //       count[v](bind);
+              //     }
+              //   }
+              // }
               break;
             }
             case DEVICE_TYPE_DIM4:
@@ -518,20 +671,20 @@ module.exports.manage = () => {
                   type === DIM_TYPE_RISING_EDGE ||
                   type === DIM_TYPE_PWM,
               });
-              if (chan) {
-                const { bind } = chan;
-                if (bind) {
-                  const v = value ? 1 : 0;
-                  const v_ = chan.value ? 1 : 0;
-                  if (v !== v_) {
-                    const script = chan[onDO[v]];
-                    if (script) {
-                      run({ type: ACTION_SCRIPT_RUN, id: script });
-                    }
-                    count[v](bind);
-                  }
-                }
-              }
+              // if (chan) {
+              //   const { bind } = chan;
+              //   if (bind) {
+              //     const v = value ? 1 : 0;
+              //     const v_ = chan.value ? 1 : 0;
+              //     if (v !== v_) {
+              //       const script = chan[onDO[v]];
+              //       if (script) {
+              //         run({ type: ACTION_SCRIPT_RUN, id: script });
+              //       }
+              //       count[v](bind);
+              //     }
+              //   }
+              // }
               break;
             }
             case DEVICE_TYPE_SMART_TOP_A6P:
@@ -569,20 +722,20 @@ module.exports.manage = () => {
                   type === DIM_TYPE_RISING_EDGE ||
                   type === DIM_TYPE_PWM,
               });
-              if (chan) {
-                const { bind } = chan;
-                if (bind) {
-                  const v = value ? 1 : 0;
-                  const v_ = chan.value ? 1 : 0;
-                  if (v !== v_) {
-                    const script = chan[onDO[v]];
-                    if (script) {
-                      run({ type: ACTION_SCRIPT_RUN, id: script });
-                    }
-                    count[v](bind);
-                  }
-                }
-              }
+              // if (chan) {
+              //   const { bind } = chan;
+              //   if (bind) {
+              //     const v = value ? 1 : 0;
+              //     const v_ = chan.value ? 1 : 0;
+              //     if (v !== v_) {
+              //       const script = chan[onDO[v]];
+              //       if (script) {
+              //         run({ type: ACTION_SCRIPT_RUN, id: script });
+              //       }
+              //       count[v](bind);
+              //     }
+              //   }
+              // }
             }
           }
           break;
@@ -717,7 +870,10 @@ module.exports.manage = () => {
         case ACTION_TEMPERATURE_EXT_DEPRECATED:
         case ACTION_TEMPERATURE_EXT_OLD:
         case ACTION_TEMPERATURE_EXT: {
-          if (data.length < 15) {
+          if (data.length < 17) {
+            return;
+          }
+          if (data[7] !== 0x28) {
             return;
           }
           const dev_id =
@@ -730,9 +886,6 @@ module.exports.manage = () => {
                 .slice(7, 15)
                 .map((i) => `0${i.toString(16)}`.slice(-2))
                 .join(":");
-          if (data.length < 17) {
-            return;
-          }
           const temperature_raw = data.readInt16LE(15) / 100;
           const { temperature_correct = 0 } = get(dev_id) || {};
           const temperature = temperature_raw + temperature_correct;
@@ -1238,7 +1391,13 @@ const handle = (handleSmartTop, handleDefault) => (id, index, chan) => {
 
 const handleSmartTop = () => false;
 
-const handleSmartTopClick1 = (id, dev, chan, current, mode) => {
+const handleSmartTopOn = (id, dev, chan, current, mode) => {
+  chan.onHoldCountPrev = chan.onHoldCount;
+  return false;
+}
+
+const handleSmartTopOff = (id, dev, chan, current, mode) => {
+  if (chan.onHoldCount != chan.onHoldCountPrev) return;
   if (dev.configuring) {
     const site = current.site || dev.site;
     if (site) {
@@ -1748,12 +1907,12 @@ const handleSmartTopHold = (id, dev, chan, current) => {
   return false;
 }
 
-const handleOn = handle(handleSmartTop, handleDefaultOn);
-const handleClick1 = handle(handleSmartTopClick1, handleDefaultClick1);
+const handleOn = handle(handleSmartTopOn, handleDefaultOn);
+const handleClick1 = handle(handleSmartTop, handleDefaultClick1);
 const handleClick2 = handle(handleSmartTop, handleDefaultClick2);
 const handleClick3 = handle(handleSmartTop, handleDefaultClick3);
 const handleHold = handle(handleSmartTopHold, handleDefaultHold);
-const handleOff = handle(handleSmartTop, handleDefaultOff);
+const handleOff = handle(handleSmartTopOff, handleDefaultOff);
 
 
 

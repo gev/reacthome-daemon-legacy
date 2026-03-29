@@ -30,6 +30,9 @@ module.exports.handle = (action) => {
 }
 
 module.exports.clear = () => {
+    for (bot of bots) {
+        bot.stopPolling();
+    }
 }
 
 const connect = (id) => {
@@ -38,12 +41,7 @@ const connect = (id) => {
         if (!bots.has(id)) {
             const bot = new TelegramBot(token, { polling: true });
             bots.set(id, bot);
-            bot.on('polling_error', (error) => {
-                bots.delete(id);
-                setTimeout(() => {
-                    connect(id);
-                }, 3000);
-            });
+            bot.on('polling_error', console.error);
             bot.on('message', (msg, match) => {
                 const [cmd, daemon] = msg.text.normalize().split(' ');
                 switch (cmd) {

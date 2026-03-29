@@ -139,8 +139,9 @@ const {
   DRIVER_TYPE_COMFOVENT,
   DEVICE_TYPE_RS_HUB4,
   DEVICE_TYPE_SMART_TOP_A6P,
-  DEVICE_TYPE_SMART_BOTTOM_1,
-  DEVICE_TYPE_SMART_BOTTOM_2,
+  DEVICE_TYPE_SMART_BOTTOM,
+  DEVICE_TYPE_SMART_BOTTOM_CLIMATE,
+  DEVICE_TYPE_SMART_BOTTOM_CO2,
   DEVICE_TYPE_SMART_TOP_G4D,
   ACTION_GRADIENT,
   ACTION_BLINK,
@@ -262,8 +263,8 @@ const run = (action) => {
           case DEVICE_TYPE_SMART_4G:
           case DEVICE_TYPE_SMART_4GD:
           case DEVICE_TYPE_SMART_6_PUSH:
-          case DEVICE_TYPE_SMART_BOTTOM_1:
-          case DEVICE_TYPE_SMART_BOTTOM_2: {
+          case DEVICE_TYPE_SMART_BOTTOM:
+          case DEVICE_TYPE_SMART_BOTTOM_CO2: {
             device.sendRBUS(Buffer.from([
               ACTION_FIND_ME,
               action.finding,
@@ -3235,8 +3236,9 @@ const run = (action) => {
           case DEVICE_TYPE_DI_4_LA:
           case DEVICE_TYPE_DOPPLER_1_DI_4:
           case DEVICE_TYPE_DOPPLER_5_DI_4:
-          case DEVICE_TYPE_SMART_BOTTOM_1:
-          case DEVICE_TYPE_SMART_BOTTOM_2: {
+          case DEVICE_TYPE_SMART_BOTTOM:
+          case DEVICE_TYPE_SMART_BOTTOM_CLIMATE:
+          case DEVICE_TYPE_SMART_BOTTOM_CO2: {
             device.sendRBUS(buff, action.id);
             break;
           }
@@ -3259,8 +3261,9 @@ const run = (action) => {
           case DEVICE_TYPE_DI_4_LA:
           case DEVICE_TYPE_DOPPLER_1_DI_4:
           case DEVICE_TYPE_DOPPLER_5_DI_4:
-          case DEVICE_TYPE_SMART_BOTTOM_1:
-          case DEVICE_TYPE_SMART_BOTTOM_2: {
+          case DEVICE_TYPE_SMART_BOTTOM:
+          case DEVICE_TYPE_SMART_BOTTOM_CLIMATE:
+          case DEVICE_TYPE_SMART_BOTTOM_CO2: {
             device.sendRBUS(buff, action.id);
             break;
           }
@@ -3295,8 +3298,9 @@ const run = (action) => {
             case DEVICE_TYPE_DI_4_LA:
             case DEVICE_TYPE_DOPPLER_1_DI_4:
             case DEVICE_TYPE_DOPPLER_5_DI_4:
-            case DEVICE_TYPE_SMART_BOTTOM_1:
-            case DEVICE_TYPE_SMART_BOTTOM_2: {
+            case DEVICE_TYPE_SMART_BOTTOM:
+            case DEVICE_TYPE_SMART_BOTTOM_CLIMATE:
+            case DEVICE_TYPE_SMART_BOTTOM_CO2: {
               device.sendRBUS(buff, id);
               break;
             }
@@ -3325,8 +3329,9 @@ const run = (action) => {
             case DEVICE_TYPE_DI_4_LA:
             case DEVICE_TYPE_DOPPLER_1_DI_4:
             case DEVICE_TYPE_DOPPLER_5_DI_4:
-            case DEVICE_TYPE_SMART_BOTTOM_1:
-            case DEVICE_TYPE_SMART_BOTTOM_2: {
+            case DEVICE_TYPE_SMART_BOTTOM:
+            case DEVICE_TYPE_SMART_BOTTOM_CLIMATE:
+            case DEVICE_TYPE_SMART_BOTTOM_CO2: {
               device.sendRBUS(buff, id);
               break;
             }
@@ -3355,8 +3360,9 @@ const run = (action) => {
             case DEVICE_TYPE_DI_4_LA:
             case DEVICE_TYPE_DOPPLER_1_DI_4:
             case DEVICE_TYPE_DOPPLER_5_DI_4:
-            case DEVICE_TYPE_SMART_BOTTOM_1:
-            case DEVICE_TYPE_SMART_BOTTOM_2: {
+            case DEVICE_TYPE_SMART_BOTTOM:
+            case DEVICE_TYPE_SMART_BOTTOM_CLIMATE:
+            case DEVICE_TYPE_SMART_BOTTOM_CO2: {
               device.sendRBUS(buff, id);
               break;
             }
@@ -3389,8 +3395,9 @@ const run = (action) => {
           case DEVICE_TYPE_DI_4_LA:
           case DEVICE_TYPE_DOPPLER_1_DI_4:
           case DEVICE_TYPE_DOPPLER_5_DI_4:
-          case DEVICE_TYPE_SMART_BOTTOM_1:
-          case DEVICE_TYPE_SMART_BOTTOM_2: {
+          case DEVICE_TYPE_SMART_BOTTOM:
+          case DEVICE_TYPE_SMART_BOTTOM_CLIMATE:
+          case DEVICE_TYPE_SMART_BOTTOM_CO2: {
             device.sendRBUS(buff, action.id);
             break;
           }
