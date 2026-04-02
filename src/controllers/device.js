@@ -123,6 +123,7 @@ const {
   DEVICE_TYPE_DOPPLER_5_DI_4,
   DEVICE_TYPE_SMART_BOTTOM,
   DEVICE_TYPE_SMART_BOTTOM_CO2,
+  DEVICE_TYPE_SMART_BOTTOM_CLIMATE,
 } = require("../constants");
 const {
   get,
@@ -166,6 +167,9 @@ module.exports.manage = () => {
       const dev = get(id) || {};
       if (dev) {
         online(id, { ip: address, hub, type: dev.type });
+        if(!dev.bottom) { 
+          add(mac(), DEVICE, id); 
+        };
       }
       const action = data[6];
       // if (hub && action !== ACTION_DISCOVERY && action !== ACTION_READY) {
@@ -351,6 +355,7 @@ module.exports.manage = () => {
             case DEVICE_TYPE_DOPPLER_1_DI_4:
             case DEVICE_TYPE_DOPPLER_5_DI_4:
             case DEVICE_TYPE_SMART_BOTTOM:
+            case DEVICE_TYPE_SMART_BOTTOM_CLIMATE:
             case DEVICE_TYPE_SMART_BOTTOM_CO2:
             case DEVICE_TYPE_SMART_TOP_A4P:
             case DEVICE_TYPE_SMART_TOP_A4T:

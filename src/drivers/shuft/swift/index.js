@@ -29,7 +29,7 @@ const sync = (id) => {
   } else {
     writeRegister(modbus, address, 0x2, dev.value ? 1 : 0);
     setTimeout(() => {
-      writeRegister(modbus, address, 0x19, dev.setpoint * 10);
+      writeRegister(modbus, address, 0x1f, dev.setpoint * 10);
     }, 100);
     setTimeout(() => {
       writeRegister(modbus, address, 0x20, dev.fan_speed);
@@ -39,7 +39,6 @@ const sync = (id) => {
     }, 300);
   }
   set(id, { synced: true });
-
 };
 
 module.exports.run = (action) => {
@@ -71,19 +70,20 @@ module.exports.run = (action) => {
 module.exports.handle = (action) => {
   const { id, data } = action;
   switch (data[0]) {
-    case READ_HOLDING_REGISTERS: {
-      const dev = get(id) || {};
-      // const value = data.readUInt16BE(2);
-      // const fan_speed = data.readUInt16BE(2);
-      // const setpoint = data.readUInt16BE(4) / 10;
-      // if (dev.synced) {
-      // set(id, {
-      // value,// !!fan_speed,
-      // fan_speed: fan_speed ? fan_speed : dev.fan_speed,
-      // setpoint,
-      // synced: true,
-      // });
-    }
+    case READ_HOLDING_REGISTERS:
+      {
+        const dev = get(id) || {};
+        // const value = data.readUInt16BE(2);
+        // const fan_speed = data.readUInt16BE(2);
+        // const setpoint = data.readUInt16BE(4) / 10;
+        // if (dev.synced) {
+        // set(id, {
+        // value,// !!fan_speed,
+        // fan_speed: fan_speed ? fan_speed : dev.fan_speed,
+        // setpoint,
+        // synced: true,
+        // });
+      }
       break;
   }
 };
