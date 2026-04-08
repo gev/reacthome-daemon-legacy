@@ -124,6 +124,8 @@ const {
   DEVICE_TYPE_SMART_BOTTOM,
   DEVICE_TYPE_SMART_BOTTOM_CO2,
   DEVICE_TYPE_SMART_BOTTOM_CLIMATE,
+  DEVICE_TYPE_UNKNOWN,
+  ACTION_GET_INFO,
 } = require("../constants");
 const {
   get,
@@ -167,14 +169,11 @@ module.exports.manage = () => {
       const dev = get(id) || {};
       if (dev) {
         online(id, { ip: address, hub, type: dev.type });
-        if(!dev.bottom) { 
-          add(mac(), DEVICE, id); 
+        if (!dev.bottom) {
+          add(mac(), DEVICE, id);
         };
       }
       const action = data[6];
-      // if (hub && action !== ACTION_DISCOVERY && action !== ACTION_READY) {
-      //   console.log('receive', data, address, hub);
-      // }
       switch (action) {
         case DEVICE_TYPE_PLC: {
           for (let i = 1; i <= 36; i++) {
@@ -592,19 +591,34 @@ module.exports.manage = () => {
               const top_mac = Array.from(data.slice(8, 14));
               const top_id = top_mac.map((i) => `0${i.toString(16)}`.slice(-2)).join(":");
               const type = data[14];
-              set(id, { top: top_id, topDetected: true });
-              online(top_id, { type, bottom: id, version: `${data[15]}.${data[16]}`, ip: address, ready: true });
               switch (type) {
-                case DEVICE_TYPE_SMART_TOP_G4D:
-                case DEVICE_TYPE_SMART_TOP_A4TD:
-                case DEVICE_TYPE_SMART_TOP_A4TD_7S: {
-                  const ts = timestamp[top_id] || 0;
-                  const { timeout = 0, mode, defaultMode } = get(top_id) || {};
-                  if (Date.now() - ts > (timeout || 10_000)) {
-                    set(top_id, { configuring: 0, mode: defaultMode ? defaultMode - 1 : mode });
-                    renderSmartTop(top_id);
+                case DEVICE_TYPE_UNKNOWN: {
+                  const dev = get(top_id) || {};
+                  set(id, { top: top_id, topDetected: true });
+                  if (dev.type) {
+                    online(top_id, { bottom: id, ip: address, ready: true });
+                  } else {
+                    online(top_id, { type, bottom: id, version: `${data[15]}.${data[16]}`, ip: address, ready: true });
                   }
+                  device.sendTOP({ type: ACTION_GET_INFO }, top_id);
                   break;
+                }
+                default: {
+                  set(id, { top: top_id, topDetected: true });
+                  online(top_id, { type, bottom: id, version: `${data[15]}.${data[16]}`, ip: address, ready: true });
+                  switch (type) {
+                    case DEVICE_TYPE_SMART_TOP_G4D:
+                    case DEVICE_TYPE_SMART_TOP_A4TD:
+                    case DEVICE_TYPE_SMART_TOP_A4TD_7S: {
+                      const ts = timestamp[top_id] || 0;
+                      const { timeout = 0, mode, defaultMode } = get(top_id) || {};
+                      if (Date.now() - ts > (timeout || 10_000)) {
+                        set(top_id, { configuring: 0, mode: defaultMode ? defaultMode - 1 : mode });
+                        renderSmartTop(top_id);
+                      }
+                      break;
+                    }
+                  }
                 }
               }
               break;
@@ -1092,8 +1106,49 @@ module.exports.manage = () => {
         case ACTION_DISCOVERY: {
           const type = data[7];
           const version = `${data[8]}.${data[9]}`;
-          online(id, { type, version, ip: address, ready: true });
+          switch (type) {
+            case DEVICE_TYPE_UNKNOWN: {
+              const dev = get(id) || {}
+              if (dev.type) {
+                online(id, { ip: address, ready: true });
+              } else {
+                online(id, { type, version, ip: address, ready: true });
+              }
+              add(mac(), DEVICE, id);
+              if (hub) {
+                device.sendRBUS({ type: ACTION_GET_INFO }, id)
+              } else {
+                device.send({ type: ACTION_GET_INFO }, address);
+              }
+              break;
+            }
+            default: {
+              online(id, { type, version, ip: address, ready: true });
+              add(mac(), DEVICE, id)
+            }
+          }
+          break;
+        }
+        case ACTION_GET_INFO: {
+          const type = data.readUInt16BE(7);
+          const board = data[9];
+          const version = `${data[10]}.${data[11]}`;
+          const mcu = data.slice(12).toString();
+          online(id, { type, board, version, mcu, ip: address, ready: true });
           add(mac(), DEVICE, id)
+          switch (type) {
+            case DEVICE_TYPE_SMART_TOP_G4D:
+            case DEVICE_TYPE_SMART_TOP_A4TD:
+            case DEVICE_TYPE_SMART_TOP_A4TD_7S: {
+              const ts = timestamp[top_id] || 0;
+              const { timeout = 0, mode, defaultMode } = get(top_id) || {};
+              if (Date.now() - ts > (timeout || 10_000)) {
+                set(top_id, { configuring: 0, mode: defaultMode ? defaultMode - 1 : mode });
+                renderSmartTop(top_id);
+              }
+              break;
+            }
+          }
           break;
         }
         case ACTION_FIND_ME: {
