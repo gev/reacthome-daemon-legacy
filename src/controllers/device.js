@@ -600,7 +600,7 @@ module.exports.manage = () => {
                   } else {
                     online(top_id, { type, bottom: id, version: `${data[15]}.${data[16]}`, ip: address, ready: true });
                   }
-                  device.sendTOP({ type: ACTION_GET_INFO }, top_id);
+                  device.sendTOP(Buffer.from([ACTION_GET_INFO]), top_id);
                   break;
                 }
                 default: {
@@ -1116,9 +1116,9 @@ module.exports.manage = () => {
               }
               add(mac(), DEVICE, id);
               if (hub) {
-                device.sendRBUS({ type: ACTION_GET_INFO }, id)
+                device.sendRBUS(Buffer.from([ACTION_GET_INFO]), id)
               } else {
-                device.send({ type: ACTION_GET_INFO }, address);
+                device.send(Buffer.from([ACTION_GET_INFO]), address);
               }
               break;
             }
