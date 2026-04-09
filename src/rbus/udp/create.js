@@ -19,19 +19,19 @@ module.exports.createSocket = (rbus, host) => {
     host, send,
     close: socket.close
   }
-  setInterval(() => {
-    // console.log(rbus);
-    if (rbus.mac) {
-      send(Buffer.from([
-        // rbus.ready ? ACTION_READY : ACTION_DISCOVERY,
-        ACTION_DISCOVERY,
-        DEVICE_TYPE_SERVER,
-        rbus.version.major, rbus.version.minor // Version
-      ]))
-      if (!rbus.ready) {
-        send(Buffer.from([ACTION_INITIALIZE]));
-        rbus.ready = true;
-      }
-    }
-  }, 1_000)
+  // setInterval(() => {
+  //   // console.log(rbus);
+  //   if (rbus.mac) {
+  //     send(Buffer.from([
+  //       // rbus.ready ? ACTION_READY : ACTION_DISCOVERY,
+  //       ACTION_DISCOVERY,
+  //       rbus.type || 0,
+  //       rbus.version.major, rbus.version.minor // Version
+  //     ]))
+  //     if (!rbus.ready) {
+  //       send(Buffer.from([ACTION_INITIALIZE]));
+  //       rbus.ready = true;
+  //     }
+  //   }
+  // }, 1_000)
 }
