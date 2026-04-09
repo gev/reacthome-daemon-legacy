@@ -1104,6 +1104,7 @@ module.exports.manage = () => {
         }
         case ACTION_READY:
         case ACTION_DISCOVERY: {
+          console.log("discovery", data);
           const type = data[7];
           const version = `${data[8]}.${data[9]}`;
           switch (type) {
@@ -1130,6 +1131,7 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_GET_INFO: {
+          console.log("get_info", data);
           const type = data.readUInt16BE(7);
           const board = data[9];
           const version = `${data[10]}.${data[11]}`;
