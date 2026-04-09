@@ -23,13 +23,19 @@ module.exports.handle = (rbus) => {
       case ACTION_DISCOVERY: {
         rbus.mac = Buffer.copyBytesFrom(buff.slice(1, 7));
         rbus.socket.send(Buffer.from([0xf0, buff[7], buff[8], buff[9]]));
+        const type = buff[8];
+        if (!rbus.ready && type) {
+          rbus.socket.send(Buffer.from([ACTION_INITIALIZE]));
+          rbus.ready = true;
+        }
         break;
       }
       case ACTION_GET_INFO: {
         rbus.socket.send(buff);
         const type = buff.readUInt16BE(1);
-        if (type) {
+        if (!rbus.ready && type) {
           rbus.socket.send(Buffer.from([ACTION_INITIALIZE]));
+          rbus.ready = true;
         }
         break;
       }
