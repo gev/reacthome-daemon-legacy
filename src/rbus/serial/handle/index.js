@@ -16,12 +16,14 @@ module.exports.handle = (rbus) => {
   let buff = Buffer.alloc(512)
 
   const handle = (buff) => {
+    console.log(buff);
     // if (buff[0] === 0xf0) {
-    //   rbus.mac = Buffer.copyBytesFrom(buff.slice(1, 7));
-    //   rbus.type = buff[7];
-    //   rbus.version = { major: buff[8], minor: buff[9] };
+    //   // rbus.mac = Buffer.copyBytesFrom(buff.slice(1, 7));
+    //   // rbus.type = buff[7];
+    //   // rbus.version = { major: buff[8], minor: buff[9] };
+    //   rbus.socket.send(Buffer.from([buff[1], buff[2], buff[3], buff[4], buff[5], buff[6], 0xf0, buff[7], buff[8], buff[9]]));
     // } else {
-      rbus.socket.send(buff)
+    //   rbus.socket.send(buff)
     // }
   }
 
