@@ -17,7 +17,6 @@ module.exports.handle = (rbus) => {
   let buff = Buffer.alloc(512)
 
   const handle = (buff) => {
-    console.log(buff);
     const action = buff[0];
     switch (action) {
       case ACTION_DISCOVERY: {

@@ -1106,7 +1106,6 @@ module.exports.manage = () => {
         case ACTION_DISCOVERY: {
           const type = data[7];
           const version = `${data[8]}.${data[9]}`;
-          console.log("discovery", data);
           switch (type) {
             case DEVICE_TYPE_UNKNOWN: {
               const dev = get(id) || {}
@@ -1229,12 +1228,10 @@ module.exports.manage = () => {
             }
             case DEVICE_TYPE_SMART_TOP_A6T:
             case DEVICE_TYPE_SMART_TOP_G6: {
-              // console.log(data);
               const log = [];
               for (let i = 0; i < 6; i++) {
                 log[i] = data.readInt16BE(8 + 2 * i);
               }
-              // console.log(log);
               set(id, { log });
               break;
             }
