@@ -1118,9 +1118,9 @@ module.exports.manage = () => {
               add(mac(), DEVICE, id);
               console.log("hub", hub, "address", address);
               if (hub) {
-                device.send(Buffer.from([ACTION_GET_INFO]), address);
-              } else {
                 device.sendRBUS(Buffer.from([ACTION_GET_INFO]), id)
+              } else {
+                device.send(Buffer.from([ACTION_GET_INFO]), address);
               }
               break;
             }
