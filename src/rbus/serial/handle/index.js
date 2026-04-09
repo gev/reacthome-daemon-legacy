@@ -29,7 +29,7 @@ module.exports.handle = (rbus) => {
         rbus.socket.send(buff);
         const type = buff.readUInt16BE(1);
         if (type) {
-          rbus.socet.send(Buffer.from([ACTION_INITIALIZE]));
+          rbus.socket.send(Buffer.from([ACTION_INITIALIZE]));
         }
         break;
       }
