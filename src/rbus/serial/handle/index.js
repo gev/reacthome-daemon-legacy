@@ -17,6 +17,7 @@ module.exports.handle = (rbus) => {
   let buff = Buffer.alloc(512)
 
   const handle = (buff) => {
+    console.log(buff);
     switch (buff[0]) {
       case ACTION_DISCOVERY: {
         rbus.mac = Buffer.copyBytesFrom(buff.slice(1, 7));
