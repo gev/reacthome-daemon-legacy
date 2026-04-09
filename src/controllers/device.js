@@ -1106,6 +1106,7 @@ module.exports.manage = () => {
         case ACTION_DISCOVERY: {
           const type = data[7];
           const version = `${data[8]}.${data[9]}`;
+          console.log("discovery", data);
           switch (type) {
             case DEVICE_TYPE_UNKNOWN: {
               const dev = get(id) || {}
