@@ -163,7 +163,6 @@ module.exports.manage = () => {
   }
 
   const handleData = (data, { address }, { hub = null } = {}) => {
-    console.log("data", data);
     try {
       const dev_mac = data.slice(0, 6);
       const id = Array.from(dev_mac).map((i) => `0${i.toString(16)}`.slice(-2)).join(":");
@@ -339,7 +338,6 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_GET_STATE: {
-          console.log("get_state", data);
           const { type } = get(id) || {};
           switch (type) {
             case DEVICE_TYPE_SMART_TOP_G2: {
@@ -1132,7 +1130,6 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_GET_INFO: {
-          console.log("get_info", data);
           const type = data.readUInt16BE(7);
           const board = data[9];
           const version = `${data[10]}.${data[11]}`;
