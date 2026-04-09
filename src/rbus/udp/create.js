@@ -25,7 +25,7 @@ module.exports.createSocket = (rbus, host) => {
       send(Buffer.from([
         // rbus.ready ? ACTION_READY : ACTION_DISCOVERY,
         ACTION_DISCOVERY,
-        DEVICE_TYPE_SERVER,
+        rbus.type || 0,
         rbus.version.major, rbus.version.minor // Version
       ]))
       if (!rbus.ready) {

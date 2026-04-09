@@ -17,8 +17,9 @@ module.exports.handle = (rbus) => {
 
   const handle = (buff) => {
     if (buff[0] === 0xf0) {
-      rbus.version = { major: buff[8], minor: buff[9] };
       rbus.mac = Buffer.copyBytesFrom(buff.slice(1, 7));
+      rbus.type = buff[7];
+      rbus.version = { major: buff[8], minor: buff[9] };
     } else {
       rbus.socket.send(buff)
     }
