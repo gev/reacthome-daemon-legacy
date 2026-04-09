@@ -1116,7 +1116,7 @@ module.exports.manage = () => {
                 online(id, { type, version, ip: address, ready: true });
               }
               add(mac(), DEVICE, id);
-              console.log("hub", hub);
+              console.log("hub", hub, "address", address);
               if (hub) {
                 device.send(Buffer.from([ACTION_GET_INFO]), address);
               } else {
