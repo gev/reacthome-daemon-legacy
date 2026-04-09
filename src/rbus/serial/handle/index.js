@@ -1,5 +1,6 @@
 const os = require('os');
-const { crc16modbus } = require('crc')
+const { crc16modbus } = require('crc');
+const { ACTION_INITIALIZE, ACTION_DISCOVERY, ACTION_GET_INFO } = require('../../../constants');
 
 const WAITING_PREAMBLE = 0
 const WAITING_SIZE = 1
@@ -16,15 +17,23 @@ module.exports.handle = (rbus) => {
   let buff = Buffer.alloc(512)
 
   const handle = (buff) => {
-    console.log(buff);
-    // if (buff[0] === 0xf0) {
-    //   // rbus.mac = Buffer.copyBytesFrom(buff.slice(1, 7));
-    //   // rbus.type = buff[7];
-    //   // rbus.version = { major: buff[8], minor: buff[9] };
-    //   rbus.socket.send(Buffer.from([buff[1], buff[2], buff[3], buff[4], buff[5], buff[6], 0xf0, buff[7], buff[8], buff[9]]));
-    // } else {
-    //   rbus.socket.send(buff)
-    // }
+    switch (buff[0]) {
+      case ACTION_DISCOVERY: {
+        rbus.mac = Buffer.copyBytesFrom(buff.slice(1, 7));
+        rbus.socket.send(Buffer.from([0xf0, buff[7], buff[8], buff[9]]));
+        break;
+      }
+      case ACTION_GET_INFO: {
+        rbus.socket.send(buff);
+        if (buff[1]) {
+          rbus.socet.send(Buffer.from([ACTION_INITIALIZE]));
+        }
+        break;
+      }
+      default: {
+        rbus.socket.send(buff);
+      }
+    }
   }
 
   const receivePreamble = (v) => {
