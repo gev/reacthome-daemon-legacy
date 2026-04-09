@@ -18,7 +18,8 @@ module.exports.handle = (rbus) => {
 
   const handle = (buff) => {
     console.log(buff);
-    switch (buff[0]) {
+    const action = buff[0];
+    switch (action) {
       case ACTION_DISCOVERY: {
         rbus.mac = Buffer.copyBytesFrom(buff.slice(1, 7));
         rbus.socket.send(Buffer.from([0xf0, buff[7], buff[8], buff[9]]));
@@ -26,7 +27,8 @@ module.exports.handle = (rbus) => {
       }
       case ACTION_GET_INFO: {
         rbus.socket.send(buff);
-        if (buff[1]) {
+        const type = buff.readUInt16BE(1);
+        if (type) {
           rbus.socet.send(Buffer.from([ACTION_INITIALIZE]));
         }
         break;
