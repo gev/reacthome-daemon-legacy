@@ -1135,7 +1135,6 @@ module.exports.manage = () => {
           const version = `${data[10]}.${data[11]}`;
           const mcu = data.slice(12).toString();
           online(id, { type, board, version, mcu, ip: address, ready: true });
-          add(mac(), DEVICE, id)
           switch (type) {
             case DEVICE_TYPE_SMART_TOP_G4D:
             case DEVICE_TYPE_SMART_TOP_A4TD:
