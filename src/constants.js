@@ -433,3 +433,6 @@ module.exports.DRIVER_TYPE_TELEGRAM = "TELEGRAM";
 module.exports.DALI_LIGHT = 'dali_light';
 module.exports.DALI_GROUP = 'dali_group';
 module.exports.DALI_SCENE = 'dali_scene';
+
+module.exports.STATUS_MAIN = 0x0;
+module.exports.STATUS_DFU = 0x1;

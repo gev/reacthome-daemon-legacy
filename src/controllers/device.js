@@ -1130,11 +1130,12 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_GET_INFO: {
-          const type = data.readUInt16BE(7);
-          const board = data[9];
-          const version = `${data[10]}.${data[11]}`;
-          const mcu = data.slice(12).toString();
-          online(id, { type, board, version, mcu, ip: address, ready: true });
+          const status = data[7]
+          const type = data.readUInt16BE(8);
+          const board = data[10];
+          const version = `${data[11]}.${data[12]}`;
+          const mcu = data.slice(13).toString();
+          online(id, { status, type, board, version, mcu, ip: address, ready: true });
           switch (type) {
             case DEVICE_TYPE_SMART_TOP_G4D:
             case DEVICE_TYPE_SMART_TOP_A4TD:
