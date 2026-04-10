@@ -127,6 +127,7 @@ const {
   DEVICE_TYPE_UNKNOWN,
   ACTION_GET_INFO,
   STATUS_MAIN,
+  STATUS_DFU,
 } = require("../constants");
 const {
   get,
