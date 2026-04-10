@@ -126,6 +126,7 @@ const {
   DEVICE_TYPE_SMART_BOTTOM_CLIMATE,
   DEVICE_TYPE_UNKNOWN,
   ACTION_GET_INFO,
+  STATUS_MAIN,
 } = require("../constants");
 const {
   get,
@@ -1130,12 +1131,22 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_GET_INFO: {
+          const { version = "", dfuVersion = ""} = get(id) || {};
           const status = data[7]
           const type = data.readUInt16BE(8);
           const board = data[10];
-          const version = `${data[11]}.${data[12]}`;
+          switch (status) {
+            case STATUS_MAIN:{
+              version = `${data[11]}.${data[12]}`;
+              break;
+            }
+            case STATUS_DFU:{
+              dfuVersion = `${data[11]}.${data[12]}`;
+              break;
+            }
+          } 
           const mcu = data.slice(13).toString();
-          online(id, { status, type, board, version, mcu, ip: address, ready: true });
+          online(id, { status, type, board, version, dfuVersion, mcu, ip: address, ready: true });
           switch (type) {
             case DEVICE_TYPE_SMART_TOP_G4D:
             case DEVICE_TYPE_SMART_TOP_A4TD:
