@@ -1,6 +1,6 @@
 const os = require('os');
 const { crc16modbus } = require('crc');
-const { ACTION_INITIALIZE, ACTION_DISCOVERY, ACTION_GET_INFO } = require('../../../constants');
+const { ACTION_INITIALIZE, ACTION_DISCOVERY, ACTION_GET_INFO, STATUS_MAIN } = require('../../../constants');
 
 const WAITING_PREAMBLE = 0
 const WAITING_SIZE = 1
@@ -31,8 +31,9 @@ module.exports.handle = (rbus) => {
       }
       case ACTION_GET_INFO: {
         rbus.socket.send(buff);
-        const type = buff.readUInt16BE(1);
-        if (!rbus.ready && type) {
+        const status = buff[1];
+        const type = buff.readUInt16BE(2);
+        if (!rbus.ready && type && status === STATUS_MAIN) {
           rbus.socket.send(Buffer.from([ACTION_INITIALIZE]));
           rbus.ready = true;
         }
