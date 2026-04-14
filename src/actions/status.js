@@ -26,6 +26,7 @@ const {
   DEVICE_TYPE_SMART_TOP_A4TD_7S,
   DEVICE_TYPE_MIX_V,
   DEVICE_TYPE_SMART_BOTTOM_CLIMATE,
+  DEVICE_TYPE_SMART_TOP_CARD_HOLDER,
 } = require("../constants");
 const { device } = require("../sockets");
 
@@ -71,7 +72,8 @@ const online = (id, props) => {
       case DEVICE_TYPE_SMART_TOP_G2:
       case DEVICE_TYPE_SMART_TOP_A4P:
       case DEVICE_TYPE_SMART_TOP_A4TD:
-      case DEVICE_TYPE_SMART_TOP_A4TD_7S: {
+      case DEVICE_TYPE_SMART_TOP_A4TD_7S:
+      case DEVICE_TYPE_SMART_TOP_CARD_HOLDER: {
         device.sendTOP(
           Buffer.from([
             ACTION_GET_STATE,

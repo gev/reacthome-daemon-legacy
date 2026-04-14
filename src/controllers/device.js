@@ -128,6 +128,7 @@ const {
   ACTION_GET_INFO,
   STATUS_MAIN,
   STATUS_DFU,
+  DEVICE_TYPE_SMART_TOP_CARD_HOLDER,
 } = require("../constants");
 const {
   get,
@@ -297,7 +298,8 @@ module.exports.manage = () => {
             type === DEVICE_TYPE_SMART_TOP_G2 ||
             type === DEVICE_TYPE_SMART_TOP_A4P ||
             type === DEVICE_TYPE_SMART_TOP_A4TD ||
-            type === DEVICE_TYPE_SMART_TOP_A4TD_7S
+            type === DEVICE_TYPE_SMART_TOP_A4TD_7S ||
+            type === DEVICE_TYPE_SMART_TOP_CARD_HOLDER
           ) {
             set(id, { state: data[7] })
             return;
@@ -345,6 +347,15 @@ module.exports.manage = () => {
             case DEVICE_TYPE_SMART_TOP_G2: {
               const valuesDI = data.readUInt8(7);
               for (let i = 1; i <= 2; i++) {
+                let value = (valuesDI & (1 << (i - 1))) ? 1 : 0;
+                let payload = Buffer.from([ACTION_DI, i, value]);
+                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              }
+              break;
+            }
+            case DEVICE_TYPE_SMART_TOP_CARD_HOLDER: {
+              const valuesDI = data.readUInt8(7);
+              for (let i = 1; i <= 3; i++) {
                 let value = (valuesDI & (1 << (i - 1))) ? 1 : 0;
                 let payload = Buffer.from([ACTION_DI, i, value]);
                 handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
@@ -712,7 +723,8 @@ module.exports.manage = () => {
             case DEVICE_TYPE_SMART_TOP_G2:
             case DEVICE_TYPE_SMART_TOP_A4P:
             case DEVICE_TYPE_SMART_TOP_A4TD:
-            case DEVICE_TYPE_SMART_TOP_A4TD_7S: {
+            case DEVICE_TYPE_SMART_TOP_A4TD_7S:
+            case DEVICE_TYPE_SMART_TOP_CARD_HOLDER: {
               set(id, { brightness: data[7] });
               break;
             }
@@ -768,7 +780,8 @@ module.exports.manage = () => {
             case DEVICE_TYPE_SMART_TOP_G2:
             case DEVICE_TYPE_SMART_TOP_A4P:
             case DEVICE_TYPE_SMART_TOP_A4TD:
-            case DEVICE_TYPE_SMART_TOP_A4TD_7S: {
+            case DEVICE_TYPE_SMART_TOP_A4TD_7S:
+            case DEVICE_TYPE_SMART_TOP_CARD_HOLDER: {
               let [, , , , , , , palette, index] = data;
               if (index === 0) {
                 index = 1;
@@ -812,7 +825,8 @@ module.exports.manage = () => {
             case DEVICE_TYPE_SMART_TOP_G2:
             case DEVICE_TYPE_SMART_TOP_A4P:
             case DEVICE_TYPE_SMART_TOP_A4TD:
-            case DEVICE_TYPE_SMART_TOP_A4TD_7S: {
+            case DEVICE_TYPE_SMART_TOP_A4TD_7S:
+            case DEVICE_TYPE_SMART_TOP_CARD_HOLDER: {
               const image = Array.from(data.slice(7, 15))
               set(id, { image });
               break;
@@ -837,7 +851,8 @@ module.exports.manage = () => {
             case DEVICE_TYPE_SMART_TOP_G2:
             case DEVICE_TYPE_SMART_TOP_A4P:
             case DEVICE_TYPE_SMART_TOP_A4TD:
-            case DEVICE_TYPE_SMART_TOP_A4TD_7S: {
+            case DEVICE_TYPE_SMART_TOP_A4TD_7S:
+            case DEVICE_TYPE_SMART_TOP_CARD_HOLDER: {
               const blink = Array.from(data.slice(7, 15))
               set(id, { blink });
               break;
@@ -1222,6 +1237,14 @@ module.exports.manage = () => {
             case DEVICE_TYPE_SMART_TOP_G2: {
               const log = [];
               for (let i = 0; i < 2; i++) {
+                log[i] = data.readInt16BE(8 + 2 * i);
+              }
+              set(id, { log });
+              break;
+            }
+            case DEVICE_TYPE_SMART_TOP_CARD_HOLDER: {
+              const log = [];
+              for (let i = 0; i < 3; i++) {
                 log[i] = data.readInt16BE(8 + 2 * i);
               }
               set(id, { log });
