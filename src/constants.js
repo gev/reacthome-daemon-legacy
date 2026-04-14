@@ -323,12 +323,13 @@ module.exports.DEVICE_TYPE_SMART_TOP_G2 = 0x36;
 module.exports.DEVICE_TYPE_SMART_TOP_A4P = 0x37;
 module.exports.DEVICE_TYPE_SMART_TOP_A4TD = 0x38;
 module.exports.DEVICE_TYPE_SMART_TOP_A4TD_7S = 0x39;
+module.exports.DEVICE_TYPE_SMART_TOP_CLIMATE = 0x3c;
+module.exports.DEVICE_TYPE_SMART_TOP_CARD_HOLDER = 0x3e;
 
 module.exports.DEVICE_TYPE_SMART_BOTTOM = 0x3a;
 module.exports.DEVICE_TYPE_SMART_BOTTOM_CO2 = 0x3b;
 module.exports.DEVICE_TYPE_SMART_BOTTOM_CLIMATE = 0x3d;
 
-module.exports.DEVICE_TYPE_SMART_TOP_CARD_HOLDER = 0x3e;
 
 module.exports.DEVICE_TYPE_RELAY_6 = 0xa0;
 module.exports.DEVICE_TYPE_RELAY_12 = 0xa1;
