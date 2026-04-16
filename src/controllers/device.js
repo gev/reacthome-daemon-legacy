@@ -300,7 +300,8 @@ module.exports.manage = () => {
             type === DEVICE_TYPE_SMART_TOP_A4P ||
             type === DEVICE_TYPE_SMART_TOP_A4TD ||
             type === DEVICE_TYPE_SMART_TOP_A4TD_7S ||
-            type === DEVICE_TYPE_SMART_TOP_CARD_HOLDER
+            type === DEVICE_TYPE_SMART_TOP_CARD_HOLDER ||
+            type === DEVICE_TYPE_ROOM_NUMBER
           ) {
             set(id, { state: data[7] })
             return;
