@@ -245,11 +245,13 @@ const run = (action) => {
           case DEVICE_TYPE_DIM_12_AC_RS:
           case DEVICE_TYPE_DIM_12_DC_RS:
           case DEVICE_TYPE_MIX_6x12_RS:
+          case DEVICE_TYPE_ROOM_NUMBER:
           case DEVICE_TYPE_SMART_4A:
           case DEVICE_TYPE_SMART_4AM:
           case DEVICE_TYPE_SMART_4G:
           case DEVICE_TYPE_SMART_4GD:
           case DEVICE_TYPE_SMART_6_PUSH:
+          case DEVICE_TYPE_SMART_TOP_CARD_HOLDER:
           case DEVICE_TYPE_SMART_BOTTOM:
           case DEVICE_TYPE_SMART_BOTTOM_CO2: {
             device.sendRBUS(
