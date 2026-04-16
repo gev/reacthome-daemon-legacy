@@ -780,7 +780,7 @@ module.exports.manage = () => {
         case ACTION_RGB: {
           const { type } = get(id) || {};
           switch (type) {
-            case DEVICE_TYPE_ROOM_NUMBER:
+            // case DEVICE_TYPE_ROOM_NUMBER:
             case DEVICE_TYPE_SMART_TOP_A6P:
             case DEVICE_TYPE_SMART_TOP_G4D:
             case DEVICE_TYPE_SMART_TOP_A4T:
