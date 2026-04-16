@@ -129,6 +129,7 @@ const {
   STATUS_MAIN,
   STATUS_DFU,
   DEVICE_TYPE_SMART_TOP_CARD_HOLDER,
+  DEVICE_TYPE_ROOM_NUMBER,
 } = require("../constants");
 const {
   get,
@@ -299,7 +300,8 @@ module.exports.manage = () => {
             type === DEVICE_TYPE_SMART_TOP_A4P ||
             type === DEVICE_TYPE_SMART_TOP_A4TD ||
             type === DEVICE_TYPE_SMART_TOP_A4TD_7S ||
-            type === DEVICE_TYPE_SMART_TOP_CARD_HOLDER
+            type === DEVICE_TYPE_SMART_TOP_CARD_HOLDER ||
+            type === DEVICE_TYPE_ROOM_NUMBER
           ) {
             set(id, { state: data[7] })
             return;
@@ -344,6 +346,12 @@ module.exports.manage = () => {
         case ACTION_GET_STATE: {
           const { type } = get(id) || {};
           switch (type) {
+            case DEVICE_TYPE_ROOM_NUMBER:
+              const valuesDI = data.readUInt8(7);
+              let value = (valuesDI & (1 << 0)) ? 1 : 0;
+              let payload = Buffer.from([ACTION_DI, i, value]);
+              handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              break;
             case DEVICE_TYPE_SMART_TOP_G2: {
               const valuesDI = data.readUInt8(7);
               for (let i = 1; i <= 2; i++) {
@@ -714,6 +722,7 @@ module.exports.manage = () => {
               // }
               break;
             }
+            case DEVICE_TYPE_ROOM_NUMBER:
             case DEVICE_TYPE_SMART_TOP_A6P:
             case DEVICE_TYPE_SMART_TOP_G4D:
             case DEVICE_TYPE_SMART_TOP_A4T:
@@ -771,6 +780,7 @@ module.exports.manage = () => {
         case ACTION_RGB: {
           const { type } = get(id) || {};
           switch (type) {
+            case DEVICE_TYPE_ROOM_NUMBER:
             case DEVICE_TYPE_SMART_TOP_A6P:
             case DEVICE_TYPE_SMART_TOP_G4D:
             case DEVICE_TYPE_SMART_TOP_A4T:
@@ -816,6 +826,7 @@ module.exports.manage = () => {
         case ACTION_IMAGE: {
           const { type } = get(id) || {};
           switch (type) {
+            case DEVICE_TYPE_ROOM_NUMBER:
             case DEVICE_TYPE_SMART_TOP_A6P:
             case DEVICE_TYPE_SMART_TOP_G4D:
             case DEVICE_TYPE_SMART_TOP_A4T:
@@ -842,6 +853,7 @@ module.exports.manage = () => {
         case ACTION_BLINK: {
           const { type } = get(id) || {};
           switch (type) {
+            case DEVICE_TYPE_ROOM_NUMBER:
             case DEVICE_TYPE_SMART_TOP_A6P:
             case DEVICE_TYPE_SMART_TOP_G4D:
             case DEVICE_TYPE_SMART_TOP_A4T:
@@ -1234,6 +1246,12 @@ module.exports.manage = () => {
         case ACTION_ERROR: {
           const { type } = get(id) || {};
           switch (type) {
+            case DEVICE_TYPE_ROOM_NUMBER: {
+              const log = [];
+                log[i] = data.readInt16BE(8);
+              set(id, { log });
+              break;
+            }
             case DEVICE_TYPE_SMART_TOP_G2: {
               const log = [];
               for (let i = 0; i < 2; i++) {

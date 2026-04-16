@@ -211,6 +211,7 @@ const {
   ACTION_DMX512,
   DRIVER_TYPE_DMX512,
   DEVICE_TYPE_SMART_TOP_CARD_HOLDER,
+  DEVICE_TYPE_ROOM_NUMBER,
 } = require("../constants");
 const { NOTIFY } = require("../notification/constants");
 const notification = require("../notification");
@@ -244,11 +245,13 @@ const run = (action) => {
           case DEVICE_TYPE_DIM_12_AC_RS:
           case DEVICE_TYPE_DIM_12_DC_RS:
           case DEVICE_TYPE_MIX_6x12_RS:
+          case DEVICE_TYPE_ROOM_NUMBER:
           case DEVICE_TYPE_SMART_4A:
           case DEVICE_TYPE_SMART_4AM:
           case DEVICE_TYPE_SMART_4G:
           case DEVICE_TYPE_SMART_4GD:
           case DEVICE_TYPE_SMART_6_PUSH:
+          case DEVICE_TYPE_SMART_TOP_CARD_HOLDER:
           case DEVICE_TYPE_SMART_BOTTOM:
           case DEVICE_TYPE_SMART_BOTTOM_CO2: {
             device.sendRBUS(
@@ -479,6 +482,15 @@ const run = (action) => {
             );
             break;
           }
+          case DEVICE_TYPE_ROOM_NUMBER: {
+            {
+              device.sendRBUS(
+                Buffer.from([ACTION_DO, action.value]),
+                action.id
+              );
+              break;
+            }
+          }
           case DEVICE_TYPE_SMART_TOP_A6P:
           case DEVICE_TYPE_SMART_TOP_G4D:
           case DEVICE_TYPE_SMART_TOP_A4T:
@@ -658,6 +670,13 @@ const run = (action) => {
             }
             break;
           }
+          case DEVICE_TYPE_ROOM_NUMBER: {
+            device.sendRBUS(
+              Buffer.from([ACTION_DIMMER, action.value]),
+              action.id,
+            );
+            break;
+          }
           case DEVICE_TYPE_SMART_TOP_A6P:
           case DEVICE_TYPE_SMART_TOP_G4D:
           case DEVICE_TYPE_SMART_TOP_A4T:
@@ -747,6 +766,13 @@ const run = (action) => {
           case DEVICE_TYPE_SMART_6_PUSH: {
             device.sendRBUS(
               Buffer.from([ACTION_RGB, index, r, g, b]),
+              action.id,
+            );
+            break;
+          }
+          case DEVICE_TYPE_ROOM_NUMBER: {
+            device.sendRBUS(
+              Buffer.from([ACTION_RGB, palette, index, r, g, b]),
               action.id,
             );
             break;
@@ -876,6 +902,13 @@ const run = (action) => {
           case DEVICE_TYPE_SMART_6_PUSH: {
             device.sendRBUS(
               Buffer.from([ACTION_RGB, index, r, g, b]),
+              action.id,
+            );
+            break;
+          }
+          case DEVICE_TYPE_ROOM_NUMBER: {
+            device.sendRBUS(
+              Buffer.from([ACTION_RGB, palette, index, r, g, b]),
               action.id,
             );
             break;
@@ -1351,6 +1384,10 @@ const run = (action) => {
         const { last = {} } = o;
         const isOn = last.r > 0 || last.g > 0 || last.b > 0 || last.value > 0;
         switch (o.type) {
+          case DEVICE_TYPE_ROOM_NUMBER: {
+            device.sendRBUS(Buffer.from([ACTION_DO, ON]), action.id);
+            break;
+          }
           case DEVICE_TYPE_SMART_TOP_A6P:
           case DEVICE_TYPE_SMART_TOP_G4D:
           case DEVICE_TYPE_SMART_TOP_A4T:
@@ -1583,6 +1620,10 @@ const run = (action) => {
           run({ type: ACTION_SCRIPT_RUN, id: o.onOff });
         }
         switch (o.type) {
+          case DEVICE_TYPE_ROOM_NUMBER: {
+            device.sendRBUS(Buffer.from([ACTION_DO, OFF]), action.id);
+            break;
+          }
           case DEVICE_TYPE_SMART_TOP_A6P:
           case DEVICE_TYPE_SMART_TOP_G4D:
           case DEVICE_TYPE_SMART_TOP_A4T:
@@ -1781,6 +1822,10 @@ const run = (action) => {
         const [r, g, b] = rgb;
         set(id, { last: o.bind ? { value } : { r, g, b }, value: !!value });
         switch (o.type) {
+          case DEVICE_TYPE_ROOM_NUMBER: {
+            device.sendRBUS(Buffer.from([ACTION_DIMMER, value]), action.id);
+            break;
+          }
           case DEVICE_TYPE_SMART_TOP_A6P:
           case DEVICE_TYPE_SMART_TOP_G4D:
           case DEVICE_TYPE_SMART_TOP_A4T:
