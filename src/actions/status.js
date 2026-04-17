@@ -28,6 +28,7 @@ const {
   DEVICE_TYPE_SMART_BOTTOM_CLIMATE,
   DEVICE_TYPE_SMART_TOP_CARD_HOLDER,
   DEVICE_TYPE_ROOM_NUMBER,
+  DEVICE_TYPE_MIX_F,
 } = require("../constants");
 const { device } = require("../sockets");
 
@@ -48,6 +49,7 @@ const online = (id, props) => {
       case DEVICE_TYPE_RELAY_2:
       case DEVICE_TYPE_MIX_1_RS:
       case DEVICE_TYPE_MIX_6x12_RS:
+      case DEVICE_TYPE_MIX_F:
       case DEVICE_TYPE_MIX_H:
       case DEVICE_TYPE_MIX_V:
       case DEVICE_TYPE_RELAY_2_DIN:
