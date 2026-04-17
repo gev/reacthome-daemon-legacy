@@ -617,6 +617,7 @@ const run = (action) => {
           case DEVICE_TYPE_DIM_1_AC_RS:
           case DEVICE_TYPE_DI_4_RSM:
           case DEVICE_TYPE_AO_4_DIN: {
+            console.log("MIX DIM", dev, index, value);
             const velocity =
               dev.type === DEVICE_TYPE_DIM_12_LED_RS ||
                 dev.type === DEVICE_TYPE_MIX_H ||
@@ -1476,13 +1477,13 @@ const run = (action) => {
                 case DEVICE_TYPE_AO_4_DIN:
                 case DEVICE_TYPE_MIX_1_RS:
                 case DEVICE_TYPE_MIX_6x12_RS:
+                case DEVICE_TYPE_MIX_F:
                 case DEVICE_TYPE_RELAY_2:
                 case DEVICE_TYPE_RELAY_2_DIN:
                 case DEVICE_TYPE_RELAY_12_RS: {
                   device.sendRBUS(Buffer.from([ACTION_DO, index, ON]), dev);
                   break;
                 }
-                case DEVICE_TYPE_MIX_F:
                 case DEVICE_TYPE_MIX_V:
                 case DEVICE_TYPE_MIX_H: {
                   switch (kind) {
@@ -1491,7 +1492,6 @@ const run = (action) => {
                         case DIM_TYPE_PWM:
                         case DIM_TYPE_RISING_EDGE:
                         case DIM_TYPE_FALLING_EDGE: {
-                          console.log("sendRBUS", index, value);
                           device.sendRBUS(
                             Buffer.from([
                               ACTION_DIMMER,
