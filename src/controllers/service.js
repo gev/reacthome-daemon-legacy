@@ -617,7 +617,7 @@ const run = (action) => {
           case DEVICE_TYPE_DIM_1_AC_RS:
           case DEVICE_TYPE_DI_4_RSM:
           case DEVICE_TYPE_AO_4_DIN: {
-            console.log("MIX DIM", dev, index, value);
+            console.log("MIX DIM", action);
             const velocity =
               dev.type === DEVICE_TYPE_DIM_12_LED_RS ||
                 dev.type === DEVICE_TYPE_MIX_H ||
