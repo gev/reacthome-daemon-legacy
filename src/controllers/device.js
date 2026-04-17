@@ -468,8 +468,8 @@ module.exports.manage = () => {
               const diNum = 1;
               const valuesDI = data.readUInt8(7);
               let valueDI = (valuesDI & (1 << (diNum - 1))) ? 1 : 0;
-              let payload = Buffer.from([ACTION_DI, diNum, valueDI]);
-              handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              let payloadDI = Buffer.from([ACTION_DI, diNum, valueDI]);
+              handleData(Buffer.concat([dev_mac, payloadDI]), { address }, { hub });
               for (let i = 1; i <= 2; i++) {
                 let value = data.readUInt8(7 + i);
                 const channel = `${id}/${DIM}/${i}`;
@@ -479,8 +479,8 @@ module.exports.manage = () => {
               }
               const aoNum = 1;
               let valueAO = data.readUInt8(9 + aoNum);
-              let payload = Buffer.from([ACTION_AO, aoNum, valueAO]);
-              handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              let payloadAO = Buffer.from([ACTION_AO, aoNum, valueAO]);
+              handleData(Buffer.concat([dev_mac, payloadAO]), { address }, { hub });
               break;
             }
             case DEVICE_TYPE_MIX_H: {
