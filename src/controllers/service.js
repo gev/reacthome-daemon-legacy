@@ -1491,6 +1491,7 @@ const run = (action) => {
                         case DIM_TYPE_PWM:
                         case DIM_TYPE_RISING_EDGE:
                         case DIM_TYPE_FALLING_EDGE: {
+                          console.log("sendRBUS", index, value);
                           device.sendRBUS(
                             Buffer.from([
                               ACTION_DIMMER,
