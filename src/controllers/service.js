@@ -1714,6 +1714,7 @@ const run = (action) => {
                   device.sendRBUS(Buffer.from([ACTION_DO, index, OFF]), dev);
                   break;
                 }
+                case DEVICE_TYPE_MIX_F:
                 case DEVICE_TYPE_MIX_V:
                 case DEVICE_TYPE_MIX_H: {
                   switch (kind) {
