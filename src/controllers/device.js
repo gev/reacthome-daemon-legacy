@@ -467,8 +467,8 @@ module.exports.manage = () => {
             case DEVICE_TYPE_MIX_F: {
               const diNum = 1;
               const valuesDI = data.readUInt8(7);
-              let value = (valuesDI & (1 << (diNum - 1))) ? 1 : 0;
-              let payload = Buffer.from([ACTION_DI, diNum, value]);
+              let valueDI = (valuesDI & (1 << (diNum - 1))) ? 1 : 0;
+              let payload = Buffer.from([ACTION_DI, diNum, valueDI]);
               handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
               for (let i = 1; i <= 2; i++) {
                 let value = data.readUInt8(7 + i);
@@ -478,9 +478,9 @@ module.exports.manage = () => {
                 handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
               }
               const aoNum = 1;
-                let value = data.readUInt8(9 + aoNum);
-                let payload = Buffer.from([ACTION_AO, aoNum, value]);
-                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              let valueAO = data.readUInt8(9 + aoNum);
+              let payload = Buffer.from([ACTION_AO, aoNum, valueAO]);
+              handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
               break;
             }
             case DEVICE_TYPE_MIX_H: {
