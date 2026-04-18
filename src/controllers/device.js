@@ -1248,7 +1248,7 @@ module.exports.manage = () => {
           switch (type) {
             case DEVICE_TYPE_ROOM_NUMBER: {
               const log = [];
-                log[i] = data.readInt16BE(8);
+                log[0] = data.readInt16BE(8);
               set(id, { log });
               break;
             }
