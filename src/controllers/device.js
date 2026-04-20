@@ -684,7 +684,7 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_DIMMER: {
-          console.log(data);
+          // console.log(data);
           const device = get(id) || {};
           switch (device.type) {
             case DEVICE_TYPE_DI_4_RSM:
