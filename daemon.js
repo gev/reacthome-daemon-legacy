@@ -80,14 +80,23 @@ const start = (id) => {
 
 const initFirmware = () => {
   const files = fs.readdirSync(folderFirmware);
-  let firmwareMap = new Map();
+  const firmwares = {};
   for (const file of files) {
     const header = fs.readFileSync(`${folderFirmware}/${file}`, 'utf8').split('\n')[0];
     const deviceType = parseInt(header.substring(1,5), 16);
-    const list = firmwareMap.get(deviceType) || [];
-    firmwareMap.set(deviceType, [...list, file])
+    const boardVersion = parseInt(header.substring(5,7), 16);
+    const firmwareMajorVersion = parseInt(header.substring(7,9), 16);
+    const firmwareMinorVersion = parseInt(header.substring(9,11), 16);
+    const dfuMajorVersion = parseInt(header.substring(11,13), 16);
+    const dfuMinorVersion = parseInt(header.substring(13,15), 16);
+    const mcu = header.substring(15)
+
+    console.log(deviceType, boardVersion, firmwareMajorVersion, firmwareMinorVersion, dfuMajorVersion, dfuMinorVersion);
+    
+    const list = firmwares[key] || [];
+    firmwares[key] = [...list, file];
   }
-  console.log(firmwareMap);
+  console.log(firmwares);
 }
 
 const load = async () => {
