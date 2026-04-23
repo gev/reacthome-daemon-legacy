@@ -86,10 +86,7 @@ const initFirmware = () => {
 
     const deviceType = parseInt(header.substring(1,5), 16);
     const boardVersion = parseInt(header.substring(5,7), 16);
-    const firmwareMajorVersion = parseInt(header.substring(7,9), 16);
-    const firmwareMinorVersion = parseInt(header.substring(9,11), 16);
     const dfuMajorVersion = parseInt(header.substring(11,13), 16);
-    const dfuMinorVersion = parseInt(header.substring(13,15), 16);
     const mcuName = header.substring(15)
     
     const key = `${deviceType}_${boardVersion}_${dfuMajorVersion}_${mcuName}`;
@@ -97,7 +94,7 @@ const initFirmware = () => {
     const list = firmwares[key] || [];
     firmwares[key] = [...list, file];
   }
-  console.log(firmwares);
+  set("firmwares", firmwares);
 }
 
 const load = async () => {
