@@ -1,6 +1,6 @@
 const fs = require("fs");
 
-const folderFirmware = '../firmware';
+const folderFirmware = 'firmware';
 
 process.on("uncaughtException", function (err) {
   console.error(err);
