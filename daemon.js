@@ -94,7 +94,7 @@ const initFirmware = () => {
     const list = firmwares[key] || [];
     firmwares[key] = [...list, file];
   }
-  set("firmwares", firmwares);
+  set("firmwares", {timestamp: Date.now(), firmwares});
 }
 
 const load = async () => {
