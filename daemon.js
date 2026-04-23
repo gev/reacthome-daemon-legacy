@@ -82,8 +82,8 @@ const initFirmware = () => {
   const files = fs.readdirSync(folderFirmware);
   for (const file of files) {
     const header = fs.readFileSync(`${folderFirmware}/${file}`, 'utf8').split('\n')[0];
-    const typeDevice = header.substring(1,5);
-    console.log(typeDevice);
+    const deviceType = header.substring(1,5).parseInt(16);
+    console.log(deviceType);
   }
 }
 
