@@ -78,7 +78,7 @@ const start = (id) => {
   }
 };
 
-const initFirmware = () => {
+const initFirmware = (id) => {
   const files = fs.readdirSync(folderFirmware);
   const firmwares = {};
   for (const file of files) {
@@ -94,7 +94,7 @@ const initFirmware = () => {
     const list = firmwares[key] || [];
     firmwares[key] = [...list, file];
   }
-  set("firmwares", {timestamp: Date.now(), firmwares});
+  set(id, {firmwares});
 }
 
 const load = async () => {
@@ -115,7 +115,7 @@ const load = async () => {
   assets.init();
   state.init(init);
   initAssist();
-  initFirmware();
+  initFirmware(init.mac);
   weather.manage();
   device.manage();
   drivers.manage();
