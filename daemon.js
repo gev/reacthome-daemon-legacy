@@ -83,6 +83,7 @@ const initFirmware = () => {
   const firmwares = {};
   for (const file of files) {
     const header = fs.readFileSync(`${folderFirmware}/${file}`, 'utf8').split('\n')[0];
+
     const deviceType = parseInt(header.substring(1,5), 16);
     const boardVersion = parseInt(header.substring(5,7), 16);
     const firmwareMajorVersion = parseInt(header.substring(7,9), 16);
@@ -90,9 +91,9 @@ const initFirmware = () => {
     const dfuMajorVersion = parseInt(header.substring(11,13), 16);
     const dfuMinorVersion = parseInt(header.substring(13,15), 16);
     const mcuName = header.substring(15)
-
-    console.log(deviceType, boardVersion, firmwareMajorVersion, firmwareMinorVersion, dfuMajorVersion, dfuMinorVersion, mcuName);
     
+    const key = `${deviceType}_${boardVersion}_${dfuMajorVersion}_${mcuName}`;
+
     const list = firmwares[key] || [];
     firmwares[key] = [...list, file];
   }
