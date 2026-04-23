@@ -80,10 +80,12 @@ const start = (id) => {
 
 const initFirmware = () => {
   const files = fs.readdirSync(folderFirmware);
+  let firmwareMap = new Map();
   for (const file of files) {
     const header = fs.readFileSync(`${folderFirmware}/${file}`, 'utf8').split('\n')[0];
     const deviceType = parseInt(header.substring(1,5), 16);
-    console.log(deviceType);
+    firmwaresMap.set(deviceType, file)
+    console.log(firmwaresMap);
   }
 }
 
