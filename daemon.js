@@ -1,5 +1,7 @@
 const fs = require("fs");
 
+const folderFirmware = '../firmware';
+
 process.on("uncaughtException", function (err) {
   console.error(err);
 });
@@ -75,6 +77,15 @@ const start = (id) => {
     }
   }
 };
+
+const initFirmware = () => {
+  const files = fs.readdirSync(folderFirmware);
+  for (const file of files) {
+    const header = fs.readFileSync(`${folderFirmware}/${file}`, 'utf8').split('\n')[0];
+    console.log(header);
+  }
+}
+
 const load = async () => {
   for await (const [key, value] of db.iterator()) {
     init[key] = value;
@@ -93,6 +104,7 @@ const load = async () => {
   assets.init();
   state.init(init);
   initAssist();
+  initFirmware();
   weather.manage();
   device.manage();
   drivers.manage();
