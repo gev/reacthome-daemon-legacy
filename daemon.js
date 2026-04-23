@@ -93,7 +93,7 @@ const initFirmware = (id) => {
     
     const firmwareMajorVersion = parseInt(header.substring(7,9), 16);
     const firmwareMinorVersion = parseInt(header.substring(9,11), 16);
-    const version = `${firmwareMajorVersion},${firmwareMinorVersion}`;
+    const version = `${firmwareMajorVersion}.${firmwareMinorVersion}`;
 
     const list = firmwares[key] || [];
     firmwares[key] = [...list, {file, version }];
