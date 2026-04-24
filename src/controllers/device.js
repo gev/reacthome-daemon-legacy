@@ -130,6 +130,7 @@ const {
   STATUS_DFU,
   DEVICE_TYPE_SMART_TOP_CARD_HOLDER,
   DEVICE_TYPE_ROOM_NUMBER,
+  DEVICE_TYPE_MIX_F,
 } = require("../constants");
 const {
   get,
@@ -461,6 +462,25 @@ module.exports.manage = () => {
                 let payload = Buffer.from([ACTION_DIMMER, i, chan.group, chan.type, value, chan.velocity]);
                 handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
               }
+              break;
+            }
+            case DEVICE_TYPE_MIX_F: {
+              const diNum = 1;
+              const valuesDI = data.readUInt8(7);
+              let valueDI = (valuesDI & (1 << (diNum - 1))) ? 1 : 0;
+              let payloadDI = Buffer.from([ACTION_DI, diNum, valueDI]);
+              handleData(Buffer.concat([dev_mac, payloadDI]), { address }, { hub });
+              for (let i = 1; i <= 2; i++) {
+                let value = data.readUInt8(7 + i);
+                const channel = `${id}/${DIM}/${i}`;
+                const chan = get(channel);
+                let payload = Buffer.from([ACTION_DIMMER, i, chan.group, chan.type, value, chan.velocity]);
+                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              }
+              const aoNum = 1;
+              let valueAO = data.readUInt8(9 + aoNum);
+              let payloadAO = Buffer.from([ACTION_AO, aoNum, valueAO]);
+              handleData(Buffer.concat([dev_mac, payloadAO]), { address }, { hub });
               break;
             }
             case DEVICE_TYPE_MIX_H: {
@@ -1248,7 +1268,7 @@ module.exports.manage = () => {
           switch (type) {
             case DEVICE_TYPE_ROOM_NUMBER: {
               const log = [];
-                log[0] = data.readInt16BE(8);
+              log[0] = data.readInt16BE(8);
               set(id, { log });
               break;
             }

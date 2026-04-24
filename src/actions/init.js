@@ -62,6 +62,7 @@ const {
   DEVICE_TYPE_MIX_V,
   DEVICE_TYPE_AO_4,
   DEVICE_TYPE_SMART_BOTTOM_CLIMATE,
+  DEVICE_TYPE_MIX_F,
 } = require("../constants");
 const { get, set, add } = require("./create");
 const { device } = require("../sockets");
@@ -314,6 +315,24 @@ module.exports.initialize = (id) => {
         a[6 * i + 29] = (timeout >> 16) & 0xff;
         a[6 * i + 30] = (timeout >> 24) & 0xff;
       }
+      device.sendRBUS(Buffer.from(a), id);
+      break;
+    }
+    case DEVICE_TYPE_MIX_F: {
+      const mac = id.split(":").map((i) => parseInt(i, 16));
+      a[0] = ACTION_INITIALIZE;
+
+      const channel = get(`${id}/${AO}/${1}`) || {};
+      a[1] = channel.value || 0;
+
+
+      for (let i = 1; i <= 2; i++) {
+        const channel = get(`${id}/${DIM}/${i}`);
+        a[1 + 3 * i - 2] = (channel && channel.group) || i;
+        a[1 + 3 * i - 1] = (channel && channel.type) || 0;
+        a[1 + 3 * i - 0] = (channel && channel.value) || 0;
+      }
+      
       device.sendRBUS(Buffer.from(a), id);
       break;
     }
