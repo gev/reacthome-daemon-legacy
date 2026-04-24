@@ -1268,21 +1268,14 @@ module.exports.manage = () => {
           switch (type) {
             case DEVICE_TYPE_ROOM_NUMBER: {
               const log = [];
-              log[i] = data.readInt16BE(8);
+              log[0] = data.readInt16BE(8);
               set(id, { log });
               break;
             }
+            case DEVICE_TYPE_SMART_TOP_CARD_HOLDER:
             case DEVICE_TYPE_SMART_TOP_G2: {
               const log = [];
               for (let i = 0; i < 2; i++) {
-                log[i] = data.readInt16BE(8 + 2 * i);
-              }
-              set(id, { log });
-              break;
-            }
-            case DEVICE_TYPE_SMART_TOP_CARD_HOLDER: {
-              const log = [];
-              for (let i = 0; i < 3; i++) {
                 log[i] = data.readInt16BE(8 + 2 * i);
               }
               set(id, { log });
