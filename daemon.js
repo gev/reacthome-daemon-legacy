@@ -81,8 +81,8 @@ const start = (id) => {
 const initFirmware = (id) => {
   const files = fs.readdirSync(folderFirmware);
   const firmwares = {};
-  for (const file of files) {
-    const header = fs.readFileSync(`${folderFirmware}/${file}`, 'utf8').split('\n')[0];
+  for (const firmware of files) {
+    const header = fs.readFileSync(`${folderFirmware}/${firmware}`, 'utf8').split('\n')[0];
 
     const deviceType = parseInt(header.substring(1,5), 16);
     const boardVersion = parseInt(header.substring(5,7), 16);
@@ -96,7 +96,7 @@ const initFirmware = (id) => {
     const version = `${firmwareMajorVersion}.${firmwareMinorVersion}`;
 
     const list = firmwares[key] || [];
-    firmwares[key] = [...list, {file, version }];
+    firmwares[key] = [...list, {firmware, version }];
   }
   set(id, {firmwares});
 }
