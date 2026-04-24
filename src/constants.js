@@ -236,6 +236,8 @@ module.exports.ACTION_STOP_WET = "ACTION_STOP_WET";
 
 module.exports.ACTION_ASSIST = "ACTION_ASSIST";
 
+module.exports.ACTION_UPDATE_FIRMWARE = "ACTION_UPDATE_FIRMWARE"
+
 module.exports.TEMPERATURE_EXT = "temperature_ext";
 
 module.exports.OFF = 0x0;

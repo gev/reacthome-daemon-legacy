@@ -212,6 +212,7 @@ const {
   DRIVER_TYPE_DMX512,
   DEVICE_TYPE_SMART_TOP_CARD_HOLDER,
   DEVICE_TYPE_ROOM_NUMBER,
+  ACTION_UPDATE_FIRMWARE,
 } = require("../constants");
 const { NOTIFY } = require("../notification/constants");
 const notification = require("../notification");
@@ -3609,6 +3610,10 @@ const run = (action) => {
         if (co2_correct !== undefined) {
           set(id, { co2_correct, co2: co2_raw + co2_correct });
         }
+      }
+      case ACTION_UPDATE_FIRMWARE: {
+        console.log(action);
+        break;
       }
       case ACTION_ERROR: {
         const dev = get(action.id);
