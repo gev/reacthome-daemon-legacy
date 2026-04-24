@@ -213,6 +213,7 @@ const {
   DEVICE_TYPE_SMART_TOP_CARD_HOLDER,
   DEVICE_TYPE_ROOM_NUMBER,
   ACTION_UPDATE_FIRMWARE,
+  DEVICE_TYPE_SOUNDBOX,
 } = require("../constants");
 const { NOTIFY } = require("../notification/constants");
 const notification = require("../notification");
@@ -3612,6 +3613,38 @@ const run = (action) => {
         }
       }
       case ACTION_UPDATE_FIRMWARE: {
+        const { id, firmware } = action;
+        const dev = get(id);
+        set(id, { pending: true, updating: true, firmware })
+        const buffer = Buffer.from([ACTION_UPDATE_FIRMWARE]);
+
+        switch (dev.type) {
+          case DEVICE_TYPE_SMART_TOP_A6P:
+          case DEVICE_TYPE_SMART_TOP_G4D:
+          case DEVICE_TYPE_SMART_TOP_A4T:
+          case DEVICE_TYPE_SMART_TOP_A6T:
+          case DEVICE_TYPE_SMART_TOP_G6:
+          case DEVICE_TYPE_SMART_TOP_G4:
+          case DEVICE_TYPE_SMART_TOP_G2:
+          case DEVICE_TYPE_SMART_TOP_A4P:
+          case DEVICE_TYPE_SMART_TOP_A4TD:
+          case DEVICE_TYPE_SMART_TOP_A4TD_7S:
+          case DEVICE_TYPE_SMART_TOP_CARD_HOLDER: {
+            device.sendTOP(buffer, id);
+            break;
+          }
+          case DEVICE_TYPE_SERVER:
+          case DEVICE_TYPE_RS_HUB4:
+          case DEVICE_TYPE_SOUNDBOX: {
+            device.send(buffer, dev.ip);
+            break;
+          }
+          default: {
+            device.sendRBUS(buffer, id);
+          }
+            break;
+        }
+
         console.log(action);
         break;
       }
