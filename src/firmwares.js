@@ -13,23 +13,26 @@ const initFirmware = (id) => {
       .readFileSync(`${folderFirmware}/${firmware}`, "utf8")
       .split("\n")[0];
 
-    const deviceType = parseInt(header.substring(1, 5), 16);
-    const boardVersion = parseInt(header.substring(5, 7), 16);
-    const dfuMajorVersion = parseInt(header.substring(11, 13), 16);
-    const mcuName = header.substring(15);
+    const length = parseInt(header.substring(0, 8), 16);
+    const deviceType = parseInt(header.substring(8, 12), 16);
+    const boardVersion = parseInt(header.substring(12, 14), 16);
+    const firmwareMajorVersion = parseInt(header.substring(14, 16), 16);
+    const firmwareMinorVersion = parseInt(header.substring(16, 18), 16);
+    const dfuMajorVersion = parseInt(header.substring(18, 20), 16);
+    const mcuName = Buffer.from(header.substring(22), "hex").toString();
 
     const key = `${deviceType}_${boardVersion}_${dfuMajorVersion}_${mcuName}`;
 
-    const firmwareMajorVersion = parseInt(header.substring(7, 9), 16);
-    const firmwareMinorVersion = parseInt(header.substring(9, 11), 16);
+    console.log(key);
+
     const version = `${firmwareMajorVersion}.${firmwareMinorVersion}`;
 
     const list = firmwares[key] || [];
-    firmwares[key] = [...list, { firmware, version }];
+    firmwares[key] = [...list, { firmware, version, length }];
   }
-  set(id, { firmwares });
+  // set(id, { firmwares });
   console.log(firmwares);
 };
 
 module.exports.initFirmware = initFirmware;
-module.exports.getFirmware = (file) => firmwares[file];
+module.exports.getFirmware = (file) => packets[file];
