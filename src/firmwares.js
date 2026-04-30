@@ -12,9 +12,9 @@ const initFirmware = (id) => {
     const pack = fs
       .readFileSync(`${folderFirmware}/${firmware}`, "utf8")
       .split("\n");
+
     const header = pack[0];
 
-    const length = parseInt(header.substring(0, 8), 16);
     const deviceType = parseInt(header.substring(8, 12), 16);
     const boardVersion = parseInt(header.substring(12, 14), 16);
     const firmwareMajorVersion = parseInt(header.substring(14, 16), 16);
@@ -24,12 +24,10 @@ const initFirmware = (id) => {
 
     const key = `${deviceType}_${boardVersion}_${dfuMajorVersion}_${mcuName}`;
 
-    console.log(firmware, key);
-
     const version = `${firmwareMajorVersion}.${firmwareMinorVersion}`;
 
     const list = firmwares[key] || [];
-    firmwares[key] = [...list, { firmware, version, length }];
+    firmwares[key] = [...list, { firmware, version }];
     packets[firmware] = pack.map((p) => Buffer.from(p, "hex"));
   }
   set(id, { firmwares });
