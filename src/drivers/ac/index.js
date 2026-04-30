@@ -26,10 +26,10 @@ const manage = (power, setpoint, ac) => {
       for (let i = 0; i < command.length; i++) {
         const code = command[i];
         setTimeout(
-          device.send,
+          device.sendUDP,
           i * model.delay,
           Buffer.from([ACTION_IR, index, ...code]),
-          ip
+          ip,
         );
       }
       break;
@@ -41,7 +41,7 @@ const manage = (power, setpoint, ac) => {
           model.count,
           model.header,
           model.trail,
-          code
+          code,
         );
         const buff = Buffer.alloc(data.length * 2 + 5);
         buff.writeUInt8(ACTION_IR, 0);
@@ -51,7 +51,7 @@ const manage = (power, setpoint, ac) => {
         for (let i = 0; i < data.length; i++) {
           buff.writeUInt16BE(data[i], i * 2 + 5);
         }
-        setTimeout(device.send, i * model.delay, buff, ip);
+        setTimeout(device.sendUDP, i * model.delay, buff, ip);
       }
   }
 };
@@ -83,4 +83,4 @@ module.exports.run = ({ type, id }) => {
   }
 };
 
-module.exports.handle = () => { }
+module.exports.handle = () => {};

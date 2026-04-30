@@ -1,5 +1,4 @@
-
-const { get } = require('../controllers/state');
+const { get } = require("../controllers/state");
 const {
   DISCOVERY_INTERVAL,
   ACTION_DISCOVERY,
@@ -9,21 +8,26 @@ const {
   IP_ADDRESS,
   ACTION_RBUS_TRANSMIT,
   ACTION_SMART_TOP,
-} = require('../constants');
-const socket = require('./socket');
+} = require("../constants");
+const socket = require("./socket");
 
 queue = [];
 
-const device = socket((socket) => {
-  const data = Buffer.alloc(7);
-  data.writeUInt8(ACTION_DISCOVERY, 0);
-  data.writeUInt32BE(IP_ADDRESS, 1);
-  data.writeUInt16BE(socket.address().port, 5);
-  return () => {
-    device.send(data, DEVICE_GROUP);
-  };
-}, DISCOVERY_INTERVAL, DEVICE_PORT, DEVICE_SERVER_PORT, '172.16.0.1');
-
+const device = socket(
+  (socket) => {
+    const data = Buffer.alloc(7);
+    data.writeUInt8(ACTION_DISCOVERY, 0);
+    data.writeUInt32BE(IP_ADDRESS, 1);
+    data.writeUInt16BE(socket.address().port, 5);
+    return () => {
+      device.sendUDP(data, DEVICE_GROUP);
+    };
+  },
+  DISCOVERY_INTERVAL,
+  DEVICE_PORT,
+  DEVICE_SERVER_PORT,
+  "172.16.0.1",
+);
 
 device.sendRBUS = (data, id) => {
   push(() => {
@@ -38,11 +42,10 @@ device.sendRBUS = (data, id) => {
       } else {
         buff = Buffer.from([...header, ...data]);
       }
-      device.send(buff, dev.ip);
+      device.sendUDP(buff, dev.ip);
     }
   });
-}
-
+};
 
 device.sendTOP = (data, id) => {
   push(() => {
@@ -52,17 +55,46 @@ device.sendTOP = (data, id) => {
       device.sendRBUS([ACTION_SMART_TOP, ...data], bottom);
     }
   });
-}
+};
+
+device.send = (data, id) => {
+  const { type, ip } = get(id) || {};
+  switch (dev.type) {
+    case DEVICE_TYPE_SMART_TOP_A6P:
+    case DEVICE_TYPE_SMART_TOP_G4D:
+    case DEVICE_TYPE_SMART_TOP_A4T:
+    case DEVICE_TYPE_SMART_TOP_A6T:
+    case DEVICE_TYPE_SMART_TOP_G6:
+    case DEVICE_TYPE_SMART_TOP_G4:
+    case DEVICE_TYPE_SMART_TOP_G2:
+    case DEVICE_TYPE_SMART_TOP_A4P:
+    case DEVICE_TYPE_SMART_TOP_A4TD:
+    case DEVICE_TYPE_SMART_TOP_A4TD_7S:
+    case DEVICE_TYPE_SMART_TOP_CARD_HOLDER: {
+      sendTOP(data, id);
+      break;
+    }
+    case DEVICE_TYPE_SERVER:
+    case DEVICE_TYPE_RS_HUB4:
+    case DEVICE_TYPE_SOUNDBOX: {
+      send(data, dev.ip);
+      break;
+    }
+    default: {
+      sendRBUS(data, id);
+    }
+  }
+};
 
 setInterval(() => {
   const run = queue.shift();
   if (run) {
     run();
   }
-}, 10)
+}, 10);
 
 const push = (run) => {
   queue.push(run);
-}
+};
 
 module.exports = device;

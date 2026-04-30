@@ -1308,7 +1308,7 @@ module.exports.manage = () => {
             dev_mac.copy(buff, 1, 0, 6);
             buff.writeUInt32BE(lookup, 7);
             buff.writeUInt32BE(SUB_NET_MASK, 11);
-            device.send(buff, DEVICE_GROUP);
+            device.sendUDP(buff, DEVICE_GROUP);
           } else if (last_ip < IP_ADDRESS_POOL_END) {
             const buff = Buffer.alloc(15);
             buff.writeUInt8(ACTION_IP_ADDRESS, 0);
@@ -1321,7 +1321,7 @@ module.exports.manage = () => {
             set(POOL, { [id]: last_ip });
             buff.writeUInt32BE(last_ip, 7);
             buff.writeUInt32BE(SUB_NET_MASK, 11);
-            device.send(buff, DEVICE_GROUP);
+            device.sendUDP(buff, DEVICE_GROUP);
           }
           break;
         }
@@ -1332,7 +1332,7 @@ module.exports.manage = () => {
               a[0] = ACTION_MAC_ADDRESS;
               a[1] &= 0b11111110;
               a[1] |= 0b00000010;
-              device.send(a, address);
+              device.sendUDP(a, address);
             }
           });
           break;
@@ -1353,7 +1353,7 @@ module.exports.manage = () => {
               if (hub) {
                 device.sendRBUS(Buffer.from([ACTION_GET_INFO]), id);
               } else {
-                device.send(Buffer.from([ACTION_GET_INFO]), address);
+                device.sendUDP(Buffer.from([ACTION_GET_INFO]), address);
               }
               break;
             }

@@ -1,11 +1,9 @@
-
-const { createSocket } = require('dgram');
+const { createSocket } = require("dgram");
 
 module.exports = (discovery, interval, port, listen, multicast) => {
+  const socket = createSocket("udp4");
 
-  const socket = createSocket('udp4');
-
-  const send = (packet, ip) => {
+  const sendUDP = (packet, ip) => {
     socket.send(packet, port, ip, (err) => {
       if (err) console.error(err);
     });
@@ -21,13 +19,11 @@ module.exports = (discovery, interval, port, listen, multicast) => {
     }
   };
 
-  socket
-    .on('error', console.error)
-    .bind(listen, startDiscovery);
+  socket.on("error", console.error).bind(listen, startDiscovery);
 
   const handle = (handler) => {
-    socket.on('message', handler);
+    socket.on("message", handler);
   };
 
-  return { handle, send };
+  return { handle, sendUDP };
 };
