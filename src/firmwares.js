@@ -30,7 +30,7 @@ const initFirmware = (id) => {
 
     const list = firmwares[key] || [];
     firmwares[key] = [...list, { firmware, version, length }];
-    packets[firmware] = pack.map((p) => packBuffer.from(p, "hex"));
+    packets[firmware] = pack.map((p) => Buffer.from(p, "hex"));
   }
   set(id, { firmwares });
   console.log(firmwares);
