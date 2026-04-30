@@ -1,4 +1,5 @@
 const fs = require("fs");
+const { set } = require("./src/actions");
 
 const firmwares = {};
 
