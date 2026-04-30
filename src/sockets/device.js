@@ -59,7 +59,7 @@ device.sendTOP = (data, id) => {
 
 device.send = (data, id) => {
   const { type, ip } = get(id) || {};
-  switch (dev.type) {
+  switch (type) {
     case DEVICE_TYPE_SMART_TOP_A6P:
     case DEVICE_TYPE_SMART_TOP_G4D:
     case DEVICE_TYPE_SMART_TOP_A4T:
@@ -71,17 +71,17 @@ device.send = (data, id) => {
     case DEVICE_TYPE_SMART_TOP_A4TD:
     case DEVICE_TYPE_SMART_TOP_A4TD_7S:
     case DEVICE_TYPE_SMART_TOP_CARD_HOLDER: {
-      sendTOP(data, id);
+      device.sendTOP(data, id);
       break;
     }
     case DEVICE_TYPE_SERVER:
     case DEVICE_TYPE_RS_HUB4:
     case DEVICE_TYPE_SOUNDBOX: {
-      send(data, dev.ip);
+      device.sendUDP(data, ip);
       break;
     }
     default: {
-      sendRBUS(data, id);
+      device.sendRBUS(data, id);
     }
   }
 };
