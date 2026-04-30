@@ -24,7 +24,7 @@ const initFirmware = (id) => {
 
     const key = `${deviceType}_${boardVersion}_${dfuMajorVersion}_${mcuName}`;
 
-    console.log(key);
+    console.log(key, firmware);
 
     const version = `${firmwareMajorVersion}.${firmwareMinorVersion}`;
 
@@ -33,8 +33,6 @@ const initFirmware = (id) => {
     packets[firmware] = pack.map((p) => Buffer.from(p, "hex"));
   }
   set(id, { firmwares });
-  console.log(firmwares);
-  console.log(packets);
 };
 
 module.exports.initFirmware = initFirmware;
