@@ -9,9 +9,10 @@ const initFirmware = (id) => {
   const firmwares = {};
   const files = fs.readdirSync(folderFirmware);
   for (const firmware of files) {
-    const header = fs
+    const packet = fs
       .readFileSync(`${folderFirmware}/${firmware}`, "utf8")
-      .split("\n")[0];
+      .split("\n");
+    const header = packet[0];
 
     const length = parseInt(header.substring(0, 8), 16);
     const deviceType = parseInt(header.substring(8, 12), 16);
@@ -29,9 +30,11 @@ const initFirmware = (id) => {
 
     const list = firmwares[key] || [];
     firmwares[key] = [...list, { firmware, version, length }];
+    packets[firmware] = Buffer.from(packet, "hex");
   }
-  // set(id, { firmwares });
+  set(id, { firmwares });
   console.log(firmwares);
+  console.log(packets;)
 };
 
 module.exports.initFirmware = initFirmware;
