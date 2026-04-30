@@ -1,11 +1,12 @@
 const fs = require("fs");
 const { set } = require("./actions");
 
-const firmwares = {};
-
 const folderFirmware = "firmware";
 
+const packets = {};
+
 const initFirmware = (id) => {
+  const firmwares = {};
   const files = fs.readdirSync(folderFirmware);
   for (const firmware of files) {
     const header = fs
@@ -27,7 +28,8 @@ const initFirmware = (id) => {
     firmwares[key] = [...list, { firmware, version }];
   }
   set(id, { firmwares });
+  console.log(firmwares);
 };
 
 module.exports.initFirmware = initFirmware;
-module.exports.firmwares = firmwares;
+module.exports.getFirmware = (file) => firmwares[file];
