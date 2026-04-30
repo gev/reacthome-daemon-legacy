@@ -34,7 +34,7 @@ const initFirmware = (id) => {
   }
   set(id, { firmwares });
   console.log(firmwares);
-  console.log(packets;)
+  console.log(packets);
 };
 
 module.exports.initFirmware = initFirmware;
