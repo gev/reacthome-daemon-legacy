@@ -155,6 +155,7 @@ const {
 } = require("../util");
 const { image2char } = require("../drivers/display");
 const { on } = require("events");
+const { getFirmware } = require("../firmwares");
 
 const onDI = [onOff, onOn, onHold, onClick];
 const onDO = [onOff, onOn];
@@ -1386,6 +1387,12 @@ module.exports.manage = () => {
               break;
             }
             case STATUS_DFU: {
+              const { pending, firware } = get(id) || {};
+              if (pending) {
+                const buff = getFirmware(firware)[0];
+                console.log(firmware, buff);
+                device.send(buff, id);
+              }
               online(id, {
                 status,
                 type,
@@ -1394,6 +1401,7 @@ module.exports.manage = () => {
                 mcu,
                 ip: address,
                 ready: true,
+                pending: false,
               });
               break;
             }

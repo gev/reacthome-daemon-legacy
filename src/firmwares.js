@@ -1,5 +1,6 @@
 const fs = require("fs");
 const { set } = require("./actions");
+const { ACTION_UPDATE_FIRMWARE } = require("./constants");
 
 const folderFirmware = "firmware";
 
@@ -28,7 +29,12 @@ const initFirmware = (id) => {
 
     const list = firmwares[key] || [];
     firmwares[key] = [...list, { firmware, version }];
-    packets[firmware] = pack.map((p) => Buffer.from(p, "hex"));
+    packets[firmware] = pack.map((p) =>
+      Buffer.concat([
+        Buffer.from([ACTION_UPDATE_FIRMWARE]),
+        Buffer.from(p, "hex"),
+      ]),
+    );
   }
   set(id, { firmwares });
 };
