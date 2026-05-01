@@ -29,9 +29,9 @@ const initFirmware = (id) => {
 
     const list = firmwares[key] || [];
     firmwares[key] = [...list, { firmware, version }];
-    packets[firmware] = pack.map((p) =>
+    packets[firmware] = pack.map((p, i) =>
       Buffer.concat([
-        Buffer.from([ACTION_UPDATE_FIRMWARE]),
+        Buffer.from([ACTION_UPDATE_FIRMWARE, i >> 8, i & 0xff]),
         Buffer.from(p, "hex"),
       ]),
     );
