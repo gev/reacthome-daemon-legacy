@@ -30,7 +30,7 @@ const {
   ACTION_INITIALIZED,
   ACTION_ERROR,
   ACTION_FIND_ME,
-  ACTION_BOOTLOAD,
+  ACTION_UPDATE_FIRMWARE,
   DIM_TYPE_FALLING_EDGE,
   DIM_TYPE_RISING_EDGE,
   DIM_TYPE_PWM,
@@ -1389,9 +1389,11 @@ module.exports.manage = () => {
             case STATUS_DFU: {
               const { pending, firware } = get(id) || {};
               if (pending) {
-                const buff = getFirmware(firware)[0];
+                const buff = getFirmware(firware);
                 console.log(firmware, buff);
-                device.send(buff, id);
+                if (buff) {
+                  device.send(buff, id);
+                }
               }
               online(id, {
                 status,
@@ -1428,8 +1430,13 @@ module.exports.manage = () => {
           set(id, { finding: !!data[7] });
           break;
         }
-        case ACTION_BOOTLOAD: {
-          updateFirmware(id);
+        case ACTION_UPDATE_FIRMWARE: {
+          const index = data.readUInt16BE(7);
+          const { firmware } = get(id) || {};
+          const buff = getFirmware(firmware, index);
+          if (buff) {
+            device.send(buff, id);
+          }
           break;
         }
         case ACTION_ALED_ON: {
@@ -1517,16 +1524,16 @@ module.exports.manage = () => {
               break;
             }
             default: {
-              const reason = data[7];
-              switch (reason) {
-                case ACTION_BOOTLOAD:
-                  set(id, { pending: false, updating: false });
-                  console.error(data);
-                  break;
-                default: {
-                  console.error(data);
-                }
-              }
+              // const reason = data[7];
+              // switch (reason) {
+              //   case ACTION_UPDATE_FIRMWARE:
+              //     set(id, { pending: false, updating: false });
+              //     console.error(data);
+              //     break;
+              //   default: {
+              //     console.error(data);
+              //   }
+              // }
             }
           }
         }

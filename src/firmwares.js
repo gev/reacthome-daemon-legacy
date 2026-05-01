@@ -40,4 +40,4 @@ const initFirmware = (id) => {
 };
 
 module.exports.initFirmware = initFirmware;
-module.exports.getFirmware = (file) => packets[file];
+module.exports.getFirmware = (file, index = 0) => file && packets[file][index];
