@@ -16,12 +16,12 @@ const initFirmware = (id) => {
 
     const header = pack[0];
 
-    const deviceType = parseInt(header.substring(8, 12), 16);
-    const boardVersion = parseInt(header.substring(12, 14), 16);
-    const firmwareMajorVersion = parseInt(header.substring(14, 16), 16);
-    const firmwareMinorVersion = parseInt(header.substring(16, 18), 16);
-    const dfuMajorVersion = parseInt(header.substring(18, 20), 16);
-    const mcuName = Buffer.from(header.substring(22), "hex").toString();
+    const deviceType = parseInt(header.substring(4, 8), 16);
+    const boardVersion = parseInt(header.substring(8, 10), 16);
+    const firmwareMajorVersion = parseInt(header.substring(10, 12), 16);
+    const firmwareMinorVersion = parseInt(header.substring(12, 14), 16);
+    const dfuMajorVersion = parseInt(header.substring(14, 16), 16);
+    const mcuName = Buffer.from(header.substring(18), "hex").toString();
 
     const key = `${deviceType}_${boardVersion}_${dfuMajorVersion}_${mcuName}`;
 
