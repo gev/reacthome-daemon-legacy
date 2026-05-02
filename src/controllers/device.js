@@ -1387,6 +1387,7 @@ module.exports.manage = () => {
               break;
             }
             case STATUS_DFU: {
+              console.log(data);
               const { pending, firmware } = get(id) || {};
               if (pending) {
                 const buff = getFirmware(firmware);
