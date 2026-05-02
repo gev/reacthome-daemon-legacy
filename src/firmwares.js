@@ -40,4 +40,5 @@ const initFirmware = (id) => {
 };
 
 module.exports.initFirmware = initFirmware;
-module.exports.getFirmware = (file, index = 0) => file && packets[file][index];
+module.exports.getFirmwareChunk = (file, index = 0) =>
+  file && packets[file][index];

@@ -155,7 +155,7 @@ const {
 } = require("../util");
 const { image2char } = require("../drivers/display");
 const { on } = require("events");
-const { getFirmware } = require("../firmwares");
+const { getFirmwareChunk } = require("../firmwares");
 
 const onDI = [onOff, onOn, onHold, onClick];
 const onDO = [onOff, onOn];
@@ -1387,11 +1387,9 @@ module.exports.manage = () => {
               break;
             }
             case STATUS_DFU: {
-              console.log(data);
               const { pending, firmware } = get(id) || {};
               if (pending) {
-                const buff = getFirmware(firmware);
-                console.log(firmware, buff);
+                const buff = getFirmwareChunk(firmware);
                 if (buff) {
                   device.send(buff, id);
                 }
@@ -1434,10 +1432,11 @@ module.exports.manage = () => {
         case ACTION_UPDATE_FIRMWARE: {
           const index = data.readUInt16BE(7);
           const { firmware } = get(id) || {};
-          const buff = getFirmware(firmware, index);
+          const buff = getFirmwareChunk(firmware, index);
           if (buff) {
             device.send(buff, id);
           }
+          set(id, { updating: true });
           break;
         }
         case ACTION_ALED_ON: {
