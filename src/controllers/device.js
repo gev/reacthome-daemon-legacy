@@ -1430,6 +1430,7 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_UPDATE_FIRMWARE: {
+          console.log(data);
           const index = data.readUInt16BE(7);
           const { firmware } = get(id) || {};
           const buff = getFirmwareChunk(firmware, index);
