@@ -3622,7 +3622,7 @@ const run = (action) => {
       case ACTION_UPDATE_FIRMWARE: {
         const { id, firmware } = action;
         const dev = get(id);
-        set(id, { pending: true, firmware });
+        set(id, { pending: true, upating: false, firmware });
         device.send(Buffer.from([ACTION_UPDATE_FIRMWARE]), id);
         console.log(action);
         break;
