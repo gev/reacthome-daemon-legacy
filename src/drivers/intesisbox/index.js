@@ -9,6 +9,9 @@ const { delay } = require('../../util');
 
 const instance = new Set();
 
+// INC-044: sentinel Intesis «no link to indoor unit»
+const INTESIS_INVALID = 0x8000;
+
 const sync = async (id) => {
   const dev = get(id) || {};
   const { bind, synced } = dev;
@@ -67,14 +70,33 @@ module.exports.handle = (action) => {
     case READ_HOLDING_REGISTERS: {
       const dev = get(id) || {};
       if (dev.synced) {
-        const actualValue = data.readUInt16BE(2);
+        const newSetpoint = data.readUInt16BE(10);
+
+        // INC-044: фильтр невалидной телеметрии Intesis.
+        // 0x8000 в setpoint — sentinel «нет связи шлюза с indoor unit».
+        // Не перезаписываем командное состояние битыми значениями;
+        // выставляем bridge_offline для UI/диагностики.
+        if (newSetpoint === INTESIS_INVALID) {
+          if (!dev.bridge_offline) {
+            console.warn(`[intesisbox] ${id}: bridge link lost (setpoint=0x8000)`);
+          }
+          set(id, { bridge_offline: true, synced: true });
+          break;
+        }
+
+        // Связь восстановилась после offline
+        if (dev.bridge_offline) {
+          console.info(`[intesisbox] ${id}: bridge link restored`);
+        }
+
         set(id, {
-          actual_value: actualValue,
+          actual_value: data.readUInt16BE(2),
           mode: data.readUInt16BE(4),
           fan_speed: data.readUInt16BE(6),
           direction: data.readUInt16BE(8),
-          setpoint: data.readUInt16BE(10),
-          synced: true
+          setpoint: newSetpoint,
+          synced: true,
+          bridge_offline: false,
         });
       }
       break;
