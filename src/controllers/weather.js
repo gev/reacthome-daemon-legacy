@@ -7,17 +7,27 @@ const { run } = require('./service');
 const mac = require('../mac');
 
 const key = 'fd688cedc9202c33d316dda05b28df8e';
+// INC-031: AbortController-таймаут вместо OS-default 75-120с — закрывает socket принудительно
+const FETCH_TIMEOUT_MS = 10000;
 
 let sunrise;
 let sunset;
+let inFlight = false;  // INC-031: защита от параллельных pending fetch при ETIMEDOUT-серии
 
 function weather(units = 'metric', lang = 'ru') {
+  if (inFlight) return;  // не запускаем новый пока предыдущий висит
+
   const { project } = get(mac()) || {};
   if (!project) return;
   const { location } = get(project) || {};
   if (!location) return;
   const { lat, lng } = location;
-  fetch(`http://api.openweathermap.org/data/2.5/weather?APPID=${key}&units=${units}&lang=${lang}&lat=${lat}&lon=${lng}`)
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+  inFlight = true;
+
+  fetch(`http://api.openweathermap.org/data/2.5/weather?APPID=${key}&units=${units}&lang=${lang}&lat=${lat}&lon=${lng}`, { signal: controller.signal })
     .then(res => res.json())
     .then(weather => {
       now = Date.now();
@@ -45,7 +55,14 @@ function weather(units = 'metric', lang = 'ru') {
 
       set(project, { weather });
     })
-    .catch(console.error);
+    .catch((e) => {
+      // INC-031: тихий warn вместо стека — снижает шум при ETIMEDOUT/ECONNRESET
+      console.warn('[weather] fetch failed:', e.code || e.name, e.message);
+    })
+    .finally(() => {
+      clearTimeout(timeoutId);
+      inFlight = false;
+    });
 }
 
 module.exports.manage = () => {
