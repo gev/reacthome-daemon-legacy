@@ -8,6 +8,16 @@ module.exports.set = (id, payload) => {
   if (state[id] === undefined) {
     state[id] = payload;
   } else {
+    // Зачем: поддержка очистки ключей через WS. payload.__delete = ['key1','key2']
+    // удаляет указанные поля из state[id]. Используется для чистки сирот БД
+    // (см. scripts/orphan-sweep.js, INC-049) и для шаблонов (scenario-templates,
+    // INCIDENT_RECOMMENDATIONS.md). Backward-compatible: если __delete нет —
+    // поведение не меняется.
+    const toDelete = payload.__delete;
+    if (Array.isArray(toDelete)) {
+      for (const k of toDelete) delete state[id][k];
+      delete payload.__delete;
+    }
     Object.assign(state[id], payload);
   }
 };
