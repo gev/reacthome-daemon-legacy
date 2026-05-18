@@ -101,7 +101,7 @@ const buildAll = (id, pool, state, assets) => {
   if (!subject) return;
   state[id] = subject;
   for (const [k, v] of Object.entries(subject)) {
-    if (!v) break;
+    if (!v) continue;
     switch (k) {
       case IMAGE: {
         if (!assets.includes(v)) {
