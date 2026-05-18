@@ -145,6 +145,23 @@ module.exports.cleanup = (pool, options = {}) => {
   const assets = [];
   buildAll(pool.mac, pool, state, assets);
 
+  // Channel-mark: scripts вызываются через канальные bindings (S4 onClick),
+  // не только через site.script[]. Без этого music-scripts Ванной (созданные
+  // через var/create-radio-ring-vannaya.js без ACTION_ADD в site) и подобные
+  // считаются orphan. Добавляем второй проход — для каждого канала
+  // MAC/path/N прогоняем buildAll по targets его onClick* / onHold / onOn /
+  // onOff / onDoppler полей.
+  const CHANNEL_REF_FIELDS = ['onClick', 'onClick2', 'onClick3', 'onHold', 'onOn', 'onOff', 'onDoppler'];
+  for (const [chId, ch] of Object.entries(pool)) {
+    if (!chId.includes('/') || !/^([0-9a-f]{2}:){5}[0-9a-f]{2}/i.test(chId)) continue;
+    if (!ch || typeof ch !== 'object') continue;
+    for (const f of CHANNEL_REF_FIELDS) {
+      const v = ch[f];
+      if (typeof v === 'string') buildAll(v, pool, state, assets);
+      else if (Array.isArray(v)) for (const u of v) if (typeof u === 'string') buildAll(u, pool, state, assets);
+    }
+  }
+
   // Shell-mark: shell вызывается по СТРОКЕ-команде через ACTION_SHELL_START.
   // buildAll не доходит до shell через command-строку. Дополнительный проход
   // помечает все shell с тем же command что у достижимого ACTION_SHELL_START.
