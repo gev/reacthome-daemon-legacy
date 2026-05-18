@@ -1,8 +1,30 @@
 const { existsSync, unlinkSync, readdirSync } = require("fs");
-const { ASSETS } = require("./assets/constants");
+const path = require("path");
+const { execSync } = require("child_process");
+const { ASSETS, DB, BACKUPS_GC } = require("./assets/constants");
 const { PROJECT, DEVICE, IMAGE, SCRIPT, SITE, DAEMON, POOL } = require("./constants");
 const db = require("./db");
 const { asset } = require("./fs");
+
+// Safety: лимит на удаление за один запуск. Защита от лавины из-за регрессий.
+// Override через cleanup(pool, { force: true }) — для ручного first-run после
+// долгого накопления orphan'ов.
+const MAX_DELETE_PER_RUN = 50;
+
+// Safety: никогда не удалять физические id (MAC и UUID/path-каналы).
+// MAC-формат — физические устройства, 1-Wire slaves могут быть оторваны от
+// mark-структуры. UUID/path/N — подканалы (например IntesisBox/modbus/1).
+const MAC_RE = /^([0-9a-f]{2}:){5}[0-9a-f]{2}/i;
+function isPhysicalId(id) {
+  return MAC_RE.test(id) || id.includes('/');
+}
+
+// Опциональный event-log для audit-trail удалений
+let eventLog = null;
+try {
+  const m = require("./logging/event-log");
+  if (m && typeof m.add === "function") eventLog = m;
+} catch (e) { /* модуль не подключён — это норма */ }
 
 function isNumber(str) {
   return /^[0-9]+$/.test(str);
@@ -70,6 +92,9 @@ const build = (id, pool, state, assets) => {
   }
 };
 
+// buildAll — универсальный mark, обходит ВСЕ массивы и string-UUID
+// рекурсивно. Используется в cleanup, покрывает баги 1 и 4 из INC-049
+// (DEVICE-каналы через любое поле, любой type).
 const buildAll = (id, pool, state, assets) => {
   if (state[id]) return;
   const subject = pool[id];
@@ -97,19 +122,90 @@ const buildAll = (id, pool, state, assets) => {
   }
 };
 
-module.exports.cleanup = (pool) => {
-  // console.log("Before cleanup:", Object.keys(pool).length);
+// Бэкап LevelDB в var/backups/gc/db-<ts>.tar.gz перед удалением.
+// Возвращает путь или null при ошибке.
+function backupDb() {
+  try {
+    const ts = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
+    const backupPath = path.join(BACKUPS_GC, `db-${ts}.tar.gz`);
+    execSync(`tar czf ${backupPath} -C ${path.dirname(DB)} ${path.basename(DB)}`);
+    console.log(`[gc] backup: ${backupPath}`);
+    return backupPath;
+  } catch (e) {
+    console.error(`[gc] backup FAILED: ${e.message}`);
+    return null;
+  }
+}
+
+// cleanup(pool, options) — mark-and-sweep garbage collector с safety-механизмами.
+// options:
+//   force=true → пропустить лимит MAX_DELETE_PER_RUN
+module.exports.cleanup = (pool, options = {}) => {
   const state = {};
   const assets = [];
   buildAll(pool.mac, pool, state, assets);
+
+  // Shell-mark: shell вызывается по СТРОКЕ-команде через ACTION_SHELL_START.
+  // buildAll не доходит до shell через command-строку. Дополнительный проход
+  // помечает все shell с тем же command что у достижимого ACTION_SHELL_START.
+  const shellCommandsInUse = new Set();
+  for (const id of Object.keys(state)) {
+    const a = state[id];
+    if (a && a.type === 'ACTION_SHELL_START' && a.payload && a.payload.command) {
+      shellCommandsInUse.add(a.payload.command);
+    }
+  }
+  for (const [shellId, shell] of Object.entries(pool)) {
+    if (state[shellId]) continue;
+    if (shell && shell.type === 'shell' && shellCommandsInUse.has(shell.command)) {
+      state[shellId] = shell;
+    }
+  }
+
+  // Сбор orphan-объектов (исключая физические id и keep-помеченные)
+  const toDelete = [];
   for (const k of Object.keys(pool)) {
     if (k === 'mac') continue;
     if (k === POOL) continue;
-    if (state[k] === undefined) {
-      delete pool[k];
-      db.del(k);
+    if (isPhysicalId(k)) continue;  // MAC и UUID/path/N не удаляются никогда
+    if (state[k] !== undefined) continue;
+    // Whitelist через payload-флаг keep: true
+    if (pool[k] && pool[k].keep === true) continue;
+    toDelete.push(k);
+  }
+
+  if (toDelete.length === 0) {
+    console.log(`[gc] no orphans, nothing to do`);
+    return { deleted: 0 };
+  }
+
+  // Safety: лимит на удалений
+  if (toDelete.length > MAX_DELETE_PER_RUN && !options.force) {
+    console.error(`[gc] ABORT: would delete ${toDelete.length} objects (> ${MAX_DELETE_PER_RUN} limit). Run with {force:true} to override.`);
+    return { deleted: 0, wouldDelete: toDelete.length, aborted: true };
+  }
+
+  // Бэкап перед любым удалением
+  const backupPath = backupDb();
+  if (!backupPath) {
+    console.error(`[gc] ABORT: backup failed, refuse to delete without backup`);
+    return { deleted: 0, wouldDelete: toDelete.length, aborted: true };
+  }
+
+  // Удаление + audit-trail
+  for (const k of toDelete) {
+    const oldState = pool[k];
+    delete pool[k];
+    db.del(k);
+    if (eventLog) {
+      try {
+        eventLog.add(k, oldState, null, { source: "gc" }, { type: "GC_CLEANUP" });
+      } catch (e) { /* не ломать gc из-за event-log */ }
     }
   }
+  console.log(`[gc] deleted ${toDelete.length} orphan objects (backup: ${backupPath})`);
+
+  // Чистка orphan-ассетов
   for (const i of readdirSync(ASSETS)) {
     if (!assets.includes(i)) {
       const a = asset(i);
@@ -118,5 +214,6 @@ module.exports.cleanup = (pool) => {
       }
     }
   }
-  // console.log("After cleanup:", Object.keys(pool).length);
+
+  return { deleted: toDelete.length, backupPath };
 };

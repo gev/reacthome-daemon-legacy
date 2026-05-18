@@ -89,7 +89,17 @@ const load = async () => {
     delete d.ip;
     set(init.mac, d);
   }
-  // cleanup(init);
+  // gc.cleanup периодически (см. INC-049 + safety из gc.js)
+  // Первая чистка через 10 мин после старта (даём дискавери прийти),
+  // далее каждые 24 часа.
+  const GC_INITIAL_DELAY_MS = 10 * 60 * 1000;
+  const GC_INTERVAL_MS = 24 * 60 * 60 * 1000;
+  setTimeout(() => {
+    try { cleanup(init); } catch (e) { console.error('[gc] initial failed:', e.message); }
+    setInterval(() => {
+      try { cleanup(init); } catch (e) { console.error('[gc] periodic failed:', e.message); }
+    }, GC_INTERVAL_MS);
+  }, GC_INITIAL_DELAY_MS);
   assets.init();
   state.init(init);
   initAssist();
