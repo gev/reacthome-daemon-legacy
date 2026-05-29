@@ -1450,11 +1450,11 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_UPDATE_FIRMWARE: {
-          // console.log(data);
+          console.log(data);
           const index = data.readUInt16BE(7);
           const { firmware } = get(id) || {};
           const buff = getFirmwareChunk(firmware, index);
-          // console.log(buff);
+          console.log(buff);
           if (buff) {
             device.send(buff, id);
             set(id, { updating: true });
