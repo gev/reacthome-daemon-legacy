@@ -214,6 +214,7 @@ const {
   DEVICE_TYPE_ROOM_NUMBER,
   ACTION_UPDATE_FIRMWARE,
   DEVICE_TYPE_SOUNDBOX,
+  DEVICE_TYPE_MIX_F,
 } = require("../constants");
 const { NOTIFY } = require("../notification/constants");
 const notification = require("../notification");
@@ -247,6 +248,7 @@ const run = (action) => {
           case DEVICE_TYPE_DIM_12_AC_RS:
           case DEVICE_TYPE_DIM_12_DC_RS:
           case DEVICE_TYPE_MIX_6x12_RS:
+          case DEVICE_TYPE_MIX_F:
           case DEVICE_TYPE_MIX_H:
           case DEVICE_TYPE_ROOM_NUMBER:
           case DEVICE_TYPE_SMART_4A:
@@ -611,6 +613,7 @@ const run = (action) => {
         const dev = get(action.id) || {};
         switch (dev.type) {
           case DEVICE_TYPE_DIM_8_RS:
+          case DEVICE_TYPE_MIX_F:
           case DEVICE_TYPE_MIX_H:
           case DEVICE_TYPE_MIX_V:
           case DEVICE_TYPE_DIM_12_LED_RS:
@@ -1484,6 +1487,7 @@ const run = (action) => {
                   device.sendRBUS(Buffer.from([ACTION_DO, index, ON]), dev);
                   break;
                 }
+                case DEVICE_TYPE_MIX_F:
                 case DEVICE_TYPE_MIX_V:
                 case DEVICE_TYPE_MIX_H: {
                   switch (kind) {
@@ -1715,6 +1719,7 @@ const run = (action) => {
                   device.sendRBUS(Buffer.from([ACTION_DO, index, OFF]), dev);
                   break;
                 }
+                case DEVICE_TYPE_MIX_F:
                 case DEVICE_TYPE_MIX_V:
                 case DEVICE_TYPE_MIX_H: {
                   switch (kind) {
@@ -1923,6 +1928,7 @@ const run = (action) => {
                   device.sendRBUS(Buffer.from([ACTION_AO, index, v]), dev);
                   break;
                 }
+                case DEVICE_TYPE_MIX_F:
                 case DEVICE_TYPE_MIX_V: {
                   switch (kind) {
                     case DIM: {
@@ -2090,6 +2096,7 @@ const run = (action) => {
             }
             case DEVICE_TYPE_DIM_8_RS:
             case DEVICE_TYPE_DIM_12_LED_RS:
+            case DEVICE_TYPE_MIX_F:
             case DEVICE_TYPE_MIX_H:
             case DEVICE_TYPE_MIX_V:
             case DEVICE_TYPE_DIM_12_AC_RS:
