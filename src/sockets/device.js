@@ -35,8 +35,9 @@ const getIP = (name) => {
 };
 
 const toNumIP = (toNumIP) => {
-  const octet = toNumIP.split(".").map(i => parseInt(i, 10));
-  return parseInt(str, 16);
+  const octets = toNumIP.split(".").map(i => parseInt(i, 10));
+  const stringHexIp = octets.map(octet => octet.toString(16).padStart(2, '0')).join('');
+  return parseInt(stringHexIp, 16);
 }
 
 const internalStrIP = getIP(INTERNAL_NETIF)
