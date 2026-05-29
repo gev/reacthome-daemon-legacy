@@ -1,9 +1,13 @@
-'use strict';
+"use strict";
 
-const crc16 = require('crc').crc16modbus;
-const { get, set } = require('../../actions');
-const { device } = require('../../sockets');
-const { ACTION_RS485_TRANSMIT, DEVICE_TYPE_RS_HUB1_RS, DEVICE_TYPE_DI_4_RSM } = require('../../constants');
+const crc16 = require("crc").crc16modbus;
+const { get, set } = require("../../actions");
+const { device } = require("../../sockets");
+const {
+  ACTION_RS485_TRANSMIT,
+  DEVICE_TYPE_RS_HUB1_RS,
+  DEVICE_TYPE_DI_4_RSM,
+} = require("../../constants");
 
 const address = 0x46;
 // const device = '/dev/ttyUSB0';
@@ -11,7 +15,6 @@ const delay = 200;
 const period = 15000;
 
 module.exports = class {
-
   constructor(id) {
     this.id = id;
     this.start();
@@ -52,14 +55,15 @@ module.exports = class {
       const buff = Buffer.concat(this.pool);
       this.pool = [];
       if (buff.length === 4)
-        if (buff.readUInt8(1) === 5)
-          this.login();
-        else
-          this.request();
+        if (buff.readUInt8(1) === 5) this.login();
+        else this.request();
       else if (buff.length === 99) {
         const v = [];
         for (let i = 0; i < 6; i++) {
-          v[i] = ((buff.readUInt16LE(i * 16 + 1) << 16) | buff.readUInt16LE(i * 16 + 3)) / 100;
+          v[i] =
+            ((buff.readUInt16LE(i * 16 + 1) << 16) |
+              buff.readUInt16LE(i * 16 + 3)) /
+            100;
         }
         set(id, { value: [v[0], v[1]], total: v[4] });
         // this.t = setTimeout(this.request, period);
@@ -78,7 +82,7 @@ module.exports = class {
     if (!bind) return;
     const { is_rbus } = get(bind);
     if (is_rbus) return;
-    const [dev, , index] = bind.split('/');
+    const [dev, , index] = bind.split("/");
     const { ip, type } = get(dev);
     const header = Buffer.from([ACTION_RS485_TRANSMIT, index]);
     const payload = this.query(cmd);
@@ -90,11 +94,10 @@ module.exports = class {
         break;
       }
       default: {
-        device.send(buffer, ip);
+        device.sendUDP(buffer, ip);
       }
     }
   };
-
 
   query = (cmd) => {
     const buff = Buffer.alloc(1 + cmd.length);
@@ -105,6 +108,5 @@ module.exports = class {
     const req = Buffer.alloc(buff.length + 2, buff);
     req.writeUInt16LE(crc16(buff), buff.length);
     return req;
-  }
-
+  };
 };

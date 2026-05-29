@@ -59,12 +59,7 @@ const online = (id, props) => {
       case DEVICE_TYPE_ROOM_NUMBER:
       case DEVICE_TYPE_DOPPLER_1_DI_4:
       case DEVICE_TYPE_DOPPLER_5_DI_4: {
-        device.sendRBUS(
-          Buffer.from([
-            ACTION_GET_STATE,
-          ]),
-          id
-        );
+        device.sendRBUS(Buffer.from([ACTION_GET_STATE]), id);
         break;
       }
       case DEVICE_TYPE_SMART_TOP_A6P:
@@ -78,21 +73,11 @@ const online = (id, props) => {
       case DEVICE_TYPE_SMART_TOP_A4TD:
       case DEVICE_TYPE_SMART_TOP_A4TD_7S:
       case DEVICE_TYPE_SMART_TOP_CARD_HOLDER: {
-        device.sendTOP(
-          Buffer.from([
-            ACTION_GET_STATE,
-          ]),
-          id
-        );
+        device.sendTOP(Buffer.from([ACTION_GET_STATE]), id);
         break;
       }
       default: {
-        device.send(
-          Buffer.from([
-            ACTION_GET_STATE
-          ]),
-          dev.ip
-        );
+        device.sendUDP(Buffer.from([ACTION_GET_STATE]), dev.ip);
       }
     }
   }

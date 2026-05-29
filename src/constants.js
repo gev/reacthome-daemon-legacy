@@ -123,7 +123,7 @@ module.exports.ACTION_INITIALIZED = 0xf3;
 module.exports.ACTION_GET_STATE = 0xf4;
 module.exports.ACTION_GET_INFO = 0xf5;
 module.exports.ACTION_FIND_ME = 0xfa;
-module.exports.ACTION_BOOTLOAD = 0xfb;
+module.exports.ACTION_UPDATE_FIRMWARE = 0xfb;
 module.exports.ACTION_MAC_ADDRESS = 0xfc;
 module.exports.ACTION_IP_ADDRESS = 0xfd;
 module.exports.ACTION_ERROR = 0xff;
@@ -132,10 +132,6 @@ module.exports.RELAY_OFF = 0;
 module.exports.RELAY_ON = 1;
 module.exports.RELAY_SET_DELAY_OFF = 2;
 module.exports.RELAY_SET_GROUP = 3;
-
-module.exports.BOOTLOAD_WRITE = 0x00;
-module.exports.BOOTLOAD_SUCCESS = 0x01;
-module.exports.BOOTLOAD_FINISH = 0x0f;
 
 module.exports.BOOTLOAD_WRITE = 0x00;
 module.exports.BOOTLOAD_SUCCESS = 0x01;

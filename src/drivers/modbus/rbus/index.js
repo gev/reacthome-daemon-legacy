@@ -1,6 +1,10 @@
 const { crc16modbus } = require("crc");
 const { get } = require("../../../actions");
-const { ACTION_RS485_TRANSMIT, DEVICE_TYPE_RS_HUB1_RS, DEVICE_TYPE_DI_4_RSM } = require("../../../constants");
+const {
+  ACTION_RS485_TRANSMIT,
+  DEVICE_TYPE_RS_HUB1_RS,
+  DEVICE_TYPE_DI_4_RSM,
+} = require("../../../constants");
 const {
   READ_INPUT_REGISTERS,
   READ_HOLDING_REGISTERS,
@@ -38,17 +42,17 @@ const request = (getSize, fill) => (code) => (id, address, register, data) => {
         break;
       }
       default: {
-        device.send(buffer, ip);
+        device.sendUDP(buffer, ip);
       }
     }
-  };
-}
+  }
+};
 
 const request8 = request(
   () => 8,
   (buffer, data) => {
     buffer.writeUInt16BE(data, 6);
-  }
+  },
 );
 
 module.exports.readCoils = request8(READ_COILS);
@@ -90,21 +94,29 @@ module.exports.writeRegisters = request(
     for (let i = 0; i < data.length; i++) {
       buffer.writeUInt16BE(data[i], 2 * i + 9);
     }
-  }
+  },
 )(WRITE_REGISTERS);
 
-module.exports.readWriteRegisters = (id, address, readRegister, readRegistersNumber, writeRegister, data) => request(
-  (data) => 13 + 2 * data.length,
-  (buffer, data) => {
-    buffer.writeUInt16BE(readRegistersNumber, 6);
-    buffer.writeUInt16BE(writeRegister, 8);
-    buffer.writeUInt16BE(data.length, 10);
-    buffer.writeUInt8(2 * data.length, 12);
-    for (let i = 0; i < data.length; i++) {
-      buffer.writeUInt16BE(data[i], 2 * i + 13);
-    }
-  }
-)(READ_WRITE_REGISTERS)(id, address, readRegister, data);
+module.exports.readWriteRegisters = (
+  id,
+  address,
+  readRegister,
+  readRegistersNumber,
+  writeRegister,
+  data,
+) =>
+  request(
+    (data) => 13 + 2 * data.length,
+    (buffer, data) => {
+      buffer.writeUInt16BE(readRegistersNumber, 6);
+      buffer.writeUInt16BE(writeRegister, 8);
+      buffer.writeUInt16BE(data.length, 10);
+      buffer.writeUInt8(2 * data.length, 12);
+      for (let i = 0; i < data.length; i++) {
+        buffer.writeUInt16BE(data[i], 2 * i + 13);
+      }
+    },
+  )(READ_WRITE_REGISTERS)(id, address, readRegister, data);
 
 module.exports.handle = ({ id, data }) => {
   // console.log(id, data);
@@ -115,4 +127,4 @@ module.exports.handle = ({ id, data }) => {
   }
 };
 
-module.exports.run = () => { };
+module.exports.run = () => {};

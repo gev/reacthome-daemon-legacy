@@ -2,23 +2,23 @@
 // 0x9a id  chl	chh 0xaa 0xaa	crc дважды
 // 0x9a id  chl	chh 0xсa 0xсa	crc (запрос статуса)
 // ответ:
-// Head code	  0xd8										
-// D1	  Motor ID										
-// D2	  Motor Channel low 8 bits  b0 - b7 for 1 - 8 channel										
-// D3	  Motor channel high 8 bits  b0 - b7 for 9 - 16 channel										
-// D4	  Baud Rate:  00:1200   01:2400    02:4800    03:9600   04:19200										
-// D5	  Hand control method Settings: 0Normal    1Press the button to go UP, then press it to STOP, then press it to go DOWN, then press it to STOP, infinite loop    2ress the UP button to go UP, then press the UP button to STOP, press the DOWN button to go DOWN, then press the DOWN button to STOP, pressing the button opposite the direction of motor operation will change the direction    3Runs when button is pressed, stops when hand is released    4When the motor is moving up or down, pressing any button will stop it										
-// D6	Rotational speed in RPM/min (50-130)										
-// D7	  0xca Feedback on function of curtain motor enquiries										
-// D8	Zone Bit										
-//   b0：  0 with hand pull start  1 without hand pull start 										
-//   b1：  0 default direction 1 reverse										
-//   b2：  0 continuous movement  1 dot movement										
-//   b3：  0With slow start  1 without slow start										
-//   b4：  0 to limit point with clearance 1 to limit point without clearance										
-//   b5：  0 Stop at limit point 1 Stop when blocked										
-//   b6：  0Remembering the itinerary 1 Not to remember the itinerary										
-//     b7:   Reserved										
+// Head code	  0xd8
+// D1	  Motor ID
+// D2	  Motor Channel low 8 bits  b0 - b7 for 1 - 8 channel
+// D3	  Motor channel high 8 bits  b0 - b7 for 9 - 16 channel
+// D4	  Baud Rate:  00:1200   01:2400    02:4800    03:9600   04:19200
+// D5	  Hand control method Settings: 0Normal    1Press the button to go UP, then press it to STOP, then press it to go DOWN, then press it to STOP, infinite loop    2ress the UP button to go UP, then press the UP button to STOP, press the DOWN button to go DOWN, then press the DOWN button to STOP, pressing the button opposite the direction of motor operation will change the direction    3Runs when button is pressed, stops when hand is released    4When the motor is moving up or down, pressing any button will stop it
+// D6	Rotational speed in RPM/min (50-130)
+// D7	  0xca Feedback on function of curtain motor enquiries
+// D8	Zone Bit
+//   b0：  0 with hand pull start  1 without hand pull start
+//   b1：  0 default direction 1 reverse
+//   b2：  0 continuous movement  1 dot movement
+//   b3：  0With slow start  1 without slow start
+//   b4：  0 to limit point with clearance 1 to limit point without clearance
+//   b5：  0 Stop at limit point 1 Stop when blocked
+//   b6：  0Remembering the itinerary 1 Not to remember the itinerary
+//     b7:   Reserved
 
 // управление вверх/вниз/остановить:
 // up:     0x9a id  chl	chh 0x0a 0xdd	crc
@@ -26,14 +26,14 @@
 // stop:   0x9a id  chl	chh	0x0a 0xcc crc
 
 // установка направления:
-// 0x9a	0x09 id chl	chh	(b1: 0 defaut direction 1 opposite direction) crc	
+// 0x9a	0x09 id chl	chh	(b1: 0 defaut direction 1 opposite direction) crc
 
 // установка концевых значений:
-// Up limit:    0x9a id chl chh 0xda 0xdd crc			
+// Up limit:    0x9a id chl chh 0xda 0xdd crc
 // Down limit:  0x9a id chl chh 0xda 0xee crc
 
 // управление процентами:
-// 0x9a	id chl chh	0xdd 0-100 crc		
+// 0x9a	id chl chh	0xdd 0-100 crc
 // 100full close/Up limit   0full open/Down limit
 
 // считывание положения:
@@ -60,15 +60,27 @@
 // 	  b6：            no definition
 // 	  b7：            no definition
 
-
-
 // crc: D1 ^ D2 ^ D3 ^ D4 ^ D5 ^ D6 ^ D7 ^ D8
 
-
-const { get, set } = require('../../actions');
-const { ACTION_SET_ADDRESS, ACTION_SET_POSITION, DEVICE_TYPE_DI_4_RSM, DEVICE_TYPE_RS_HUB1_RS, ACTION_RS485_TRANSMIT, ACTION_UP, ACTION_DOWN, ACTION_STOP, ACTION_LIMIT_UP, ACTION_LIMIT_DOWN, ACTION_LEARN, ACTION_DELETE_ADDRESS, ACTION_OPEN, ACTION_CLOSE } = require('../../constants');
-const { device } = require('../../sockets');
-const { delay } = require('../../util');
+const { get, set } = require("../../actions");
+const {
+  ACTION_SET_ADDRESS,
+  ACTION_SET_POSITION,
+  DEVICE_TYPE_DI_4_RSM,
+  DEVICE_TYPE_RS_HUB1_RS,
+  ACTION_RS485_TRANSMIT,
+  ACTION_UP,
+  ACTION_DOWN,
+  ACTION_STOP,
+  ACTION_LIMIT_UP,
+  ACTION_LIMIT_DOWN,
+  ACTION_LEARN,
+  ACTION_DELETE_ADDRESS,
+  ACTION_OPEN,
+  ACTION_CLOSE,
+} = require("../../constants");
+const { device } = require("../../sockets");
+const { delay } = require("../../util");
 
 const timers = new Map();
 
@@ -76,11 +88,20 @@ const indexes = new Map();
 
 const sync = async (id, index) => {
   const ch = `${id}/curtain/${index}`;
-  const { shouldSetAddress, shouldSetPosition
-    , shouldUp, shouldDown, shouldStop
-    , shouldLimitUp, shouldLimitDown
-    , shouldLearn, shouldDelete
-    , address, channel, position } = get(ch) || {};
+  const {
+    shouldSetAddress,
+    shouldSetPosition,
+    shouldUp,
+    shouldDown,
+    shouldStop,
+    shouldLimitUp,
+    shouldLimitDown,
+    shouldLearn,
+    shouldDelete,
+    address,
+    channel,
+    position,
+  } = get(ch) || {};
   if (address === 0) return;
   indexes.set(id, ch);
   if (shouldSetAddress) {
@@ -117,7 +138,7 @@ const sync = async (id, index) => {
   } else {
     send(id, query(address, channel, 0xcc, 0x00));
   }
-}
+};
 
 const loop = (id) => async () => {
   const { numberCurtain = 0 } = get(id) || {};
@@ -126,7 +147,7 @@ const loop = (id) => async () => {
     await delay(100);
   }
   timers.set(id, setTimeout(loop(id), 0));
-}
+};
 
 module.exports.run = (action) => {
   const { id, index, address, channel } = action;
@@ -172,8 +193,7 @@ module.exports.run = (action) => {
       break;
     }
   }
-
-}
+};
 
 module.exports.handle = ({ id, data }) => {
   const ch = indexes.get(id);
@@ -189,8 +209,7 @@ module.exports.handle = ({ id, data }) => {
       break;
     }
   }
-}
-
+};
 
 module.exports.clear = () => {
   for (const i of timers.values()) {
@@ -198,11 +217,11 @@ module.exports.clear = () => {
   }
   timers.clear();
   queues.clear();
-}
+};
 
 module.exports.add = (id) => {
   if (timers.has(id)) {
-    clearTimeout(timers.get(id))
+    clearTimeout(timers.get(id));
   }
   timers.set(id, setTimeout(loop(id), 100));
 };
@@ -212,7 +231,7 @@ const send = (id, payload) => {
   if (!bind) return;
   const { is_rbus } = get(bind);
   if (is_rbus) return;
-  const [dev, , index] = bind.split('/');
+  const [dev, , index] = bind.split("/");
   const { ip, type } = get(dev);
   const header = Buffer.from([ACTION_RS485_TRANSMIT, index]);
   const buffer = Buffer.concat([header, payload]);
@@ -223,7 +242,7 @@ const send = (id, payload) => {
       break;
     }
     default: {
-      device.send(buffer, ip);
+      device.sendUDP(buffer, ip);
     }
   }
 };
@@ -237,4 +256,4 @@ const query = (address, channel, a, b) => {
   buffer.writeUInt8(b, 5);
   buffer.writeUInt8(buffer[1] ^ buffer[2] ^ buffer[4] ^ buffer[5], 6);
   return buffer;
-}
+};

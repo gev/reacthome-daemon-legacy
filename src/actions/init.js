@@ -85,7 +85,7 @@ module.exports.initialize = (id) => {
         const channel = get(`${id}/di/${i}`);
         a[i] = (channel && channel.value) || 0;
       }
-      device.send(Buffer.from(a), dev.ip);
+      device.sendUDP(Buffer.from(a), dev.ip);
       break;
     }
     case DEVICE_TYPE_SMART_4G: {
@@ -157,7 +157,7 @@ module.exports.initialize = (id) => {
         const channel = get(`${id}/${DI}/${i}`);
         a[i] = (channel && channel.value) || 0;
       }
-      device.send(Buffer.from(a), dev.ip);
+      device.sendUDP(Buffer.from(a), dev.ip);
       break;
     }
     case DEVICE_TYPE_DO8: {
@@ -165,7 +165,7 @@ module.exports.initialize = (id) => {
         const channel = get(`${id}/${DO}/${i}`);
         a[i] = (channel && channel.value) || 0;
       }
-      device.send(Buffer.from(a), dev.ip);
+      device.sendUDP(Buffer.from(a), dev.ip);
       break;
     }
     case DEVICE_TYPE_DO12: {
@@ -173,7 +173,7 @@ module.exports.initialize = (id) => {
         const channel = get(`${id}/${DO}/${i}`);
         a[i] = (channel && channel.value) || 0;
       }
-      device.send(Buffer.from(a), dev.ip);
+      device.sendUDP(Buffer.from(a), dev.ip);
       break;
     }
     case DEVICE_TYPE_IR_4: {
@@ -458,7 +458,7 @@ module.exports.initialize = (id) => {
         a[11] = (baud >> 24) & 0xff;
         a[12] = line_control;
       }
-      device.send(Buffer.from(a), dev.ip);
+      device.sendUDP(Buffer.from(a), dev.ip);
       break;
     }
 
@@ -543,7 +543,7 @@ module.exports.initialize = (id) => {
         a[17] = (baud >> 24) & 0xff;
         a[18] = line_control;
       }
-      device.send(Buffer.from(a), dev.ip);
+      device.sendUDP(Buffer.from(a), dev.ip);
       break;
     }
     case DEVICE_TYPE_RELAY_12_RS: {
@@ -574,10 +574,7 @@ module.exports.initialize = (id) => {
     case DEVICE_TYPE_RS_HUB1_RS: {
       const mac = id.split(":").map((i) => parseInt(i, 16));
       a[0] = ACTION_INITIALIZE;
-      const {
-        baud,
-        line_control,
-      } = get(`${id}/${RS485}/1`) || {};
+      const { baud, line_control } = get(`${id}/${RS485}/1`) || {};
       a[1] = 0;
       a[2] = baud & 0xff;
       a[3] = (baud >> 8) & 0xff;
@@ -600,7 +597,7 @@ module.exports.initialize = (id) => {
       a[4] = (baud >> 16) & 0xff;
       a[5] = (baud >> 24) & 0xff;
       a[6] = line_control;
-      device.send(Buffer.from(a), dev.ip);
+      device.sendUDP(Buffer.from(a), dev.ip);
       break;
     }
     case DEVICE_TYPE_RS_HUB4_LEGACY: {
@@ -618,7 +615,7 @@ module.exports.initialize = (id) => {
         a[i * 6 - 1] = (baud >> 24) & 0xff;
         a[i * 6] = line_control;
       }
-      device.send(Buffer.from(a), dev.ip);
+      device.sendUDP(Buffer.from(a), dev.ip);
       break;
     }
     case DEVICE_TYPE_RELAY_24: {
@@ -637,7 +634,7 @@ module.exports.initialize = (id) => {
       a[28] = (baud >> 16) & 0xff;
       a[29] = (baud >> 24) & 0xff;
       a[30] = line_control;
-      device.send(Buffer.from(a), dev.ip);
+      device.sendUDP(Buffer.from(a), dev.ip);
       break;
     }
     case DEVICE_TYPE_SERVER:
@@ -688,7 +685,7 @@ module.exports.initialize = (id) => {
           a.push(brightness);
         }
       }
-      device.send(Buffer.from(a), dev.ip);
+      device.sendUDP(Buffer.from(a), dev.ip);
       break;
     }
     case DEVICE_TYPE_DIM4: {
@@ -697,7 +694,7 @@ module.exports.initialize = (id) => {
         a[2 * i - 1] = (channel && channel.type) || 0;
         a[2 * i] = (channel && channel.value) || 0;
       }
-      device.send(Buffer.from(a), dev.ip);
+      device.sendUDP(Buffer.from(a), dev.ip);
       break;
     }
     case DEVICE_TYPE_DIM_1_AC_RS: {
@@ -724,7 +721,7 @@ module.exports.initialize = (id) => {
           a[3 * i] = (channel && channel.value) || 0;
         }
       }
-      device.send(Buffer.from(a), dev.ip);
+      device.sendUDP(Buffer.from(a), dev.ip);
       break;
     }
     case DEVICE_TYPE_DIM8: {
@@ -733,7 +730,7 @@ module.exports.initialize = (id) => {
         a[2 * i - 1] = (channel && channel.type) || 0;
         a[2 * i] = (channel && channel.value) || 0;
       }
-      device.send(Buffer.from(a), dev.ip);
+      device.sendUDP(Buffer.from(a), dev.ip);
       break;
     }
     case DEVICE_TYPE_DIM_8: {
@@ -750,7 +747,7 @@ module.exports.initialize = (id) => {
           a[3 * i] = (channel && channel.value) || 0;
         }
       }
-      device.send(Buffer.from(a), dev.ip);
+      device.sendUDP(Buffer.from(a), dev.ip);
       break;
     }
     case DEVICE_TYPE_DIM_12_LED_RS:
@@ -884,7 +881,7 @@ module.exports.initialize = (id) => {
         a[14 * i + 147] = trail & 0xff;
         a[14 * i + 148] = (trail >> 8) & 0xff;
       }
-      device.send(Buffer.from(a), dev.ip);
+      device.sendUDP(Buffer.from(a), dev.ip);
       break;
     }
     case DEVICE_TYPE_SOUNDBOX: {
@@ -933,7 +930,7 @@ module.exports.initialize = (id) => {
         a[84 + i * 7] = (port >> 8) & 0xff;
         a[85 + i * 7] = port & 0xff;
       }
-      device.send(Buffer.from(a), dev.ip);
+      device.sendUDP(Buffer.from(a), dev.ip);
       break;
     }
     case DEVICE_TYPE_PLC: {
@@ -945,7 +942,7 @@ module.exports.initialize = (id) => {
         const channel = get(`${id}/${DO}/${i}`);
         a[i + 36] = (channel && channel.value) || 0;
       }
-      device.send(Buffer.from(a), dev.ip);
+      device.sendUDP(Buffer.from(a), dev.ip);
       break;
     }
     case DEVICE_TYPE_ARTNET: {
@@ -958,9 +955,9 @@ module.exports.initialize = (id) => {
         a[2 * i + 1] = (channel && channel.type) || 0;
         a[2 * i + 2] = (channel && channel.value) || 0;
       }
-      device.send(
+      device.sendUDP(
         Buffer.concat([Buffer.from(a), Buffer.from(JSON.stringify(config))]),
-        dev.ip
+        dev.ip,
       );
       break;
     }
