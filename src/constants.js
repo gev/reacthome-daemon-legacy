@@ -11,6 +11,8 @@ module.exports.DEVICE_GROUP = "224.0.0.1";
 // module.exports.IP_ADDRESS_POOL_END = 0xc0a812fe;
 // module.exports.SUB_NET_MASK = 0xffffff00;
 
+module.exports.INTERNAL_NETIF = "eth1";
+
 module.exports.IP_ADDRESS = 0xac100001;
 module.exports.IP_ADDRESS_POOL_START = 0xac100002;
 module.exports.IP_ADDRESS_POOL_END = 0xac1ffffe;

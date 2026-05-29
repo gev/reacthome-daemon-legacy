@@ -1,4 +1,5 @@
 const { get } = require("../controllers/state");
+const os = require('os');
 const {
   DISCOVERY_INTERVAL,
   ACTION_DISCOVERY,
@@ -22,16 +23,30 @@ const {
   DEVICE_TYPE_SERVER,
   DEVICE_TYPE_RS_HUB4,
   DEVICE_TYPE_SOUNDBOX,
+  INTERNAL_NETIF,
 } = require("../constants");
 const socket = require("./socket");
 
 queue = [];
 
+const getIP = (name) => {
+    const iface = os.networkInterfaces()[name];
+    return iface ? iface.find(a => a.family === 'IPv4' && !a.internal).address : null;
+};
+
+const toNumIP = (toNumIP) => {
+  const octet = toNumIP.split(".").map(i => parseInt(i, 10));
+  return parseInt(str, 16);
+}
+
+const internalStrIP = getIP(INTERNAL_NETIF)
+const internalNumIP = toNumIP(internalStrIP)
+
 const device = socket(
   (socket) => {
     const data = Buffer.alloc(7);
     data.writeUInt8(ACTION_DISCOVERY, 0);
-    data.writeUInt32BE(IP_ADDRESS, 1);
+    data.writeUInt32BE(internalNumIP, 1);
     data.writeUInt16BE(socket.address().port, 5);
     return () => {
       device.sendUDP(data, DEVICE_GROUP);
@@ -40,7 +55,7 @@ const device = socket(
   DISCOVERY_INTERVAL,
   DEVICE_PORT,
   DEVICE_SERVER_PORT,
-  "172.16.0.1",
+  internalStrIP,
 );
 
 device.sendRBUS = (data, id) => {
