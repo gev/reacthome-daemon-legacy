@@ -16,23 +16,24 @@ const discovery = async (id, ip) => {
   const socket = createSocket({ type: "udp4", reuseAddr: true, reusePort: true });
   socket.on("error", console.error);
 
-  const discoveryMessage = JSON.stringify({
-    id,
-    type: DISCOVERY,
-    payload: get(id),
-  })
-
-  const data = Buffer.alloc(7);
-  data.writeUInt8(ACTION_DISCOVERY, 0);
-  data.writeUInt32BE(ip2int(ip), 1);
-  data.writeUInt16BE(socket.address().port, 5);
 
   socket.bind(0, ip, async () => {
     try {
-    socket.setMulticastInterface(ip);
-    await socket.send(discoveryMessage, CLIENT_PORT, CLIENT_GROUP);
-    await socket.send(data, DEVICE_PORT, DEVICE_GROUP);
-    } catch(err) {
+      const discoveryMessage = JSON.stringify({
+        id,
+        type: DISCOVERY,
+        payload: get(id),
+      })
+
+      const data = Buffer.alloc(7);
+      data.writeUInt8(ACTION_DISCOVERY, 0);
+      data.writeUInt32BE(ip2int(ip), 1);
+      data.writeUInt16BE(socket.address().port, 5);
+      
+      socket.setMulticastInterface(ip);
+      await socket.send(discoveryMessage, CLIENT_PORT, CLIENT_GROUP);
+      await socket.send(data, DEVICE_PORT, DEVICE_GROUP);
+    } catch (err) {
       console.error("Send error:", err);
     } finally {
       setTimeout(() => socket.close(), 100);
