@@ -21,7 +21,7 @@ const discovery = async (id, ip) => {
     payload: get(id),
   })
 
-  socket.bind(0, ip, () => {
+  await socket.bind(0, () => {
     socket.setMulticastInterface(ip);
   })
 
@@ -35,6 +35,7 @@ const discovery = async (id, ip) => {
 
   socket.close()
 }
+
 const getIP = (name) => {
   const iface = os.networkInterfaces()[name];
   return iface ? iface.find(a => a.family === 'IPv4' && !a.internal).address : null;
