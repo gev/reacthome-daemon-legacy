@@ -50,6 +50,8 @@ const getIP = (name) => {
 };
 
 module.exports.start = (id) => {
+  discovery(id, getIP("eth0"));
+  discovery(id, getIP("eth1"));
   setInterval(async () => {
     discovery(id, getIP("eth0"));
     discovery(id, getIP("eth1"));
