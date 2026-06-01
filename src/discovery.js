@@ -14,13 +14,13 @@ const CLIENT_PORT = 2021;
 const discovery = (id, ip) => {
   if (!ip) return;
 
+  const { title, code, type } = get(id) || {};
+
   const discoveryMessage = JSON.stringify({
     id,
     type: DISCOVERY,
-    payload: get(id),
+    payload: { title, code, type },
   })
-
-  console.log(get(id));
 
   const data = Buffer.alloc(7);
   data.writeUInt8(ACTION_DISCOVERY, 0);
@@ -32,21 +32,17 @@ const discovery = (id, ip) => {
 
   socket.bind(0, ip, () => {
     socket.setMulticastInterface(ip);
-    socket.send(data, DEVICE_PORT, DEVICE_GROUP, () => {
-      console.log("send discovery 2");
-      socket.close();
+    socket.send(discoveryMessage, CLIENT_PORT, CLIENT_GROUP, (err) => {
+      if (!err) {
+        console.log("send discovery 1");
+        socket.send(data, DEVICE_PORT, DEVICE_GROUP, () => {
+          console.log("send discovery 2");
+          socket.close();
+        });
+      } else {
+        socket.close();
+      }
     });
-    // socket.send(discoveryMessage, CLIENT_PORT, CLIENT_GROUP, (err) => {
-    //   if (!err) {
-    //     console.log("send discovery 1");
-    //     socket.send(data, DEVICE_PORT, DEVICE_GROUP, () => {
-    //       console.log("send discovery 2");
-    //       socket.close();
-    //     });
-    //   } else {
-    //     socket.close();
-    //   }
-    // });
   })
 }
 
