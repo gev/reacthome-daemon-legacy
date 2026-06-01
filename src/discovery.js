@@ -11,36 +11,35 @@ const CLIENT_GROUP = "224.0.0.2";
 const CLIENT_PORT = 2021;
 
 
-const discovery = async (id, ip) => {
+const discovery = (id, ip) => {
   if (!ip) return;
+
+  const discoveryMessage = JSON.stringify({
+    id,
+    type: DISCOVERY,
+    payload: get(id),
+  })
+
+  const data = Buffer.alloc(7);
+  data.writeUInt8(ACTION_DISCOVERY, 0);
+  data.writeUInt32BE(ip2int(ip), 1);
+  data.writeUInt16BE(DEVICE_SERVER_PORT, 5);
+
   const socket = createSocket({ type: "udp4", reuseAddr: true, reusePort: true });
   socket.on("error", console.error);
 
-
-  socket.bind(0, ip, async () => {
-    try {
-      const discoveryMessage = JSON.stringify({
-        id,
-        type: DISCOVERY,
-        payload: get(id),
-      })
-
-      const data = Buffer.alloc(7);
-      data.writeUInt8(ACTION_DISCOVERY, 0);
-      data.writeUInt32BE(ip2int(ip), 1);
-      data.writeUInt16BE(socket.address().port, 5);
-      
+  socket.bind(0, ip, () => {
       socket.setMulticastInterface(ip);
-      await socket.send(discoveryMessage, CLIENT_PORT, CLIENT_GROUP);
-      await socket.send(data, DEVICE_PORT, DEVICE_GROUP);
-    } catch (err) {
-      console.error("Send error:", err);
-    } finally {
-      setTimeout(() => socket.close(), 100);
-    }
+      socket.send(discoveryMessage, CLIENT_PORT, CLIENT_GROUP, (err) => {
+        if (!err) {
+          socket.send(data, DEVICE_PORT, DEVICE_GROUP, () => {
+            socket.close();
+          });
+        } else {
+          socket.close();
+        }
+      });
   })
-
-
 }
 
 const getIP = (name) => {
