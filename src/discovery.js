@@ -22,7 +22,6 @@ const discovery = (id, ip) => {
     payload: { title, code, type },
   })
 
-  console.log(JSON.stringify(get(id)));
 
   const data = Buffer.alloc(7);
   data.writeUInt8(ACTION_DISCOVERY, 0);
@@ -36,9 +35,7 @@ const discovery = (id, ip) => {
     socket.setMulticastInterface(ip);
     socket.send(discoveryMessage, CLIENT_PORT, CLIENT_GROUP, (err) => {
       if (!err) {
-        console.log("send discovery 1");
         socket.send(data, DEVICE_PORT, DEVICE_GROUP, () => {
-          console.log("send discovery 2");
           socket.close();
         });
       } else {
