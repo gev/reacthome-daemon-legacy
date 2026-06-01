@@ -10,7 +10,7 @@ const CLIENT_GROUP = "224.0.0.2";
 const CLIENT_PORT = 2021;
 
 
-const discovery = (id, ip) => {
+const discovery = async (id, ip) => {
   if (!ip) return;
   const socket = createSocket({ type: "udp4", reuseAddr: true, reusePort: true });
   socket.on("error", console.error);
