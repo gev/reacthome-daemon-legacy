@@ -2,7 +2,7 @@
 const { createSocket } = require("dgram");
 const { get } = require("./actions");
 const { Interface } = require("readline");
-const { DEVICE_SERVER_PORT, DEVICE_GROUP, DEVICE_PORT } = require("./constants");
+const { DEVICE_SERVER_PORT, DEVICE_GROUP, DEVICE_PORT, ACTION_DISCOVERY } = require("./constants");
 const os = require('os');
 const { ip2int } = require("./util");
 
