@@ -21,10 +21,10 @@ const discovery = async (id, ip) => {
     payload: get(id),
   })
 
-  socket.bind(0, () => {
+  socket.bind(0, ip, () => {
     socket.setMulticastInterface(ip);
   })
-  
+
   await socket.send(discoveryMessage, CLIENT_PORT, CLIENT_GROUP);
 
   const data = Buffer.alloc(7);
