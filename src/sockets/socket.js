@@ -9,7 +9,7 @@ module.exports = (port, listen) => {
     });
   };
 
-  socket.on("error", console.error).bind(listen, "0.0.0.0");
+  socket.on("error", console.error).bind(listen);
 
   const handle = (handler) => {
     socket.on("message", handler);

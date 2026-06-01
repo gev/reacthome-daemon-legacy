@@ -30,19 +30,8 @@ queue = [];
 
 
 const device = socket(
-  // (socket) => {
-  //   const data = Buffer.alloc(7);
-  //   data.writeUInt8(ACTION_DISCOVERY, 0);
-  //   data.writeUInt32BE(internalNumIP, 1);
-  //   data.writeUInt16BE(socket.address().port, 5);
-  //   return () => {
-  //     device.sendUDP(data, DEVICE_GROUP);
-  //   };
-  // },
-  // DISCOVERY_INTERVAL,
   DEVICE_PORT,
   DEVICE_SERVER_PORT,
-  // internalStrIP,
 );
 
 device.sendRBUS = (data, id) => {
