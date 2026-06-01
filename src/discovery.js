@@ -28,10 +28,15 @@ const discovery = async (id, ip) => {
   data.writeUInt16BE(socket.address().port, 5);
 
   socket.bind(0, ip, async () => {
+    try {
     socket.setMulticastInterface(ip);
     await socket.send(discoveryMessage, CLIENT_PORT, CLIENT_GROUP);
     await socket.send(data, DEVICE_PORT, DEVICE_GROUP);
-    socket.close()
+    } catch(err) {
+      console.error("Send error:", err);
+    } finally {
+      setTimeout(() => socket.close(), 100);
+    }
   })
 
 
