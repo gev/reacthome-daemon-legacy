@@ -22,6 +22,8 @@ const discovery = (id, ip) => {
     payload: { title, code, type },
   })
 
+  console.log(discoveryMessage);
+
   const data = Buffer.alloc(7);
   data.writeUInt8(ACTION_DISCOVERY, 0);
   data.writeUInt32BE(ip2int(ip), 1);
