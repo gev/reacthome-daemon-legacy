@@ -29,18 +29,18 @@ const discovery = (id, ip) => {
   socket.on("error", console.error);
 
   socket.bind(0, ip, () => {
-      socket.setMulticastInterface(ip);
-      socket.send(discoveryMessage, CLIENT_PORT, CLIENT_GROUP, (err) => {
-        if (!err) {
-          console.log("send discovery 1");
-          socket.send(data, DEVICE_PORT, DEVICE_GROUP, () => {
-            console.log("send discovery 2");
-            socket.close();
-          });
-        } else {
+    socket.setMulticastInterface(ip);
+    socket.send(discoveryMessage, CLIENT_PORT, CLIENT_GROUP, (err) => {
+      if (!err) {
+        console.log("send discovery 1");
+        socket.send(data, DEVICE_PORT, DEVICE_GROUP, () => {
+          console.log("send discovery 2");
           socket.close();
-        }
-      });
+        });
+      } else {
+        socket.close();
+      }
+    });
   })
 }
 
@@ -52,12 +52,10 @@ const getIP = (name) => {
 module.exports.start = (id) => {
   discovery(id, getIP("eth0"));
   discovery(id, getIP("eth1"));
-  // socket.bind(() => {
-  //   socket.setMulticastInterface("172.16.0.1")
   setInterval(async () => {
+    discovery(id, getIP("eth0"));
+    discovery(id, getIP("eth1"));
   }, 10_000)
-
-  // })
 };
 
 
