@@ -27,7 +27,7 @@ const discovery = async (id, ip) => {
   data.writeUInt32BE(ip2int(ip), 1);
   data.writeUInt16BE(socket.address().port, 5);
 
-  socket.bind(ip, () => {
+  socket.bind(0, ip, async () => {
     socket.setMulticastInterface(ip);
     await socket.send(discoveryMessage, CLIENT_PORT, CLIENT_GROUP);
     await socket.send(data, DEVICE_PORT, DEVICE_GROUP);
