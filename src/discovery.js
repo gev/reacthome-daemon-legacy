@@ -22,7 +22,7 @@ const discovery = (id, ip) => {
     payload: { title, code, type },
   })
 
-  console.log(discoveryMessage);
+  console.log(JSON.stringify(get(id)));
 
   const data = Buffer.alloc(7);
   data.writeUInt8(ACTION_DISCOVERY, 0);
