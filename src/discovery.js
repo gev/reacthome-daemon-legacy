@@ -21,7 +21,7 @@ const discovery = async (id, ip) => {
     payload: get(id),
   })
 
-  await socket.bind(0, () => {
+  socket.bind(0, () => {
     socket.setMulticastInterface(ip);
   })
 
