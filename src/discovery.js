@@ -20,7 +20,11 @@ const discovery = async (id, ip) => {
     type: DISCOVERY,
     payload: get(id),
   })
-  socket.setMulticastInterface(ip);
+
+  socket.bind(0, () => {
+    socket.setMulticastInterface(ip);
+  })
+  
   await socket.send(discoveryMessage, CLIENT_PORT, CLIENT_GROUP);
 
   const data = Buffer.alloc(7);
