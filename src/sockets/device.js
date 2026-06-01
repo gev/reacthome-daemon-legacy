@@ -29,34 +29,21 @@ const socket = require("./socket");
 
 queue = [];
 
-const getIP = (name) => {
-    const iface = os.networkInterfaces()[name];
-    return iface ? iface.find(a => a.family === 'IPv4' && !a.internal).address : null;
-};
-
-const toNumIP = (toNumIP) => {
-  const octets = toNumIP.split(".").map(i => parseInt(i, 10));
-  const stringHexIp = octets.map(octet => octet.toString(16).padStart(2, '0')).join('');
-  return parseInt(stringHexIp, 16);
-}
-
-const internalStrIP = getIP(INTERNAL_NETIF)
-const internalNumIP = toNumIP(internalStrIP)
 
 const device = socket(
-  (socket) => {
-    const data = Buffer.alloc(7);
-    data.writeUInt8(ACTION_DISCOVERY, 0);
-    data.writeUInt32BE(internalNumIP, 1);
-    data.writeUInt16BE(socket.address().port, 5);
-    return () => {
-      device.sendUDP(data, DEVICE_GROUP);
-    };
-  },
-  DISCOVERY_INTERVAL,
+  // (socket) => {
+  //   const data = Buffer.alloc(7);
+  //   data.writeUInt8(ACTION_DISCOVERY, 0);
+  //   data.writeUInt32BE(internalNumIP, 1);
+  //   data.writeUInt16BE(socket.address().port, 5);
+  //   return () => {
+  //     device.sendUDP(data, DEVICE_GROUP);
+  //   };
+  // },
+  // DISCOVERY_INTERVAL,
   DEVICE_PORT,
   DEVICE_SERVER_PORT,
-  internalStrIP,
+  // internalStrIP,
 );
 
 device.sendRBUS = (data, id) => {
