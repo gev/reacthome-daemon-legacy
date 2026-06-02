@@ -35,10 +35,10 @@ const discovery = (id, ip) => {
     socket.send(discoveryMessage, CLIENT_PORT, CLIENT_GROUP, (err) => {
       if (!err) {
         socket.send(discoveryDevice, DEVICE_PORT, DEVICE_GROUP, (err) => {
-          socket.close();
+          // socket.close();
         });
       } else {
-        socket.close();
+        // socket.close();
       }
     });
   })
