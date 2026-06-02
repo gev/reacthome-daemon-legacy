@@ -1125,15 +1125,15 @@ module.exports.manage = () => {
           }
           const dev_id =
             action === ACTION_TEMPERATURE_EXT ||
-            action === ACTION_TEMPERATURE_EXT_OLD
+              action === ACTION_TEMPERATURE_EXT_OLD
               ? Array.from(data)
-                  .slice(7, 15)
-                  .map((i) => i.toString(16).padStart(2, "0"))
-                  .join(":")
+                .slice(7, 15)
+                .map((i) => i.toString(16).padStart(2, "0"))
+                .join(":")
               : data
-                  .slice(7, 15)
-                  .map((i) => `0${i.toString(16)}`.slice(-2))
-                  .join(":");
+                .slice(7, 15)
+                .map((i) => `0${i.toString(16)}`.slice(-2))
+                .join(":");
           const temperature_raw = data.readInt16LE(15) / 100;
           const { temperature_correct = 0 } = get(dev_id) || {};
           const temperature = temperature_raw + temperature_correct;
@@ -1322,6 +1322,7 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_IP_ADDRESS: {
+          console.log(data);
           const lookup = (get(POOL) || {})[id];
           if (lookup) {
             const buff = Buffer.alloc(15);
