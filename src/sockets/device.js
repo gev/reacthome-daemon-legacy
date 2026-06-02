@@ -22,25 +22,16 @@ const {
   DEVICE_TYPE_SERVER,
   DEVICE_TYPE_RS_HUB4,
   DEVICE_TYPE_SOUNDBOX,
+  INTERNAL_NETIF,
 } = require("../constants");
 const socket = require("./socket");
 
 queue = [];
 
+
 const device = socket(
-  (socket) => {
-    const data = Buffer.alloc(7);
-    data.writeUInt8(ACTION_DISCOVERY, 0);
-    data.writeUInt32BE(IP_ADDRESS, 1);
-    data.writeUInt16BE(socket.address().port, 5);
-    return () => {
-      device.sendUDP(data, DEVICE_GROUP);
-    };
-  },
-  DISCOVERY_INTERVAL,
   DEVICE_PORT,
   DEVICE_SERVER_PORT,
-  "172.16.0.1",
 );
 
 device.sendRBUS = (data, id) => {

@@ -1125,15 +1125,15 @@ module.exports.manage = () => {
           }
           const dev_id =
             action === ACTION_TEMPERATURE_EXT ||
-            action === ACTION_TEMPERATURE_EXT_OLD
+              action === ACTION_TEMPERATURE_EXT_OLD
               ? Array.from(data)
-                  .slice(7, 15)
-                  .map((i) => i.toString(16).padStart(2, "0"))
-                  .join(":")
+                .slice(7, 15)
+                .map((i) => i.toString(16).padStart(2, "0"))
+                .join(":")
               : data
-                  .slice(7, 15)
-                  .map((i) => `0${i.toString(16)}`.slice(-2))
-                  .join(":");
+                .slice(7, 15)
+                .map((i) => `0${i.toString(16)}`.slice(-2))
+                .join(":");
           const temperature_raw = data.readInt16LE(15) / 100;
           const { temperature_correct = 0 } = get(dev_id) || {};
           const temperature = temperature_raw + temperature_correct;
@@ -1329,7 +1329,7 @@ module.exports.manage = () => {
             dev_mac.copy(buff, 1, 0, 6);
             buff.writeUInt32BE(lookup, 7);
             buff.writeUInt32BE(SUB_NET_MASK, 11);
-            device.sendUDP(buff, DEVICE_GROUP);
+            device.sendMulticast(buff, DEVICE_GROUP);
           } else if (last_ip < IP_ADDRESS_POOL_END) {
             const buff = Buffer.alloc(15);
             buff.writeUInt8(ACTION_IP_ADDRESS, 0);
@@ -1342,7 +1342,7 @@ module.exports.manage = () => {
             set(POOL, { [id]: last_ip });
             buff.writeUInt32BE(last_ip, 7);
             buff.writeUInt32BE(SUB_NET_MASK, 11);
-            device.sendUDP(buff, DEVICE_GROUP);
+            device.sendMulticast(buff, DEVICE_GROUP);
           }
           break;
         }

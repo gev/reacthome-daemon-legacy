@@ -794,7 +794,7 @@ module.exports.initialize = (id) => {
       const channel = get(`${id}/${AO}/${1}`);
       switch (major) {
         case 1:
-          a[1] = channel.value || 0;
+          a[1] = (channel && channel.value) || 0;
           break;
         default: {
           const { baud = 0, line_control = 0 } = get(`${id}/${RS485}/1`) || {};
