@@ -1,5 +1,6 @@
 const { createSocket } = require("dgram");
 const { getIP } = require("../util");
+const { DEVICE_GROUP } = require("../constants");
 
 module.exports = (port, listen) => {
   const socket = createSocket("udp4");
@@ -19,7 +20,13 @@ module.exports = (port, listen) => {
     }
   }
 
-  socket.on("error", console.error).bind(listen, "0.0.0.0");
+  socket.on("error", console.error).bind(listen, "0.0.0.0", () => {
+    const ip = getIP("eth1");
+    console.log(ip);
+    if (ip) {
+      socket.addMembership(DEVICE_GROUP,);
+    }
+  });
 
   const handle = (handler) => {
     socket.on("message", handler);
