@@ -10,7 +10,7 @@ const CLIENT_GROUP = "224.0.0.2";
 const CLIENT_PORT = 2021;
 
 
-const discovery = (id, ip) => {
+const discovery = (socket, id, ip) => {
   if (!ip) return;
 
   const { title, code, type } = get(id) || {};
@@ -27,30 +27,23 @@ const discovery = (id, ip) => {
   discoveryDevice.writeUInt32BE(ip2int(ip), 1);
   discoveryDevice.writeUInt16BE(DEVICE_SERVER_PORT, 5);
 
+  socket.setMulticastInterface(ip);
+  socket.send(discoveryMessage, CLIENT_PORT, CLIENT_GROUP);
+  socket.send(discoveryDevice, DEVICE_PORT, DEVICE_GROUP);
+}
+
+module.exports.start = (id) => {
   const socket = createSocket({ type: "udp4", reuseAddr: true, reusePort: true });
   socket.on("error", console.error);
 
   socket.bind(0, "0.0.0.0", () => {
-    socket.setMulticastInterface(ip);
-    socket.send(discoveryMessage, CLIENT_PORT, CLIENT_GROUP, (err) => {
-      if (!err) {
-        socket.send(discoveryDevice, DEVICE_PORT, DEVICE_GROUP, (err) => {
-          // socket.close();
-        });
-      } else {
-        // socket.close();
-      }
-    });
-  })
-}
-
-module.exports.start = (id) => {
-  discovery(id, getIP("eth0"));
-  discovery(id, getIP("eth1"));
-  setInterval(async () => {
-    discovery(id, getIP("eth0"));
-    discovery(id, getIP("eth1"));
-  }, 10_000)
+    discovery(socket, id, getIP("eth0"));
+    discovery(socket, id, getIP("eth1"));
+    setInterval(async () => {
+      discovery(socket, id, getIP("eth0"));
+      discovery(socket, id, getIP("eth1"));
+    }, 10_000)
+  });
 };
 
 
