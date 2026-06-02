@@ -48,7 +48,8 @@ const discovery = (id, ip) => {
 const getIP = (name) => {
   const iface = os.networkInterfaces()[name];
   if (!iface) return null;
-  return iface ? iface.find(a => a.family === 'IPv4' && !a.internal).address : null;
+  const ipv4 = iface.find(a => (a.family === 'IPv4' || a.family === 4) && !a.internal);
+  return ipv4 ? ipv4.address : null;
 };
 
 module.exports.start = (id) => {
