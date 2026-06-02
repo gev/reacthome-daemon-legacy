@@ -20,13 +20,7 @@ module.exports = (port, listen) => {
     }
   }
 
-  socket.on("error", console.error).bind(listen, "0.0.0.0", () => {
-    const ip = getIP("eth1");
-    console.log(ip);
-    if (ip) {
-      socket.addMembership(DEVICE_GROUP,);
-    }
-  });
+  socket.on("error", console.error).bind(listen, "172.16.1.0");
 
   const handle = (handler) => {
     socket.on("message", handler);
