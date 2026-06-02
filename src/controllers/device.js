@@ -1342,7 +1342,7 @@ module.exports.manage = () => {
             set(POOL, { [id]: last_ip });
             buff.writeUInt32BE(last_ip, 7);
             buff.writeUInt32BE(SUB_NET_MASK, 11);
-            device.sendUDP(buff, DEVICE_GROUP);
+            device.sendMilticast(buff);
           }
           break;
         }

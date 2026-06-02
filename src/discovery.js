@@ -3,8 +3,7 @@ const { createSocket } = require("dgram");
 const { get } = require("./actions");
 const { Interface } = require("readline");
 const { DEVICE_SERVER_PORT, DEVICE_GROUP, DEVICE_PORT, ACTION_DISCOVERY } = require("./constants");
-const os = require('os');
-const { ip2int } = require("./util");
+const { ip2int, getIP } = require("./util");
 
 const DISCOVERY = "discovery";
 const CLIENT_GROUP = "224.0.0.2";
@@ -44,13 +43,6 @@ const discovery = (id, ip) => {
     });
   })
 }
-
-const getIP = (name) => {
-  const iface = os.networkInterfaces()[name];
-  if (!iface) return null;
-  const ipv4 = iface.find(a => (a.family === 'IPv4' || a.family === 4) && !a.internal);
-  return ipv4 ? ipv4.address : null;
-};
 
 module.exports.start = (id) => {
   discovery(id, getIP("eth0"));
