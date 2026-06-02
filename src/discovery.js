@@ -34,7 +34,9 @@ const discovery = (id, ip) => {
     socket.setMulticastInterface(ip);
     socket.send(discoveryMessage, CLIENT_PORT, CLIENT_GROUP, (err) => {
       if (!err) {
-        socket.send(discoveryDevice, DEVICE_PORT, DEVICE_GROUP, () => {
+        console.log(err, ip);
+        socket.send(discoveryDevice, DEVICE_PORT, DEVICE_GROUP, (err) => {
+          console.log(err, ip);
           socket.close();
         });
       } else {
