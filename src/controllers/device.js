@@ -1322,7 +1322,6 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_IP_ADDRESS: {
-          console.log(data);
           const lookup = (get(POOL) || {})[id];
           if (lookup) {
             const buff = Buffer.alloc(15);

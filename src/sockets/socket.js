@@ -13,7 +13,6 @@ module.exports = (port, listen) => {
 
   const sendMulticast = (packet, group) => {
     const ip = getIP("eth1");
-    console.log(ip);
     if (ip) {
       socket.setMulticastInterface(ip);
       sendUDP(packet, group);
