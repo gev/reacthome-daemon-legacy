@@ -47,6 +47,7 @@ const discovery = (id, ip) => {
 
 const getIP = (name) => {
   const iface = os.networkInterfaces()[name];
+  if (!iface) return null;
   return iface ? iface.find(a => a.family === 'IPv4' && !a.internal).address : null;
 };
 
