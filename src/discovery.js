@@ -31,12 +31,10 @@ const discovery = (id, ip) => {
   socket.on("error", console.error);
 
   socket.bind(0, ip, () => {
-    socket.setMulticastInterface(ip);
+    // socket.setMulticastInterface(ip);
     socket.send(discoveryMessage, CLIENT_PORT, CLIENT_GROUP, (err) => {
       if (!err) {
-        console.log(err, ip);
         socket.send(discoveryDevice, DEVICE_PORT, DEVICE_GROUP, (err) => {
-          console.log(err, ip);
           socket.close();
         });
       } else {
