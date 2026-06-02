@@ -23,10 +23,10 @@ const discovery = (id, ip) => {
   })
 
 
-  const data = Buffer.alloc(7);
-  data.writeUInt8(ACTION_DISCOVERY, 0);
-  data.writeUInt32BE(ip2int(ip), 1);
-  data.writeUInt16BE(DEVICE_SERVER_PORT, 5);
+  const discoveryDevice = Buffer.alloc(7);
+  discoveryDevice.writeUInt8(ACTION_DISCOVERY, 0);
+  discoveryDevice.writeUInt32BE(ip2int(ip), 1);
+  discoveryDevice.writeUInt16BE(DEVICE_SERVER_PORT, 5);
 
   const socket = createSocket({ type: "udp4", reuseAddr: true, reusePort: true });
   socket.on("error", console.error);
@@ -35,7 +35,7 @@ const discovery = (id, ip) => {
     socket.setMulticastInterface(ip);
     socket.send(discoveryMessage, CLIENT_PORT, CLIENT_GROUP, (err) => {
       if (!err) {
-        socket.send(data, DEVICE_PORT, DEVICE_GROUP, () => {
+        socket.send(discoveryDevice, DEVICE_PORT, DEVICE_GROUP, () => {
           socket.close();
         });
       } else {
