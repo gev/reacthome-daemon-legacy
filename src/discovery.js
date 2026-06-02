@@ -30,8 +30,8 @@ const discovery = (id, ip) => {
   const socket = createSocket({ type: "udp4", reuseAddr: true, reusePort: true });
   socket.on("error", console.error);
 
-  socket.bind(0, ip, () => {
-    // socket.setMulticastInterface(ip);
+  socket.bind(0, "0.0.0.0", () => {
+    socket.setMulticastInterface(ip);
     socket.send(discoveryMessage, CLIENT_PORT, CLIENT_GROUP, (err) => {
       if (!err) {
         socket.send(discoveryDevice, DEVICE_PORT, DEVICE_GROUP, (err) => {
