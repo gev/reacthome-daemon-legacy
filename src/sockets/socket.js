@@ -11,7 +11,7 @@ module.exports = (port, listen) => {
     });
   };
 
-  const sendMilticast = (packet, group) => {
+  const sendMulticast = (packet, group) => {
     const ip = getIP("eth1");
     console.log(ip);
     if (ip) {
@@ -26,5 +26,5 @@ module.exports = (port, listen) => {
     socket.on("message", handler);
   };
 
-  return { handle, sendUDP, sendMilticast };
+  return { handle, sendUDP, sendMulticast };
 };
