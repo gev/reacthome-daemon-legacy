@@ -213,8 +213,10 @@ const {
   DEVICE_TYPE_SMART_TOP_CARD_HOLDER,
   DEVICE_TYPE_ROOM_NUMBER,
   ACTION_UPDATE_FIRMWARE,
+  ACTION_DFU,
   DEVICE_TYPE_SOUNDBOX,
   DEVICE_TYPE_MIX_F,
+  ACTION_REBOOT,
 } = require("../constants");
 const { NOTIFY } = require("../notification/constants");
 const notification = require("../notification");
@@ -624,11 +626,11 @@ const run = (action) => {
           case DEVICE_TYPE_AO_4_DIN: {
             const velocity =
               dev.type === DEVICE_TYPE_DIM_12_LED_RS ||
-              dev.type === DEVICE_TYPE_MIX_H ||
-              dev.type === DEVICE_TYPE_DIM_12_AC_RS ||
-              dev.type === DEVICE_TYPE_DIM_12_DC_RS ||
-              dev.type === DEVICE_TYPE_DIM_1_AC_RS ||
-              dev.type === DEVICE_TYPE_DIM_8_RS
+                dev.type === DEVICE_TYPE_MIX_H ||
+                dev.type === DEVICE_TYPE_DIM_12_AC_RS ||
+                dev.type === DEVICE_TYPE_DIM_12_DC_RS ||
+                dev.type === DEVICE_TYPE_DIM_1_AC_RS ||
+                dev.type === DEVICE_TYPE_DIM_8_RS
                 ? DIM_VELOCITY
                 : AO_VELOCITY;
             switch (action.action) {
@@ -845,11 +847,11 @@ const run = (action) => {
                       DIM_FADE,
                       v,
                       dev.type === DEVICE_TYPE_DIM_12_LED_RS ||
-                      dev.type === DEVICE_TYPE_MIX_H ||
-                      dev.type === DEVICE_TYPE_DIM_12_AC_RS ||
-                      dev.type === DEVICE_TYPE_DIM_12_DC_RS ||
-                      dev.type === DEVICE_TYPE_DIM_1_AC_RS ||
-                      dev.type === DEVICE_TYPE_DIM_8_RS
+                        dev.type === DEVICE_TYPE_MIX_H ||
+                        dev.type === DEVICE_TYPE_DIM_12_AC_RS ||
+                        dev.type === DEVICE_TYPE_DIM_12_DC_RS ||
+                        dev.type === DEVICE_TYPE_DIM_1_AC_RS ||
+                        dev.type === DEVICE_TYPE_DIM_8_RS
                         ? DIM_VELOCITY
                         : AO_VELOCITY,
                     ]),
@@ -1054,8 +1056,8 @@ const run = (action) => {
             const [i2, i1] = Array.isArray(value)
               ? value
               : Array.from(String(value).padStart(2, " "))
-                  .slice(-2)
-                  .map((i) => char2image[i]);
+                .slice(-2)
+                .map((i) => char2image[i]);
             const dev = get(id) || {};
             device.sendRBUS(
               Buffer.from([ACTION_IMAGE, level || dev.level, i2, i1]),
@@ -2111,11 +2113,11 @@ const run = (action) => {
                   DIM_FADE,
                   v,
                   deviceType === DEVICE_TYPE_DIM_12_LED_RS ||
-                  deviceType === DEVICE_TYPE_MIX_H ||
-                  deviceType === DEVICE_TYPE_DIM_12_AC_RS ||
-                  deviceType === DEVICE_TYPE_DIM_12_DC_RS ||
-                  deviceType === DEVICE_TYPE_DIM_1_AC_RS ||
-                  deviceType === DEVICE_TYPE_DIM_8_RS
+                    deviceType === DEVICE_TYPE_MIX_H ||
+                    deviceType === DEVICE_TYPE_DIM_12_AC_RS ||
+                    deviceType === DEVICE_TYPE_DIM_12_DC_RS ||
+                    deviceType === DEVICE_TYPE_DIM_1_AC_RS ||
+                    deviceType === DEVICE_TYPE_DIM_8_RS
                     ? DIM_VELOCITY
                     : AO_VELOCITY,
                 ]),
@@ -2818,16 +2820,16 @@ const run = (action) => {
         const { temperature } = get(site) || {};
         const make =
           (state, script, mode, enabled, intensity, onIntensity = []) =>
-          () => {
-            set(id, { state, mode });
-            if (!enabled) return;
-            if (script) {
-              run({ type: ACTION_SCRIPT_RUN, id: script });
-            }
-            if (intensity >= 0 && onIntensity[intensity]) {
-              run({ type: ACTION_SCRIPT_RUN, id: onIntensity[intensity] });
-            }
-          };
+            () => {
+              set(id, { state, mode });
+              if (!enabled) return;
+              if (script) {
+                run({ type: ACTION_SCRIPT_RUN, id: script });
+              }
+              if (intensity >= 0 && onIntensity[intensity]) {
+                run({ type: ACTION_SCRIPT_RUN, id: onIntensity[intensity] });
+              }
+            };
         const stopCool = make(STOP, onStopCool, mode, cool);
         const stopHeat = make(STOP, onStopHeat, mode, heat);
         const startCool = make(
@@ -2969,16 +2971,16 @@ const run = (action) => {
         const { co2 } = get(site) || {};
         const make =
           (state, script, intensity, onIntensity = []) =>
-          () => {
-            set(id, { state });
-            if (!ventilation) return;
-            if (script) {
-              run({ type: ACTION_SCRIPT_RUN, id: script });
-            }
-            if (intensity >= 0 && onIntensity[intensity]) {
-              run({ type: ACTION_SCRIPT_RUN, id: onIntensity[intensity] });
-            }
-          };
+            () => {
+              set(id, { state });
+              if (!ventilation) return;
+              if (script) {
+                run({ type: ACTION_SCRIPT_RUN, id: script });
+              }
+              if (intensity >= 0 && onIntensity[intensity]) {
+                run({ type: ACTION_SCRIPT_RUN, id: onIntensity[intensity] });
+              }
+            };
         const stopVentilation = make(STOP, onStopVentilation);
         const startVentilation = make(
           VENTILATION,
@@ -3628,9 +3630,13 @@ const run = (action) => {
       }
       case ACTION_UPDATE_FIRMWARE: {
         const { id, firmware } = action;
-        const dev = get(id);
         set(id, { pending: true, upating: false, firmware });
-        device.send(Buffer.from([ACTION_UPDATE_FIRMWARE]), id);
+        device.send(Buffer.from([ACTION_DFU]), id);
+        break;
+      }
+      case ACTION_REBOOT: {
+        const { id } = action;
+        device.send(Buffer.from([ACTION_DFU]), id);
         break;
       }
       case ACTION_ERROR: {
