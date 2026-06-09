@@ -213,10 +213,11 @@ const {
   DEVICE_TYPE_SMART_TOP_CARD_HOLDER,
   DEVICE_TYPE_ROOM_NUMBER,
   ACTION_UPDATE_FIRMWARE,
-  ACTION_DFU,
+  ACTION_MCU_REBOOT,
   DEVICE_TYPE_SOUNDBOX,
   DEVICE_TYPE_MIX_F,
   ACTION_REBOOT,
+  ACTION_UPDATE,
 } = require("../constants");
 const { NOTIFY } = require("../notification/constants");
 const notification = require("../notification");
@@ -3628,15 +3629,15 @@ const run = (action) => {
           set(id, { co2_correct, co2: co2_raw + co2_correct });
         }
       }
-      case ACTION_UPDATE_FIRMWARE: {
+      case ACTION_UPDATE: {
         const { id, firmware } = action;
         set(id, { pending: true, upating: false, firmware });
-        device.send(Buffer.from([ACTION_DFU]), id);
+        device.send(Buffer.from([ACTION_UPDATE_FIRMWARE]), id);
         break;
       }
       case ACTION_REBOOT: {
         const { id } = action;
-        device.send(Buffer.from([ACTION_DFU]), id);
+        device.send(Buffer.from([ACTION_UPDATE_FIRMWARE]), id);
         break;
       }
       case ACTION_ERROR: {
