@@ -74,6 +74,9 @@ module.exports.IR = "ir";
 module.exports.STATE = "state";
 module.exports.FIRMWARE = "./firmware";
 
+module.exports.ACTION_UPDATE = "ACTION_UPDATE"
+module.exports.ACTION_REBOOT = "ACTION_REBOOT"
+
 module.exports.ACTION_DO = 0x00;
 module.exports.ACTION_DI = 0x01;
 module.exports.ACTION_GROUP = 0x02;
