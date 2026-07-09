@@ -1274,8 +1274,8 @@ module.exports.manage = () => {
                 source[i] = [];
                 for (let j = 0; j < 10; j++) {
                   source[i][j] = {
-                    active: Boolean(data[i * 10 + j + 11]),
-                    volume: data[i * 10 + j + 11 + 10 * 2],
+                    active: Boolean(data[i * 10 + j + 9]),
+                    volume: data[i * 10 + j + 9 + 10 * 2],
                   };
                 }
               }
