@@ -131,6 +131,7 @@ const {
   DEVICE_TYPE_SMART_TOP_CARD_HOLDER,
   DEVICE_TYPE_ROOM_NUMBER,
   DEVICE_TYPE_MIX_F,
+  DEVICE_TYPE_SOUNDBOX_LS,
 } = require("../constants");
 const {
   get,
@@ -1302,7 +1303,8 @@ module.exports.manage = () => {
               set(chan, { active, group, port });
               break;
             }
-            case DEVICE_TYPE_SOUNDBOX: {
+            case DEVICE_TYPE_SOUNDBOX:
+            case DEVICE_TYPE_SOUNDBOX_LS: {
               const index = data[7];
               const active = data[8];
               const group = int2ip(data.readUInt32BE(9));

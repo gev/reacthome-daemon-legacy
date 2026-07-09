@@ -23,6 +23,7 @@ const {
   DEVICE_TYPE_RS_HUB4,
   DEVICE_TYPE_SOUNDBOX,
   INTERNAL_NETIF,
+  DEVICE_TYPE_SOUNDBOX_LS,
 } = require("../constants");
 const socket = require("./socket");
 
@@ -81,7 +82,8 @@ device.send = (data, id) => {
     }
     case DEVICE_TYPE_SERVER:
     case DEVICE_TYPE_RS_HUB4:
-    case DEVICE_TYPE_SOUNDBOX: {
+    case DEVICE_TYPE_SOUNDBOX:
+    case DEVICE_TYPE_SOUNDBOX_LS: {
       device.sendUDP(data, ip);
       break;
     }
