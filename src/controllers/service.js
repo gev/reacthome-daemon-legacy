@@ -3282,7 +3282,7 @@ const run = (action) => {
                 break;
               }
             }
-            const buffer = Buffer.alloc(49);
+            const buffer = Buffer.alloc(45);
             buffer.writeUInt8(ACTION_LANAMP, 0);
             buffer.writeUInt8(index, 1);
             buffer.writeUInt8(mode, 2);
