@@ -3294,6 +3294,7 @@ const run = (action) => {
                 buffer.writeUInt8(volume || 0, i * 10 + j + 5 + 10 * 2);
               }
             }
+            console.log(buffer);
             device.sendUDP(buffer, ip);
             break;
           }
