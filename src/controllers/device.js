@@ -1270,12 +1270,12 @@ module.exports.manage = () => {
               const volume = [];
               const source = [];
               for (let i = 0; i < 2; i++) {
-                volume[i] = data[i + 10];
+                volume[i] = data[i + 9];
                 source[i] = [];
                 for (let j = 0; j < 10; j++) {
                   source[i][j] = {
-                    active: Boolean(data[i * 10 + j + 9]),
-                    volume: data[i * 10 + j + 9 + 10 * 2],
+                    active: Boolean(data[i * 10 + j + 11]),
+                    volume: data[i * 10 + j + 11 + 10 * 2],
                   };
                 }
               }
