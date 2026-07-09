@@ -980,6 +980,7 @@ module.exports.initialize = (id) => {
         a[92 + i * 7] = (port >> 8) & 0xff;
         a[93 + i * 7] = port & 0xff;
       }
+      console.log(a);
       device.sendUDP(Buffer.from(a), dev.ip);
       break;
     }
