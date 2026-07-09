@@ -982,6 +982,7 @@ module.exports.initialize = (id) => {
       }
       console.log(a);
       console.log(Buffer.from(a));
+      console.log(Buffer.from(a).length);
       device.sendUDP(Buffer.from(a), dev.ip);
       break;
     }
