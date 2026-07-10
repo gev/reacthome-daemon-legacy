@@ -3628,6 +3628,7 @@ const run = (action) => {
         if (co2_correct !== undefined) {
           set(id, { co2_correct, co2: co2_raw + co2_correct });
         }
+        break;
       }
       case ACTION_UPDATE: {
         const { id, firmware } = action;
