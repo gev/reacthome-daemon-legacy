@@ -1,3 +1,5 @@
+const os = require("os");
+
 module.exports.sleep = (t) =>
   new Promise((resolve) => {
     setTimeout(resolve, t);
@@ -8,6 +10,13 @@ module.exports.hashCode = (s) => {
     i = s.length - 1;
   while (i >= 0) h = Math.imul(31, h) + s.charCodeAt(i--);
   return h > 0 ? h : Number.MAX_SAFE_INTEGER + h;
+};
+
+module.exports.getIP = (name) => {
+  const iface = os.networkInterfaces()[name];
+  if (!iface) return null;
+  const ipv4 = iface.find(a => (a.family === 'IPv4' || a.family === 4) && !a.internal);
+  return ipv4 ? ipv4.address : null;
 };
 
 module.exports.ip2int = (ip) =>

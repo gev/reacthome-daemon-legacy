@@ -26,6 +26,9 @@ const {
   DEVICE_TYPE_SMART_TOP_A4TD_7S,
   DEVICE_TYPE_MIX_V,
   DEVICE_TYPE_SMART_BOTTOM_CLIMATE,
+  DEVICE_TYPE_SMART_TOP_CARD_HOLDER,
+  DEVICE_TYPE_ROOM_NUMBER,
+  DEVICE_TYPE_MIX_F,
 } = require("../constants");
 const { device } = require("../sockets");
 
@@ -46,20 +49,17 @@ const online = (id, props) => {
       case DEVICE_TYPE_RELAY_2:
       case DEVICE_TYPE_MIX_1_RS:
       case DEVICE_TYPE_MIX_6x12_RS:
+      case DEVICE_TYPE_MIX_F:
       case DEVICE_TYPE_MIX_H:
       case DEVICE_TYPE_MIX_V:
       case DEVICE_TYPE_RELAY_2_DIN:
       case DEVICE_TYPE_SMART_BOTTOM:
       case DEVICE_TYPE_SMART_BOTTOM_CLIMATE:
       case DEVICE_TYPE_SMART_BOTTOM_CO2:
+      case DEVICE_TYPE_ROOM_NUMBER:
       case DEVICE_TYPE_DOPPLER_1_DI_4:
       case DEVICE_TYPE_DOPPLER_5_DI_4: {
-        device.sendRBUS(
-          Buffer.from([
-            ACTION_GET_STATE,
-          ]),
-          id
-        );
+        device.sendRBUS(Buffer.from([ACTION_GET_STATE]), id);
         break;
       }
       case DEVICE_TYPE_SMART_TOP_A6P:
@@ -71,22 +71,13 @@ const online = (id, props) => {
       case DEVICE_TYPE_SMART_TOP_G2:
       case DEVICE_TYPE_SMART_TOP_A4P:
       case DEVICE_TYPE_SMART_TOP_A4TD:
-      case DEVICE_TYPE_SMART_TOP_A4TD_7S: {
-        device.sendTOP(
-          Buffer.from([
-            ACTION_GET_STATE,
-          ]),
-          id
-        );
+      case DEVICE_TYPE_SMART_TOP_A4TD_7S:
+      case DEVICE_TYPE_SMART_TOP_CARD_HOLDER: {
+        device.sendTOP(Buffer.from([ACTION_GET_STATE]), id);
         break;
       }
       default: {
-        device.send(
-          Buffer.from([
-            ACTION_GET_STATE
-          ]),
-          dev.ip
-        );
+        device.sendUDP(Buffer.from([ACTION_GET_STATE]), dev.ip);
       }
     }
   }

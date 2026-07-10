@@ -48,7 +48,7 @@ const dali_dlc = require("./dali-dlc");
 const dauerhaft = require("./dauerhaft");
 const proxy = require("./proxy");
 const telegram = require("./telegram");
-const dmx512 = require("./dmx512")
+const dmx512 = require("./dmx512");
 
 const mac = require("../mac");
 
@@ -80,10 +80,10 @@ module.exports.manage = () => {
         instances.add(id, proxy);
         proxy.add(id);
         break;
-      case DRIVER_TYPE_TELEGRAM:
-        instances.add(id, telegram);
-        telegram.add(id);
-        break;
+      // case DRIVER_TYPE_TELEGRAM:
+      //   instances.add(id, telegram);
+      //   telegram.add(id);
+      //   break;
       case DRIVER_TYPE_RS21:
         instances.add(id, new RS21(id));
         break;
@@ -170,7 +170,7 @@ module.exports.manage = () => {
 
 module.exports.run = (action) => {
   if (action.id) {
-    const instance = instances.get(action.id)
+    const instance = instances.get(action.id);
     if (instance && instance.run) {
       instance.run(action);
     }
@@ -184,7 +184,7 @@ module.exports.run = (action) => {
 };
 
 module.exports.handle = (action) => {
-  const instance = instances.get(action.id)
+  const instance = instances.get(action.id);
   if (instance && instance.handle) {
     instance.handle(action);
   }

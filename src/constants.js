@@ -11,6 +11,8 @@ module.exports.DEVICE_GROUP = "224.0.0.1";
 // module.exports.IP_ADDRESS_POOL_END = 0xc0a812fe;
 // module.exports.SUB_NET_MASK = 0xffffff00;
 
+module.exports.INTERNAL_NETIF = "eth1";
+
 module.exports.IP_ADDRESS = 0xac100001;
 module.exports.IP_ADDRESS_POOL_START = 0xac100002;
 module.exports.IP_ADDRESS_POOL_END = 0xac1ffffe;
@@ -72,6 +74,9 @@ module.exports.IR = "ir";
 module.exports.STATE = "state";
 module.exports.FIRMWARE = "./firmware";
 
+module.exports.ACTION_UPDATE = "ACTION_UPDATE"
+module.exports.ACTION_REBOOT = "ACTION_REBOOT"
+
 module.exports.ACTION_DO = 0x00;
 module.exports.ACTION_DI = 0x01;
 module.exports.ACTION_GROUP = 0x02;
@@ -121,8 +126,9 @@ module.exports.ACTION_READY = 0xf1;
 module.exports.ACTION_INITIALIZE = 0xf2;
 module.exports.ACTION_INITIALIZED = 0xf3;
 module.exports.ACTION_GET_STATE = 0xf4;
+module.exports.ACTION_GET_INFO = 0xf5;
 module.exports.ACTION_FIND_ME = 0xfa;
-module.exports.ACTION_BOOTLOAD = 0xfb;
+module.exports.ACTION_UPDATE_FIRMWARE = 0xfb;
 module.exports.ACTION_MAC_ADDRESS = 0xfc;
 module.exports.ACTION_IP_ADDRESS = 0xfd;
 module.exports.ACTION_ERROR = 0xff;
@@ -131,10 +137,6 @@ module.exports.RELAY_OFF = 0;
 module.exports.RELAY_ON = 1;
 module.exports.RELAY_SET_DELAY_OFF = 2;
 module.exports.RELAY_SET_GROUP = 3;
-
-module.exports.BOOTLOAD_WRITE = 0x00;
-module.exports.BOOTLOAD_SUCCESS = 0x01;
-module.exports.BOOTLOAD_FINISH = 0x0f;
 
 module.exports.BOOTLOAD_WRITE = 0x00;
 module.exports.BOOTLOAD_SUCCESS = 0x01;
@@ -311,6 +313,8 @@ module.exports.DEVICE_TYPE_DI_4_LA = 0x40;
 module.exports.DEVICE_TYPE_MIX_H = 0x41;
 module.exports.DEVICE_TYPE_MIX_V = 0x42;
 module.exports.DEVICE_TYPE_AO_4 = 0x43;
+module.exports.DEVICE_TYPE_ROOM_NUMBER = 0x44;
+module.exports.DEVICE_TYPE_MIX_F = 0x45;
 
 module.exports.DEVICE_TYPE_SMART_TOP_A6P = 0x30;
 module.exports.DEVICE_TYPE_SMART_TOP_G4D = 0x31;
@@ -322,10 +326,13 @@ module.exports.DEVICE_TYPE_SMART_TOP_G2 = 0x36;
 module.exports.DEVICE_TYPE_SMART_TOP_A4P = 0x37;
 module.exports.DEVICE_TYPE_SMART_TOP_A4TD = 0x38;
 module.exports.DEVICE_TYPE_SMART_TOP_A4TD_7S = 0x39;
+module.exports.DEVICE_TYPE_SMART_TOP_CLIMATE = 0x3c;
+module.exports.DEVICE_TYPE_SMART_TOP_CARD_HOLDER = 0x3e;
 
 module.exports.DEVICE_TYPE_SMART_BOTTOM = 0x3a;
 module.exports.DEVICE_TYPE_SMART_BOTTOM_CO2 = 0x3b;
 module.exports.DEVICE_TYPE_SMART_BOTTOM_CLIMATE = 0x3d;
+
 
 module.exports.DEVICE_TYPE_RELAY_6 = 0xa0;
 module.exports.DEVICE_TYPE_RELAY_12 = 0xa1;
@@ -432,3 +439,6 @@ module.exports.DRIVER_TYPE_TELEGRAM = "TELEGRAM";
 module.exports.DALI_LIGHT = 'dali_light';
 module.exports.DALI_GROUP = 'dali_group';
 module.exports.DALI_SCENE = 'dali_scene';
+
+module.exports.STATUS_MAIN = 0x0;
+module.exports.STATUS_DFU = 0x1;

@@ -30,7 +30,7 @@ const {
   ACTION_INITIALIZED,
   ACTION_ERROR,
   ACTION_FIND_ME,
-  ACTION_BOOTLOAD,
+  ACTION_UPDATE_FIRMWARE,
   DIM_TYPE_FALLING_EDGE,
   DIM_TYPE_RISING_EDGE,
   DIM_TYPE_PWM,
@@ -124,6 +124,13 @@ const {
   DEVICE_TYPE_SMART_BOTTOM,
   DEVICE_TYPE_SMART_BOTTOM_CO2,
   DEVICE_TYPE_SMART_BOTTOM_CLIMATE,
+  DEVICE_TYPE_UNKNOWN,
+  ACTION_GET_INFO,
+  STATUS_MAIN,
+  STATUS_DFU,
+  DEVICE_TYPE_SMART_TOP_CARD_HOLDER,
+  DEVICE_TYPE_ROOM_NUMBER,
+  DEVICE_TYPE_MIX_F,
 } = require("../constants");
 const {
   get,
@@ -141,9 +148,15 @@ const { device } = require("../sockets");
 const { run } = require("./service");
 const drivers = require("../drivers");
 const mac = require("../mac");
-const { int2ip, toAbsoluteHumidity, toKelvin, toRelativeHumidity } = require("../util");
+const {
+  int2ip,
+  toAbsoluteHumidity,
+  toKelvin,
+  toRelativeHumidity,
+} = require("../util");
 const { image2char } = require("../drivers/display");
 const { on } = require("events");
+const { getFirmwareChunk } = require("../firmwares");
 
 const onDI = [onOff, onOn, onHold, onClick];
 const onDO = [onOff, onOn];
@@ -152,7 +165,7 @@ const count = [count_off, count_on];
 let last_ip = IP_ADDRESS_POOL_START;
 
 const hold = {};
-const timestamp = {}
+const timestamp = {};
 
 module.exports.manage = () => {
   const devices = (get(mac()) || {}).device || [];
@@ -163,18 +176,17 @@ module.exports.manage = () => {
   const handleData = (data, { address }, { hub = null } = {}) => {
     try {
       const dev_mac = data.slice(0, 6);
-      const id = Array.from(dev_mac).map((i) => `0${i.toString(16)}`.slice(-2)).join(":");
+      const id = Array.from(dev_mac)
+        .map((i) => `0${i.toString(16)}`.slice(-2))
+        .join(":");
       const dev = get(id) || {};
       if (dev) {
         online(id, { ip: address, hub, type: dev.type });
-        if(!dev.bottom) { 
-          add(mac(), DEVICE, id); 
-        };
+        if (!dev.bottom) {
+          add(mac(), DEVICE, id);
+        }
       }
       const action = data[6];
-      // if (hub && action !== ACTION_DISCOVERY && action !== ACTION_READY) {
-      //   console.log('receive', data, address, hub);
-      // }
       switch (action) {
         case DEVICE_TYPE_PLC: {
           for (let i = 1; i <= 36; i++) {
@@ -223,37 +235,40 @@ module.exports.manage = () => {
                 hold[channel] = {
                   count: 0,
                   timestamp: Date.now(),
-                }
+                };
               }
               const { onOnCount = 0 } = chan;
               set(channel, { onOnCount: onOnCount + 1 });
               handleOn(id, index, chan);
               hold[channel].count++;
-              setTimeout(() => {
-                switch (hold[channel].count) {
-                  case 1: {
-                    if (!chan.value) {
-                      const { onClick1Count = 0 } = chan;
-                      set(channel, { onClick1Count: onClick1Count + 1 });
-                      handleClick1(id, index, chan);
+              setTimeout(
+                () => {
+                  switch (hold[channel].count) {
+                    case 1: {
+                      if (!chan.value) {
+                        const { onClick1Count = 0 } = chan;
+                        set(channel, { onClick1Count: onClick1Count + 1 });
+                        handleClick1(id, index, chan);
+                      }
+                      break;
                     }
-                    break;
+                    case 2: {
+                      const { onClick2Count = 0 } = chan;
+                      set(channel, { onClick2Count: onClick2Count + 1 });
+                      handleClick2(id, index, chan);
+                      break;
+                    }
+                    case 3: {
+                      const { onClick3Count = 0 } = chan;
+                      set(channel, { onClick3Count: onClick3Count + 1 });
+                      handleClick3(id, index, chan);
+                      break;
+                    }
                   }
-                  case 2: {
-                    const { onClick2Count = 0 } = chan;
-                    set(channel, { onClick2Count: onClick2Count + 1 });
-                    handleClick2(id, index, chan);
-                    break;
-                  }
-                  case 3: {
-                    const { onClick3Count = 0 } = chan;
-                    set(channel, { onClick3Count: onClick3Count + 1 });
-                    handleClick3(id, index, chan);
-                    break;
-                  }
-                }
-                hold[channel] = { count: 0 };
-              }, parseInt(chan.timeout || 1000) / 2);
+                  hold[channel] = { count: 0 };
+                },
+                parseInt(chan.timeout || 1000) / 2,
+              );
               const handleHold_ = (start = false) => {
                 if (!chan.value) return;
                 if (start) {
@@ -265,13 +280,17 @@ module.exports.manage = () => {
                     count: 0,
                     timeout: setTimeout(
                       handleHold_,
-                      parseInt(chan.interval || 300)
-                    )
+                      parseInt(chan.interval || 300),
+                    ),
                   };
                 }
               };
               clearTimeout(hold[channel].timeout);
-              hold[channel].timeout = setTimeout(handleHold_, parseInt(chan.timeout || 1000), true);
+              hold[channel].timeout = setTimeout(
+                handleHold_,
+                parseInt(chan.timeout || 1000),
+                true,
+              );
             } else {
               clearTimeout(timeout);
               const { onOffCount = 0 } = chan;
@@ -296,9 +315,11 @@ module.exports.manage = () => {
             type === DEVICE_TYPE_SMART_TOP_G2 ||
             type === DEVICE_TYPE_SMART_TOP_A4P ||
             type === DEVICE_TYPE_SMART_TOP_A4TD ||
-            type === DEVICE_TYPE_SMART_TOP_A4TD_7S
+            type === DEVICE_TYPE_SMART_TOP_A4TD_7S ||
+            type === DEVICE_TYPE_SMART_TOP_CARD_HOLDER ||
+            type === DEVICE_TYPE_ROOM_NUMBER
           ) {
-            set(id, { state: data[7] })
+            set(id, { state: data[7] });
             return;
           }
           const index = data[7];
@@ -341,12 +362,39 @@ module.exports.manage = () => {
         case ACTION_GET_STATE: {
           const { type } = get(id) || {};
           switch (type) {
+            case DEVICE_TYPE_ROOM_NUMBER:
+              const valuesDI = data.readUInt8(7);
+              let value = valuesDI & (1 << 0) ? 1 : 0;
+              let payload = Buffer.from([ACTION_DI, i, value]);
+              handleData(
+                Buffer.concat([dev_mac, payload]),
+                { address },
+                { hub },
+              );
+              break;
             case DEVICE_TYPE_SMART_TOP_G2: {
               const valuesDI = data.readUInt8(7);
               for (let i = 1; i <= 2; i++) {
-                let value = (valuesDI & (1 << (i - 1))) ? 1 : 0;
+                let value = valuesDI & (1 << (i - 1)) ? 1 : 0;
                 let payload = Buffer.from([ACTION_DI, i, value]);
-                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+                handleData(
+                  Buffer.concat([dev_mac, payload]),
+                  { address },
+                  { hub },
+                );
+              }
+              break;
+            }
+            case DEVICE_TYPE_SMART_TOP_CARD_HOLDER: {
+              const valuesDI = data.readUInt8(7);
+              for (let i = 1; i <= 3; i++) {
+                let value = valuesDI & (1 << (i - 1)) ? 1 : 0;
+                let payload = Buffer.from([ACTION_DI, i, value]);
+                handleData(
+                  Buffer.concat([dev_mac, payload]),
+                  { address },
+                  { hub },
+                );
               }
               break;
             }
@@ -365,9 +413,13 @@ module.exports.manage = () => {
             case DEVICE_TYPE_SMART_TOP_G4D: {
               const valuesDI = data.readUInt8(7);
               for (let i = 1; i <= 4; i++) {
-                let value = (valuesDI & (1 << (i - 1))) ? 1 : 0;
+                let value = valuesDI & (1 << (i - 1)) ? 1 : 0;
                 let payload = Buffer.from([ACTION_DI, i, value]);
-                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+                handleData(
+                  Buffer.concat([dev_mac, payload]),
+                  { address },
+                  { hub },
+                );
               }
               break;
             }
@@ -376,33 +428,49 @@ module.exports.manage = () => {
             case DEVICE_TYPE_SMART_TOP_A6P: {
               const valuesDI = data.readUInt8(7);
               for (let i = 1; i <= 6; i++) {
-                let value = (valuesDI & (1 << (i - 1))) ? 1 : 0;
+                let value = valuesDI & (1 << (i - 1)) ? 1 : 0;
                 let payload = Buffer.from([ACTION_DI, i, value]);
-                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+                handleData(
+                  Buffer.concat([dev_mac, payload]),
+                  { address },
+                  { hub },
+                );
               }
               break;
             }
             case DEVICE_TYPE_RELAY_12_RS: {
               const valuesDO = data.readUInt16LE(7);
               for (let i = 1; i <= 12; i++) {
-                let value = (valuesDO & (1 << (i - 1))) ? 1 : 0;
+                let value = valuesDO & (1 << (i - 1)) ? 1 : 0;
                 let payload = Buffer.from([ACTION_DO, i, value]);
-                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+                handleData(
+                  Buffer.concat([dev_mac, payload]),
+                  { address },
+                  { hub },
+                );
               }
               break;
             }
             case DEVICE_TYPE_MIX_6x12_RS: {
               const valuesDI = data.readUInt16LE(7);
               for (let i = 1; i <= 12; i++) {
-                let value = (valuesDI & (1 << (i - 1))) ? 1 : 0;
+                let value = valuesDI & (1 << (i - 1)) ? 1 : 0;
                 let payload = Buffer.from([ACTION_DI, i, value]);
-                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+                handleData(
+                  Buffer.concat([dev_mac, payload]),
+                  { address },
+                  { hub },
+                );
               }
               const valuesDO = data.readUInt8(9);
               for (let i = 1; i <= 6; i++) {
-                let value = (valuesDO & (1 << (i - 1))) ? 1 : 0;
+                let value = valuesDO & (1 << (i - 1)) ? 1 : 0;
                 let payload = Buffer.from([ACTION_DO, i, value]);
-                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+                handleData(
+                  Buffer.concat([dev_mac, payload]),
+                  { address },
+                  { hub },
+                );
               }
               break;
             }
@@ -412,8 +480,19 @@ module.exports.manage = () => {
                 let value = data.readUInt8(6 + i);
                 const channel = `${id}/${DIM}/${i}`;
                 const chan = get(channel);
-                let payload = Buffer.from([ACTION_DIMMER, i, chan.group, chan.type, value, chan.velocity]);
-                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+                let payload = Buffer.from([
+                  ACTION_DIMMER,
+                  i,
+                  chan.group,
+                  chan.type,
+                  value,
+                  chan.velocity,
+                ]);
+                handleData(
+                  Buffer.concat([dev_mac, payload]),
+                  { address },
+                  { hub },
+                );
               }
               break;
             }
@@ -422,85 +501,180 @@ module.exports.manage = () => {
               let value = data.readUInt8(6 + chNum);
               const channel = `${id}/${DIM}/${chNum}`;
               const chan = get(channel);
-              let payload = Buffer.from([ACTION_DIMMER, chNum, chan.group, chan.type, value, chan.velocity]);
-              handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              let payload = Buffer.from([
+                ACTION_DIMMER,
+                chNum,
+                chan.group,
+                chan.type,
+                value,
+                chan.velocity,
+              ]);
+              handleData(
+                Buffer.concat([dev_mac, payload]),
+                { address },
+                { hub },
+              );
               break;
             }
             case DEVICE_TYPE_SERVER:
             case DEVICE_TYPE_RS_HUB4: {
               const valuesDI = data.readUInt8(7);
               for (let i = 1; i <= 4; i++) {
-                let value = (valuesDI & (1 << (i - 1))) ? 1 : 0;
+                let value = valuesDI & (1 << (i - 1)) ? 1 : 0;
                 let payload = Buffer.from([ACTION_DI, i, value]);
-                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+                handleData(
+                  Buffer.concat([dev_mac, payload]),
+                  { address },
+                  { hub },
+                );
               }
               for (let i = 1; i <= 3; i++) {
+                let value = data.readUInt8(7 + i);
+                const channel = `${id}/${DIM}/${i}`;
+                const chan = get(channel);
+                let payload = Buffer.from([
+                  ACTION_DIMMER,
+                  i,
+                  chan.group,
+                  chan.type,
+                  value,
+                  chan.velocity,
+                ]);
+                handleData(
+                  Buffer.concat([dev_mac, payload]),
+                  { address },
+                  { hub },
+                );
+              }
+              break;
+            }
+            case DEVICE_TYPE_MIX_F: {
+              const diNum = 1;
+              const valuesDI = data.readUInt8(7);
+              let valueDI = (valuesDI & (1 << (diNum - 1))) ? 1 : 0;
+              let payloadDI = Buffer.from([ACTION_DI, diNum, valueDI]);
+              handleData(Buffer.concat([dev_mac, payloadDI]), { address }, { hub });
+              for (let i = 1; i <= 2; i++) {
                 let value = data.readUInt8(7 + i);
                 const channel = `${id}/${DIM}/${i}`;
                 const chan = get(channel);
                 let payload = Buffer.from([ACTION_DIMMER, i, chan.group, chan.type, value, chan.velocity]);
                 handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
               }
+              const aoNum = 1;
+              let valueAO = data.readUInt8(9 + aoNum);
+              let payloadAO = Buffer.from([ACTION_AO, aoNum, valueAO]);
+              handleData(Buffer.concat([dev_mac, payloadAO]), { address }, { hub });
               break;
             }
             case DEVICE_TYPE_MIX_H: {
               const valuesDI = data.readUInt8(7);
               for (let i = 1; i <= 8; i++) {
-                let value = (valuesDI & (1 << (i - 1))) ? 1 : 0;
+                let value = valuesDI & (1 << (i - 1)) ? 1 : 0;
                 let payload = Buffer.from([ACTION_DI, i, value]);
-                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+                handleData(
+                  Buffer.concat([dev_mac, payload]),
+                  { address },
+                  { hub },
+                );
               }
               const valuesDO = data.readUInt8(8);
               for (let i = 1; i <= 2; i++) {
-                let value = (valuesDO & (1 << (i - 1))) ? 1 : 0;
+                let value = valuesDO & (1 << (i - 1)) ? 1 : 0;
                 let payload = Buffer.from([ACTION_DO, i, value]);
-                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+                handleData(
+                  Buffer.concat([dev_mac, payload]),
+                  { address },
+                  { hub },
+                );
               }
               for (let i = 1; i <= 6; i++) {
                 let value = data.readUInt8(8 + i);
                 const channel = `${id}/${DIM}/${i}`;
                 const chan = get(channel);
-                let payload = Buffer.from([ACTION_DIMMER, i, chan.group, chan.type, value, chan.velocity]);
-                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+                let payload = Buffer.from([
+                  ACTION_DIMMER,
+                  i,
+                  chan.group,
+                  chan.type,
+                  value,
+                  chan.velocity,
+                ]);
+                handleData(
+                  Buffer.concat([dev_mac, payload]),
+                  { address },
+                  { hub },
+                );
               }
               break;
             }
             case DEVICE_TYPE_MIX_V: {
               const valuesDI = data.readUInt8(7);
               for (let i = 1; i <= 8; i++) {
-                let value = (valuesDI & (1 << (i - 1))) ? 1 : 0;
+                let value = valuesDI & (1 << (i - 1)) ? 1 : 0;
                 let payload = Buffer.from([ACTION_DI, i, value]);
-                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+                handleData(
+                  Buffer.concat([dev_mac, payload]),
+                  { address },
+                  { hub },
+                );
               }
               const valuesDO = data.readUInt8(8);
               const chNum = 1;
-              let value = (valuesDO & (1 << (chNum - 1))) ? 1 : 0;
+              let value = valuesDO & (1 << (chNum - 1)) ? 1 : 0;
               let payload = Buffer.from([ACTION_DO, chNum, value]);
-              handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              handleData(
+                Buffer.concat([dev_mac, payload]),
+                { address },
+                { hub },
+              );
               for (let i = 1; i <= 2; i++) {
                 let value = data.readUInt8(8 + i);
                 const channel = `${id}/${DIM}/${i}`;
                 const chan = get(channel);
-                let payload = Buffer.from([ACTION_DIMMER, i, chan.group, chan.type, value, chan.velocity]);
-                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+                let payload = Buffer.from([
+                  ACTION_DIMMER,
+                  i,
+                  chan.group,
+                  chan.type,
+                  value,
+                  chan.velocity,
+                ]);
+                handleData(
+                  Buffer.concat([dev_mac, payload]),
+                  { address },
+                  { hub },
+                );
               }
               for (let i = 1; i <= 2; i++) {
                 let value = data.readUInt8(10 + i);
                 let payload = Buffer.from([ACTION_AO, i, value]);
-                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+                handleData(
+                  Buffer.concat([dev_mac, payload]),
+                  { address },
+                  { hub },
+                );
               }
               break;
             }
             case DEVICE_TYPE_DI_4_RSM: {
               const valuesDI = data.readUInt8(7);
               for (let i = 1; i <= 4; i++) {
-                let value = (valuesDI & (1 << (i - 1))) ? 1 : 0;
+                let value = valuesDI & (1 << (i - 1)) ? 1 : 0;
                 let payload = Buffer.from([ACTION_DI, i, value]);
-                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+                handleData(
+                  Buffer.concat([dev_mac, payload]),
+                  { address },
+                  { hub },
+                );
               }
               const valueAO = data.readUInt8(8);
               let payload = Buffer.from([ACTION_AO, i, valueAO]);
-              handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+              handleData(
+                Buffer.concat([dev_mac, payload]),
+                { address },
+                { hub },
+              );
               break;
             }
           }
@@ -528,7 +702,7 @@ module.exports.manage = () => {
             mode: data[7],
             source: data[8],
             attempt: data[9],
-            error: [data[10], data[11], data[12], data[13]]
+            error: [data[10], data[11], data[12], data[13]],
           });
           break;
         }
@@ -549,7 +723,13 @@ module.exports.manage = () => {
             const baud = data.readUInt32BE(9);
             const line_control = data[13];
             const size_dmx = Math.min(data.readUInt16BE(14), 512);
-            set(channel, { rs485_mode, is_rbus: rs485_mode === 1 ? 1 : 0, baud, line_control, size_dmx });
+            set(channel, {
+              rs485_mode,
+              is_rbus: rs485_mode === 1 ? 1 : 0,
+              baud,
+              line_control,
+              size_dmx,
+            });
           } else {
             const is_rbus = data[8];
             const baud = data.readUInt32LE(9);
@@ -575,14 +755,20 @@ module.exports.manage = () => {
         case ACTION_RBUS_TRANSMIT: {
           const buff = data.slice(7);
           const mac = buff.slice(0, 6);
-          const did = Array.from(mac).map((i) => i.toString(16).padStart(2, '0')).join(':');
+          const did = Array.from(mac)
+            .map((i) => i.toString(16).padStart(2, "0"))
+            .join(":");
           const device = get(id) || {};
           set(did, {
             port: buff[6],
             address: buff[7],
             hub: id,
           });
-          handleData(Buffer.concat([mac, buff.slice(8)]), { address }, { hub: id });
+          handleData(
+            Buffer.concat([mac, buff.slice(8)]),
+            { address },
+            { hub: id },
+          );
           break;
         }
         case ACTION_SMART_TOP: {
@@ -590,21 +776,57 @@ module.exports.manage = () => {
           switch (action) {
             case ACTION_DISCOVERY: {
               const top_mac = Array.from(data.slice(8, 14));
-              const top_id = top_mac.map((i) => `0${i.toString(16)}`.slice(-2)).join(":");
+              const top_id = top_mac
+                .map((i) => `0${i.toString(16)}`.slice(-2))
+                .join(":");
               const type = data[14];
-              set(id, { top: top_id, topDetected: true });
-              online(top_id, { type, bottom: id, version: `${data[15]}.${data[16]}`, ip: address, ready: true });
               switch (type) {
-                case DEVICE_TYPE_SMART_TOP_G4D:
-                case DEVICE_TYPE_SMART_TOP_A4TD:
-                case DEVICE_TYPE_SMART_TOP_A4TD_7S: {
-                  const ts = timestamp[top_id] || 0;
-                  const { timeout = 0, mode, defaultMode } = get(top_id) || {};
-                  if (Date.now() - ts > (timeout || 10_000)) {
-                    set(top_id, { configuring: 0, mode: defaultMode ? defaultMode - 1 : mode });
-                    renderSmartTop(top_id);
+                case DEVICE_TYPE_UNKNOWN: {
+                  const dev = get(top_id) || {};
+                  set(id, { top: top_id, topDetected: true });
+                  if (dev.type) {
+                    online(top_id, { bottom: id, ip: address, ready: true });
+                  } else {
+                    online(top_id, {
+                      type,
+                      bottom: id,
+                      version: `${data[15]}.${data[16]}`,
+                      ip: address,
+                      ready: true,
+                    });
                   }
+                  device.sendTOP(Buffer.from([ACTION_GET_INFO]), top_id);
                   break;
+                }
+                default: {
+                  set(id, { top: top_id, topDetected: true });
+                  online(top_id, {
+                    type,
+                    bottom: id,
+                    version: `${data[15]}.${data[16]}`,
+                    ip: address,
+                    ready: true,
+                  });
+                  switch (type) {
+                    case DEVICE_TYPE_SMART_TOP_G4D:
+                    case DEVICE_TYPE_SMART_TOP_A4TD:
+                    case DEVICE_TYPE_SMART_TOP_A4TD_7S: {
+                      const ts = timestamp[top_id] || 0;
+                      const {
+                        timeout = 0,
+                        mode,
+                        defaultMode,
+                      } = get(top_id) || {};
+                      if (Date.now() - ts > (timeout || 10_000)) {
+                        set(top_id, {
+                          configuring: 0,
+                          mode: defaultMode ? defaultMode - 1 : mode,
+                        });
+                        renderSmartTop(top_id);
+                      }
+                      break;
+                    }
+                  }
                 }
               }
               break;
@@ -612,8 +834,14 @@ module.exports.manage = () => {
             default: {
               const { top, hub } = get(id) || {};
               if (top) {
-                const mac_ = Buffer.from(top.split(':').map(i => parseInt(i, 16)));
-                handleData(Buffer.concat([mac_, data.slice(7)]), { address }, { hub });
+                const mac_ = Buffer.from(
+                  top.split(":").map((i) => parseInt(i, 16)),
+                );
+                handleData(
+                  Buffer.concat([mac_, data.slice(7)]),
+                  { address },
+                  { hub },
+                );
               }
             }
           }
@@ -687,6 +915,7 @@ module.exports.manage = () => {
               // }
               break;
             }
+            case DEVICE_TYPE_ROOM_NUMBER:
             case DEVICE_TYPE_SMART_TOP_A6P:
             case DEVICE_TYPE_SMART_TOP_G4D:
             case DEVICE_TYPE_SMART_TOP_A4T:
@@ -696,7 +925,8 @@ module.exports.manage = () => {
             case DEVICE_TYPE_SMART_TOP_G2:
             case DEVICE_TYPE_SMART_TOP_A4P:
             case DEVICE_TYPE_SMART_TOP_A4TD:
-            case DEVICE_TYPE_SMART_TOP_A4TD_7S: {
+            case DEVICE_TYPE_SMART_TOP_A4TD_7S:
+            case DEVICE_TYPE_SMART_TOP_CARD_HOLDER: {
               set(id, { brightness: data[7] });
               break;
             }
@@ -743,6 +973,7 @@ module.exports.manage = () => {
         case ACTION_RGB: {
           const { type } = get(id) || {};
           switch (type) {
+            case DEVICE_TYPE_ROOM_NUMBER:
             case DEVICE_TYPE_SMART_TOP_A6P:
             case DEVICE_TYPE_SMART_TOP_G4D:
             case DEVICE_TYPE_SMART_TOP_A4T:
@@ -752,7 +983,8 @@ module.exports.manage = () => {
             case DEVICE_TYPE_SMART_TOP_G2:
             case DEVICE_TYPE_SMART_TOP_A4P:
             case DEVICE_TYPE_SMART_TOP_A4TD:
-            case DEVICE_TYPE_SMART_TOP_A4TD_7S: {
+            case DEVICE_TYPE_SMART_TOP_A4TD_7S:
+            case DEVICE_TYPE_SMART_TOP_CARD_HOLDER: {
               let [, , , , , , , palette, index] = data;
               if (index === 0) {
                 index = 1;
@@ -787,6 +1019,7 @@ module.exports.manage = () => {
         case ACTION_IMAGE: {
           const { type } = get(id) || {};
           switch (type) {
+            case DEVICE_TYPE_ROOM_NUMBER:
             case DEVICE_TYPE_SMART_TOP_A6P:
             case DEVICE_TYPE_SMART_TOP_G4D:
             case DEVICE_TYPE_SMART_TOP_A4T:
@@ -796,8 +1029,9 @@ module.exports.manage = () => {
             case DEVICE_TYPE_SMART_TOP_G2:
             case DEVICE_TYPE_SMART_TOP_A4P:
             case DEVICE_TYPE_SMART_TOP_A4TD:
-            case DEVICE_TYPE_SMART_TOP_A4TD_7S: {
-              const image = Array.from(data.slice(7, 15))
+            case DEVICE_TYPE_SMART_TOP_A4TD_7S:
+            case DEVICE_TYPE_SMART_TOP_CARD_HOLDER: {
+              const image = Array.from(data.slice(7, 15));
               set(id, { image });
               break;
             }
@@ -812,6 +1046,7 @@ module.exports.manage = () => {
         case ACTION_BLINK: {
           const { type } = get(id) || {};
           switch (type) {
+            case DEVICE_TYPE_ROOM_NUMBER:
             case DEVICE_TYPE_SMART_TOP_A6P:
             case DEVICE_TYPE_SMART_TOP_G4D:
             case DEVICE_TYPE_SMART_TOP_A4T:
@@ -821,14 +1056,16 @@ module.exports.manage = () => {
             case DEVICE_TYPE_SMART_TOP_G2:
             case DEVICE_TYPE_SMART_TOP_A4P:
             case DEVICE_TYPE_SMART_TOP_A4TD:
-            case DEVICE_TYPE_SMART_TOP_A4TD_7S: {
-              const blink = Array.from(data.slice(7, 15))
+            case DEVICE_TYPE_SMART_TOP_A4TD_7S:
+            case DEVICE_TYPE_SMART_TOP_CARD_HOLDER: {
+              const blink = Array.from(data.slice(7, 15));
               set(id, { blink });
               break;
             }
           }
           break;
-        } case ACTION_TEMPERATURE_CORRECT: {
+        }
+        case ACTION_TEMPERATURE_CORRECT: {
           const correct = data.readInt8(7) / 10;
           set(id, { correct });
           break;
@@ -840,7 +1077,15 @@ module.exports.manage = () => {
         }
         case ACTION_TEMPERATURE: {
           const temperature_raw = data.readUInt16LE(7) / 100;
-          const { onTemperature, site, display, temperature_correct = 0, humidity_absolute, humidity_correct, onHumidity } = get(id) || {};
+          const {
+            onTemperature,
+            site,
+            display,
+            temperature_correct = 0,
+            humidity_absolute,
+            humidity_correct,
+            onHumidity,
+          } = get(id) || {};
           const temperature = temperature_raw + temperature_correct;
           set(id, { temperature, temperature_raw });
           if (site) calcTemperature(site);
@@ -848,7 +1093,9 @@ module.exports.manage = () => {
             run({ type: ACTION_SCRIPT_RUN, id: onTemperature });
           }
           if (humidity_absolute >= 0) {
-            const humidity = toRelativeHumidity(humidity_absolute, toKelvin(temperature)) + humidity_correct;
+            const humidity =
+              toRelativeHumidity(humidity_absolute, toKelvin(temperature)) +
+              humidity_correct;
             set(id, { humidity });
             if (site) calcHumidity(site);
             if (onHumidity) {
@@ -877,7 +1124,8 @@ module.exports.manage = () => {
             return;
           }
           const dev_id =
-            action === ACTION_TEMPERATURE_EXT || action === ACTION_TEMPERATURE_EXT_OLD
+            action === ACTION_TEMPERATURE_EXT ||
+              action === ACTION_TEMPERATURE_EXT_OLD
               ? Array.from(data)
                 .slice(7, 15)
                 .map((i) => i.toString(16).padStart(2, "0"))
@@ -889,7 +1137,14 @@ module.exports.manage = () => {
           const temperature_raw = data.readInt16LE(15) / 100;
           const { temperature_correct = 0 } = get(dev_id) || {};
           const temperature = temperature_raw + temperature_correct;
-          online(dev_id, { temperature, temperature_raw, master: id, type: DEVICE_TYPE_TEMPERATURE_EXT, version: '1.0', ready: true });
+          online(dev_id, {
+            temperature,
+            temperature_raw,
+            master: id,
+            type: DEVICE_TYPE_TEMPERATURE_EXT,
+            version: "1.0",
+            ready: true,
+          });
           add(id, TEMPERATURE_EXT, dev_id);
           const { onTemperature: onTemperature, display, site } = get(dev_id);
           if (site) calcTemperature(site);
@@ -910,10 +1165,21 @@ module.exports.manage = () => {
         }
         case ACTION_HUMIDITY: {
           const humidity_raw = data.readUInt16LE(7) / 100;
-          const { onHumidity, site, humidity_correct = 0, temperature, temperature_raw } = get(id) || {};
+          const {
+            onHumidity,
+            site,
+            humidity_correct = 0,
+            temperature,
+            temperature_raw,
+          } = get(id) || {};
           if (temperature && temperature_raw) {
-            const humidity_absolute = toAbsoluteHumidity(humidity_raw, toKelvin(temperature_raw));
-            const humidity = toRelativeHumidity(humidity_absolute, toKelvin(temperature)) + humidity_correct;
+            const humidity_absolute = toAbsoluteHumidity(
+              humidity_raw,
+              toKelvin(temperature_raw),
+            );
+            const humidity =
+              toRelativeHumidity(humidity_absolute, toKelvin(temperature)) +
+              humidity_correct;
             set(id, { humidity, humidity_absolute, humidity_raw });
           } else {
             const humidity = humidity_raw + humidity_correct;
@@ -927,7 +1193,11 @@ module.exports.manage = () => {
         }
         case ACTION_ILLUMINATION: {
           const illumination_raw = data.readUInt32LE(7) / 100;
-          const { onIllumination, illumination_correct = 0, site } = get(id) || {};
+          const {
+            onIllumination,
+            illumination_correct = 0,
+            site,
+          } = get(id) || {};
           const illumination = illumination_raw + illumination_correct;
           set(id, { illumination, illumination_raw });
           if (site) calcIllumination(site);
@@ -1059,7 +1329,7 @@ module.exports.manage = () => {
             dev_mac.copy(buff, 1, 0, 6);
             buff.writeUInt32BE(lookup, 7);
             buff.writeUInt32BE(SUB_NET_MASK, 11);
-            device.send(buff, DEVICE_GROUP);
+            device.sendMulticast(buff, DEVICE_GROUP);
           } else if (last_ip < IP_ADDRESS_POOL_END) {
             const buff = Buffer.alloc(15);
             buff.writeUInt8(ACTION_IP_ADDRESS, 0);
@@ -1072,7 +1342,7 @@ module.exports.manage = () => {
             set(POOL, { [id]: last_ip });
             buff.writeUInt32BE(last_ip, 7);
             buff.writeUInt32BE(SUB_NET_MASK, 11);
-            device.send(buff, DEVICE_GROUP);
+            device.sendMulticast(buff, DEVICE_GROUP);
           }
           break;
         }
@@ -1083,7 +1353,7 @@ module.exports.manage = () => {
               a[0] = ACTION_MAC_ADDRESS;
               a[1] &= 0b11111110;
               a[1] |= 0b00000010;
-              device.send(a, address);
+              device.sendUDP(a, address);
             }
           });
           break;
@@ -1092,16 +1362,103 @@ module.exports.manage = () => {
         case ACTION_DISCOVERY: {
           const type = data[7];
           const version = `${data[8]}.${data[9]}`;
-          online(id, { type, version, ip: address, ready: true });
-          add(mac(), DEVICE, id)
+          switch (type) {
+            case DEVICE_TYPE_UNKNOWN: {
+              const dev = get(id) || {};
+              if (dev.type) {
+                online(id, { ip: address, ready: true });
+              } else {
+                online(id, { type, version, ip: address, ready: true });
+              }
+              add(mac(), DEVICE, id);
+              if (hub) {
+                device.sendRBUS(Buffer.from([ACTION_GET_INFO]), id);
+              } else {
+                device.sendUDP(Buffer.from([ACTION_GET_INFO]), address);
+              }
+              break;
+            }
+            default: {
+              online(id, { type, version, ip: address, ready: true });
+              add(mac(), DEVICE, id);
+            }
+          }
+          break;
+        }
+        case ACTION_GET_INFO: {
+          const status = data[7];
+          const type = data.readUInt16BE(8);
+          const board = data[10];
+          const version = `${data[11]}.${data[12]}`;
+          const mcu = data.slice(13).toString();
+          switch (status) {
+            case STATUS_MAIN: {
+              online(id, {
+                status,
+                type,
+                board,
+                version,
+                mcu,
+                ip: address,
+                ready: true,
+                pending: false,
+                updating: false,
+              });
+              break;
+            }
+            case STATUS_DFU: {
+              const { pending, firmware } = get(id) || {};
+              if (pending) {
+                const buff = getFirmwareChunk(firmware);
+                if (buff) {
+                  device.send(buff, id);
+                }
+              }
+              online(id, {
+                status,
+                type,
+                board,
+                dfuVersion: version,
+                mcu,
+                ip: address,
+                ready: true,
+                pending: false,
+              });
+              break;
+            }
+          }
+          switch (type) {
+            case DEVICE_TYPE_SMART_TOP_G4D:
+            case DEVICE_TYPE_SMART_TOP_A4TD:
+            case DEVICE_TYPE_SMART_TOP_A4TD_7S: {
+              const ts = timestamp[top_id] || 0;
+              const { timeout = 0, mode, defaultMode } = get(top_id) || {};
+              if (Date.now() - ts > (timeout || 10_000)) {
+                set(top_id, {
+                  configuring: 0,
+                  mode: defaultMode ? defaultMode - 1 : mode,
+                });
+                renderSmartTop(top_id);
+              }
+              break;
+            }
+          }
           break;
         }
         case ACTION_FIND_ME: {
           set(id, { finding: !!data[7] });
           break;
         }
-        case ACTION_BOOTLOAD: {
-          updateFirmware(id);
+        case ACTION_UPDATE_FIRMWARE: {
+          // console.log(data);
+          const index = data.readUInt16BE(7);
+          const { firmware } = get(id) || {};
+          const buff = getFirmwareChunk(firmware, index);
+          // console.log(buff);
+          if (buff) {
+            device.send(buff, id);
+            set(id, { updating: true });
+          }
           break;
         }
         case ACTION_ALED_ON: {
@@ -1153,6 +1510,13 @@ module.exports.manage = () => {
         case ACTION_ERROR: {
           const { type } = get(id) || {};
           switch (type) {
+            case DEVICE_TYPE_ROOM_NUMBER: {
+              const log = [];
+              log[0] = data.readInt16BE(8);
+              set(id, { log });
+              break;
+            }
+            case DEVICE_TYPE_SMART_TOP_CARD_HOLDER:
             case DEVICE_TYPE_SMART_TOP_G2: {
               const log = [];
               for (let i = 0; i < 2; i++) {
@@ -1174,26 +1538,24 @@ module.exports.manage = () => {
             }
             case DEVICE_TYPE_SMART_TOP_A6T:
             case DEVICE_TYPE_SMART_TOP_G6: {
-              // console.log(data);
               const log = [];
               for (let i = 0; i < 6; i++) {
                 log[i] = data.readInt16BE(8 + 2 * i);
               }
-              // console.log(log);
               set(id, { log });
               break;
             }
             default: {
-              const reason = data[7];
-              switch (reason) {
-                case ACTION_BOOTLOAD:
-                  set(id, { pending: false, updating: false });
-                  console.error(data);
-                  break;
-                default: {
-                  console.error(data);
-                }
-              }
+              // const reason = data[7];
+              // switch (reason) {
+              //   case ACTION_UPDATE_FIRMWARE:
+              //     set(id, { pending: false, updating: false });
+              //     console.error(data);
+              //     break;
+              //   default: {
+              //     console.error(data);
+              //   }
+              // }
             }
           }
         }
@@ -1205,8 +1567,7 @@ module.exports.manage = () => {
   device.handle(handleData);
 };
 
-
-const calcTemperature = site => {
+const calcTemperature = (site) => {
   if (!site) return;
   if (Array.isArray(site)) {
     for (const s of site) {
@@ -1214,13 +1575,17 @@ const calcTemperature = site => {
     }
     return;
   }
-  const { sensor = [], temperature_sensor = [], thermostat = [] } = get(site) || {};
+  const {
+    sensor = [],
+    temperature_sensor = [],
+    thermostat = [],
+  } = get(site) || {};
   let temperature = 0;
   let n = 0;
   const s = temperature_sensor.length > 0 ? temperature_sensor : sensor;
   for (const id of s) {
     const dev = get(id) || {};
-    if (dev.online && typeof dev.temperature === 'number') {
+    if (dev.online && typeof dev.temperature === "number") {
       temperature += dev.temperature;
       n++;
     }
@@ -1232,13 +1597,13 @@ const calcTemperature = site => {
       run({
         ...get(id),
         type: ACTION_THERMOSTAT_HANDLE,
-        id
+        id,
       });
     }
   }
-}
+};
 
-const calcHumidity = site => {
+const calcHumidity = (site) => {
   if (!site) return;
   if (Array.isArray(site)) {
     for (const s of site) {
@@ -1252,7 +1617,7 @@ const calcHumidity = site => {
   const s = humidity_sensor.length > 0 ? humidity_sensor : sensor;
   for (const id of s) {
     const dev = get(id) || {};
-    if (dev.online && typeof dev.humidity === 'number') {
+    if (dev.online && typeof dev.humidity === "number") {
       humidity += dev.humidity;
       n++;
     }
@@ -1264,13 +1629,13 @@ const calcHumidity = site => {
       run({
         ...get(id),
         type: ACTION_HYGROSTAT_HANDLE,
-        id
+        id,
       });
     }
   }
-}
+};
 
-const calcIllumination = site => {
+const calcIllumination = (site) => {
   if (!site) return;
   if (Array.isArray(site)) {
     for (const s of site) {
@@ -1284,7 +1649,7 @@ const calcIllumination = site => {
   const s = illumination_sensor.length > 0 ? illumination_sensor : sensor;
   for (const id of s) {
     const dev = get(id) || {};
-    if (dev.online && typeof dev.illumination === 'number') {
+    if (dev.online && typeof dev.illumination === "number") {
       illumination += dev.illumination;
       n++;
     }
@@ -1293,9 +1658,9 @@ const calcIllumination = site => {
     illumination /= n;
     set(site, { illumination });
   }
-}
+};
 
-const calcCO2 = site => {
+const calcCO2 = (site) => {
   if (!site) return;
   if (Array.isArray(site)) {
     for (const s of site) {
@@ -1309,7 +1674,7 @@ const calcCO2 = site => {
   const s = co2_sensor.length > 0 ? co2_sensor : sensor;
   for (const id of s) {
     const dev = get(id) || {};
-    if (dev.online && typeof dev.co2 === 'number') {
+    if (dev.online && typeof dev.co2 === "number") {
       co2 += dev.co2;
       n++;
     }
@@ -1321,13 +1686,13 @@ const calcCO2 = site => {
       run({
         ...get(id),
         type: ACTION_CO2_STAT_HANDLE,
-        id
+        id,
       });
     }
   }
-}
+};
 
-const calcWarmFloorTemperature = site => {
+const calcWarmFloorTemperature = (site) => {
   const { warm_floor = [] } = get(site) || {};
   let temperature = 0;
   let n = 0;
@@ -1335,19 +1700,18 @@ const calcWarmFloorTemperature = site => {
     const dev = get(id) || {};
     if (dev.sensor) {
       const sensor = get(dev.sensor) || {};
-      if (sensor.online && typeof sensor.temperature === 'number') {
+      if (sensor.online && typeof sensor.temperature === "number") {
         temperature += sensor.temperature;
         n++;
       }
     }
   }
   if (n > 0) {
-    return temperature /= n;
+    return (temperature /= n);
   }
-}
+};
 
-const toArr = a => Array.isArray(a) ? a : a ? [a] : [];
-
+const toArr = (a) => (Array.isArray(a) ? a : a ? [a] : []);
 
 const handleDefault = (action, actionCount) => (chan, btn) => {
   const actions = toArr(chan[action]);
@@ -1356,15 +1720,14 @@ const handleDefault = (action, actionCount) => (chan, btn) => {
     run({ type: ACTION_SCRIPT_RUN, id: actions[count % actions.length] });
   }
   return chan.repeat;
-}
+};
 
-const handleDefaultOn = handleDefault('onOn', 'onOnCount');
-const handleDefaultClick1 = handleDefault('onClick', 'onClick1Count');
-const handleDefaultClick2 = handleDefault('onClick2', 'onClick2Count');
-const handleDefaultClick3 = handleDefault('onClick3', 'onClick3Count');
-const handleDefaultHold = handleDefault('onHold', 'onHoldCount');
-const handleDefaultOff = handleDefault('onOff', 'onOffCount');
-
+const handleDefaultOn = handleDefault("onOn", "onOnCount");
+const handleDefaultClick1 = handleDefault("onClick", "onClick1Count");
+const handleDefaultClick2 = handleDefault("onClick2", "onClick2Count");
+const handleDefaultClick3 = handleDefault("onClick3", "onClick3Count");
+const handleDefaultHold = handleDefault("onHold", "onHoldCount");
+const handleDefaultOff = handleDefault("onOff", "onOffCount");
 
 const handle = (handleSmartTop, handleDefault) => (id, index, chan) => {
   const dev = get(id) || {};
@@ -1376,7 +1739,7 @@ const handle = (handleSmartTop, handleDefault) => (id, index, chan) => {
       if (modes.length > 0) {
         const cid = modes[mode % modes.length];
         const current = get(cid) || {};
-        if (current.mode === 'MODE_SCENE' && chan.action !== 'menu') {
+        if (current.mode === "MODE_SCENE" && chan.action !== "menu") {
           return handleDefault(get(`${cid}/${DI}/${index}`), chan);
         }
         return handleSmartTop(id, dev, chan, current, mode);
@@ -1387,64 +1750,94 @@ const handle = (handleSmartTop, handleDefault) => (id, index, chan) => {
       return handleDefault(chan, chan);
     }
   }
-}
+};
 
 const handleSmartTop = () => false;
 
 const handleSmartTopOn = (id, dev, chan, current, mode) => {
   chan.onHoldCountPrev = chan.onHoldCount;
   return false;
-}
+};
 
 const handleSmartTopOff = (id, dev, chan, current, mode) => {
   if (chan.onHoldCount != chan.onHoldCountPrev) return;
   if (dev.configuring) {
     const site = current.site || dev.site;
     if (site) {
-      const { thermostat = [], hygrostat = [], co2_stat = [], warm_floor = [] } = get(site) || {};
+      const {
+        thermostat = [],
+        hygrostat = [],
+        co2_stat = [],
+        warm_floor = [],
+      } = get(site) || {};
       switch (current.mode) {
-        case 'MODE_COOL': {
-          const { setpoint = 24, cool = true, cool_intensity = 0 } = get(thermostat[0]) || {};
+        case "MODE_COOL": {
+          const {
+            setpoint = 24,
+            cool = true,
+            cool_intensity = 0,
+          } = get(thermostat[0]) || {};
           switch (chan.action) {
-            case 'plus': {
+            case "plus": {
               switch (dev.configuring) {
                 case 1: {
-                  run({ type: ACTION_SETPOINT, id: site, temperature: setpoint + 0.5 });
+                  run({
+                    type: ACTION_SETPOINT,
+                    id: site,
+                    temperature: setpoint + 0.5,
+                  });
                   renderSmartTop(id);
                   break;
                 }
                 case 2: {
-                  run({ type: ACTION_INTENSITY, id: site, cool: cool_intensity + 1 });
+                  run({
+                    type: ACTION_INTENSITY,
+                    id: site,
+                    cool: cool_intensity + 1,
+                  });
                   renderSmartTop(id);
                   break;
                 }
               }
               break;
             }
-            case 'minus': {
+            case "minus": {
               switch (dev.configuring) {
                 case 1: {
-                  run({ type: ACTION_SETPOINT, id: site, temperature: setpoint - 0.5 });
+                  run({
+                    type: ACTION_SETPOINT,
+                    id: site,
+                    temperature: setpoint - 0.5,
+                  });
                   renderSmartTop(id);
                   break;
                 }
                 case 2: {
-                  run({ type: ACTION_INTENSITY, id: site, cool: cool_intensity - 1 });
+                  run({
+                    type: ACTION_INTENSITY,
+                    id: site,
+                    cool: cool_intensity - 1,
+                  });
                   renderSmartTop(id);
                   break;
                 }
               }
               break;
             }
-            case 'power': {
-              run({ type: cool ? ACTION_STOP_COOL : ACTION_START_COOL, id: site });
+            case "power": {
+              run({
+                type: cool ? ACTION_STOP_COOL : ACTION_START_COOL,
+                id: site,
+              });
               renderSmartTop(id);
               break;
             }
-            case 'menu': {
-              const max = maxCoolIntensity(thermostat)
+            case "menu": {
+              const max = maxCoolIntensity(thermostat);
               if (max > 0) {
-                set(id, { configuring: dev.configuring < 2 ? dev.configuring + 1 : 1 });
+                set(id, {
+                  configuring: dev.configuring < 2 ? dev.configuring + 1 : 1,
+                });
                 renderSmartTop(id);
               }
               break;
@@ -1452,48 +1845,73 @@ const handleSmartTopOff = (id, dev, chan, current, mode) => {
           }
           break;
         }
-        case 'MODE_HEAT': {
-          const { setpoint = 24, heat = true, heat_intensity = 0 } = get(thermostat[0]) || {};
+        case "MODE_HEAT": {
+          const {
+            setpoint = 24,
+            heat = true,
+            heat_intensity = 0,
+          } = get(thermostat[0]) || {};
           switch (chan.action) {
-            case 'plus': {
+            case "plus": {
               switch (dev.configuring) {
                 case 1: {
-                  run({ type: ACTION_SETPOINT, id: site, temperature: setpoint + 0.5 });
+                  run({
+                    type: ACTION_SETPOINT,
+                    id: site,
+                    temperature: setpoint + 0.5,
+                  });
                   renderSmartTop(id);
                   break;
                 }
                 case 2: {
-                  run({ type: ACTION_INTENSITY, id: site, heat: heat_intensity + 1 });
+                  run({
+                    type: ACTION_INTENSITY,
+                    id: site,
+                    heat: heat_intensity + 1,
+                  });
                   renderSmartTop(id);
                   break;
                 }
               }
               break;
             }
-            case 'minus': {
+            case "minus": {
               switch (dev.configuring) {
                 case 1: {
-                  run({ type: ACTION_SETPOINT, id: site, temperature: setpoint - 0.5 });
+                  run({
+                    type: ACTION_SETPOINT,
+                    id: site,
+                    temperature: setpoint - 0.5,
+                  });
                   renderSmartTop(id);
                   break;
                 }
                 case 2: {
-                  run({ type: ACTION_INTENSITY, id: site, heat: heat_intensity - 1 });
+                  run({
+                    type: ACTION_INTENSITY,
+                    id: site,
+                    heat: heat_intensity - 1,
+                  });
                   renderSmartTop(id);
                   break;
                 }
               }
               break;
             }
-            case 'power': {
-              run({ type: heat ? ACTION_STOP_HEAT : ACTION_START_HEAT, id: site });
+            case "power": {
+              run({
+                type: heat ? ACTION_STOP_HEAT : ACTION_START_HEAT,
+                id: site,
+              });
               renderSmartTop(id);
               break;
             }
-            case 'menu': {
-              const max = maxHeatIntensity(thermostat)
+            case "menu": {
+              const max = maxHeatIntensity(thermostat);
               if (max > 0) {
-                set(id, { configuring: dev.configuring < 2 ? dev.configuring + 1 : 1 });
+                set(id, {
+                  configuring: dev.configuring < 2 ? dev.configuring + 1 : 1,
+                });
                 renderSmartTop(id);
               }
               break;
@@ -1501,25 +1919,33 @@ const handleSmartTopOff = (id, dev, chan, current, mode) => {
           }
           break;
         }
-        case 'MODE_WET': {
+        case "MODE_WET": {
           const { setpoint = 50, wet = true } = get(hygrostat[0]) || {};
           switch (chan.action) {
-            case 'plus': {
-              run({ type: ACTION_SETPOINT, id: site, humidity: setpoint + 0.5 });
+            case "plus": {
+              run({
+                type: ACTION_SETPOINT,
+                id: site,
+                humidity: setpoint + 0.5,
+              });
               renderSmartTop(id);
               break;
             }
-            case 'minus': {
-              run({ type: ACTION_SETPOINT, id: site, humidity: setpoint - 0.5 });
+            case "minus": {
+              run({
+                type: ACTION_SETPOINT,
+                id: site,
+                humidity: setpoint - 0.5,
+              });
               renderSmartTop(id);
               break;
             }
-            case 'power': {
+            case "power": {
               run({ type: wet ? ACTION_STOP_WET : ACTION_START_WET, id: site });
               renderSmartTop(id);
               break;
             }
-            case 'menu': {
+            case "menu": {
               // set(id, { configuring: dev.configuring + 1 })
               // renderSmartTop(id);
               break;
@@ -1527,10 +1953,14 @@ const handleSmartTopOff = (id, dev, chan, current, mode) => {
           }
           break;
         }
-        case 'MODE_VENTILATION': {
-          const { setpoint = 400, ventilation = true, ventilation_intensity = 0 } = get(co2_stat[0]) || {};
+        case "MODE_VENTILATION": {
+          const {
+            setpoint = 400,
+            ventilation = true,
+            ventilation_intensity = 0,
+          } = get(co2_stat[0]) || {};
           switch (chan.action) {
-            case 'plus': {
+            case "plus": {
               switch (dev.configuring) {
                 case 1: {
                   run({ type: ACTION_SETPOINT, id: site, co2: setpoint + 10 });
@@ -1538,14 +1968,18 @@ const handleSmartTopOff = (id, dev, chan, current, mode) => {
                   break;
                 }
                 case 2: {
-                  run({ type: ACTION_INTENSITY, id: site, ventilation: ventilation_intensity + 1 });
+                  run({
+                    type: ACTION_INTENSITY,
+                    id: site,
+                    ventilation: ventilation_intensity + 1,
+                  });
                   renderSmartTop(id);
                   break;
                 }
               }
               break;
             }
-            case 'minus': {
+            case "minus": {
               switch (dev.configuring) {
                 case 1: {
                   run({ type: ACTION_SETPOINT, id: site, co2: setpoint - 10 });
@@ -1553,22 +1987,33 @@ const handleSmartTopOff = (id, dev, chan, current, mode) => {
                   break;
                 }
                 case 2: {
-                  run({ type: ACTION_INTENSITY, id: site, ventilation: ventilation_intensity - 1 });
+                  run({
+                    type: ACTION_INTENSITY,
+                    id: site,
+                    ventilation: ventilation_intensity - 1,
+                  });
                   renderSmartTop(id);
                   break;
                 }
               }
               break;
             }
-            case 'power': {
-              run({ type: ventilation ? ACTION_STOP_VENTILATION : ACTION_START_VENTILATION, id: site });
+            case "power": {
+              run({
+                type: ventilation
+                  ? ACTION_STOP_VENTILATION
+                  : ACTION_START_VENTILATION,
+                id: site,
+              });
               renderSmartTop(id);
               break;
             }
-            case 'menu': {
-              const max = maxVentilationIntensity(co2_stat)
+            case "menu": {
+              const max = maxVentilationIntensity(co2_stat);
               if (max > 0) {
-                set(id, { configuring: dev.configuring < 2 ? dev.configuring + 1 : 1 });
+                set(id, {
+                  configuring: dev.configuring < 2 ? dev.configuring + 1 : 1,
+                });
                 renderSmartTop(id);
               }
               break;
@@ -1576,10 +2021,10 @@ const handleSmartTopOff = (id, dev, chan, current, mode) => {
           }
           break;
         }
-        case 'MODE_WARM_FLOOR': {
+        case "MODE_WARM_FLOOR": {
           const { min = 5, max = 40 } = get(warm_floor[0]) || {};
           switch (chan.action) {
-            case 'plus': {
+            case "plus": {
               switch (dev.configuring) {
                 case 1: {
                   const value = min + 0.5;
@@ -1604,7 +2049,7 @@ const handleSmartTopOff = (id, dev, chan, current, mode) => {
               }
               break;
             }
-            case 'minus': {
+            case "minus": {
               switch (dev.configuring) {
                 case 1: {
                   const value = min - 0.5;
@@ -1629,7 +2074,7 @@ const handleSmartTopOff = (id, dev, chan, current, mode) => {
               }
               break;
             }
-            case 'power': {
+            case "power": {
               const on = isWarmFloorOn(warm_floor);
               for (const id of warm_floor) {
                 const { inverse } = get(id) || {};
@@ -1642,8 +2087,10 @@ const handleSmartTopOff = (id, dev, chan, current, mode) => {
               setTimeout(renderSmartTop, 300, id);
               break;
             }
-            case 'menu': {
-              set(id, { configuring: dev.configuring < 2 ? dev.configuring + 1 : 1 });
+            case "menu": {
+              set(id, {
+                configuring: dev.configuring < 2 ? dev.configuring + 1 : 1,
+              });
               renderSmartTop(id);
               break;
             }
@@ -1652,52 +2099,74 @@ const handleSmartTopOff = (id, dev, chan, current, mode) => {
         }
       }
     }
-  } else if (chan.action === 'menu') {
+  } else if (chan.action === "menu") {
     set(id, { mode: mode + 1 });
     renderSmartTop(id);
   }
   return false;
-}
+};
 
 const handleSmartTopHold = (id, dev, chan, current) => {
-  if (chan.action === 'menu') {
-    if (current.mode !== 'MODE_SCENE') {
+  if (chan.action === "menu") {
+    if (current.mode !== "MODE_SCENE") {
       set(id, { configuring: dev.configuring ? 0 : 1 });
       renderSmartTop(id);
     }
   } else {
     const site = current.site || dev.site;
     if (site) {
-      const { thermostat = [], hygrostat = [], co2_stat = [], warm_floor = [] } = get(site) || {};
+      const {
+        thermostat = [],
+        hygrostat = [],
+        co2_stat = [],
+        warm_floor = [],
+      } = get(site) || {};
       if (dev.configuring) {
         switch (current.mode) {
-          case 'MODE_COOL': {
-            const { setpoint = 24, cool_intensity = 0 } = get(thermostat[0]) || {};
+          case "MODE_COOL": {
+            const { setpoint = 24, cool_intensity = 0 } =
+              get(thermostat[0]) || {};
             switch (chan.action) {
-              case 'plus': {
+              case "plus": {
                 switch (dev.configuring) {
                   case 1: {
-                    run({ type: ACTION_SETPOINT, id: site, temperature: setpoint + 0.5 });
+                    run({
+                      type: ACTION_SETPOINT,
+                      id: site,
+                      temperature: setpoint + 0.5,
+                    });
                     renderSmartTop(id);
                     return true;
                   }
                   case 2: {
-                    run({ type: ACTION_INTENSITY, id: site, cool: cool_intensity + 1 });
+                    run({
+                      type: ACTION_INTENSITY,
+                      id: site,
+                      cool: cool_intensity + 1,
+                    });
                     renderSmartTop(id);
                     return true;
                   }
                 }
                 break;
               }
-              case 'minus': {
+              case "minus": {
                 switch (dev.configuring) {
                   case 1: {
-                    run({ type: ACTION_SETPOINT, id: site, temperature: setpoint - 0.5 });
+                    run({
+                      type: ACTION_SETPOINT,
+                      id: site,
+                      temperature: setpoint - 0.5,
+                    });
                     renderSmartTop(id);
                     return true;
                   }
                   case 2: {
-                    run({ type: ACTION_INTENSITY, id: site, cool: cool_intensity - 1 });
+                    run({
+                      type: ACTION_INTENSITY,
+                      id: site,
+                      cool: cool_intensity - 1,
+                    });
                     renderSmartTop(id);
                     return true;
                   }
@@ -1707,33 +2176,50 @@ const handleSmartTopHold = (id, dev, chan, current) => {
             }
             break;
           }
-          case 'MODE_HEAT': {
-            const { setpoint = 24, heat_intensity = 0 } = get(thermostat[0]) || {};
+          case "MODE_HEAT": {
+            const { setpoint = 24, heat_intensity = 0 } =
+              get(thermostat[0]) || {};
             switch (chan.action) {
-              case 'plus': {
+              case "plus": {
                 switch (dev.configuring) {
                   case 1: {
-                    run({ type: ACTION_SETPOINT, id: site, temperature: setpoint + 0.5 });
+                    run({
+                      type: ACTION_SETPOINT,
+                      id: site,
+                      temperature: setpoint + 0.5,
+                    });
                     renderSmartTop(id);
                     return true;
                   }
                   case 2: {
-                    run({ type: ACTION_INTENSITY, id: site, heat: heat_intensity + 1 });
+                    run({
+                      type: ACTION_INTENSITY,
+                      id: site,
+                      heat: heat_intensity + 1,
+                    });
                     renderSmartTop(id);
                     return true;
                   }
                 }
                 break;
               }
-              case 'minus': {
+              case "minus": {
                 switch (dev.configuring) {
                   case 1: {
-                    run({ type: ACTION_SETPOINT, id: site, temperature: setpoint - 0.5 });
+                    run({
+                      type: ACTION_SETPOINT,
+                      id: site,
+                      temperature: setpoint - 0.5,
+                    });
                     renderSmartTop(id);
                     return true;
                   }
                   case 2: {
-                    run({ type: ACTION_INTENSITY, id: site, heat: heat_intensity - 1 });
+                    run({
+                      type: ACTION_INTENSITY,
+                      id: site,
+                      heat: heat_intensity - 1,
+                    });
                     renderSmartTop(id);
                     return true;
                   }
@@ -1743,49 +2229,74 @@ const handleSmartTopHold = (id, dev, chan, current) => {
             }
             break;
           }
-          case 'MODE_WET': {
+          case "MODE_WET": {
             const { setpoint = 50 } = get(hygrostat[0]) || {};
             switch (chan.action) {
-              case 'plus': {
-                run({ type: ACTION_SETPOINT, id: site, humidity: setpoint + 0.5 });
+              case "plus": {
+                run({
+                  type: ACTION_SETPOINT,
+                  id: site,
+                  humidity: setpoint + 0.5,
+                });
                 renderSmartTop(id);
                 return true;
               }
-              case 'minus': {
-                run({ type: ACTION_SETPOINT, id: site, humidity: setpoint - 0.5 });
+              case "minus": {
+                run({
+                  type: ACTION_SETPOINT,
+                  id: site,
+                  humidity: setpoint - 0.5,
+                });
                 renderSmartTop(id);
                 return true;
               }
             }
             break;
           }
-          case 'MODE_VENTILATION': {
-            const { setpoint = 400, ventilation_intensity = 0 } = get(co2_stat[0]) || {};
+          case "MODE_VENTILATION": {
+            const { setpoint = 400, ventilation_intensity = 0 } =
+              get(co2_stat[0]) || {};
             switch (chan.action) {
-              case 'plus': {
+              case "plus": {
                 switch (dev.configuring) {
                   case 1: {
-                    run({ type: ACTION_SETPOINT, id: site, co2: setpoint + 10 });
+                    run({
+                      type: ACTION_SETPOINT,
+                      id: site,
+                      co2: setpoint + 10,
+                    });
                     renderSmartTop(id);
                     return true;
                   }
                   case 2: {
-                    run({ type: ACTION_INTENSITY, id: site, ventilation: ventilation_intensity + 1 });
+                    run({
+                      type: ACTION_INTENSITY,
+                      id: site,
+                      ventilation: ventilation_intensity + 1,
+                    });
                     renderSmartTop(id);
                     return true;
                   }
                 }
                 break;
               }
-              case 'minus': {
+              case "minus": {
                 switch (dev.configuring) {
                   case 1: {
-                    run({ type: ACTION_SETPOINT, id: site, co2: setpoint - 10 });
+                    run({
+                      type: ACTION_SETPOINT,
+                      id: site,
+                      co2: setpoint - 10,
+                    });
                     renderSmartTop(id);
                     return true;
                   }
                   case 2: {
-                    run({ type: ACTION_INTENSITY, id: site, ventilation: ventilation_intensity - 1 });
+                    run({
+                      type: ACTION_INTENSITY,
+                      id: site,
+                      ventilation: ventilation_intensity - 1,
+                    });
                     renderSmartTop(id);
                     return true;
                   }
@@ -1795,10 +2306,10 @@ const handleSmartTopHold = (id, dev, chan, current) => {
             }
             break;
           }
-          case 'MODE_WARM_FLOOR': {
+          case "MODE_WARM_FLOOR": {
             const { min = 5, max = 40 } = get(warm_floor[0]) || {};
             switch (chan.action) {
-              case 'plus': {
+              case "plus": {
                 switch (dev.configuring) {
                   case 1: {
                     const value = min + 0.5;
@@ -1825,7 +2336,7 @@ const handleSmartTopHold = (id, dev, chan, current) => {
                 }
                 break;
               }
-              case 'minus': {
+              case "minus": {
                 switch (dev.configuring) {
                   case 1: {
                     const value = min - 0.5;
@@ -1856,33 +2367,44 @@ const handleSmartTopHold = (id, dev, chan, current) => {
             break;
           }
         }
-      } else if (chan.action === 'power') {
+      } else if (chan.action === "power") {
         switch (current.mode) {
-          case 'MODE_COOL': {
+          case "MODE_COOL": {
             const { cool = true } = get(thermostat[0]) || {};
-            run({ type: cool ? ACTION_STOP_COOL : ACTION_START_COOL, id: site });
+            run({
+              type: cool ? ACTION_STOP_COOL : ACTION_START_COOL,
+              id: site,
+            });
             renderSmartTop(id);
             break;
           }
-          case 'MODE_HEAT': {
+          case "MODE_HEAT": {
             const { heat = true } = get(thermostat[0]) || {};
-            run({ type: heat ? ACTION_STOP_HEAT : ACTION_START_HEAT, id: site });
+            run({
+              type: heat ? ACTION_STOP_HEAT : ACTION_START_HEAT,
+              id: site,
+            });
             renderSmartTop(id);
             break;
           }
-          case 'MODE_WET': {
+          case "MODE_WET": {
             const { wet = true } = get(hygrostat[0]) || {};
             run({ type: wet ? ACTION_STOP_WET : ACTION_START_WET, id: site });
             renderSmartTop(id);
             break;
           }
-          case 'MODE_VENTILATION': {
+          case "MODE_VENTILATION": {
             const { ventilation = true } = get(co2_stat[0]) || {};
-            run({ type: ventilation ? ACTION_STOP_VENTILATION : ACTION_START_VENTILATION, id: site });
+            run({
+              type: ventilation
+                ? ACTION_STOP_VENTILATION
+                : ACTION_START_VENTILATION,
+              id: site,
+            });
             renderSmartTop(id);
             break;
           }
-          case 'MODE_WARM_FLOOR': {
+          case "MODE_WARM_FLOOR": {
             let on = false;
             for (const id of warm_floor) {
               const { bind, inverse } = get(id) || {};
@@ -1905,7 +2427,7 @@ const handleSmartTopHold = (id, dev, chan, current) => {
     }
   }
   return false;
-}
+};
 
 const handleOn = handle(handleSmartTopOn, handleDefaultOn);
 const handleClick1 = handle(handleSmartTop, handleDefaultClick1);
@@ -1913,8 +2435,6 @@ const handleClick2 = handle(handleSmartTop, handleDefaultClick2);
 const handleClick3 = handle(handleSmartTop, handleDefaultClick3);
 const handleHold = handle(handleSmartTopHold, handleDefaultHold);
 const handleOff = handle(handleSmartTopOff, handleDefaultOff);
-
-
 
 const renderSmartTop = (id) => {
   timestamp[id] = Date.now();
@@ -1959,47 +2479,123 @@ const renderSmartTop = (id) => {
   }
   const site = current.site || dev.site;
   if (site) {
-    const { temperature, humidity, co2, thermostat = [], hygrostat = [], co2_stat = [], warm_floor = [] } = get(site) || {};
+    const {
+      temperature,
+      humidity,
+      co2,
+      thermostat = [],
+      hygrostat = [],
+      co2_stat = [],
+      warm_floor = [],
+    } = get(site) || {};
     switch (current.mode) {
-      case 'MODE_COOL': {
+      case "MODE_COOL": {
         const max = maxCoolIntensity(thermostat);
-        const { setpoint = 24, cool = true, cool_intensity = 0 } = get(thermostat[0]) || {};
+        const {
+          setpoint = 24,
+          cool = true,
+          cool_intensity = 0,
+        } = get(thermostat[0]) || {};
         if (configuring) {
           switch (configuring) {
             case 1: {
-              printf(id, setpoint, -99.9, 199.9, 1, cool, cool_intensity, max, image);
+              printf(
+                id,
+                setpoint,
+                -99.9,
+                199.9,
+                1,
+                cool,
+                cool_intensity,
+                max,
+                image,
+              );
               break;
             }
             case 2: {
-              printf(id, cool_intensity, 0, 1999, 0, cool, cool_intensity, max, image);
+              printf(
+                id,
+                cool_intensity,
+                0,
+                1999,
+                0,
+                cool,
+                cool_intensity,
+                max,
+                image,
+              );
               break;
             }
           }
         } else {
-          printf(id, temperature, -99.9, 199.9, 1, cool, cool_intensity, max, image);
+          printf(
+            id,
+            temperature,
+            -99.9,
+            199.9,
+            1,
+            cool,
+            cool_intensity,
+            max,
+            image,
+          );
         }
         break;
       }
-      case 'MODE_HEAT': {
+      case "MODE_HEAT": {
         const max = maxHeatIntensity(thermostat);
-        const { setpoint = 24, heat = true, heat_intensity = 0 } = get(thermostat[0]) || {};
+        const {
+          setpoint = 24,
+          heat = true,
+          heat_intensity = 0,
+        } = get(thermostat[0]) || {};
         if (configuring) {
           switch (configuring) {
             case 1: {
-              printf(id, setpoint, -99.9, 199.9, 1, heat, heat_intensity, max, image);
+              printf(
+                id,
+                setpoint,
+                -99.9,
+                199.9,
+                1,
+                heat,
+                heat_intensity,
+                max,
+                image,
+              );
               break;
             }
             case 2: {
-              printf(id, heat_intensity, 0, 1999, 0, heat, heat_intensity, max, image);
+              printf(
+                id,
+                heat_intensity,
+                0,
+                1999,
+                0,
+                heat,
+                heat_intensity,
+                max,
+                image,
+              );
               break;
             }
           }
         } else {
-          printf(id, temperature, -99.9, 199.9, 1, heat, heat_intensity, max, image);
+          printf(
+            id,
+            temperature,
+            -99.9,
+            199.9,
+            1,
+            heat,
+            heat_intensity,
+            max,
+            image,
+          );
         }
         break;
       }
-      case 'MODE_WARM_FLOOR': {
+      case "MODE_WARM_FLOOR": {
         const on = isWarmFloorOn(warm_floor);
         if (configuring) {
           const { min = 5, max = 40 } = get(warm_floor[0]) || {};
@@ -2019,7 +2615,7 @@ const renderSmartTop = (id) => {
         }
         break;
       }
-      case 'MODE_WET': {
+      case "MODE_WET": {
         const { setpoint = 50, wet = true } = get(hygrostat[0]) || {};
         if (configuring) {
           printf(id, setpoint, 0, 100, 1, wet, 0, 0, image);
@@ -2028,57 +2624,99 @@ const renderSmartTop = (id) => {
         }
         break;
       }
-      case 'MODE_VENTILATION': {
+      case "MODE_VENTILATION": {
         const max = maxVentilationIntensity(co2_stat);
-        const { setpoint = 400, ventilation = true, ventilation_intensity = 0 } = get(co2_stat[0]) || {};
+        const {
+          setpoint = 400,
+          ventilation = true,
+          ventilation_intensity = 0,
+        } = get(co2_stat[0]) || {};
         if (configuring) {
           switch (configuring) {
             case 1: {
-              printf(id, setpoint, 0, 1999, 0, ventilation, ventilation_intensity, max, image);
+              printf(
+                id,
+                setpoint,
+                0,
+                1999,
+                0,
+                ventilation,
+                ventilation_intensity,
+                max,
+                image,
+              );
               break;
             }
             case 2: {
-              printf(id, ventilation_intensity, 0, 1999, 0, ventilation, ventilation_intensity, max, image);
+              printf(
+                id,
+                ventilation_intensity,
+                0,
+                1999,
+                0,
+                ventilation,
+                ventilation_intensity,
+                max,
+                image,
+              );
               break;
             }
           }
         } else {
-          printf(id, co2, 0, 1999, 0, ventilation, ventilation_intensity, max, image);
+          printf(
+            id,
+            co2,
+            0,
+            1999,
+            0,
+            ventilation,
+            ventilation_intensity,
+            max,
+            image,
+          );
         }
         break;
       }
       default:
-        print(id, "", false, 0, image)
+        print(id, "", false, 0, image);
     }
   } else {
-    run({ type: ACTION_IMAGE, id, value: image })
+    run({ type: ACTION_IMAGE, id, value: image });
   }
-  run({ type: ACTION_BLINK, id, value: blink })
+  run({ type: ACTION_BLINK, id, value: blink });
   if (configuring) {
     switch (current.mode) {
-      case 'MODE_COOL':
-      case 'MODE_HEAT':
-      case 'MODE_WET':
-      case 'MODE_VENTILATION': {
+      case "MODE_COOL":
+      case "MODE_HEAT":
+      case "MODE_WET":
+      case "MODE_VENTILATION": {
         switch (configuring) {
           case 1: {
-            run({ type: ACTION_PALETTE, id, value: current.palette_setpoint })
+            run({ type: ACTION_PALETTE, id, value: current.palette_setpoint });
             break;
           }
           case 2: {
-            run({ type: ACTION_PALETTE, id, value: current.palette_intensity })
+            run({ type: ACTION_PALETTE, id, value: current.palette_intensity });
             break;
           }
         }
       }
-      case 'MODE_WARM_FLOOR': {
+      case "MODE_WARM_FLOOR": {
         switch (configuring) {
           case 1: {
-            run({ type: ACTION_PALETTE, id, value: current.palette_setpoint_min })
+            run({
+              type: ACTION_PALETTE,
+              id,
+              value: current.palette_setpoint_min,
+            });
             break;
           }
           case 2: {
-            run({ type: ACTION_PALETTE, id, value: current.palette_setpoint_max })
+            run({
+              type: ACTION_PALETTE,
+              id,
+              value: current.palette_setpoint_max,
+            });
             break;
           }
         }
@@ -2087,19 +2725,27 @@ const renderSmartTop = (id) => {
     }
   } else {
     if (current.palette > 0 && current.palette <= 12) {
-      run({ type: ACTION_PALETTE, id, value: current.palette })
+      run({ type: ACTION_PALETTE, id, value: current.palette });
     }
   }
-}
+};
 
 const print = (id, value, power, intensity, image) =>
-  run({ type: ACTION_PRINT, id, value, power, intensity, image })
+  run({ type: ACTION_PRINT, id, value, power, intensity, image });
 
 printf = (id, value, min, max, fixed, power, intensity, max_intensity, image) =>
-  print(id, format(value, min, max, fixed), power, max_intensity > 0 ? intensity / max_intensity : 0, image)
+  print(
+    id,
+    format(value, min, max, fixed),
+    power,
+    max_intensity > 0 ? intensity / max_intensity : 0,
+    image,
+  );
 
 const format = (value, min, max, fixed) =>
-  typeof value === 'number' ? Math.max(Math.min(value, max), min).toFixed(fixed) : ""
+  typeof value === "number"
+    ? Math.max(Math.min(value, max), min).toFixed(fixed)
+    : "";
 
 const isWarmFloorOn = (warm_floor = []) => {
   let on = false;
@@ -2109,7 +2755,7 @@ const isWarmFloorOn = (warm_floor = []) => {
     on ||= inverse ? !value : value;
   }
   return on;
-}
+};
 
 const maxCoolIntensity = (thermostat = []) => {
   let max = 0;
@@ -2118,7 +2764,7 @@ const maxCoolIntensity = (thermostat = []) => {
     max = Math.max(max, onCoolIntensity.length - 1);
   }
   return max;
-}
+};
 
 const maxHeatIntensity = (thermostat = []) => {
   let max = 0;
@@ -2127,7 +2773,7 @@ const maxHeatIntensity = (thermostat = []) => {
     max = Math.max(max, onHeatIntensity.length - 1);
   }
   return max;
-}
+};
 
 const maxVentilationIntensity = (co2_stat = []) => {
   let max = 0;
@@ -2136,4 +2782,4 @@ const maxVentilationIntensity = (co2_stat = []) => {
     max = Math.max(max, onVentilationIntensity.length - 1);
   }
   return max;
-}
+};

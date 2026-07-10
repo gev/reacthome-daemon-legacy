@@ -1,5 +1,3 @@
-const fs = require("fs");
-
 process.on("uncaughtException", function (err) {
   console.error(err);
 });
@@ -37,6 +35,7 @@ const sip = require("./src/sip");
 const db = require("./src/db");
 const { cleanup } = require("./src/gc");
 const { initAssist } = require("./src/assist");
+const { initFirmware } = require("./src/firmwares");
 
 const init = {};
 
@@ -75,6 +74,7 @@ const start = (id) => {
     }
   }
 };
+
 const load = async () => {
   for await (const [key, value] of db.iterator()) {
     init[key] = value;
@@ -93,6 +93,7 @@ const load = async () => {
   assets.init();
   state.init(init);
   initAssist();
+  initFirmware(init.mac);
   weather.manage();
   device.manage();
   drivers.manage();

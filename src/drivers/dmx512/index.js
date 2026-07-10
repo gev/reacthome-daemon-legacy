@@ -1,8 +1,31 @@
-const { get, set } = require('../../actions');
-const { buffer_SET_ADDRESS, buffer_SET_POSITION, DEVICE_TYPE_DI_4_RSM, DEVICE_TYPE_RS_HUB1_RS, buffer_RS485_TRANSMIT, buffer_UP, buffer_DOWN, buffer_STOP, buffer_LIMIT_UP, buffer_LIMIT_DOWN, buffer_LEARN, buffer_DELETE_ADDRESS, buffer_OPEN, buffer_CLOSE, buffer_DMX512, DIM_FADE, DIM_OFF, DEVICE_TYPE_RS_HUB4, DEVICE_TYPE_SERVER, DMX512, DIM_SET, DIM_ON, ACTION_DMX512 } = require('../../constants');
-const { device } = require('../../sockets');
-const { delay } = require('../../util');
-
+const { get, set } = require("../../actions");
+const {
+  buffer_SET_ADDRESS,
+  buffer_SET_POSITION,
+  DEVICE_TYPE_DI_4_RSM,
+  DEVICE_TYPE_RS_HUB1_RS,
+  buffer_RS485_TRANSMIT,
+  buffer_UP,
+  buffer_DOWN,
+  buffer_STOP,
+  buffer_LIMIT_UP,
+  buffer_LIMIT_DOWN,
+  buffer_LEARN,
+  buffer_DELETE_ADDRESS,
+  buffer_OPEN,
+  buffer_CLOSE,
+  buffer_DMX512,
+  DIM_FADE,
+  DIM_OFF,
+  DEVICE_TYPE_RS_HUB4,
+  DEVICE_TYPE_SERVER,
+  DMX512,
+  DIM_SET,
+  DIM_ON,
+  ACTION_DMX512,
+} = require("../../constants");
+const { device } = require("../../sockets");
+const { delay } = require("../../util");
 
 module.exports.run = (action) => {
   const { id, index, value = 0, velocity = 180 } = action;
@@ -18,9 +41,9 @@ module.exports.run = (action) => {
       buffer[1] = dev_index;
       buffer.writeUInt16BE(index, 2);
       buffer[4] = DIM_FADE;
-      buffer[5] = value
-      buffer[6] = velocity
-      device.send(buffer, dev.ip);
+      buffer[5] = value;
+      buffer[6] = velocity;
+      device.sendUDP(buffer, dev.ip);
       break;
     }
     case DIM_SET: {
@@ -29,9 +52,9 @@ module.exports.run = (action) => {
       buffer[1] = dev_index;
       buffer.writeUInt16BE(index, 2);
       buffer[4] = DIM_SET;
-      buffer[5] = value
-      device.send(buffer, dev.ip);
-      break
+      buffer[5] = value;
+      device.sendUDP(buffer, dev.ip);
+      break;
     }
     case DIM_ON: {
       const buffer = Buffer.alloc(5);
@@ -39,7 +62,7 @@ module.exports.run = (action) => {
       buffer[1] = dev_index;
       buffer.writeUInt16BE(index, 2);
       buffer[4] = DIM_ON;
-      device.send(buffer, dev.ip);
+      device.sendUDP(buffer, dev.ip);
       break;
     }
     case DIM_OFF: {
@@ -48,11 +71,11 @@ module.exports.run = (action) => {
       buffer[1] = dev_index;
       buffer.writeUInt16BE(index, 2);
       buffer[4] = DIM_OFF;
-      device.send(buffer, dev.ip);
-      break
+      device.sendUDP(buffer, dev.ip);
+      break;
     }
   }
-}
+};
 
 module.exports.handle = ({ id, data }) => {
   const index = data.readUInt16BE(0);
@@ -60,17 +83,11 @@ module.exports.handle = ({ id, data }) => {
   const velocity = data.readUInt8(3);
   const ch = `${id}/${DMX512}/${index}`;
   set(ch, { value, velocity });
-}
-
-
-
-module.exports.clear = () => {
-
-}
-
-module.exports.add = (id) => {
-
 };
+
+module.exports.clear = () => {};
+
+module.exports.add = (id) => {};
 
 send = (id, payload) => {
   // const { bind } = get(id);
@@ -81,7 +98,7 @@ send = (id, payload) => {
   // const { ip, type } = get(dev);
   // const header = Buffer.from([buffer_DMX512, index, channel]);
   // const buffer = Buffer.concat([header, payload]);
-  // device.send(buffer, ip);
+  // device.sendUDP(buffer, ip);
 };
 
 query = (address, channel, a, b) => {
@@ -93,4 +110,4 @@ query = (address, channel, a, b) => {
   buffer.writeUInt8(b, 5);
   buffer.writeUInt8(buffer[1] ^ buffer[2] ^ buffer[4] ^ buffer[5], 6);
   return buffer;
-}
+};

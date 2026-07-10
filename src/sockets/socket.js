@@ -1,33 +1,29 @@
+const { createSocket } = require("dgram");
+const { getIP } = require("../util");
+const { DEVICE_GROUP } = require("../constants");
 
-const { createSocket } = require('dgram');
+module.exports = (port, listen) => {
+  const socket = createSocket("udp4");
 
-module.exports = (discovery, interval, port, listen, multicast) => {
-
-  const socket = createSocket('udp4');
-
-  const send = (packet, ip) => {
+  const sendUDP = (packet, ip) => {
     socket.send(packet, port, ip, (err) => {
       if (err) console.error(err);
     });
   };
 
-  const startDiscovery = () => {
-    try {
-      socket.setMulticastInterface(multicast);
-      setInterval(discovery(socket), interval);
-    } catch (e) {
-      // console.error(e);
-      setTimeout(startDiscovery, 10_000);
+  const sendMulticast = (packet, group) => {
+    const ip = getIP("eth1");
+    if (ip) {
+      socket.setMulticastInterface(ip);
+      sendUDP(packet, group);
     }
-  };
+  }
 
-  socket
-    .on('error', console.error)
-    .bind(listen, startDiscovery);
+  socket.on("error", console.error).bind(listen, "0.0.0.0");
 
   const handle = (handler) => {
-    socket.on('message', handler);
+    socket.on("message", handler);
   };
 
-  return { handle, send };
+  return { handle, sendUDP, sendMulticast };
 };

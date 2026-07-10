@@ -1,9 +1,13 @@
-'use strict';
+"use strict";
 
-const crc16 = require('crc').crc16modbus;
-const { get, set } = require('../../actions');
-const { device } = require('../../sockets');
-const { ACTION_RS485_TRANSMIT, DEVICE_TYPE_RS_HUB1_RS, DEVICE_TYPE_DI_4_RSM } = require('../../constants');
+const crc16 = require("crc").crc16modbus;
+const { get, set } = require("../../actions");
+const { device } = require("../../sockets");
+const {
+  ACTION_RS485_TRANSMIT,
+  DEVICE_TYPE_RS_HUB1_RS,
+  DEVICE_TYPE_DI_4_RSM,
+} = require("../../constants");
 
 const address = 27321232;
 const delay = 500;
@@ -11,12 +15,10 @@ const period = 15000;
 
 const cmd = [0x27, 0x85, 0x63, 0x81];
 
-const number = x =>
-  x.reduce((a, b) => (100 * a) + (10 * (b >> 4 & 0xf) + (b & 0xf)), 0);
-
+const number = (x) =>
+  x.reduce((a, b) => 100 * a + (10 * ((b >> 4) & 0xf) + (b & 0xf)), 0);
 
 module.exports = class {
-
   constructor(id) {
     this.id = id;
     this.start();
@@ -74,7 +76,7 @@ module.exports = class {
     if (!bind) return;
     const { is_rbus } = get(bind);
     if (is_rbus) return;
-    const [dev, , index] = bind.split('/');
+    const [dev, , index] = bind.split("/");
     const { ip, type } = get(dev);
     const header = Buffer.from([ACTION_RS485_TRANSMIT, index]);
     const payload = Buffer.alloc(5, 0);
@@ -90,9 +92,8 @@ module.exports = class {
         break;
       }
       default: {
-        device.send(buffer, ip);
+        device.sendUDP(buffer, ip);
       }
     }
-
   };
-}
+};
