@@ -1,6 +1,4 @@
-const os = require('os');
-const { crc16modbus } = require('crc');
-const { ACTION_INITIALIZE, ACTION_DISCOVERY, ACTION_GET_INFO, STATUS_MAIN } = require('../../../constants');
+const { crc16modbus } = require('crc')
 
 const WAITING_PREAMBLE = 0
 const WAITING_SIZE = 1
@@ -12,36 +10,15 @@ const PREAMBLE = 0xa5
 
 module.exports.handle = (rbus) => {
 
+  const mac = Buffer.from(rbus.mac)
+
   let phase = WAITING_PREAMBLE
     , offset, size, crc
   let buff = Buffer.alloc(512)
 
-  const handle = (buff) => {
-    const action = buff[0];
-    switch (action) {
-      case ACTION_DISCOVERY: {
-        rbus.mac = Buffer.copyBytesFrom(buff.slice(1, 7));
-        rbus.socket.send(Buffer.from([0xf0, buff[7], buff[8], buff[9]]));
-        const type = buff[8];
-        if (!rbus.ready && type) {
-          rbus.socket.send(Buffer.from([ACTION_INITIALIZE]));
-          rbus.ready = true;
-        }
-        break;
-      }
-      case ACTION_GET_INFO: {
-        rbus.socket.send(buff);
-        const status = buff[1];
-        const type = buff.readUInt16BE(2);
-        if (!rbus.ready && type && status === STATUS_MAIN) {
-          rbus.socket.send(Buffer.from([ACTION_INITIALIZE]));
-          rbus.ready = true;
-        }
-        break;
-      }
-      default: {
-        rbus.socket.send(buff);
-      }
+  handle = (buff) => {
+    if (buff[0] !== 0xf0) {
+      rbus.socket.send(Buffer.concat([mac, buff]))
     }
   }
 
