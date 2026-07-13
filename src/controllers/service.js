@@ -218,6 +218,7 @@ const {
   DEVICE_TYPE_MIX_F,
   ACTION_REBOOT,
   ACTION_UPDATE,
+  DEVICE_TYPE_SOUNDBOX_LS,
 } = require("../constants");
 const { NOTIFY } = require("../notification/constants");
 const notification = require("../notification");
@@ -3262,34 +3263,72 @@ const run = (action) => {
         const { id, index, mode = 0, volume = [] } = action;
         const { ip } = get(id);
         let source = [[], []];
-        switch (mode) {
-          case 0b01:
-          case 0b10: {
-            const zone = get(`${id}/stereo/${index}`) || {};
-            source[0] = zone.source || [];
+        const dev = get(action.id) || {};
+        const buff = Buffer.from([action.type, action.index]);
+        switch (dev.type) {
+          case DEVICE_TYPE_SOUNDBOX_LS: {
+            switch (mode) {
+              case 0b01:
+              case 0b10: {
+                const zone = get(`${id}/stereo/${index}`) || {};
+                source[0] = zone.source || [];
+                break;
+              }
+              case 0b11: {
+                const zone0 = get(`${id}/mono/${2 * index - 1}`) || {};
+                source[0] = zone0.source || [];
+                const zone1 = get(`${id}/mono/${2 * index}`) || {};
+                source[1] = zone1.source || [];
+                break;
+              }
+            }
+            const buffer = Buffer.alloc(45);
+            buffer.writeUInt8(ACTION_LANAMP, 0);
+            buffer.writeUInt8(index, 1);
+            buffer.writeUInt8(mode, 2);
+            for (let i = 0; i < 2; i++) {
+              buffer.writeUInt8(volume[i] || 0, i + 3);
+              for (let j = 0; j < 10; j++) {
+                const { active, volume } = source[i][j] || {};
+                buffer.writeUInt8(active || 0, i * 10 + j + 5);
+                buffer.writeUInt8(volume || 0, i * 10 + j + 5 + 10 * 2);
+              }
+            }
+            device.sendUDP(buffer, ip);
             break;
           }
-          case 0b11: {
-            const zone0 = get(`${id}/mono/${2 * index - 1}`) || {};
-            source[0] = zone0.source || [];
-            const zone1 = get(`${id}/mono/${2 * index}`) || {};
-            source[1] = zone1.source || [];
+          default: {
+            switch (mode) {
+              case 0b01:
+              case 0b10: {
+                const zone = get(`${id}/stereo/${index}`) || {};
+                source[0] = zone.source || [];
+                break;
+              }
+              case 0b11: {
+                const zone0 = get(`${id}/mono/${2 * index - 1}`) || {};
+                source[0] = zone0.source || [];
+                const zone1 = get(`${id}/mono/${2 * index}`) || {};
+                source[1] = zone1.source || [];
+                break;
+              }
+            }
+            const buffer = Buffer.alloc(41);
+            buffer.writeUInt8(ACTION_LANAMP, 0);
+            buffer.writeUInt8(index, 1);
+            buffer.writeUInt8(mode, 2);
+            for (let i = 0; i < 2; i++) {
+              buffer.writeUInt8(volume[i] || 0, i + 3);
+              for (let j = 0; j < 9; j++) {
+                const { active, volume } = source[i][j] || {};
+                buffer.writeUInt8(active || 0, i * 9 + j + 5);
+                buffer.writeUInt8(volume || 0, i * 9 + j + 5 + 9 * 2);
+              }
+            }
+            device.sendUDP(buffer, ip);
+          }
             break;
-          }
         }
-        const buffer = Buffer.alloc(41);
-        buffer.writeUInt8(ACTION_LANAMP, 0);
-        buffer.writeUInt8(index, 1);
-        buffer.writeUInt8(mode, 2);
-        for (let i = 0; i < 2; i++) {
-          buffer.writeUInt8(volume[i] || 0, i + 3);
-          for (let j = 0; j < 9; j++) {
-            const { active, volume } = source[i][j] || {};
-            buffer.writeUInt8(active || 0, i * 9 + j + 5);
-            buffer.writeUInt8(volume || 0, i * 9 + j + 5 + 9 * 2);
-          }
-        }
-        device.sendUDP(buffer, ip);
         break;
       }
       case ACTION_RTP: {

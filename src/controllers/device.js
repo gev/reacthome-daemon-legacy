@@ -131,6 +131,7 @@ const {
   DEVICE_TYPE_SMART_TOP_CARD_HOLDER,
   DEVICE_TYPE_ROOM_NUMBER,
   DEVICE_TYPE_MIX_F,
+  DEVICE_TYPE_SOUNDBOX_LS,
 } = require("../constants");
 const {
   get,
@@ -1261,31 +1262,66 @@ module.exports.manage = () => {
           break;
         }
         case ACTION_LANAMP: {
-          const index = data[7];
-          const mode = data[8];
-          const volume = [];
-          const source = [];
-          for (let i = 0; i < 2; i++) {
-            volume[i] = data[i + 9];
-            source[i] = [];
-            for (let j = 0; j < 9; j++) {
-              source[i][j] = {
-                active: Boolean(data[i * 9 + j + 11]),
-                volume: data[i * 9 + j + 11 + 9 * 2],
-              };
-            }
-          }
-          set(`${id}/lanamp/${index}`, { mode, volume });
-          switch (mode) {
-            case 0b01:
-            case 0b10: {
-              set(`${id}/stereo/${index}`, { source: source[0] });
+          const { type } = get(id) || {};
+          switch (type) {
+            case DEVICE_TYPE_SOUNDBOX_LS: {
+              const index = data[7];
+              const mode = data[8];
+              const volume = [];
+              const source = [];
+              for (let i = 0; i < 2; i++) {
+                volume[i] = data[i + 9];
+                source[i] = [];
+                for (let j = 0; j < 10; j++) {
+                  source[i][j] = {
+                    active: Boolean(data[i * 10 + j + 11]),
+                    volume: data[i * 10 + j + 11 + 10 * 2],
+                  };
+                }
+              }
+              set(`${id}/lanamp/${index}`, { mode, volume });
+              switch (mode) {
+                case 0b01:
+                case 0b10: {
+                  set(`${id}/stereo/${index}`, { source: source[0] });
+                  break;
+                }
+                case 0b11: {
+                  set(`${id}/mono/${2 * index - 1}`, { source: source[0] });
+                  set(`${id}/mono/${2 * index}`, { source: source[1] });
+                  break;
+                }
+              }
               break;
             }
-            case 0b11: {
-              set(`${id}/mono/${2 * index - 1}`, { source: source[0] });
-              set(`${id}/mono/${2 * index}`, { source: source[1] });
-              break;
+            default: {
+              const index = data[7];
+              const mode = data[8];
+              const volume = [];
+              const source = [];
+              for (let i = 0; i < 2; i++) {
+                volume[i] = data[i + 9];
+                source[i] = [];
+                for (let j = 0; j < 9; j++) {
+                  source[i][j] = {
+                    active: Boolean(data[i * 9 + j + 11]),
+                    volume: data[i * 9 + j + 11 + 9 * 2],
+                  };
+                }
+              }
+              set(`${id}/lanamp/${index}`, { mode, volume });
+              switch (mode) {
+                case 0b01:
+                case 0b10: {
+                  set(`${id}/stereo/${index}`, { source: source[0] });
+                  break;
+                }
+                case 0b11: {
+                  set(`${id}/mono/${2 * index - 1}`, { source: source[0] });
+                  set(`${id}/mono/${2 * index}`, { source: source[1] });
+                  break;
+                }
+              }
             }
           }
           break;
@@ -1302,7 +1338,8 @@ module.exports.manage = () => {
               set(chan, { active, group, port });
               break;
             }
-            case DEVICE_TYPE_SOUNDBOX: {
+            case DEVICE_TYPE_SOUNDBOX:
+            case DEVICE_TYPE_SOUNDBOX_LS: {
               const index = data[7];
               const active = data[8];
               const group = int2ip(data.readUInt32BE(9));
