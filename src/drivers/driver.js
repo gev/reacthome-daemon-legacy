@@ -8,6 +8,7 @@ const {
   DRIVER_TYPE_MODBUS,
   DRIVER_TYPE_VARMANN,
   DRIVER_TYPE_INTESIS_BOX,
+  DRIVER_TYPE_HISENSE_B544,
   // DRIVER_TYPE_ME210_701,
   DRIVER_TYPE_NOVA,
   DRIVER_TYPE_SWIFT,
@@ -38,6 +39,7 @@ const swift = require("./shuft/swift");
 const comfovent = require("./comfovent");
 const varmann = require("./varmann");
 const intesisbox = require("./intesisbox");
+const hisenseB544 = require("./hisense-b544");
 const md_ccm18_an_e = require("./MD-CCM18-AN-E");
 const tica = require("./tica");
 const rtdra = require("./RTD-RA");
@@ -65,6 +67,7 @@ module.exports.manage = () => {
   comfovent.clear();
   varmann.clear();
   intesisbox.clear();
+  hisenseB544.clear();
   md_ccm18_an_e.clear();
   rtdra.clear();
   alink.clear();
@@ -127,6 +130,10 @@ module.exports.manage = () => {
       case DRIVER_TYPE_INTESIS_BOX:
         instances.add(id, intesisbox);
         intesisbox.add(id);
+        break;
+      case DRIVER_TYPE_HISENSE_B544:
+        instances.add(id, hisenseB544);
+        hisenseB544.add(id);
         break;
       case DRIVER_TYPE_MD_CCM18_AN_E:
         instances.add(id, md_ccm18_an_e);

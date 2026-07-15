@@ -56,6 +56,7 @@ const {
   DRIVER_TYPE_BB_PLC1,
   DRIVER_TYPE_BB_PLC2,
   DRIVER_TYPE_INTESIS_BOX,
+  DRIVER_TYPE_HISENSE_B544,
   ON,
   OFF,
   DIM_ON,
@@ -1376,6 +1377,7 @@ const run = (action) => {
         if (o.disabled) return;
         if (
           o.type === DRIVER_TYPE_INTESIS_BOX ||
+          o.type === DRIVER_TYPE_HISENSE_B544 ||
           o.type === DRIVER_TYPE_MD_CCM18_AN_E ||
           o.type === DRIVER_TYPE_TICA ||
           o.type === DRIVER_TYPE_NOVA ||
@@ -1615,6 +1617,7 @@ const run = (action) => {
         if (o.disabled) return;
         if (
           o.type === DRIVER_TYPE_INTESIS_BOX ||
+          o.type === DRIVER_TYPE_HISENSE_B544 ||
           o.type === DRIVER_TYPE_MD_CCM18_AN_E ||
           o.type === DRIVER_TYPE_TICA ||
           o.type === DRIVER_TYPE_NOVA ||
@@ -2464,6 +2467,7 @@ const run = (action) => {
             set(id, { setpoint });
           } else if (
             dev.type === DRIVER_TYPE_INTESIS_BOX ||
+            dev.type === DRIVER_TYPE_HISENSE_B544 ||
             dev.type === DRIVER_TYPE_MD_CCM18_AN_E ||
             dev.type === DRIVER_TYPE_TICA ||
             dev.type === DRIVER_TYPE_NOVA ||

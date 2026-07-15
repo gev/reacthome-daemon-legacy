@@ -428,6 +428,7 @@ module.exports.DRIVER_TYPE_SWIFT = "SWIFT";
 module.exports.DRIVER_TYPE_COMFOVENT = "COMFOVENT";
 module.exports.DRIVER_TYPE_VARMANN = "VARMANN";
 module.exports.DRIVER_TYPE_INTESIS_BOX = "INTESIS_BOX";
+module.exports.DRIVER_TYPE_HISENSE_B544 = "HISENSE_B544";
 module.exports.DRIVER_TYPE_MD_CCM18_AN_E = 'MD_CCM18_AN_E';
 module.exports.DRIVER_TYPE_TICA = 'TICA';
 module.exports.DRIVER_TYPE_RTD_RA = "RT_DA";
