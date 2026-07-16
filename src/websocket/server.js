@@ -7,12 +7,12 @@ const { terminals } = require("../terminal");
 
 const port = 3000;
 
-module.exports = () => {
+module.exports = (id) => {
   const server = new Server({ port });
   server.on("connection", (socket) => {
     const session = uuid();
     socket.on("message", (message) => {
-      handle(session, message);
+      handle(session, message, id);
     });
     socket.on("error", console.error);
     peers.set(session, {

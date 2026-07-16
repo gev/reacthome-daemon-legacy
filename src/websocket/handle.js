@@ -6,7 +6,7 @@ const { run } = require('../controllers/service');
 const { onWatch, onStart, onStop, onPause } = require('../camera');
 const { TOKEN } = require('../notification/constants');
 const { addToken } = require('../notification');
-const { broadcast, peers } = require('./peer');
+const { broadcast, peers, send } = require('./peer');
 const onGet = require('../init/get');
 const onList = require('../init/list');
 const onAck = require('../sip/ack');
@@ -18,15 +18,23 @@ const janus = require('../janus');
 const { CANDIDATE, KEEPALIVE } = require('../janus/constants');
 const { ACTION_ASSIST, ACTION_SET, POOL, ACTION_ADD, ACTION_MAKE_BIND, ACTION_ADD_BIND, ACTION_ASSET, ACTION_DEL } = require('../constants');
 const { handleAssist, initAssistDelayed } = require('../assist');
-const { set, add, makeBind, addBind, del } = require('../actions');
+const { set, add, makeBind, addBind, del, get } = require('../actions');
 const { writeFile, asset } = require('../fs');
 
-module.exports = (session, message) => {
+module.exports = (session, message, id) => {
   try {
     const peer = peers.get(session);
     peer.timestamp = Date.now();
     const action = JSON.parse(message);
     switch (action.type) {
+      case "discovery": {
+        const daemon = get(id);
+        if (!daemon) return;
+        const project = get(daemon.project);
+        if (!project) return;
+        send(session, { type: "discovery", id, project });
+        break;
+      }
       case ACTION_SET: {
         const { id, payload = {} } = action;
         if (payload.title || payload.code) {
