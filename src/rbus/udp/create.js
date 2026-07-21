@@ -2,10 +2,14 @@ const dgram = require('dgram');
 const { DEVICE_PORT, DEVICE_SERVER_PORT, ACTION_READY, ACTION_DISCOVERY, ACTION_INITIALIZE, DEVICE_TYPE_SERVER } = require('../../constants');
 const { handle } = require('./handle');
 
-module.exports.createSocket = (rbus, host) => {
+const connect = (rbus, host) => {
   const socket = dgram.createSocket('udp4');
   socket.bind(DEVICE_PORT, host);
   socket.on('message', handle(rbus));
+  socket.on('close', setTimeout(() => {
+    console.log(`Reconnecting to ${host}`);
+    connect(rbus, host);
+  }, 1000));
   const send = (data) => {
     if (rbus.mac) {
       socket.send(
@@ -15,6 +19,7 @@ module.exports.createSocket = (rbus, host) => {
       )
     }
   }
+
   rbus.socket = {
     host, send,
     close: socket.close
@@ -34,4 +39,6 @@ module.exports.createSocket = (rbus, host) => {
   //     }
   //   }
   // }, 1_000)
-}
+};
+
+module.exports.createSocket = connect;
