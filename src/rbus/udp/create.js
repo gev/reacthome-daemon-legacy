@@ -6,7 +6,7 @@ const connect = (rbus, host) => {
   const socket = dgram.createSocket('udp4');
   socket.bind(DEVICE_PORT, host);
   socket.on('message', handle(rbus));
-  socket.on('close', () => {
+  socket.on('error', () => {
     setTimeout(() => {
       console.log(`Reconnecting to ${host}`);
       connect(rbus, host);
