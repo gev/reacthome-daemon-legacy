@@ -6,10 +6,12 @@ const connect = (rbus, host) => {
   const socket = dgram.createSocket('udp4');
   socket.bind(DEVICE_PORT, host);
   socket.on('message', handle(rbus));
-  socket.on('close', setTimeout(() => {
-    console.log(`Reconnecting to ${host}`);
-    connect(rbus, host);
-  }, 1000));
+  socket.on('close', () => {
+    setTimeout(() => {
+      console.log(`Reconnecting to ${host}`);
+      connect(rbus, host);
+    }, 1000)
+  });
   const send = (data) => {
     if (rbus.mac) {
       socket.send(
