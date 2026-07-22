@@ -8,7 +8,6 @@ const connect = (rbus, host) => {
   socket.on('message', handle(rbus));
   socket.on('error', () => {
     setTimeout(() => {
-      console.log(`Reconnecting to ${host}`);
       connect(rbus, host);
     }, 1000)
   });
