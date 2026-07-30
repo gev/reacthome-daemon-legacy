@@ -1468,14 +1468,14 @@ module.exports.manage = () => {
             case DEVICE_TYPE_SMART_TOP_G4D:
             case DEVICE_TYPE_SMART_TOP_A4TD:
             case DEVICE_TYPE_SMART_TOP_A4TD_7S: {
-              const ts = timestamp[top_id] || 0;
-              const { timeout = 0, mode, defaultMode } = get(top_id) || {};
+              const ts = timestamp[id] || 0;
+              const { timeout = 0, mode, defaultMode } = get(id) || {};
               if (Date.now() - ts > (timeout || 10_000)) {
-                set(top_id, {
+                set(id, {
                   configuring: 0,
                   mode: defaultMode ? defaultMode - 1 : mode,
                 });
-                renderSmartTop(top_id);
+                renderSmartTop(id);
               }
               break;
             }
