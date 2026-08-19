@@ -1236,7 +1236,6 @@ module.exports.manage = () => {
           const dev = get(id) || {};
           if (value !== dev.value) {
             if (value === 0 || value > dev.value) {
-              set(id, { value, gain });
               set(id, { value });
               if (dev.onDoppler) {
                 run({ type: ACTION_SCRIPT_RUN, id: dev.onDoppler });
