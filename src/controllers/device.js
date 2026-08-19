@@ -1221,26 +1221,18 @@ module.exports.manage = () => {
         case ACTION_DOPPLER0: {
           const [, , , , , , , value, gain] = data;
           const dev = get(id) || {};
-          if (value !== dev.value) {
-            if (value === 0 || value > dev.value) {
-              set(id, { value, gain });
-              if (dev.nDoppler) {
-                run({ type: ACTION_SCRIPT_RUN, id: dev.onDoppler });
-              }
-            }
+          set(id, { value, gain });
+          if (dev.nDoppler) {
+            run({ type: ACTION_SCRIPT_RUN, id: dev.onDoppler });
           }
           break;
         }
         case ACTION_DOPPLER1: {
           const value = [...data.slice(7)];
           const dev = get(id) || {};
-          if (value !== dev.value) {
-            if (value === 0 || value > dev.value) {
-              set(id, { value });
-              if (dev.onDoppler) {
-                run({ type: ACTION_SCRIPT_RUN, id: dev.onDoppler });
-              }
-            }
+          set(id, { value });
+          if (dev.onDoppler) {
+            run({ type: ACTION_SCRIPT_RUN, id: dev.onDoppler });
           }
           break;
         }
