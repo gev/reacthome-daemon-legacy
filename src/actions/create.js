@@ -13,7 +13,7 @@ const apply = (id, payload) => {
   const o = state.get(id);
   broadcast({ type: ACTION_SET, id, payload: o });
   try {
-    db.put(id, state.get(id), (err) => {
+    db.put(id, o, (err) => {
       if (err) console.error(err);
     });
   } catch (e) {
