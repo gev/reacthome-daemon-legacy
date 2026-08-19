@@ -2076,7 +2076,7 @@ const run = (action) => {
         }
         const rgb = color.hsv.rgb(h, s, v);
         const [r, g, b] = rgb || [0, 0, 0];
-        set(id, { last: o.bind ? { v } : { r, g, b }, value: !!v });
+        set(id, { last: o.bind ? { value: v } : { r, g, b }, value: !!v });
         for (let i = 0; i < bind.length; i++) {
           const c = bind[i];
           if (!o[c]) continue;
