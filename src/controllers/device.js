@@ -1222,9 +1222,11 @@ module.exports.manage = () => {
           const [, , , , , , , value, gain] = data;
           const dev = get(id) || {};
           if (value !== dev.value) {
-            set(id, { value, gain });
-            if (dev.nDoppler) {
-              run({ type: ACTION_SCRIPT_RUN, id: dev.onDoppler });
+            if (value === 0 || value > dev.value) {
+              set(id, { value, gain });
+              if (dev.nDoppler) {
+                run({ type: ACTION_SCRIPT_RUN, id: dev.onDoppler });
+              }
             }
           }
           break;
@@ -1233,9 +1235,12 @@ module.exports.manage = () => {
           const value = [...data.slice(7)];
           const dev = get(id) || {};
           if (value !== dev.value) {
-            set(id, { value });
-            if (dev.onDoppler) {
-              run({ type: ACTION_SCRIPT_RUN, id: dev.onDoppler });
+            if (value === 0 || value > dev.value) {
+              set(id, { value, gain });
+              set(id, { value });
+              if (dev.onDoppler) {
+                run({ type: ACTION_SCRIPT_RUN, id: dev.onDoppler });
+              }
             }
           }
           break;
