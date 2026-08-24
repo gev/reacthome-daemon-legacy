@@ -1222,7 +1222,7 @@ module.exports.manage = () => {
           const [, , , , , , , value, gain] = data;
           const dev = get(id) || {};
           set(id, { value, gain });
-          if (dev.nDoppler) {
+          if (dev.onDoppler) {
             run({ type: ACTION_SCRIPT_RUN, id: dev.onDoppler });
           }
           break;
