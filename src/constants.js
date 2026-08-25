@@ -436,6 +436,7 @@ module.exports.DRIVER_TYPE_ME210_701 = "ME210_710";
 module.exports.DRIVER_TYPE_DAUERHAFT = 'DAUERHAFT';
 module.exports.DRIVER_TYPE_DMX512 = 'DMX512';
 module.exports.DRIVER_TYPE_TELEGRAM = "TELEGRAM";
+module.exports.DRIVER_TYPE_ROYAL_VENTO = "ROYAL_VENTO";
 
 module.exports.DALI_LIGHT = 'dali_light';
 module.exports.DALI_GROUP = 'dali_group';

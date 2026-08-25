@@ -24,6 +24,7 @@ const {
   DRIVER_TYPE_PROXY,
   DRIVER_TYPE_TELEGRAM,
   DRIVER_TYPE_DMX512,
+  DRIVER_TYPE_ROYAL_VENTO,
 } = require("../constants");
 const { get } = require("../actions");
 const RS21 = require("./RS21");
@@ -49,6 +50,7 @@ const dauerhaft = require("./dauerhaft");
 const proxy = require("./proxy");
 const telegram = require("./telegram");
 const dmx512 = require("./dmx512");
+const royal_vento = require("./royal/vento")
 
 const mac = require("../mac");
 
@@ -71,6 +73,7 @@ module.exports.manage = () => {
   // me210_701.clear()
   dali_gw.clear();
   dali_dlc.clear();
+  royal_vento.clear();
 
   if (!Array.isArray(driver)) return;
   for (const id of driver) {
@@ -163,6 +166,10 @@ module.exports.manage = () => {
       case DRIVER_TYPE_DAUERHAFT:
         instances.add(id, dauerhaft);
         dauerhaft.add(id);
+        break;
+      case DRIVER_TYPE_ROYAL_VENTO:
+        instances.add(id, royal_vento);
+        royal_vento.add(id);
         break;
     }
   }

@@ -1,5 +1,5 @@
 const { get, set } = require('../../actions');
-const { HYGROSTAT, DRIVER_TYPE_DAUERHAFT, DRIVER_TYPE_SWIFT } = require('../../constants');
+const { HYGROSTAT, DRIVER_TYPE_DAUERHAFT, DRIVER_TYPE_SWIFT, DRIVER_TYPE_ROYAL_VENTO } = require('../../constants');
 
 const timers = new Map();
 
@@ -14,6 +14,9 @@ const sync = (id, index) => {
       syncHygrostat(ch, source, target);
       break;
     case DRIVER_TYPE_SWIFT:
+      syncVent(ch, proxy, source, target);
+      break;
+    case DRIVER_TYPE_ROYAL_VENTO:
       syncVent(ch, proxy, source, target);
       break;
     default:

@@ -219,6 +219,7 @@ const {
   ACTION_REBOOT,
   ACTION_UPDATE,
   DEVICE_TYPE_SOUNDBOX_LS,
+  DRIVER_TYPE_ROYAL_VENTO,
 } = require("../constants");
 const { NOTIFY } = require("../notification/constants");
 const notification = require("../notification");
@@ -1381,7 +1382,8 @@ const run = (action) => {
           o.type === DRIVER_TYPE_NOVA ||
           o.type === DRIVER_TYPE_SWIFT ||
           o.type === DRIVER_TYPE_ALINK ||
-          o.type === DRIVER_TYPE_COMFOVENT
+          o.type === DRIVER_TYPE_COMFOVENT ||
+          o.type === DRIVER_TYPE_ROYAL_VENTO
         ) {
           drivers.run(action);
           return;
@@ -1620,7 +1622,8 @@ const run = (action) => {
           o.type === DRIVER_TYPE_NOVA ||
           o.type === DRIVER_TYPE_SWIFT ||
           o.type === DRIVER_TYPE_ALINK ||
-          o.type === DRIVER_TYPE_COMFOVENT
+          o.type === DRIVER_TYPE_COMFOVENT ||
+          o.type === DRIVER_TYPE_ROYAL_VENTO
         ) {
           drivers.run(action);
           return;
@@ -2016,6 +2019,27 @@ const run = (action) => {
                             id: proxy.proxy,
                             type: ACTION_SET_FAN_SPEED,
                             value: Math.round(v / 25.5),
+                          });
+                          break;
+                        }
+                      }
+                      break;
+                    }
+                    case DRIVER_TYPE_ROYAL_VENTO: {
+                      switch (proxy.mode) {
+                        case "setpoint": {
+                          drivers.run({
+                            id: proxy.proxy,
+                            type: ACTION_SETPOINT,
+                            value: v / 2.55,
+                          });
+                          break;
+                        }
+                        case "speed": {
+                          drivers.run({
+                            id: proxy.proxy,
+                            type: ACTION_SET_FAN_SPEED,
+                            value: Math.round(v / 85),
                           });
                           break;
                         }
@@ -2469,7 +2493,8 @@ const run = (action) => {
             dev.type === DRIVER_TYPE_NOVA ||
             dev.type === DRIVER_TYPE_SWIFT ||
             dev.type === DRIVER_TYPE_ALINK ||
-            dev.type === DRIVER_TYPE_COMFOVENT
+            dev.type === DRIVER_TYPE_COMFOVENT ||
+            dev.type === DRIVER_TYPE_ROYAL_VENTO
           ) {
             action.value = setpoint;
             drivers.run(action);
