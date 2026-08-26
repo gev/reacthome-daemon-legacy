@@ -1,0 +1,119 @@
+const { get, set } = require("../../../actions");
+const {
+  ACTION_SET_FAN_SPEED,
+  ACTION_ON,
+  ACTION_OFF,
+  ACTION_SETPOINT,
+  ACTION_START_HEAT,
+  ACTION_STOP_HEAT,
+} = require("../../../constants");
+const {
+  writeRegister,
+  readHoldingRegisters,
+  writeRegisters,
+  readInputRegisters,
+} = require("../../modbus");
+const {
+  READ_HOLDING_REGISTERS,
+  WRITE_REGISTER,
+} = require("../../modbus/constants");
+const { ADDRESS, TIMEOUT } = require("./constants");
+
+const instance = new Set();
+
+const sync = (id) => {
+  const dev = get(id) || {};
+  const { bind, synced } = dev;
+  if (!bind) return;
+  const [modbus, , address] = bind.split("/");
+  if (synced) {
+    readHoldingRegisters(modbus, address, 0, 11);
+  } else {
+    writeRegister(modbus, address, 0x0, dev.value ? 1 : 0);
+    setTimeout(() => {
+      writeRegister(modbus, address, 0x7, dev.setpoint);
+    }, 400);
+    setTimeout(() => {
+      writeRegister(modbus, address, 0x3, dev.fan_speed);
+    }, 800);
+    setTimeout(() => {
+      writeRegister(modbus, address, 0x4, dev.heat ? 1 : 0);
+    }, 1200);
+  }
+  set(id, { synced: true });
+};
+
+module.exports.run = (action) => {
+  const { id, type } = action;
+  switch (type) {
+    case ACTION_ON: {
+      set(id, { value: true, synced: false });
+      break;
+    }
+    case ACTION_OFF: {
+      set(id, { value: false, synced: false });
+      break;
+    }
+    case ACTION_SET_FAN_SPEED: {
+      set(id, {
+        fan_speed: action.value,
+        synced: false,
+      });
+      break;
+    }
+    case ACTION_SETPOINT: {
+      set(id, { setpoint: action.value, synced: false });
+      break;
+    }
+    case ACTION_START_HEAT: {
+      set(id, { heat: true, synced: false });
+      break
+    }
+    case ACTION_STOP_HEAT: {
+      set(id, { heat: false, synced: false });
+      break
+    }
+  }
+};
+
+module.exports.handle = (action) => {
+  const { id, data } = action;
+  switch (data[0]) {
+    case READ_HOLDING_REGISTERS:
+      {
+        const dev = get(id) || {};
+        const value = data.readUInt16BE(2);
+        const fan_speed = data.readUInt16BE(6);
+        const heat = data.readUInt16BE(8);
+        const setpoint = data.readUInt16BE(16);
+        if (dev.synced) {
+          set(id, {
+            value: !!value,
+            fan_speed: fan_speed,
+            heat: !!heat,
+            setpoint,
+            synced: true,
+          });
+        }
+        break;
+      }
+  }
+};
+
+module.exports.clear = () => {
+  instance.clear();
+};
+
+module.exports.add = (id) => {
+  instance.add(id);
+};
+
+let index = 0;
+
+setInterval(() => {
+  const arr = Array.from(instance);
+  if (arr.length > 0) {
+    sync(arr[index % arr.length]);
+    index++;
+  }
+}, TIMEOUT);
