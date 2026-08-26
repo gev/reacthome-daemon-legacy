@@ -66,40 +66,37 @@ module.exports.run = (action) => {
       break;
     }
     case ACTION_START_HEAT: {
-      set(id, { heat: true, synced: false});
+      set(id, { heat: true, synced: false });
       break
     }
     case ACTION_STOP_HEAT: {
-      set(id, { heat: false, synced: false});
+      set(id, { heat: false, synced: false });
       break
     }
   }
 };
 
 module.exports.handle = (action) => {
-  console.log(action);
-  // const { id, data } = action;
-  // const dev = get(id) || {};
-  // const value = data.readUInt16BE(2);
-  // set(id, {temperature: value});
-
-  // switch (data[0]) {
-  //   case READ_HOLDING_REGISTERS:
-  //     {
-  //       const dev = get(id) || {};
-  //       // const value = data.readUInt16BE(2);
-  //       // const fan_speed = data.readUInt16BE(2);
-  //       // const setpoint = data.readUInt16BE(4) / 10;
-  //       // if (dev.synced) {
-  //       // set(id, {
-  //       // value,// !!fan_speed,
-  //       // fan_speed: fan_speed ? fan_speed : dev.fan_speed,
-  //       // setpoint,
-  //       // synced: true,
-  //       // });
-  //     }
-  //     break;
-  // }
+  switch (data[0]) {
+    case READ_HOLDING_REGISTERS:
+      {
+        const dev = get(id) || {};
+        const value = data.readUInt16BE(2);
+        const fan_speed = data.readUInt16BE(6);
+        const heat = data.readUInt16BE(8);
+        const setpoint = data.readUInt16BE(16);
+        if (dev.synced) {
+          set(id, {
+            value: !!value,
+            fan_speed: fan_speed,
+            heat: !!heat,
+            setpoint,
+            synced: true,
+          });
+        }
+        break;
+      }
+  }
 };
 
 module.exports.clear = () => {
