@@ -25,7 +25,7 @@ const sync = (id) => {
   if (!bind) return;
   const [modbus, , address] = bind.split("/");
   if (synced) {
-    readHoldingRegisters(modbus, address, 0xa, 1);
+    readHoldingRegisters(modbus, address, 0x0, 15);
   } else {
     writeRegister(modbus, address, 0x0, dev.value ? 1 : 0);
     // setTimeout(() => {
@@ -52,7 +52,6 @@ module.exports.run = (action) => {
     case ACTION_SET_FAN_SPEED: {
       set(id, {
         fan_speed: action.value,
-        value: !!action.value,
         synced: false,
       });
       break;
