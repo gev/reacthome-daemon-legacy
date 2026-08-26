@@ -65,6 +65,7 @@ module.exports.run = (action) => {
 };
 
 module.exports.handle = (action) => {
+  console.log(action);
   // const { id, data } = action;
   // const dev = get(id) || {};
   // const value = data.readUInt16BE(2);
