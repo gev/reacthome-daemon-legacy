@@ -32,7 +32,7 @@ const sync = (id) => {
       writeRegister(modbus, address, 0x7, dev.setpoint);
     }, 400);
     setTimeout(() => {
-      writeRegister(modbus, address, 0x3, dev.fan_speed);
+      writeRegister(modbus, address, 0x3, dev.fan_speed ? 0x100 | dev.fan_speed : 0);
     }, 800);
   }
   set(id, { synced: true });
