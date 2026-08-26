@@ -77,27 +77,27 @@ module.exports.run = (action) => {
 };
 
 module.exports.handle = (action) => {
-  console.log(action);
-  // switch (data[0]) {
-  //   case READ_HOLDING_REGISTERS:
-  //     {
-  //       const dev = get(id) || {};
-  //       const value = data.readUInt16BE(2);
-  //       const fan_speed = data.readUInt16BE(6);
-  //       const heat = data.readUInt16BE(8);
-  //       const setpoint = data.readUInt16BE(16);
-  //       if (dev.synced) {
-  //         set(id, {
-  //           value: !!value,
-  //           fan_speed: fan_speed,
-  //           heat: !!heat,
-  //           setpoint,
-  //           synced: true,
-  //         });
-  //       }
-  //       break;
-  //     }
-  // }
+  const { id, data } = action;
+  switch (data[0]) {
+    case READ_HOLDING_REGISTERS:
+      {
+        const dev = get(id) || {};
+        const value = data.readUInt16BE(2);
+        const fan_speed = data.readUInt16BE(6);
+        const heat = data.readUInt16BE(8);
+        const setpoint = data.readUInt16BE(16);
+        if (dev.synced) {
+          set(id, {
+            value: !!value,
+            fan_speed: fan_speed,
+            heat: !!heat,
+            setpoint,
+            synced: true,
+          });
+        }
+        break;
+      }
+  }
 };
 
 module.exports.clear = () => {
