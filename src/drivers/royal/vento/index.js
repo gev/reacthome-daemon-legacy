@@ -25,7 +25,7 @@ const sync = (id) => {
   if (!bind) return;
   const [modbus, , address] = bind.split("/");
   if (synced) {
-    readHoldingRegisters(modbus, address, 0x0, 15);
+    readHoldingRegisters(modbus, address, 0xa, 15);
   } else {
     writeRegister(modbus, address, 0x0, dev.value ? 1 : 0);
     // setTimeout(() => {
