@@ -25,14 +25,14 @@ const sync = (id) => {
   if (!bind) return;
   const [modbus, , address] = bind.split("/");
   if (synced) {
-    readHoldingRegisters(modbus, address, 0xa, 1);
+    readHoldingRegisters(modbus, address, 0x7, 1);
   } else {
     writeRegister(modbus, address, 0x0, dev.value ? 1 : 0);
-    // setTimeout(() => {
-    //   writeRegister(modbus, address, 0xa, dev.setpoint * 10);
-    // }, 300);
     setTimeout(() => {
-      writeRegister(modbus, address, 0x5, dev.fan_speed);
+      writeRegister(modbus, address, 0x7, dev.setpoint * 10);
+    }, 300);
+    setTimeout(() => {
+      writeRegister(modbus, address, 0x2, dev.fan_speed);
     }, 600);
   }
   set(id, { synced: true });
