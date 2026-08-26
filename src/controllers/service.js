@@ -2319,7 +2319,7 @@ const run = (action) => {
         const { disabled, type } = get(id) || {};
         if (disabled) return;
         if (
-          o.type === DRIVER_TYPE_ROYAL_VENTO
+          type === DRIVER_TYPE_ROYAL_VENTO
         ) {
           drivers.run(action);
           return;
@@ -2346,7 +2346,7 @@ const run = (action) => {
         const { disabled, type } = get(id) || {};
         if (disabled) return;
         if (
-          o.type === DRIVER_TYPE_ROYAL_VENTO
+          type === DRIVER_TYPE_ROYAL_VENTO
         ) {
           drivers.run(action);
           return;
