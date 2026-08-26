@@ -2316,7 +2316,14 @@ const run = (action) => {
       }
       case ACTION_START_HEAT: {
         const { id } = action;
-        const { type } = get(id) || {};
+        const { disabled, type } = get(id) || {};
+        if (disabled) return;
+        if (
+          o.type === DRIVER_TYPE_ROYAL_VENTO
+        ) {
+          drivers.run(action);
+          return;
+        }
         switch (type) {
           case SITE: {
             const { thermostat = [] } = get(id) || {};
@@ -2336,7 +2343,14 @@ const run = (action) => {
       }
       case ACTION_STOP_HEAT: {
         const { id } = action;
-        const { type } = get(id) || {};
+        const { disabled, type } = get(id) || {};
+        if (disabled) return;
+        if (
+          o.type === DRIVER_TYPE_ROYAL_VENTO
+        ) {
+          drivers.run(action);
+          return;
+        }
         switch (type) {
           case SITE: {
             const { thermostat = [] } = get(id) || {};

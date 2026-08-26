@@ -4,6 +4,8 @@ const {
   ACTION_ON,
   ACTION_OFF,
   ACTION_SETPOINT,
+  ACTION_START_HEAT,
+  ACTION_STOP_HEAT,
 } = require("../../../constants");
 const {
   writeRegister,
@@ -27,13 +29,16 @@ const sync = (id) => {
   if (synced) {
     readHoldingRegisters(modbus, address, 0, 11);
   } else {
-    writeRegister(modbus, address, 0x4, dev.value ? 1 : 0);
+    writeRegister(modbus, address, 0x0, dev.value ? 1 : 0);
     setTimeout(() => {
       writeRegister(modbus, address, 0x7, dev.setpoint);
     }, 400);
     setTimeout(() => {
       writeRegister(modbus, address, 0x3, dev.fan_speed);
     }, 800);
+    setTimeout(() => {
+      writeRegister(modbus, address, 0x4, dev.heat ? 1 : 0);
+    }, 1200);
   }
   set(id, { synced: true });
 };
@@ -59,6 +64,14 @@ module.exports.run = (action) => {
     case ACTION_SETPOINT: {
       set(id, { setpoint: action.value, synced: false });
       break;
+    }
+    case ACTION_START_HEAT: {
+      set(id, { heat: true, synced: false});
+      break
+    }
+    case ACTION_STOP_HEAT: {
+      set(id, { heat: false, synced: false});
+      break
     }
   }
 };
