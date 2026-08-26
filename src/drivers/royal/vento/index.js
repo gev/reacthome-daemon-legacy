@@ -27,12 +27,12 @@ const sync = (id) => {
   if (synced) {
     readHoldingRegisters(modbus, address, 0, 11);
   } else {
-    writeRegister(modbus, address, 0x0, dev.value ? 1 : 0);
+    writeRegister(modbus, address, 0x4, dev.value ? 1 : 0);
     setTimeout(() => {
       writeRegister(modbus, address, 0x7, dev.setpoint);
     }, 400);
     setTimeout(() => {
-      writeRegister(modbus, address, 0x3, dev.fan_speed ? 0x100 | dev.fan_speed : 0);
+      writeRegister(modbus, address, 0x3, dev.fan_speed);
     }, 800);
   }
   set(id, { synced: true });
