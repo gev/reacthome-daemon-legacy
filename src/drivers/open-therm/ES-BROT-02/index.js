@@ -13,7 +13,7 @@ const {
 const {
   READ_HOLDING_REGISTERS,
 } = require("../../modbus/constants");
-const { ADDRESS, TIMEOUT, REG_W_COOLANT_TEMP, REG_W_COOLANT_MIN_TEMP, REG_W_COOLANT_MAX_TEMP, REG_W_BURNER_MODULATION } = require("./constants");
+const { ADDRESS, TIMEOUT, REG_W_COOLANT_TEMP, REG_W_COOLANT_MIN_TEMP, REG_W_COOLANT_MAX_TEMP, REG_W_BURNER_MODULATION, REG_R_ADAPTER_STATUS } = require("./constants");
 
 const instance = new Set();
 
