@@ -33,7 +33,7 @@ const sync = (id) => {
     console.log(dev.coolantTemp, dev.coolantMinTemp, dev.burnerModulation, dev.newAddress);
 
     if(dev.shouldSetNewAddress){
-      custom(modbus, [0x47, dev.newAddress]);
+      custom(modbus, [0x00, 0x47, dev.newAddress]);
       set(id, { shouldSetNewAddress: false });
       return;
     }
