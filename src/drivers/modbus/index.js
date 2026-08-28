@@ -39,3 +39,10 @@ module.exports.readWriteRegisters = (id, address, readRegister, readRegistersNum
     const instance = instances.get(id);
     if (instance) instance.readWriteRegisters(id, address, readRegister, readRegistersNumber, writeRegister, data);
 }
+
+module.exports.custom = (id, data) => {
+    const instance = instances.get(id);
+    if (instance) instance.custom(id, data);
+}
+
+

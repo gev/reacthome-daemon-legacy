@@ -5,10 +5,12 @@ const {
   ACTION_SET_COOLANT_MAX_TEMP,
   ACTION_SET_COOLANT_TEMP,
   ACTION_SET_BURNER_MODULATION,
+  ACTION_SET_ADDRESS,
 } = require("../../../constants");
 const {
   readHoldingRegisters,
   writeRegisters,
+  custom,
 } = require("../../modbus");
 const {
   READ_HOLDING_REGISTERS,
@@ -28,18 +30,25 @@ const sync = (id) => {
   if (synced) {
     readHoldingRegisters(modbus, address, REG_R_ADAPTER_STATUS, 20);
   } else {
-    console.log(dev.coolant_temp, dev.coolant_min_temp, dev.burner_modulation);
+    console.log(dev.coolantTemp, dev.coolantMinTemp, dev.burnerModulation, dev.newAddress);
+
+    if(dev.shouldSetNewAddress){
+      custom(modbus, [0x47, dev.newAddress]);
+      set(id, { shouldSetNewAddress: false });
+      return;
+    }
+
     setTimeout(() => {
-      writeRegisters(modbus, address, REG_W_COOLANT_TEMP, [dev.coolant_temp * 10]);
+      writeRegisters(modbus, address, REG_W_COOLANT_TEMP, [dev.coolantTemp * 10]);
     }, 400);
     // setTimeout(() => {
-    //   writeRegisters(modbus, address, REG_W_COOLANT_MIN_TEMP, [dev.coolant_min_temp * 10]);
+    //   writeRegisters(modbus, address, REG_W_COOLANT_MIN_TEMP, [dev.coolantMinTemp * 10]);
     // }, 800);
     // setTimeout(() => {
-    //   writeRegisters(modbus, address, REG_W_COOLANT_MAX_TEMP, [dev.coolant_max_temp * 10]);
+    //   writeRegisters(modbus, address, REG_W_COOLANT_MAX_TEMP, [dev.coolantMaxTemp * 10]);
     // }, 1200);
     setTimeout(() => {
-      writeRegisters(modbus, address, REG_W_BURNER_MODULATION, [dev.burner_modulation]);
+      writeRegisters(modbus, address, REG_W_BURNER_MODULATION, [dev.burnerModulation]);
     }, 1600);
   }
   set(id, { synced: true });
@@ -50,19 +59,23 @@ module.exports.run = (action) => {
 
   switch (type) {
     case ACTION_SET_COOLANT_TEMP: {
-      set(id, { coolant_temp: action.value, synced: false });
+      set(id, { coolantTemp: action.value, synced: false });
       break;
     }
     case ACTION_SET_COOLANT_MIN_TEMP: {
-      set(id, { coolant_min_temp: action.value, synced: false });
+      set(id, { coolantMinTemp: action.value, synced: false });
       break;
     }
     case ACTION_SET_COOLANT_MAX_TEMP: {
-      set(id, { coolant_max_temp: action.value, synced: false });
+      set(id, { coolantMaxTemp: action.value, synced: false });
       break;
     }
     case ACTION_SET_BURNER_MODULATION: {
-      set(id, { burner_modulation: action.value, synced: false });
+      set(id, { burnerModulation: action.value, synced: false });
+      break;
+    }
+    case ACTION_SET_ADDRESS: {
+      set(id, {newAddress: action.value, shouldSetNewAddress: true, synced: false })
       break;
     }
     // case ACTION_MODE_HEAT_COOLANT: {
