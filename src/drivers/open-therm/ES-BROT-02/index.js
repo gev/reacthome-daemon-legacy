@@ -1,10 +1,10 @@
 const { get, set } = require("../../../actions");
 const {
   ACTION_SETPOINT,
-  ACTION_BURNER_MODULATION,
   ACTION_SET_COOLANT_MIN_TEMP,
   ACTION_SET_COOLANT_MAX_TEMP,
   ACTION_SET_COOLANT_TEMP,
+  ACTION_SET_BURNER_MODULATION,
 } = require("../../../constants");
 const {
   readHoldingRegisters,
@@ -61,7 +61,7 @@ module.exports.run = (action) => {
       set(id, { coolant_max_temp: action.value, synced: false });
       break;
     }
-    case ACTION_BURNER_MODULATION: {
+    case ACTION_SET_BURNER_MODULATION: {
       set(id, { burner_modulation: action.value, synced: false });
       break;
     }
