@@ -28,6 +28,7 @@ const sync = (id) => {
   if (synced) {
     readHoldingRegisters(modbus, address, REG_R_ADAPTER_STATUS, 20);
   } else {
+    console.log(dev.coolant_temp, coolant_min_temp, burner_modulation);
     setTimeout(() => {
       writeRegisters(modbus, address, REG_W_COOLANT_TEMP, dev.coolant_temp * 10);
     }, 400);
