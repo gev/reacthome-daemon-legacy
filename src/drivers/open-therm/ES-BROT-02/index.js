@@ -28,7 +28,7 @@ const sync = (id) => {
   if (synced) {
     readHoldingRegisters(modbus, address, REG_R_ADAPTER_STATUS, 20);
   } else {
-    console.log(dev.coolant_temp, coolant_min_temp, burner_modulation);
+    console.log(dev.coolant_temp, dev.coolant_min_temp, dev.burner_modulation);
     setTimeout(() => {
       writeRegisters(modbus, address, REG_W_COOLANT_TEMP, dev.coolant_temp * 10);
     }, 400);
@@ -65,11 +65,11 @@ module.exports.run = (action) => {
       set(id, { burner_modulation: action.value, synced: false });
       break;
     }
-    case ACTION_MODE_HEAT_COOLANT: {
-      const dev = get(id) || {};
-      const mode = action.value ? setBit(dev.mode, 0) : resetBit(dev.mode, 0);
-      set(id, { mode, synced: false });
-    }
+    // case ACTION_MODE_HEAT_COOLANT: {
+    //   const dev = get(id) || {};
+    //   const mode = action.value ? setBit(dev.mode, 0) : resetBit(dev.mode, 0);
+    //   set(id, { mode, synced: false });
+    // }
   }
 };
 
