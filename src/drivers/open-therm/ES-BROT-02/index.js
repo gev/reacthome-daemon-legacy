@@ -32,12 +32,12 @@ const sync = (id) => {
     setTimeout(() => {
       writeRegisters(modbus, address, REG_W_COOLANT_TEMP, [dev.coolant_temp * 10]);
     }, 400);
-    setTimeout(() => {
-      writeRegisters(modbus, address, REG_W_COOLANT_MIN_TEMP, [dev.coolant_min_temp * 10]);
-    }, 800);
-    setTimeout(() => {
-      writeRegisters(modbus, address, REG_W_COOLANT_MAX_TEMP, [dev.coolant_max_temp * 10]);
-    }, 1200);
+    // setTimeout(() => {
+    //   writeRegisters(modbus, address, REG_W_COOLANT_MIN_TEMP, [dev.coolant_min_temp * 10]);
+    // }, 800);
+    // setTimeout(() => {
+    //   writeRegisters(modbus, address, REG_W_COOLANT_MAX_TEMP, [dev.coolant_max_temp * 10]);
+    // }, 1200);
     setTimeout(() => {
       writeRegisters(modbus, address, REG_W_BURNER_MODULATION, [dev.burner_modulation]);
     }, 1600);
