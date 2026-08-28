@@ -25,6 +25,7 @@ const {
   DRIVER_TYPE_TELEGRAM,
   DRIVER_TYPE_DMX512,
   DRIVER_TYPE_ROYAL_VENTO,
+  DRIVER_TYPE_ES_BROT_02,
 } = require("../constants");
 const { get } = require("../actions");
 const RS21 = require("./RS21");
