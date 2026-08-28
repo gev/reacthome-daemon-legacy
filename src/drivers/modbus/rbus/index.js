@@ -139,7 +139,7 @@ module.exports.custom = (id, data) => {
     const buffer = Buffer.alloc(size + 4);
     buffer.writeUInt8(ACTION_RS485_TRANSMIT, 0);
     buffer.writeUInt8(index, 1);
-    for (const i = 0; i < size; i++) {
+    for (let i = 0; i < size; i++) {
       buffer[i + 2] = data[i];
     }
     buffer.writeUInt16LE(crc16modbus(data), size + 2);

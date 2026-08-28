@@ -117,7 +117,7 @@ module.exports.custom = (id, data) => {
     buffer.writeUInt16BE(tid, 0);
     buffer.writeUInt16BE(0, 2);
     buffer.writeUInt16BE(size, 4);
-    for (const i = 0; i < size; i++) {
+    for (let i = 0; i < size; i++) {
       buffer[i + 6] = data[i];
     }
     send(buffer, port, host, handle(id));
