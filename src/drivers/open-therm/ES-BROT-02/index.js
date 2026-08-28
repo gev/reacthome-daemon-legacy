@@ -33,13 +33,13 @@ const sync = (id) => {
     }, 400);
     setTimeout(() => {
       writeRegisters(modbus, address, REG_W_COOLANT_MIN_TEMP, dev.coolant_min_temp * 10);
-    }, 400);
+    }, 800);
     setTimeout(() => {
       writeRegisters(modbus, address, REG_W_COOLANT_MAX_TEMP, dev.coolant_max_temp * 10);
-    }, 400);
+    }, 1200);
     setTimeout(() => {
       writeRegisters(modbus, address, REG_W_BURNER_MODULATION, dev.burner_modulation);
-    }, 400);
+    }, 1600);
   }
   set(id, { synced: true });
 };
