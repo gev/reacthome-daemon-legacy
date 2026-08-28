@@ -220,6 +220,8 @@ const {
   ACTION_UPDATE,
   DEVICE_TYPE_SOUNDBOX_LS,
   DRIVER_TYPE_ROYAL_VENTO,
+  ACTION_SET_COOLANT_TEMP,
+  ACTION_SET_BURNER_MODULATION,
 } = require("../constants");
 const { NOTIFY } = require("../notification/constants");
 const notification = require("../notification");
@@ -3706,6 +3708,14 @@ const run = (action) => {
         if (co2_correct !== undefined) {
           set(id, { co2_correct, co2: co2_raw + co2_correct });
         }
+        break;
+      }
+      case ACTION_SET_COOLANT_TEMP:
+      case ACTION_SET_COOLANT_MIN_TEMP:
+      case ACTION_SET_COOLANT_MAX_TEMP:
+      case ACTION_SET_BURNER_MODULATION:
+      {
+        drivers.run(action);
         break;
       }
       case ACTION_UPDATE: {
