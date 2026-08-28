@@ -221,6 +221,8 @@ const {
   DEVICE_TYPE_SOUNDBOX_LS,
   DRIVER_TYPE_ROYAL_VENTO,
   ACTION_SET_COOLANT_TEMP,
+  ACTION_SET_COOLANT_MIN_TEMP,
+  ACTION_SET_COOLANT_MAX_TEMP,
   ACTION_SET_BURNER_MODULATION,
 } = require("../constants");
 const { NOTIFY } = require("../notification/constants");
