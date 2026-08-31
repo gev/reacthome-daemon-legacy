@@ -220,6 +220,7 @@ const {
   ACTION_UPDATE,
   DEVICE_TYPE_SOUNDBOX_LS,
   DRIVER_TYPE_ROYAL_VENTO,
+  DEVICE_TYPE_DIM_12_MOSFET_AC_RS,
 } = require("../constants");
 const { NOTIFY } = require("../notification/constants");
 const notification = require("../notification");
@@ -251,6 +252,7 @@ const run = (action) => {
           case DEVICE_TYPE_RELAY_12_RS:
           case DEVICE_TYPE_DIM_12_LED_RS:
           case DEVICE_TYPE_DIM_12_AC_RS:
+          case DEVICE_TYPE_DIM_12_MOSFET_AC_RS:
           case DEVICE_TYPE_DIM_12_DC_RS:
           case DEVICE_TYPE_MIX_6x12_RS:
           case DEVICE_TYPE_MIX_F:
@@ -623,6 +625,7 @@ const run = (action) => {
           case DEVICE_TYPE_MIX_V:
           case DEVICE_TYPE_DIM_12_LED_RS:
           case DEVICE_TYPE_DIM_12_AC_RS:
+          case DEVICE_TYPE_DIM_12_MOSFET_AC_RS:
           case DEVICE_TYPE_DIM_12_DC_RS:
           case DEVICE_TYPE_DIM_1_AC_RS:
           case DEVICE_TYPE_DI_4_RSM:
@@ -631,6 +634,7 @@ const run = (action) => {
               dev.type === DEVICE_TYPE_DIM_12_LED_RS ||
                 dev.type === DEVICE_TYPE_MIX_H ||
                 dev.type === DEVICE_TYPE_DIM_12_AC_RS ||
+                dev.type === DEVICE_TYPE_DIM_12_MOSFET_AC_RS ||
                 dev.type === DEVICE_TYPE_DIM_12_DC_RS ||
                 dev.type === DEVICE_TYPE_DIM_1_AC_RS ||
                 dev.type === DEVICE_TYPE_DIM_8_RS
@@ -841,6 +845,7 @@ const run = (action) => {
                 case DEVICE_TYPE_MIX_H:
                 case DEVICE_TYPE_DIM_12_LED_RS:
                 case DEVICE_TYPE_DIM_12_AC_RS:
+                case DEVICE_TYPE_DIM_12_MOSFET_AC_RS:
                 case DEVICE_TYPE_DIM_12_DC_RS:
                 case DEVICE_TYPE_DIM_1_AC_RS: {
                   device.sendRBUS(
@@ -852,6 +857,7 @@ const run = (action) => {
                       dev.type === DEVICE_TYPE_DIM_12_LED_RS ||
                         dev.type === DEVICE_TYPE_MIX_H ||
                         dev.type === DEVICE_TYPE_DIM_12_AC_RS ||
+                        dev.type === DEVICE_TYPE_DIM_12_MOSFET_AC_RS ||
                         dev.type === DEVICE_TYPE_DIM_12_DC_RS ||
                         dev.type === DEVICE_TYPE_DIM_1_AC_RS ||
                         dev.type === DEVICE_TYPE_DIM_8_RS
@@ -1456,6 +1462,7 @@ const run = (action) => {
                 case DEVICE_TYPE_DIM_8_RS:
                 case DEVICE_TYPE_DIM_12_LED_RS:
                 case DEVICE_TYPE_DIM_12_AC_RS:
+                case DEVICE_TYPE_DIM_12_MOSFET_AC_RS:
                 case DEVICE_TYPE_DIM_12_DC_RS:
                 case DEVICE_TYPE_DIM_1_AC_RS: {
                   switch (type) {
@@ -1691,6 +1698,7 @@ const run = (action) => {
                 case DEVICE_TYPE_DIM_8_RS:
                 case DEVICE_TYPE_DIM_12_LED_RS:
                 case DEVICE_TYPE_DIM_12_AC_RS:
+                case DEVICE_TYPE_DIM_12_MOSFET_AC_RS:
                 case DEVICE_TYPE_DIM_12_DC_RS:
                 case DEVICE_TYPE_DIM_1_AC_RS: {
                   switch (type) {
@@ -1895,6 +1903,7 @@ const run = (action) => {
                 case DEVICE_TYPE_DIM_12_LED_RS:
                 case DEVICE_TYPE_MIX_H:
                 case DEVICE_TYPE_DIM_12_AC_RS:
+                case DEVICE_TYPE_DIM_12_MOSFET_AC_RS:
                 case DEVICE_TYPE_DIM_12_DC_RS:
                 case DEVICE_TYPE_DIM_1_AC_RS:
                 case DEVICE_TYPE_AO_4_DIN: {
@@ -2128,6 +2137,7 @@ const run = (action) => {
             case DEVICE_TYPE_MIX_H:
             case DEVICE_TYPE_MIX_V:
             case DEVICE_TYPE_DIM_12_AC_RS:
+            case DEVICE_TYPE_DIM_12_MOSFET_AC_RS:
             case DEVICE_TYPE_DIM_12_DC_RS:
             case DEVICE_TYPE_DIM_1_AC_RS:
             case DEVICE_TYPE_DI_4_RSM:
@@ -2141,6 +2151,7 @@ const run = (action) => {
                   deviceType === DEVICE_TYPE_DIM_12_LED_RS ||
                     deviceType === DEVICE_TYPE_MIX_H ||
                     deviceType === DEVICE_TYPE_DIM_12_AC_RS ||
+                    dev.type === DEVICE_TYPE_DIM_12_MOSFET_AC_RS ||
                     deviceType === DEVICE_TYPE_DIM_12_DC_RS ||
                     deviceType === DEVICE_TYPE_DIM_1_AC_RS ||
                     deviceType === DEVICE_TYPE_DIM_8_RS

@@ -132,6 +132,7 @@ const {
   DEVICE_TYPE_ROOM_NUMBER,
   DEVICE_TYPE_MIX_F,
   DEVICE_TYPE_SOUNDBOX_LS,
+  DEVICE_TYPE_DIM_12_MOSFET_AC_RS,
 } = require("../constants");
 const {
   get,
@@ -476,6 +477,7 @@ module.exports.manage = () => {
               break;
             }
             case DEVICE_TYPE_DIM_12_AC_RS:
+            case DEVICE_TYPE_DIM_12_MOSFET_AC_RS:
             case DEVICE_TYPE_DIM_12_DC_RS: {
               for (let i = 1; i <= 12; i++) {
                 let value = data.readUInt8(6 + i);
