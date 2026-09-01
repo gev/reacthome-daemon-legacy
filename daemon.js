@@ -94,10 +94,10 @@ const load = async () => {
   state.init(init);
   initAssist();
   initFirmware(init.mac);
-  weather.manage();
+  // weather.manage();
   device.manage();
   drivers.manage();
-  cpu.manage();
+  // cpu.manage();
   console.log(init.mac);
   console.log(Object.keys(init).length);
   discovery.start(init.mac);
