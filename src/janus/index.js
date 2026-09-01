@@ -15,7 +15,7 @@ const handlers = new Map();
 let socket;
 
 const connect = () => {
-  socket = new WebSocket('ws://localhost:8188', 'janus-protocol');
+  socket = new WebSocket('ws://192.168.1.3:8188', 'janus-protocol');
   socket.on('message', (message) => {
     try {
       const action = JSON.parse(message);
