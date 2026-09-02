@@ -6,6 +6,7 @@ const {
   ACTION_SET_COOLANT_TEMP,
   ACTION_SET_BURNER_MODULATION,
   ACTION_SET_ADDRESS,
+  ACTION_SETPOINT_MIN_MAX,
 } = require("../../../constants");
 const {
   readHoldingRegisters,
@@ -37,16 +38,15 @@ const sync = (id) => {
       set(id, { shouldSetNewAddress: false });
       return;
     }
-
     setTimeout(() => {
       writeRegisters(modbus, address, REG_W_COOLANT_TEMP, [dev.coolantTemp * 10]);
     }, 400);
-    // setTimeout(() => {
-    //   writeRegisters(modbus, address, REG_W_COOLANT_MIN_TEMP, [dev.coolantMinTemp * 10]);
-    // }, 800);
-    // setTimeout(() => {
-    //   writeRegisters(modbus, address, REG_W_COOLANT_MAX_TEMP, [dev.coolantMaxTemp * 10]);
-    // }, 1200);
+    setTimeout(() => {
+      writeRegisters(modbus, address, REG_W_COOLANT_MIN_TEMP, [dev.coolantMinTemp * 10]);
+    }, 800);
+    setTimeout(() => {
+      writeRegisters(modbus, address, REG_W_COOLANT_MAX_TEMP, [dev.coolantMaxTemp * 10]);
+    }, 1200);
     setTimeout(() => {
       writeRegisters(modbus, address, REG_W_BURNER_MODULATION, [dev.burnerModulation]);
     }, 1600);
@@ -58,16 +58,12 @@ module.exports.run = (action) => {
   const { id, type } = action;
 
   switch (type) {
-    case ACTION_SET_COOLANT_TEMP: {
+    case ACTION_SETPOINT: {
       set(id, { coolantTemp: action.value, synced: false });
       break;
     }
-    case ACTION_SET_COOLANT_MIN_TEMP: {
-      set(id, { coolantMinTemp: action.value, synced: false });
-      break;
-    }
-    case ACTION_SET_COOLANT_MAX_TEMP: {
-      set(id, { coolantMaxTemp: action.value, synced: false });
+    case ACTION_SETPOINT_MIN_MAX: {
+      set(id, { coolantMinTemp: action.min, coolantMaxTemp: action.max, synced: false });
       break;
     }
     case ACTION_SET_BURNER_MODULATION: {

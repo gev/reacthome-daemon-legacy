@@ -220,9 +220,7 @@ const {
   ACTION_UPDATE,
   DEVICE_TYPE_SOUNDBOX_LS,
   DRIVER_TYPE_ROYAL_VENTO,
-  ACTION_SET_COOLANT_TEMP,
-  ACTION_SET_COOLANT_MIN_TEMP,
-  ACTION_SET_COOLANT_MAX_TEMP,
+
   ACTION_SET_BURNER_MODULATION,
 } = require("../constants");
 const { NOTIFY } = require("../notification/constants");
@@ -2547,7 +2545,13 @@ const run = (action) => {
       case ACTION_SETPOINT_MIN_MAX: {
         const { id, min, max } = action;
         const dev = get(id) || {};
-        set(id, { min, max });
+        if (dev.type === DRIVER_TYPE_ES_BROT_02){
+          action.min = min;
+          action.max = max;
+          drivers.run(action);
+        } else {
+          set(id, { min, max });
+        }
         break;
       }
       case ACTION_INC_SETPOINT: {
@@ -3712,9 +3716,6 @@ const run = (action) => {
         }
         break;
       }
-      case ACTION_SET_COOLANT_TEMP:
-      case ACTION_SET_COOLANT_MIN_TEMP:
-      case ACTION_SET_COOLANT_MAX_TEMP:
       case ACTION_SET_BURNER_MODULATION:
       {
         drivers.run(action);
