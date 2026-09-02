@@ -31,7 +31,7 @@ const sync = (id) => {
   if (synced) {
     readHoldingRegisters(modbus, address, REG_R_ADAPTER_STATUS, 20);
   } else {
-    console.log(dev.coolantTemp, dev.coolantMinTemp, dev.burnerModulation, dev.newAddress);
+    console.log(dev.coolantTemp, dev.coolantMinTemp, dev.coolantMaxTemp, dev.burnerModulation, dev.newAddress);
 
     if(dev.shouldSetNewAddress){
       custom(modbus, [0x00, 0x47, dev.newAddress]);
@@ -63,7 +63,10 @@ module.exports.run = (action) => {
       break;
     }
     case ACTION_SETPOINT_MIN_MAX: {
-      set(id, { coolantMinTemp: action.min, coolantMaxTemp: action.max, synced: false });
+      if (action.min <= action.max){
+        set(id, { coolantMinTemp: action.min, coolantMaxTemp: action.max, synced: false });
+      }
+      // set(id, { coolantMinTemp: action.min, coolantMaxTemp: action.min > action.max ? action.min : action.max, synced: false });
       break;
     }
     case ACTION_SET_BURNER_MODULATION: {
