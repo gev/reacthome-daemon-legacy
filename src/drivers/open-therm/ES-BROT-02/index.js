@@ -15,6 +15,7 @@ const {
 } = require("../../modbus");
 const {
   READ_HOLDING_REGISTERS,
+  WRITE_REGISTERS,
 } = require("../../modbus/constants");
 const { ADDRESS, TIMEOUT, REG_W_COOLANT_TEMP, REG_W_COOLANT_MIN_TEMP, REG_W_COOLANT_MAX_TEMP, REG_W_BURNER_MODULATION, REG_R_ADAPTER_STATUS, REG_R_COOLANT_MIN_TEMP, REG_R_COOLANT_MAX_TEMP, REG_R_DHW_MIN_TEMP, REG_R_DHW_MAX_TEMP, REG_R_CURRENT_PRESSURE, REG_R_ERROR_CODE_MAIN, REG_R_BURNER_MODULATION } = require("./constants");
 
@@ -110,6 +111,9 @@ module.exports.handle = (action) => {
         "\n errorMainCode:", errorMainCode,
       );
       break;
+    }
+    case WRITE_REGISTERS:{
+      console.log("write registers:", action);
     }
   }
 };
