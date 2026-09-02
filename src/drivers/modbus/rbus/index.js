@@ -95,6 +95,7 @@ module.exports.writeRegisters = request(
     for (let i = 0; i < data.length; i++) {
       buffer.writeUInt16BE(data[i], 2 * i + 9);
     }
+    console.log("writing buffer", buffer);
   },
 )(WRITE_REGISTERS);
 
