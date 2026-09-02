@@ -222,6 +222,7 @@ const {
   DRIVER_TYPE_ROYAL_VENTO,
 
   ACTION_SET_BURNER_MODULATION,
+  DRIVER_TYPE_ES_BROT_02,
 } = require("../constants");
 const { NOTIFY } = require("../notification/constants");
 const notification = require("../notification");
