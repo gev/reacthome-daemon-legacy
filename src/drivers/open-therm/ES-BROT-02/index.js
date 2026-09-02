@@ -16,7 +16,7 @@ const {
 const {
   READ_HOLDING_REGISTERS,
 } = require("../../modbus/constants");
-const { ADDRESS, TIMEOUT, REG_W_COOLANT_TEMP, REG_W_COOLANT_MIN_TEMP, REG_W_COOLANT_MAX_TEMP, REG_W_BURNER_MODULATION, REG_R_ADAPTER_STATUS } = require("./constants");
+const { ADDRESS, TIMEOUT, REG_W_COOLANT_TEMP, REG_W_COOLANT_MIN_TEMP, REG_W_COOLANT_MAX_TEMP, REG_W_BURNER_MODULATION, REG_R_ADAPTER_STATUS, REG_R_COOLANT_MIN_TEMP, REG_R_COOLANT_MAX_TEMP, REG_R_DHW_MIN_TEMP, REG_R_DHW_MAX_TEMP, REG_R_CURRENT_PRESSURE } = require("./constants");
 
 const instance = new Set();
 
@@ -29,11 +29,11 @@ const sync = (id) => {
   if (!bind) return;
   const [modbus, , address] = bind.split("/");
   if (synced) {
-    readHoldingRegisters(modbus, address, REG_R_ADAPTER_STATUS, 20);
+    readHoldingRegisters(modbus, address, REG_R_ADAPTER_STATUS, 19);
   } else {
     console.log(dev.coolantTemp, dev.coolantMinTemp, dev.coolantMaxTemp, dev.burnerModulation, dev.newAddress);
 
-    if(dev.shouldSetNewAddress){
+    if (dev.shouldSetNewAddress) {
       custom(modbus, [0x00, 0x47, dev.newAddress]);
       set(id, { shouldSetNewAddress: false });
       return;
@@ -63,7 +63,7 @@ module.exports.run = (action) => {
       break;
     }
     case ACTION_SETPOINT_MIN_MAX: {
-      if (action.min <= action.max){
+      if (action.min <= action.max) {
         set(id, { coolantMinTemp: action.min, coolantMaxTemp: action.max, synced: false });
       }
       // set(id, { coolantMinTemp: action.min, coolantMaxTemp: action.min > action.max ? action.min : action.max, synced: false });
@@ -74,7 +74,7 @@ module.exports.run = (action) => {
       break;
     }
     case ACTION_SET_ADDRESS: {
-      set(id, {newAddress: action.value, shouldSetNewAddress: true, synced: false })
+      set(id, { newAddress: action.value, shouldSetNewAddress: true, synced: false })
       break;
     }
     // case ACTION_MODE_HEAT_COOLANT: {
@@ -86,10 +86,30 @@ module.exports.run = (action) => {
 };
 
 module.exports.handle = (action) => {
+  const offsetBufReg = (reg) => reg - REG_R_ADAPTER_STATUS + 2;
   const { id, data } = action;
-  console.log(action);
   switch (data[0]) {
-    // case READ_HOLDING_REGISTERS:
+    case READ_HOLDING_REGISTERS: {
+      const statusAdapter = data.readUInt16BE(offsetBufReg(REG_R_ADAPTER_STATUS));
+      const coolantMinTemp = data.readUInt16BE(offsetBufReg(REG_R_COOLANT_MIN_TEMP));
+      const coolantMaxTemp = data.readUInt16BE(offsetBufReg(REG_R_COOLANT_MAX_TEMP));
+      const DHWMinTemp = data.readUInt16BE(offsetBufReg(REG_R_DHW_MIN_TEMP));
+      const DHWMAXTemp = data.readUInt16BE(offsetBufReg(REG_R_DHW_MAX_TEMP));
+      const currentPressure = data.readUInt16BE(offsetBufReg(REG_R_CURRENT_PRESSURE));
+      const burnerModulation = data.readUInt16BE(offsetBufReg(REG_R_BURNER_MODULATION));
+      const errorMainCode = data.readUInt16BE(offsetBufReg(REG_R_ERROR_CODE_MAIN));
+      console.log(
+        "\n statusAdapter:", statusAdapter,
+        "\n coolantMinTemp:", coolantMinTemp,
+        "\n coolantMaxTemp:", coolantMaxTemp,
+        "\n DHWMinTemp:", DHWMinTemp,
+        "\n DHWMAXTemp:", DHWMAXTemp,
+        "\n currentPressure:", currentPressure,
+        "\n burnerModulation:", burnerModulation,
+        "\n errorMainCode:", errorMainCode,
+      );
+      break;
+    }
   }
 };
 
