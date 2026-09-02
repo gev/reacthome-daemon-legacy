@@ -31,7 +31,7 @@ const sync = (id) => {
   if (synced) {
     readHoldingRegisters(modbus, address, REG_R_ADAPTER_STATUS, 20);
   } else {
-    console.log(dev.coolantTemp, dev.coolantMinTemp, dev.coolantMaxTemp, dev.burnerModulation, dev.newAddress, dev.newAddress);
+    console.log(dev.coolantTemp, dev.coolantMinTemp, dev.coolantMaxTemp, dev.burnerModulation, dev.newAddress);
 
     if(dev.shouldSetNewAddress){
       custom(modbus, [0x00, 0x47, dev.newAddress]);

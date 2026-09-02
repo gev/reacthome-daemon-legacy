@@ -2511,7 +2511,8 @@ const run = (action) => {
             dev.type === DRIVER_TYPE_SWIFT ||
             dev.type === DRIVER_TYPE_ALINK ||
             dev.type === DRIVER_TYPE_COMFOVENT ||
-            dev.type === DRIVER_TYPE_ROYAL_VENTO
+            dev.type === DRIVER_TYPE_ROYAL_VENTO ||
+            dev.type === DRIVER_TYPE_ES_BROT_02
           ) {
             action.value = setpoint;
             drivers.run(action);
