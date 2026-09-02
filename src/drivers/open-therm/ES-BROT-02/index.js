@@ -92,7 +92,8 @@ module.exports.handle = (action) => {
   console.log(action);
   switch (data[0]) {
     case READ_HOLDING_REGISTERS: {
-      const statusAdapter = data.readUInt16BE(offsetBufReg(REG_R_ADAPTER_STATUS));
+      const statusAdapter = data.readUInt8(offsetBufReg(REG_R_ADAPTER_STATUS));
+      const statusBurner = data.readUInt8(offsetBufReg(REG_R_ADAPTER_STATUS) + 1);
       const coolantMinTemp = data.readUInt16BE(offsetBufReg(REG_R_COOLANT_MIN_TEMP));
       const coolantMaxTemp = data.readUInt16BE(offsetBufReg(REG_R_COOLANT_MAX_TEMP));
       const DHWMinTemp = data.readUInt16BE(offsetBufReg(REG_R_DHW_MIN_TEMP));
@@ -102,6 +103,7 @@ module.exports.handle = (action) => {
       const errorMainCode = data.readUInt16BE(offsetBufReg(REG_R_ERROR_CODE_MAIN));
       console.log(
         "\n statusAdapter:", statusAdapter,
+        "\n statusAdapter:", statusBurner,
         "\n coolantMinTemp:", coolantMinTemp,
         "\n coolantMaxTemp:", coolantMaxTemp,
         "\n DHWMinTemp:", DHWMinTemp,
