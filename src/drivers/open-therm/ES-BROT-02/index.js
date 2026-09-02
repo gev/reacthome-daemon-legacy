@@ -100,6 +100,7 @@ module.exports.handle = (action) => {
       const currentPressure = data.readUInt16BE(offsetBufReg(REG_R_CURRENT_PRESSURE));
       const burnerModulation = data.readUInt16BE(offsetBufReg(REG_R_BURNER_MODULATION));
       const errorMainCode = data.readUInt16BE(offsetBufReg(REG_R_ERROR_CODE_MAIN));
+      const errorAddCode = data.readUInt16BE(offsetBufReg(REG_R_ERROR_CODE_ADD));
       console.log(
         "\n statusAdapter:", statusAdapter,
         "\n coolantMinTemp:", coolantMinTemp,
@@ -109,6 +110,7 @@ module.exports.handle = (action) => {
         "\n currentPressure:", currentPressure,
         "\n burnerModulation:", burnerModulation,
         "\n errorMainCode:", errorMainCode,
+        "\n errorAddCode:", errorAddCode,
       );
       break;
     }
