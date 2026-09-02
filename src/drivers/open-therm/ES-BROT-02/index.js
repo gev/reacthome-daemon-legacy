@@ -43,10 +43,10 @@ const sync = (id) => {
       writeRegisters(modbus, address, REG_W_COOLANT_TEMP, [dev.coolantTemp * 10]);
     }, 400);
     setTimeout(() => {
-      writeRegisters(modbus, address, REG_W_COOLANT_MIN_TEMP, [dev.coolantMinTemp * 10]);
+      writeRegisters(modbus, address, REG_W_COOLANT_MIN_TEMP, [dev.coolantMinTemp]);
     }, 800);
     setTimeout(() => {
-      writeRegisters(modbus, address, REG_W_COOLANT_MAX_TEMP, [dev.coolantMaxTemp * 10]);
+      writeRegisters(modbus, address, REG_W_COOLANT_MAX_TEMP, [dev.coolantMaxTemp]);
     }, 1200);
     setTimeout(() => {
       writeRegisters(modbus, address, REG_W_BURNER_MODULATION, [dev.burnerModulation]);
