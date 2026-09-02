@@ -86,7 +86,7 @@ module.exports.run = (action) => {
 };
 
 module.exports.handle = (action) => {
-  const offsetBufReg = (reg) => reg - REG_R_ADAPTER_STATUS + 2;
+  const offsetBufReg = (reg) => reg - REG_R_ADAPTER_STATUS + 3;
   const { id, data } = action;
   switch (data[0]) {
     case READ_HOLDING_REGISTERS: {
