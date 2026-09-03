@@ -32,7 +32,7 @@ const sync = (id) => {
   if (!bind) return;
   const [modbus, , address] = bind.split("/");
   if (synced) {
-    readHoldingRegisters(modbus, address, REG_R_ADAPTER_STATUS, 19);
+    readHoldingRegisters(modbus, address, REG_R_ADAPTER_STATUS, 20);
     setTimeout(() => {
       readInputRegisters(modbus, address, 0x0081, 1);
     }, 400);
@@ -97,7 +97,7 @@ module.exports.handle = (action) => {
   switch (data[0]) {
     case READ_HOLDING_REGISTERS: {
       const statusAdapter = data.readUInt16BE(offsetBufReg(REG_R_ADAPTER_STATUS));
-      const uptimeAdapter = data.readUInt16BE(offsetBufReg(REG_R_ADAPTER_UPTIME));
+      const uptimeAdapter = data.readUInt32BE(offsetBufReg(REG_R_ADAPTER_UPTIME));
       const coolantTemp = data.readUInt16BE(offsetBufReg(REG_R_COOLANT_TEMP));
       const coolantMinTemp = data.readUInt16BE(offsetBufReg(REG_R_COOLANT_MIN_TEMP));
       const coolantMaxTemp = data.readUInt16BE(offsetBufReg(REG_R_COOLANT_MAX_TEMP));
@@ -115,7 +115,7 @@ module.exports.handle = (action) => {
       const modelCode = data.readUInt16BE(offsetBufReg(REG_R_MODEL_CODE));
       const errorOpenTherm = data.readUInt16BE(offsetBufReg(REG_R_OPENTHERM_ERRORS));
       console.log(
-        "\n statusAdapter:", statusAdapter,
+        "\n statusAdapter:", statusAdapter.toString(2),
         "\n uptimeAdapter:", uptimeAdapter,
         "\n coolantTemp:", coolantTemp,
         "\n coolantMinTemp:", coolantMinTemp,
@@ -126,7 +126,7 @@ module.exports.handle = (action) => {
         "\n currentPressure:", currentPressure,
         "\n currentVolumeFlowRate:", currentVolumeFlowRate,
         "\n burnerModulation:", burnerModulation,
-        "\n burnerStatus:", burnerStatus,
+        "\n burnerStatus:", burnerStatus.toString(2),
         "\n errorMainCode:", errorMainCode,
         "\n errorAddCode:", errorAddCode,
         "\n outerTemp:", outerTemp,
