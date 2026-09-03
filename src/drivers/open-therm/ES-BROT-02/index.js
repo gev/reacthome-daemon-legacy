@@ -12,12 +12,14 @@ const {
   readHoldingRegisters,
   writeRegisters,
   custom,
+  readInputRegisters,
 } = require("../../modbus");
 const {
   READ_HOLDING_REGISTERS,
   WRITE_REGISTERS,
+  READ_INPUT_REGISTERS,
 } = require("../../modbus/constants");
-const { ADDRESS, TIMEOUT, REG_W_COOLANT_TEMP, REG_W_COOLANT_MIN_TEMP, REG_W_COOLANT_MAX_TEMP, REG_W_BURNER_MODULATION, REG_R_ADAPTER_STATUS, REG_R_COOLANT_MIN_TEMP, REG_R_COOLANT_MAX_TEMP, REG_R_DHW_MIN_TEMP, REG_R_DHW_MAX_TEMP, REG_R_CURRENT_PRESSURE, REG_R_ERROR_CODE_MAIN, REG_R_BURNER_MODULATION, REG_R_ERROR_CODE_ADD } = require("./constants");
+const { ADDRESS, TIMEOUT, REG_W_COOLANT_TEMP, REG_W_COOLANT_MIN_TEMP, REG_W_COOLANT_MAX_TEMP, REG_W_BURNER_MODULATION, REG_R_ADAPTER_STATUS, REG_R_COOLANT_MIN_TEMP, REG_R_COOLANT_MAX_TEMP, REG_R_DHW_MIN_TEMP, REG_R_DHW_MAX_TEMP, REG_R_CURRENT_PRESSURE, REG_R_ERROR_CODE_MAIN, REG_R_BURNER_MODULATION, REG_R_ERROR_CODE_ADD, REG_R_OPENTHERM_ERRORS, REG_R_ADAPTER_UPTIME, REG_R_COOLANT_TEMP, REG_R_DHW_TEMP, REG_R_CURRENT_VOLUME_FLOW_RATE, REG_R_BURNER_STATUS, REG_R_OUTER_TEMP, REG_R_VENDOR_CODE, REG_R_MODEL_CODE } = require("./constants");
 
 const instance = new Set();
 
@@ -31,6 +33,9 @@ const sync = (id) => {
   const [modbus, , address] = bind.split("/");
   if (synced) {
     readHoldingRegisters(modbus, address, REG_R_ADAPTER_STATUS, 19);
+    setTimeout(() => {
+      readInputRegisters(modbus, address, 0x0081, 1);
+    }, 400);
   } else {
     console.log(dev.coolantTemp, dev.coolantMinTemp, dev.coolantMaxTemp, dev.burnerModulation, dev.newAddress);
 
@@ -92,29 +97,51 @@ module.exports.handle = (action) => {
   switch (data[0]) {
     case READ_HOLDING_REGISTERS: {
       const statusAdapter = data.readUInt16BE(offsetBufReg(REG_R_ADAPTER_STATUS));
+      const uptimeAdapter = data.readUInt16BE(offsetBufReg(REG_R_ADAPTER_UPTIME));
+      const coolantTemp = data.readUInt16BE(offsetBufReg(REG_R_COOLANT_TEMP));
       const coolantMinTemp = data.readUInt16BE(offsetBufReg(REG_R_COOLANT_MIN_TEMP));
       const coolantMaxTemp = data.readUInt16BE(offsetBufReg(REG_R_COOLANT_MAX_TEMP));
+      const DHWTemp = data.readUInt16BE(offsetBufReg(REG_R_DHW_TEMP));
       const DHWMinTemp = data.readUInt16BE(offsetBufReg(REG_R_DHW_MIN_TEMP));
-      const DHWMAXTemp = data.readUInt16BE(offsetBufReg(REG_R_DHW_MAX_TEMP));
+      const DHWMaxTemp = data.readUInt16BE(offsetBufReg(REG_R_DHW_MAX_TEMP));
       const currentPressure = data.readUInt16BE(offsetBufReg(REG_R_CURRENT_PRESSURE));
+      const currentVolumeFlowRate = data.readUInt16BE(offsetBufReg(REG_R_CURRENT_VOLUME_FLOW_RATE));
       const burnerModulation = data.readUInt16BE(offsetBufReg(REG_R_BURNER_MODULATION));
+      const burnerStatus = data.readUInt16BE(offsetBufReg(REG_R_BURNER_STATUS));
       const errorMainCode = data.readUInt16BE(offsetBufReg(REG_R_ERROR_CODE_MAIN));
       const errorAddCode = data.readUInt16BE(offsetBufReg(REG_R_ERROR_CODE_ADD));
+      const outerTemp = data.readUInt16BE(offsetBufReg(REG_R_OUTER_TEMP));
+      const vendorCode = data.readUInt16BE(offsetBufReg(REG_R_VENDOR_CODE));
+      const modelCode = data.readUInt16BE(offsetBufReg(REG_R_MODEL_CODE));
+      const errorOpenTherm = data.readUInt16BE(offsetBufReg(REG_R_OPENTHERM_ERRORS));
       console.log(
         "\n statusAdapter:", statusAdapter,
+        "\n uptimeAdapter:", uptimeAdapter,
+        "\n coolantTemp:", coolantTemp,
         "\n coolantMinTemp:", coolantMinTemp,
         "\n coolantMaxTemp:", coolantMaxTemp,
+        "\n DHWTemp:", DHWTemp,
         "\n DHWMinTemp:", DHWMinTemp,
-        "\n DHWMAXTemp:", DHWMAXTemp,
+        "\n DHWMaxTemp:", DHWMaxTemp,
         "\n currentPressure:", currentPressure,
+        "\n currentVolumeFlowRate:", currentVolumeFlowRate,
         "\n burnerModulation:", burnerModulation,
+        "\n burnerStatus:", burnerStatus,
         "\n errorMainCode:", errorMainCode,
         "\n errorAddCode:", errorAddCode,
+        "\n outerTemp:", outerTemp,
+        "\n vendorCode:", vendorCode,
+        "\n modelCode:", modelCode,
+        "\n errorOpenTherm:", errorOpenTherm,
       );
       break;
     }
+    case READ_INPUT_REGISTERS: {
+      stateAdapter = data.readInt16BE(2);
+      console.log("\n stateAdapter:", stateAdapter);
+    }
     case WRITE_REGISTERS:{
-      console.log("write registers:", data);
+      // console.log("return write registers:", data);
     }
   }
 };
