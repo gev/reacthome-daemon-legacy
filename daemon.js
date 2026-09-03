@@ -94,7 +94,7 @@ const load = async () => {
   state.init(init);
   initAssist();
   initFirmware(init.mac);
-  // weather.manage();
+  weather.manage();
   device.manage();
   drivers.manage();
   // cpu.manage();
