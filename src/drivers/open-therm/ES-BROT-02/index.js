@@ -45,7 +45,7 @@ const sync = (id) => {
       return;
     }
 
-    writeRegisters(modbus, address, REG_W_MODE, [0x01]);
+    writeRegisters(modbus, address, REG_W_MODE, [0x00]);
     // setTimeout(() => {
     //   writeRegisters(modbus, address, REG_W_CONNECT_TYPE, [0]);
     // }, 200);
