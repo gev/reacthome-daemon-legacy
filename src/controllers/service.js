@@ -2514,9 +2514,11 @@ const run = (action) => {
             dev.type === DRIVER_TYPE_ROYAL_VENTO ||
             dev.type === DRIVER_TYPE_ES_BROT_02
           ) {
+            if (setpoint > 40) setpoint = 40;
             action.value = setpoint;
             drivers.run(action);
           } else {
+            if (setpoint > 40) setpoint = 40;
             set(id, { setpoint });
           }
         } else if (isHumidity) {
