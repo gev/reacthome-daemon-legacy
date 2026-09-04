@@ -64,6 +64,7 @@ const {
   DEVICE_TYPE_SMART_BOTTOM_CLIMATE,
   DEVICE_TYPE_MIX_F,
   DEVICE_TYPE_SOUNDBOX_LS,
+  DEVICE_TYPE_DIM_12_MOSFET_AC_RS,
 } = require("../constants");
 const { get, set, add } = require("./create");
 const { device } = require("../sockets");
@@ -753,6 +754,7 @@ module.exports.initialize = (id) => {
     }
     case DEVICE_TYPE_DIM_12_LED_RS:
     case DEVICE_TYPE_DIM_12_AC_RS:
+    case DEVICE_TYPE_DIM_12_MOSFET_AC_RS:
     case DEVICE_TYPE_DIM_12_DC_RS: {
       const mac = id.split(":").map((i) => parseInt(i, 16));
       a[0] = ACTION_INITIALIZE;

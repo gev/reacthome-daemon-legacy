@@ -1,19 +1,18 @@
+const firebase = require("firebase-admin");
+const { get } = require("../actions");
+const mac = require("../mac");
+const { deleteToken } = require("./token");
+const serviceAccount = require("../../var/firebase.json");
 
-const firebase = require('firebase-admin');
-const { get } = require('../actions');
-const mac = require('../mac');
-const { deleteToken } = require('./token');
-const serviceAccount = require('../../var/firebase.json');
+const sound = "default";
 
-const sound = 'default';
-
-firebase.initializeApp({
-  credential: firebase.credential.cert(serviceAccount),
-  databaseURL: 'https://reacthome-9021b.firebaseio.com'
-});
+// firebase.initializeApp({
+//   credential: firebase.credential.cert(serviceAccount),
+//   databaseURL: 'https://reacthome-9021b.firebaseio.com'
+// });
 
 const params = {
-  priority: 'high',
+  priority: "high",
   // timeToLive: 0,
 };
 
@@ -34,14 +33,15 @@ const data = (action) => ({
 module.exports.notificationMessage = (action) => ({
   notification: notification(action),
   data: data(action),
-})
+});
 
 module.exports.dataMessage = (action) => ({
   data: data(action),
 });
 
 module.exports.send = (token, message) => {
-  firebase.messaging()
+  firebase
+    .messaging()
     .sendToDevice(token, message, params)
     .then(({ results = [] } = {}) => {
       for (const result of results) {

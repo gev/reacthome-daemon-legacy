@@ -12,6 +12,8 @@ const gateURL = (id) => `wss://gate.reacthome.net/${id}`;
 let interval, timeout;
 const sessions = new Set();
 
+let online = false;
+
 const connect = (id) => {
   const socket = new WebSocket(gateURL(id), PROTOCOL);
   socket.on("message", (data) => {
@@ -40,28 +42,33 @@ const connect = (id) => {
     }
   });
   socket.on("pong", () => {
-    clearTimeout(timeout);
+    //console.log("pong");
+    online = true;
+    // clearTimeout(timeout);
   });
   socket.on("close", () => {
     socket.removeAllListeners();
-    // console.log("websocket closed");
+    console.log("websocket closed");
     for (const session of sessions) {
       deleteSession(session);
       sessions.delete(session);
       peers.delete(session);
       terminals.delete(session);
     }
-    clearTimeout(timeout);
+    // clearTimeout(timeout);
     clearInterval(interval);
     setTimeout(connect, TIMEOUT, id);
   });
   socket.on("open", () => {
-    // console.log("websocket opened");
+    console.log("websocket opened");
+    online = true;
     clearInterval(interval);
     interval = setInterval(() => {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => socket.close(), 2 * TIMEOUT);
+      // clearTimeout(timeout);
+      // timeout = setTimeout(() => socket.close(), 2 * TIMEOUT);
+      if (!online) socket.close();
       socket.ping();
+      online = false;
     }, TIMEOUT);
   });
   socket.on("error", console.error);
