@@ -33,6 +33,7 @@ const sync = (id) => {
     readHoldingRegisters(modbus, address, REG_R_ADAPTER_STATUS, 20);
   } else {
     if (dev.shouldSetNewAddress) {
+      console.log(dev.newAddress);
       custom(modbus, [0x00, 0x47, dev.newAddress]);
       set(id, { shouldSetNewAddress: false });
       return;
