@@ -42,7 +42,7 @@ const connect = (id) => {
     }
   });
   socket.on("pong", () => {
-    console.log("pong");
+    //console.log("pong");
     online = true;
     // clearTimeout(timeout);
   });

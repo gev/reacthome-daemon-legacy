@@ -112,9 +112,9 @@ load();
 
 setInterval(() => {
 	if (global.gc) {
-	const memBefore = process.memoryUsage().heapUsed;
+	//const memBefore = process.memoryUsage().heapUsed;
         global.gc();
-        const memAfter = process.memoryUsage().heapUsed;
-	console.log("mem free", memBefore - memAfter); 
+        //const memAfter = process.memoryUsage().heapUsed;
+	//console.log("mem free", memBefore - memAfter); 
 	}
 }, 60000);
