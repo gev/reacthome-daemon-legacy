@@ -220,8 +220,6 @@ const {
   ACTION_UPDATE,
   DEVICE_TYPE_SOUNDBOX_LS,
   DRIVER_TYPE_ROYAL_VENTO,
-
-  ACTION_SET_BURNER_MODULATION,
   DRIVER_TYPE_ES_BROT_02,
 } = require("../constants");
 const { NOTIFY } = require("../notification/constants");
@@ -2322,7 +2320,8 @@ const run = (action) => {
         const { disabled, type } = get(id) || {};
         if (disabled) return;
         if (
-          type === DRIVER_TYPE_ROYAL_VENTO
+          type === DRIVER_TYPE_ROYAL_VENTO ||
+          type === DRIVER_TYPE_ES_BROT_02
         ) {
           drivers.run(action);
           return;
@@ -2349,7 +2348,8 @@ const run = (action) => {
         const { disabled, type } = get(id) || {};
         if (disabled) return;
         if (
-          type === DRIVER_TYPE_ROYAL_VENTO
+          type === DRIVER_TYPE_ROYAL_VENTO ||
+          type === DRIVER_TYPE_ES_BROT_02
         ) {
           drivers.run(action);
           return;
@@ -3716,11 +3716,6 @@ const run = (action) => {
         if (co2_correct !== undefined) {
           set(id, { co2_correct, co2: co2_raw + co2_correct });
         }
-        break;
-      }
-      case ACTION_SET_BURNER_MODULATION:
-      {
-        drivers.run(action);
         break;
       }
       case ACTION_UPDATE: {

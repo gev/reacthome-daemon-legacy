@@ -236,8 +236,6 @@ module.exports.ACTION_STOP_VENTILATION = "ACTION_STOP_VENTILATION";
 module.exports.ACTION_STOP_WET = "ACTION_STOP_WET";
 
 
-module.exports.ACTION_SET_BURNER_MODULATION = "ACTION_BURNER_MODULATION"
-
 module.exports.ACTION_ASSIST = "ACTION_ASSIST";
 
 module.exports.TEMPERATURE_EXT = "temperature_ext";
