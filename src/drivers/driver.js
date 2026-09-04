@@ -25,6 +25,7 @@ const {
   DRIVER_TYPE_TELEGRAM,
   DRIVER_TYPE_DMX512,
   DRIVER_TYPE_ROYAL_VENTO,
+  DRIVER_TYPE_ES_BROT_02,
 } = require("../constants");
 const { get } = require("../actions");
 const RS21 = require("./RS21");
@@ -51,6 +52,7 @@ const proxy = require("./proxy");
 const telegram = require("./telegram");
 const dmx512 = require("./dmx512");
 const royal_vento = require("./royal/vento")
+const es_brot_02 = require("./open-therm/ES-BROT-02")
 
 const mac = require("../mac");
 
@@ -170,6 +172,10 @@ module.exports.manage = () => {
       case DRIVER_TYPE_ROYAL_VENTO:
         instances.add(id, royal_vento);
         royal_vento.add(id);
+        break;
+      case DRIVER_TYPE_ES_BROT_02:
+        instances.add(id, es_brot_02);
+        es_brot_02.add(id);
         break;
     }
   }

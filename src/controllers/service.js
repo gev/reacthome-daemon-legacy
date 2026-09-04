@@ -220,6 +220,7 @@ const {
   ACTION_UPDATE,
   DEVICE_TYPE_SOUNDBOX_LS,
   DRIVER_TYPE_ROYAL_VENTO,
+  DRIVER_TYPE_ES_BROT_02,
   DEVICE_TYPE_DIM_12_MOSFET_AC_RS,
 } = require("../constants");
 const { NOTIFY } = require("../notification/constants");
@@ -2330,7 +2331,8 @@ const run = (action) => {
         const { disabled, type } = get(id) || {};
         if (disabled) return;
         if (
-          type === DRIVER_TYPE_ROYAL_VENTO
+          type === DRIVER_TYPE_ROYAL_VENTO ||
+          type === DRIVER_TYPE_ES_BROT_02
         ) {
           drivers.run(action);
           return;
@@ -2357,7 +2359,8 @@ const run = (action) => {
         const { disabled, type } = get(id) || {};
         if (disabled) return;
         if (
-          type === DRIVER_TYPE_ROYAL_VENTO
+          type === DRIVER_TYPE_ROYAL_VENTO ||
+          type === DRIVER_TYPE_ES_BROT_02
         ) {
           drivers.run(action);
           return;
@@ -2504,7 +2507,7 @@ const run = (action) => {
         const dev = get(id) || {};
         if (isTemperature) {
           if (setpoint < 10) setpoint = 10;
-          if (setpoint > 40) setpoint = 40;
+          if (setpoint > 80) setpoint = 80;
           if (dev.type === SITE) {
             const { thermostat = [] } = dev;
             for (const t of thermostat) {
@@ -2519,11 +2522,13 @@ const run = (action) => {
             dev.type === DRIVER_TYPE_SWIFT ||
             dev.type === DRIVER_TYPE_ALINK ||
             dev.type === DRIVER_TYPE_COMFOVENT ||
-            dev.type === DRIVER_TYPE_ROYAL_VENTO
+            dev.type === DRIVER_TYPE_ROYAL_VENTO ||
+            dev.type === DRIVER_TYPE_ES_BROT_02
           ) {
             action.value = setpoint;
             drivers.run(action);
           } else {
+            if (setpoint > 40) setpoint = 40;
             set(id, { setpoint });
           }
         } else if (isHumidity) {
@@ -2554,7 +2559,11 @@ const run = (action) => {
       case ACTION_SETPOINT_MIN_MAX: {
         const { id, min, max } = action;
         const dev = get(id) || {};
-        set(id, { min, max });
+        if (dev.type === DRIVER_TYPE_ES_BROT_02){
+          drivers.run(action);
+        } else {
+          set(id, { min, max });
+        }
         break;
       }
       case ACTION_INC_SETPOINT: {

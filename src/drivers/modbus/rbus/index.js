@@ -61,6 +61,7 @@ module.exports.readHoldingRegisters = request8(READ_HOLDING_REGISTERS);
 module.exports.readInputRegisters = request8(READ_INPUT_REGISTERS);
 module.exports.writeCoil = request8(WRITE_COIL);
 module.exports.writeRegister = request8(WRITE_REGISTER);
+
 // module.exports.writeRegisters = request(
 //   (data) => {
 //     const m = data.length % 8;
@@ -127,4 +128,32 @@ module.exports.handle = ({ id, data }) => {
   }
 };
 
-module.exports.run = () => {};
+
+module.exports.custom = (id, data) => {
+  const { bind } = get(id) || {};
+  if (!bind) return;
+  const [dev, , index] = bind.split("/");
+  const { ip, type } = get(dev) || {};
+  if (ip && index) {
+    const size = data.length;
+    const buffer = Buffer.alloc(size + 4);
+    buffer.writeUInt8(ACTION_RS485_TRANSMIT, 0);
+    buffer.writeUInt8(index, 1);
+    for (let i = 0; i < size; i++) {
+      buffer[i + 2] = data[i];
+    }
+    buffer.writeUInt16LE(crc16modbus(data), size + 2);
+    switch (type) {
+      case DEVICE_TYPE_DI_4_RSM:
+      case DEVICE_TYPE_RS_HUB1_RS: {
+        device.sendRBUS(buffer, dev);
+        break;
+      }
+      default: {
+        device.sendUDP(buffer, ip);
+      }
+    }
+  }
+};
+
+module.exports.run = () => { };

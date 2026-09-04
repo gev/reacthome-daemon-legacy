@@ -235,6 +235,7 @@ module.exports.ACTION_STOP_FAN = "ACTION_STOP_FAN";
 module.exports.ACTION_STOP_VENTILATION = "ACTION_STOP_VENTILATION";
 module.exports.ACTION_STOP_WET = "ACTION_STOP_WET";
 
+
 module.exports.ACTION_ASSIST = "ACTION_ASSIST";
 
 module.exports.TEMPERATURE_EXT = "temperature_ext";
@@ -438,6 +439,7 @@ module.exports.DRIVER_TYPE_DAUERHAFT = 'DAUERHAFT';
 module.exports.DRIVER_TYPE_DMX512 = 'DMX512';
 module.exports.DRIVER_TYPE_TELEGRAM = "TELEGRAM";
 module.exports.DRIVER_TYPE_ROYAL_VENTO = "ROYAL_VENTO";
+module.exports.DRIVER_TYPE_ES_BROT_02 = 'DRIVER_TYPE_ES_BROT_02';
 
 module.exports.DALI_LIGHT = 'dali_light';
 module.exports.DALI_GROUP = 'dali_group';
