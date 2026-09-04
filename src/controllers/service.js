@@ -2549,8 +2549,6 @@ const run = (action) => {
         const { id, min, max } = action;
         const dev = get(id) || {};
         if (dev.type === DRIVER_TYPE_ES_BROT_02){
-          action.min = min;
-          action.max = max;
           drivers.run(action);
         } else {
           set(id, { min, max });
