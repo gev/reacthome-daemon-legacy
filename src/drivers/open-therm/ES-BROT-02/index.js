@@ -38,7 +38,7 @@ const sync = (id) => {
       return;
     }
     setTimeout(() => {
-      writeRegisters(modbus, address, REG_W_MODE, coolantHeat ? [1] : [0]);
+      writeRegisters(modbus, address, REG_W_MODE, dev.coolantHeat ? [1] : [0]);
     }, 200);
     setTimeout(() => {
       writeRegisters(modbus, address, REG_W_COOLANT_TEMP, [dev.coolantTemp * 10]);
