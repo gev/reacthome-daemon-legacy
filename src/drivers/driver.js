@@ -26,6 +26,7 @@ const {
   DRIVER_TYPE_DMX512,
   DRIVER_TYPE_ROYAL_VENTO,
   DRIVER_TYPE_ES_BROT_02,
+  DRIVER_TYPE_HCPC_H2M1C,
 } = require("../constants");
 const { get } = require("../actions");
 const RS21 = require("./RS21");
