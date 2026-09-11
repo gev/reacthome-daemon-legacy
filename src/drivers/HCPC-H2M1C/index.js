@@ -21,12 +21,9 @@ const sync = async (id, modbus, address, n) => {
           dataFan = 8;
           break;
         case 1:
-          dataFan = 8;
-          break;
-        case 2:
           dataFan = 4;
           break;
-        case 3:
+        case 2:
           dataFan = 2;
           break;
       }
