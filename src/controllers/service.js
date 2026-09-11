@@ -2520,7 +2520,7 @@ const run = (action) => {
           } else if (
             dev.type === DRIVER_TYPE_INTESIS_BOX ||
             dev.type === DRIVER_TYPE_MD_CCM18_AN_E ||
-            o.type === DRIVER_TYPE_HCPC_H2M1C ||
+            dev.type === DRIVER_TYPE_HCPC_H2M1C ||
             dev.type === DRIVER_TYPE_TICA ||
             dev.type === DRIVER_TYPE_NOVA ||
             dev.type === DRIVER_TYPE_SWIFT ||
