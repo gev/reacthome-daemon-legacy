@@ -15,7 +15,7 @@ const sync = async (id, modbus, address, n) => {
     const { synced, value, mode, fan_speed, setpoint } = get(ch) || {};
     if (!synced) {
       let dataMode = 1;
-      switch (mode){
+      switch (mode) {
         case 0: {
           dataMode = 8;
           break;
@@ -53,8 +53,8 @@ const sync = async (id, modbus, address, n) => {
       writeRegisters(modbus, address, 40078 + i * 91, [(value ? 1 : 0), dataMode, dataFan, 0, setpoint]);
       set(ch, { synced: true });
     } else {
-      deviceChannel = ch;
       readHoldingRegisters(modbus, address, 40002 + i * 91, 7);
+      deviceChannel = ch;
     }
     await delay(1000);
   }
@@ -110,29 +110,68 @@ module.exports.handle = (action) => {
       offsetBuf = (val) => val * 2 + 2;
 
       const val = data.readUInt16BE(offsetBuf(0));
-      const mod = data.readUInt16BE(offsetBuf(1));
+      const dataMode = data.readUInt16BE(offsetBuf(1));
       const speed = data.readUInt16BE(offsetBuf(2));
       const temp = data.readUInt16BE(offsetBuf(6));
-      console.log (
+      console.log(
         "val", val,
-        "mod", mod,
+        "mod", dataMode,
         "speed", speed,
         "temp", temp,
       )
-      if (synced) {
-          set(deviceChannel, {
-            value: !!value,
-            fan_speed: fan_speed,
-            heat: !!heat,
-            setpoint,
-            synced: true,
-          });
+
+      let fan_speed = 0;
+      switch (speed) {
+        case 8:
+          fan_speed = 0;
+          break;
+        case 4:
+          fan_speed = 1;
+          break;
+        case 2:
+          fan_speed = 2;
+          break;
+      }
+
+      let mode = 0;
+      switch (dataMode) {
+        case 8: {
+          mode = 0;
+          break;
         }
+        case 4: {
+          mode = 1;
+          break;
+        }
+        case 16: {
+          mode = 2;
+          break;
+        }
+        case 2: {
+          mode = 3;
+          break;
+        }
+        case 1: {
+          mode = 4;
+          break;
+        }
+      }
+
+      if (synced) {
+        set(deviceChannel, {
+          value: !!val,
+          fan_speed,
+          mode,
+          setpoint: temp,
+          synced: true,
+        });
+      }
       break;
     }
   }
 }
 
+// synced, value, mode, fan_speed, setpoint
 module.exports.clear = () => {
   instance.clear();
 }
