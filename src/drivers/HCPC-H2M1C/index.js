@@ -31,7 +31,7 @@ const sync = async (id, modbus, address, n) => {
       set(ch, { synced: true });
     } else {
       // readHoldingRegisters(modbus, address, 40002 + i * 91, 7);
-      readHoldingRegisters(modbus, address, 41064, 8);
+      readHoldingRegisters(modbus, address, 1064, 8);
     }
     await delay(1000);
   }
