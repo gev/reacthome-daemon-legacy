@@ -91,7 +91,7 @@ module.exports.run = (action) => {
       break;
     }
     case ACTION_SETPOINT: {
-      set(ch, { setpoint: Math.max(17, Math.min(30, action.value)), synced: false });
+      set(ch, { setpoint: Math.max(16, Math.min(32, action.value)), synced: false });
       break;
     }
   }
