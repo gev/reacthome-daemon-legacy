@@ -52,6 +52,7 @@ const loop = (id) => async () => {
 module.exports.run = (action) => {
   const { id, type, index } = action;
   const ch = `${id}/ac/${index}`;
+  console.log(action);
   switch (type) {
     case ACTION_ON: {
       set(ch, { value: true, synced: false });
