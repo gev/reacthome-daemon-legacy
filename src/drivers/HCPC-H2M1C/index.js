@@ -30,8 +30,8 @@ const sync = async (id, modbus, address, n) => {
       writeRegisters(modbus, address, 40078 + i * 91, [(value ? 1 : 0), dataMode, dataFan, 0, setpoint]);
       set(ch, { synced: true });
     } else {
-      // readHoldingRegisters(modbus, address, 40002 + i * 91, 7);
-      readHoldingRegisters(modbus, address, 4997, 8);
+      readHoldingRegisters(modbus, address, 40002 + i * 91, 7);
+      // readHoldingRegisters(modbus, address, 4997, 8);
     }
     await delay(1000);
   }
@@ -83,12 +83,7 @@ module.exports.handle = (action) => {
       break;
     }
     case READ_HOLDING_REGISTERS: {
-      // console.log("\n read: ", data,
-      //   "\non/off, mode" , data.readUInt16BE(2),
-      //   "\ntemp" , data.readUInt16BE(4),
-      //   "\nvent" , data.readUInt16BE(8),
-      // );
-      console.log(data);
+      console.log("\n read: ", data);
     }
   }
 }
