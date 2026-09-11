@@ -88,7 +88,7 @@ module.exports.handle = (action) => {
       //   "\ntemp" , data.readUInt16BE(4),
       //   "\nvent" , data.readUInt16BE(8),
       // );
-      console.log(data.toString(2));
+      console.log(data);
     }
   }
 }
