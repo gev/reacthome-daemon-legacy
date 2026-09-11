@@ -106,6 +106,20 @@ module.exports.handle = (action) => {
     }
     case READ_HOLDING_REGISTERS: {
       console.log("\n read: ", data);
+      offsetBuf = (val) => val * 2 + 2;
+
+      const val = data.data.readUInt16BE(offsetBuf(0));
+      const mod = data.data.readUInt16BE(offsetBuf(1));
+      const speed = data.data.readUInt16BE(offsetBuf(2));
+      const temp = data.data.readUInt16BE(offsetBuf(6));
+      console.log (
+        "val", val,
+        "mod", mod,
+        "speed", speed,
+        "temp", temp,
+      )
+
+
     }
   }
 }
