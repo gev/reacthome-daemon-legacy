@@ -101,24 +101,13 @@ module.exports.handle = (action) => {
   const { synced } = get(deviceChannel);
   const { id, data } = action;
   switch (data[0]) {
-    case WRITE_REGISTERS: {
-      console.log(data);
-      break;
-    }
     case READ_HOLDING_REGISTERS: {
-      console.log("\n read: ", data);
       offsetBuf = (val) => val * 2 + 2;
 
       const val = data.readUInt16BE(offsetBuf(0));
       const dataMode = data.readUInt16BE(offsetBuf(1));
       const speed = data.readUInt16BE(offsetBuf(2));
       const temp = data.readUInt16BE(offsetBuf(6));
-      console.log(
-        "val", val,
-        "mod", dataMode,
-        "speed", speed,
-        "temp", temp,
-      )
 
       let fan_speed = 0;
       switch (speed) {
