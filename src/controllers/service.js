@@ -222,6 +222,7 @@ const {
   DRIVER_TYPE_ROYAL_VENTO,
   DRIVER_TYPE_ES_BROT_02,
   DEVICE_TYPE_DIM_12_MOSFET_AC_RS,
+  DRIVER_TYPE_HCPC_H2M1C,
 } = require("../constants");
 const { NOTIFY } = require("../notification/constants");
 const notification = require("../notification");
@@ -1385,6 +1386,7 @@ const run = (action) => {
         if (
           o.type === DRIVER_TYPE_INTESIS_BOX ||
           o.type === DRIVER_TYPE_MD_CCM18_AN_E ||
+          o.type === DRIVER_TYPE_HCPC_H2M1C ||
           o.type === DRIVER_TYPE_TICA ||
           o.type === DRIVER_TYPE_NOVA ||
           o.type === DRIVER_TYPE_SWIFT ||
@@ -1626,6 +1628,7 @@ const run = (action) => {
         if (
           o.type === DRIVER_TYPE_INTESIS_BOX ||
           o.type === DRIVER_TYPE_MD_CCM18_AN_E ||
+          o.type === DRIVER_TYPE_HCPC_H2M1C ||
           o.type === DRIVER_TYPE_TICA ||
           o.type === DRIVER_TYPE_NOVA ||
           o.type === DRIVER_TYPE_SWIFT ||
@@ -2517,6 +2520,7 @@ const run = (action) => {
           } else if (
             dev.type === DRIVER_TYPE_INTESIS_BOX ||
             dev.type === DRIVER_TYPE_MD_CCM18_AN_E ||
+            o.type === DRIVER_TYPE_HCPC_H2M1C ||
             dev.type === DRIVER_TYPE_TICA ||
             dev.type === DRIVER_TYPE_NOVA ||
             dev.type === DRIVER_TYPE_SWIFT ||
