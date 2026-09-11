@@ -18,24 +18,24 @@ const sync = async (id, modbus, address, n) => {
       let dataFan = 0;
       switch (fan_speed) {
         case 0:
-          dataFan = 0b1000_0000;
+          dataFan = 8;
           break;
         case 1:
-          dataFan = 0b0000_0100;
+          dataFan = 8;
           break;
         case 2:
-          dataFan = 0b0000_0010;
+          dataFan = 4;
           break;
         case 3:
-          dataFan = 0b0000_0001;
+          dataFan = 2;
           break;
       }
-      writeRegisters(modbus, address, 40078 + 91 * i, [(value ? 1 : 0), dataMode, dataFan, 0, setpoint]);
+      writeRegisters(modbus, address, 40078 + i * 91, [(value ? 1 : 0), dataMode, dataFan, 0, setpoint]);
       set(ch, { synced: true });
     } else {
-      // readHoldingRegisters(modbus, address, 3 + i * 32, 1);
+      readHoldingRegisters(modbus, address, 40002 + i * 91, 7);
     }
-    await delay(2000);
+    await delay(1000);
   }
 };
 
@@ -83,6 +83,13 @@ module.exports.handle = (action) => {
     case WRITE_REGISTERS: {
       console.log(data);
       break;
+    }
+    case READ_HOLDING_REGISTERS: {
+      console.log("\n read: ", data,
+        "\non/off, mode" , data.readUInt16BE(2),
+        "\ntemp" , data.readUInt16BE(4),
+        "\nvent" , data.readUInt16BE(8),
+      );
     }
   }
 }
