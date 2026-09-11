@@ -27,7 +27,7 @@ const sync = async (id, modbus, address, n) => {
           dataFan = 2;
           break;
       }
-      writeRegisters(modbus, address, 40078 + i * 91, [(value ? 1 : 0), dataMode, dataFan, 0, setpoint]);
+      writeRegisters(modbus, address, 40078 + i * 91, [(value ? 1 : 0)]); //, dataMode, dataFan, 0, setpoint]);
       set(ch, { synced: true });
     } else {
       readHoldingRegisters(modbus, address, 40002 + i * 91, 7);
