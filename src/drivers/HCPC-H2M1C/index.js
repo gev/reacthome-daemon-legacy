@@ -14,8 +14,30 @@ const sync = async (id, modbus, address, n) => {
     const ch = `${id}/ac/${i + 1}`
     const { synced, value, mode, fan_speed, setpoint } = get(ch) || {};
     if (!synced) {
-      const dataMode = 1 << mode;
-      console.log("mode", mode);
+      let dataMode = 1;
+      switch (mode){
+        case 0: {
+          dataMode = 8;
+          break;
+        }
+        case 1: {
+          dataMode = 4;
+          break;
+        }
+        case 2: {
+          dataMode = 16;
+          break;
+        }
+        case 3: {
+          dataMode = 2;
+          break;
+        }
+        case 4: {
+          dataMode = 1;
+          break;
+        }
+      }
+
       let dataFan = 0;
       switch (fan_speed) {
         case 0:
@@ -28,7 +50,7 @@ const sync = async (id, modbus, address, n) => {
           dataFan = 2;
           break;
       }
-      writeRegisters(modbus, address, 40078 + i * 91, [(value ? 1 : 0)]); //, dataMode, dataFan, 0, setpoint]);
+      writeRegisters(modbus, address, 40078 + i * 91, [(value ? 1 : 0), dataMode, dataFan, 0, setpoint]);
       set(ch, { synced: true });
     } else {
       readHoldingRegisters(modbus, address, 40002 + i * 91, 7);
@@ -51,7 +73,6 @@ const loop = (id) => async () => {
 module.exports.run = (action) => {
   const { id, type, index } = action;
   const ch = `${id}/ac/${index}`;
-  console.log(action);
   switch (type) {
     case ACTION_ON: {
       set(ch, { value: true, synced: false });
