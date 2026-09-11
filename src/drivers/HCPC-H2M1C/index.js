@@ -2,7 +2,7 @@
 const { get, set } = require('../../actions');
 const { ACTION_SET_FAN_SPEED, ACTION_ON, ACTION_OFF, ACTION_SET_MODE, ACTION_SETPOINT } = require('../../constants');
 const { writeRegister, readHoldingRegisters, writeRegisters, readCoils } = require('../modbus');
-const { READ_HOLDING_REGISTERS, WRITE_REGISTER, READ_COILS } = require('../modbus/constants');
+const { READ_HOLDING_REGISTERS, WRITE_REGISTER, READ_COILS, WRITE_REGISTERS } = require('../modbus/constants');
 const { delay } = require('../../util');
 
 const instance = new Map();
@@ -77,49 +77,13 @@ module.exports.run = (action) => {
 };
 
 module.exports.handle = (action) => {
-  // const { id, data } = action;
-  // switch (data[0]) {
-  //   case READ_COILS: {
-  //     let value = data[2] >> 7;
-  //     let mode = 4;
-  //     switch (data[2] & 0b11111) {
-  //       case 0b00001:
-  //         mode = 0;
-  //         break;
-  //       case 0b0010:
-  //         mode = 1;
-  //         break;
-  //       case 0b00100:
-  //         mode = 2;
-  //         break;
-  //       case 0b01000:
-  //         mode = 3;
-  //         break;
-  //       case 0b10000:
-  //         mode = 4;
-  //         break;
-  //     }
-  //     let fan_speed = 0;
-  //     switch (data[3] & 0b111) {
-  //       case 0b100:
-  //         fan_speed = 1;
-  //         break;
-  //       case 0b010:
-  //         fan_speed = 2;
-  //         break;
-  //       case 0b001:
-  //         fan_speed = 3;
-  //         break;
-  //     }
-  //     set(`${id}/ac/${index}`, { value, mode, fan_speed });
-  //     break;
-  //   }
-  //   case READ_HOLDING_REGISTERS: {
-  //     const setpoint = data.readUInt16BE(2);
-  //     set(`${id}/ac/${index}`, { setpoint });
-  //     break;
-  //   }
-  // }
+  const { id, data } = action;
+  switch (data[0]) {
+    case WRITE_REGISTERS: {
+      console.log(data);
+      break;
+    }
+  }
 }
 
 module.exports.clear = () => {
