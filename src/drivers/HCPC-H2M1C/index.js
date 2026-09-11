@@ -7,7 +7,7 @@ const { delay } = require('../../util');
 
 const instance = new Map();
 
-let index = 0
+let deviceChannel;
 
 const sync = async (id, modbus, address, n) => {
   for (let i = 0; i < n; i += 1) {
@@ -53,8 +53,8 @@ const sync = async (id, modbus, address, n) => {
       writeRegisters(modbus, address, 40078 + i * 91, [(value ? 1 : 0), dataMode, dataFan, 0, setpoint]);
       set(ch, { synced: true });
     } else {
+      deviceChannel = ch;
       readHoldingRegisters(modbus, address, 40002 + i * 91, 7);
-      // readHoldingRegisters(modbus, address, 4997, 8);
     }
     await delay(1000);
   }
@@ -98,6 +98,7 @@ module.exports.run = (action) => {
 };
 
 module.exports.handle = (action) => {
+  const { synced } = get(deviceChannel);
   const { id, data } = action;
   switch (data[0]) {
     case WRITE_REGISTERS: {
@@ -118,8 +119,16 @@ module.exports.handle = (action) => {
         "speed", speed,
         "temp", temp,
       )
-
-
+      if (synced) {
+          set(deviceChannel, {
+            value: !!value,
+            fan_speed: fan_speed,
+            heat: !!heat,
+            setpoint,
+            synced: true,
+          });
+        }
+      break;
     }
   }
 }
