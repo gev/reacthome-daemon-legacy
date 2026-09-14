@@ -133,6 +133,7 @@ const {
   DEVICE_TYPE_MIX_F,
   DEVICE_TYPE_SOUNDBOX_LS,
   DEVICE_TYPE_DIM_12_MOSFET_AC_RS,
+  DEVICE_TYPE_MIX_W,
 } = require("../constants");
 const {
   get,
@@ -603,6 +604,29 @@ module.exports.manage = () => {
                   value,
                   chan.velocity,
                 ]);
+                handleData(
+                  Buffer.concat([dev_mac, payload]),
+                  { address },
+                  { hub },
+                );
+              }
+              break;
+            }
+            case DEVICE_TYPE_MIX_W: {
+              const valuesDI = data.readUInt8(7);
+              for (let i = 1; i <= 8; i++) {
+                let value = valuesDI & (1 << (i - 1)) ? 1 : 0;
+                let payload = Buffer.from([ACTION_DI, i, value]);
+                handleData(
+                  Buffer.concat([dev_mac, payload]),
+                  { address },
+                  { hub },
+                );
+              }
+              const valuesDO = data.readUInt8(8);
+              for (let i = 1; i <= 6; i++) {
+                let value = valuesDO & (1 << (i - 1)) ? 1 : 0;
+                let payload = Buffer.from([ACTION_DO, i, value]);
                 handleData(
                   Buffer.concat([dev_mac, payload]),
                   { address },

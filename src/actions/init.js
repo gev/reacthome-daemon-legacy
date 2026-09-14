@@ -65,6 +65,7 @@ const {
   DEVICE_TYPE_MIX_F,
   DEVICE_TYPE_SOUNDBOX_LS,
   DEVICE_TYPE_DIM_12_MOSFET_AC_RS,
+  DEVICE_TYPE_MIX_W,
 } = require("../constants");
 const { get, set, add } = require("./create");
 const { device } = require("../sockets");
@@ -366,6 +367,32 @@ module.exports.initialize = (id) => {
         a[k++] = (channel && channel.group) || i;
         a[k++] = (channel && channel.type) || 0;
         a[k++] = (channel && channel.value) || 0;
+      }
+      device.sendRBUS(Buffer.from(a), id);
+      break;
+    }
+    case DEVICE_TYPE_MIX_W: {
+      const mac = id.split(":").map((i) => parseInt(i, 16));
+      let k = 0;
+      a[k++] = ACTION_INITIALIZE;
+      for (let i = 1; i <= 6; i++) {
+        const channel = get(`${id}/${GROUP}/${i}`) || {};
+        const { enabled = 0, delay = 0 } = channel;
+        a[k++] = enabled;
+        a[k++] = delay & 0xff;
+        a[k++] = (delay >> 8) & 0xff;
+        a[k++] = (delay >> 16) & 0xff;
+        a[k++] = (delay >> 24) & 0xff;
+      }
+      for (let i = 1; i <= 6; i++) {
+        const channel = get(`${id}/${DO}/${i}`) || {};
+        const { value = 0, timeout = 0, group = i } = channel;
+        a[k++] = value;
+        a[k++] = group;
+        a[k++] = timeout & 0xff;
+        a[k++] = (timeout >> 8) & 0xff;
+        a[k++] = (timeout >> 16) & 0xff;
+        a[k++] = (timeout >> 24) & 0xff;
       }
       device.sendRBUS(Buffer.from(a), id);
       break;
