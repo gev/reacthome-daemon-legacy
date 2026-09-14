@@ -26,6 +26,7 @@ const {
   DRIVER_TYPE_DMX512,
   DRIVER_TYPE_ROYAL_VENTO,
   DRIVER_TYPE_ES_BROT_02,
+  DRIVER_TYPE_HCPC_H2M1C,
 } = require("../constants");
 const { get } = require("../actions");
 const RS21 = require("./RS21");
@@ -40,6 +41,7 @@ const swift = require("./shuft/swift");
 const comfovent = require("./comfovent");
 const varmann = require("./varmann");
 const intesisbox = require("./intesisbox");
+const hcpc_h2m1c = require("./HCPC-H2M1C");
 const md_ccm18_an_e = require("./MD-CCM18-AN-E");
 const tica = require("./tica");
 const rtdra = require("./RTD-RA");
@@ -70,6 +72,7 @@ module.exports.manage = () => {
   varmann.clear();
   intesisbox.clear();
   md_ccm18_an_e.clear();
+  hcpc_h2m1c.clear();
   rtdra.clear();
   alink.clear();
   // me210_701.clear()
@@ -136,6 +139,10 @@ module.exports.manage = () => {
       case DRIVER_TYPE_MD_CCM18_AN_E:
         instances.add(id, md_ccm18_an_e);
         md_ccm18_an_e.add(id);
+        break;
+      case DRIVER_TYPE_HCPC_H2M1C:
+        instances.add(id, hcpc_h2m1c);
+        hcpc_h2m1c.add(id);
         break;
       case DRIVER_TYPE_TICA:
         instances.add(id, tica);
