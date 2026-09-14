@@ -29,6 +29,7 @@ const {
   DEVICE_TYPE_SMART_TOP_CARD_HOLDER,
   DEVICE_TYPE_ROOM_NUMBER,
   DEVICE_TYPE_MIX_F,
+  DEVICE_TYPE_MIX_W,
 } = require("../constants");
 const { device } = require("../sockets");
 
@@ -51,6 +52,7 @@ const online = (id, props) => {
       case DEVICE_TYPE_MIX_6x12_RS:
       case DEVICE_TYPE_MIX_F:
       case DEVICE_TYPE_MIX_H:
+      case DEVICE_TYPE_MIX_W:
       case DEVICE_TYPE_MIX_V:
       case DEVICE_TYPE_RELAY_2_DIN:
       case DEVICE_TYPE_SMART_BOTTOM:

@@ -316,6 +316,7 @@ module.exports.DEVICE_TYPE_MIX_V = 0x42;
 module.exports.DEVICE_TYPE_AO_4 = 0x43;
 module.exports.DEVICE_TYPE_ROOM_NUMBER = 0x44;
 module.exports.DEVICE_TYPE_MIX_F = 0x45;
+module.exports.DEVICE_TYPE_MIX_W = 0x46;
 
 module.exports.DEVICE_TYPE_SMART_TOP_A6P = 0x30;
 module.exports.DEVICE_TYPE_SMART_TOP_G4D = 0x31;

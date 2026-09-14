@@ -223,6 +223,7 @@ const {
   DRIVER_TYPE_ES_BROT_02,
   DEVICE_TYPE_DIM_12_MOSFET_AC_RS,
   DRIVER_TYPE_HCPC_H2M1C,
+  DEVICE_TYPE_MIX_W,
 } = require("../constants");
 const { NOTIFY } = require("../notification/constants");
 const notification = require("../notification");
@@ -259,6 +260,7 @@ const run = (action) => {
           case DEVICE_TYPE_MIX_6x12_RS:
           case DEVICE_TYPE_MIX_F:
           case DEVICE_TYPE_MIX_H:
+          case DEVICE_TYPE_MIX_W:
           case DEVICE_TYPE_ROOM_NUMBER:
           case DEVICE_TYPE_SMART_4A:
           case DEVICE_TYPE_SMART_4AM:
@@ -323,6 +325,7 @@ const run = (action) => {
           case DEVICE_TYPE_MIX_1_RS:
           case DEVICE_TYPE_MIX_6x12_RS:
           case DEVICE_TYPE_MIX_H:
+          case DEVICE_TYPE_MIX_W:
           case DEVICE_TYPE_MIX_V:
           case DEVICE_TYPE_RELAY_2:
           case DEVICE_TYPE_RELAY_2_DIN:
@@ -550,6 +553,7 @@ const run = (action) => {
           case DEVICE_TYPE_MIX_1_RS:
           case DEVICE_TYPE_MIX_6x12_RS:
           case DEVICE_TYPE_MIX_H:
+          case DEVICE_TYPE_MIX_W:
           case DEVICE_TYPE_RELAY_2:
           case DEVICE_TYPE_RELAY_2_DIN:
           case DEVICE_TYPE_RELAY_12_RS: {
@@ -567,6 +571,7 @@ const run = (action) => {
           case DEVICE_TYPE_MIX_1_RS:
           case DEVICE_TYPE_MIX_6x12_RS:
           case DEVICE_TYPE_MIX_H:
+          case DEVICE_TYPE_MIX_W:
           case DEVICE_TYPE_RELAY_2:
           case DEVICE_TYPE_RELAY_2_DIN: {
             device.sendRBUS(
