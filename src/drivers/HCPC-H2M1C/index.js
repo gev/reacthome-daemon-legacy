@@ -14,7 +14,7 @@ const sync = async (id, modbus, address, n) => {
     const ch = `${id}/ac/${i + 1}`
     const { synced, value, mode, fan_speed, setpoint } = get(ch) || {};
     if (!synced) {
-      let dataMode = 1;
+      let dataMode = 0;
       switch (mode) {
         case 0: {
           dataMode = 8;
@@ -83,7 +83,9 @@ module.exports.run = (action) => {
       break;
     }
     case ACTION_SET_MODE: {
-      set(ch, { mode: action.value, synced: false });
+      if(action.value <= 4){
+        set(ch, { mode: action.value, synced: false });
+      }
       break;
     }
     case ACTION_SET_FAN_SPEED: {
