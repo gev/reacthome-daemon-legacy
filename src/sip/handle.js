@@ -41,6 +41,7 @@ module.exports.onBye = (request) => {
   let rs;
   const call_id = request.headers["call-id"];
   rs = sip.makeResponse(request, 200, "Ok");
+  console.log(request);
   rs.headers.contact = [{ uri: request.headers.contact[0].uri }];
   rs.headers.to.params.tag = call_id;
   sip.send(rs);
