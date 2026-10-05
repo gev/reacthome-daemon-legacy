@@ -1,9 +1,15 @@
-
-const WebSocket = require('ws');
-const uuid = require('uuid').v4;
-const peer = require('../websocket/peer');
-const { streams } = require('../camera/streams');
-const { CREATE, ATTACH, MESSAGE, TRICKLE, CANDIDATE, KEEPALIVE } = require('./constants');
+const WebSocket = require("ws");
+const uuid = require("uuid").v4;
+const peer = require("../websocket/peer");
+const { streams } = require("../camera/streams");
+const {
+  CREATE,
+  ATTACH,
+  MESSAGE,
+  TRICKLE,
+  CANDIDATE,
+  KEEPALIVE,
+} = require("./constants");
 
 const TIMEOUT_RECONNECT = 10000;
 const TIMEOUT_TRANSACTION = 30000;
@@ -15,8 +21,8 @@ const handlers = new Map();
 let socket;
 
 const connect = () => {
-  socket = new WebSocket('ws://192.168.1.3:8188', 'janus-protocol');
-  socket.on('message', (message) => {
+  socket = new WebSocket("ws://localhost:8188", "janus-protocol");
+  socket.on("message", (message) => {
     try {
       const action = JSON.parse(message);
       if (action.transaction) {
@@ -27,16 +33,21 @@ const connect = () => {
       } else if (action.janus === TRICKLE) {
         const { session_id, sender: handle_id, candidate } = action;
         const session = handlers.get(handle_id);
-        peer.send(session, { type: CANDIDATE, session_id, handle_id, candidate });
+        peer.send(session, {
+          type: CANDIDATE,
+          session_id,
+          handle_id,
+          candidate,
+        });
       }
     } catch (e) {
       console.error(e);
     }
   });
-  socket.on('error', () => {
-    console.error('Error. Reconnecting to janus');
+  socket.on("error", () => {
+    console.error("Error. Reconnecting to janus");
   });
-  socket.on('close', () => {
+  socket.on("close", () => {
     // console.log('Disconnect. Reconnecting to janus');
     setTimeout(connect, TIMEOUT_RECONNECT);
   });
@@ -64,7 +75,7 @@ module.exports.bind = (handle_id, session) => {
   handlers.set(handle_id, session);
   setTimeout(() => {
     // handlers.delete(handle_id);
-  }, TIMEOUT_TRICKLE)
+  }, TIMEOUT_TRICKLE);
 };
 
 module.exports.createSession = (callback) => {
