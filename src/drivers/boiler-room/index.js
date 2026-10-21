@@ -1,4 +1,4 @@
-const { get, set } = require("../../../actions");
+const { get, set } = require("../../actions");
 const { TIMEOUT } = require("./constants");
 
 const instance = new Set();
