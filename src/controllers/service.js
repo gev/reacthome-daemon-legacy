@@ -249,7 +249,7 @@ const rgb = ["r", "g", "b"];
 const run = (action) => {
   try {
     
-      [, k] = get(action.id).split("/")
+      [, k] = get(action.id)?.split?.("/") || [];
       if (k = "heating"){
         console.log(action);
       }
