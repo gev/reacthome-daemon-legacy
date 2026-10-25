@@ -30,6 +30,7 @@ const {
   DEVICE_TYPE_ROOM_NUMBER,
   DEVICE_TYPE_MIX_F,
   DEVICE_TYPE_MIX_W,
+  DEVICE_TYPE_SMART_TOP_A2T,
 } = require("../constants");
 const { device } = require("../sockets");
 
@@ -71,6 +72,7 @@ const online = (id, props) => {
       case DEVICE_TYPE_SMART_TOP_G6:
       case DEVICE_TYPE_SMART_TOP_G4:
       case DEVICE_TYPE_SMART_TOP_G2:
+      case DEVICE_TYPE_SMART_TOP_A2T:
       case DEVICE_TYPE_SMART_TOP_A4P:
       case DEVICE_TYPE_SMART_TOP_A4TD:
       case DEVICE_TYPE_SMART_TOP_A4TD_7S:
