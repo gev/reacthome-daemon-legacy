@@ -330,6 +330,7 @@ module.exports.DEVICE_TYPE_SMART_TOP_A4TD = 0x38;
 module.exports.DEVICE_TYPE_SMART_TOP_A4TD_7S = 0x39;
 module.exports.DEVICE_TYPE_SMART_TOP_CLIMATE = 0x3c;
 module.exports.DEVICE_TYPE_SMART_TOP_CARD_HOLDER = 0x3e;
+module.exports.DEVICE_TYPE_SMART_TOP_A2T = 0x3f;
 
 module.exports.DEVICE_TYPE_SMART_BOTTOM = 0x3a;
 module.exports.DEVICE_TYPE_SMART_BOTTOM_CO2 = 0x3b;

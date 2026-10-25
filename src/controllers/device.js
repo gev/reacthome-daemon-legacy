@@ -134,6 +134,7 @@ const {
   DEVICE_TYPE_SOUNDBOX_LS,
   DEVICE_TYPE_DIM_12_MOSFET_AC_RS,
   DEVICE_TYPE_MIX_W,
+  DEVICE_TYPE_SMART_TOP_A2T,
 } = require("../constants");
 const {
   get,
@@ -316,6 +317,7 @@ module.exports.manage = () => {
             type === DEVICE_TYPE_SMART_TOP_G6 ||
             type === DEVICE_TYPE_SMART_TOP_G4 ||
             type === DEVICE_TYPE_SMART_TOP_G2 ||
+            type === DEVICE_TYPE_SMART_TOP_A2T ||
             type === DEVICE_TYPE_SMART_TOP_A4P ||
             type === DEVICE_TYPE_SMART_TOP_A4TD ||
             type === DEVICE_TYPE_SMART_TOP_A4TD_7S ||
@@ -375,7 +377,8 @@ module.exports.manage = () => {
                 { hub },
               );
               break;
-            case DEVICE_TYPE_SMART_TOP_G2: {
+            case DEVICE_TYPE_SMART_TOP_G2:
+            case DEVICE_TYPE_SMART_TOP_A2T: {
               const valuesDI = data.readUInt8(7);
               for (let i = 1; i <= 2; i++) {
                 let value = valuesDI & (1 << (i - 1)) ? 1 : 0;
@@ -950,6 +953,7 @@ module.exports.manage = () => {
             case DEVICE_TYPE_SMART_TOP_G6:
             case DEVICE_TYPE_SMART_TOP_G4:
             case DEVICE_TYPE_SMART_TOP_G2:
+            case DEVICE_TYPE_SMART_TOP_A2T:
             case DEVICE_TYPE_SMART_TOP_A4P:
             case DEVICE_TYPE_SMART_TOP_A4TD:
             case DEVICE_TYPE_SMART_TOP_A4TD_7S:
@@ -1008,6 +1012,7 @@ module.exports.manage = () => {
             case DEVICE_TYPE_SMART_TOP_G6:
             case DEVICE_TYPE_SMART_TOP_G4:
             case DEVICE_TYPE_SMART_TOP_G2:
+            case DEVICE_TYPE_SMART_TOP_A2T:
             case DEVICE_TYPE_SMART_TOP_A4P:
             case DEVICE_TYPE_SMART_TOP_A4TD:
             case DEVICE_TYPE_SMART_TOP_A4TD_7S:
@@ -1054,6 +1059,7 @@ module.exports.manage = () => {
             case DEVICE_TYPE_SMART_TOP_G6:
             case DEVICE_TYPE_SMART_TOP_G4:
             case DEVICE_TYPE_SMART_TOP_G2:
+            case DEVICE_TYPE_SMART_TOP_A2T:
             case DEVICE_TYPE_SMART_TOP_A4P:
             case DEVICE_TYPE_SMART_TOP_A4TD:
             case DEVICE_TYPE_SMART_TOP_A4TD_7S:
@@ -1081,6 +1087,7 @@ module.exports.manage = () => {
             case DEVICE_TYPE_SMART_TOP_G6:
             case DEVICE_TYPE_SMART_TOP_G4:
             case DEVICE_TYPE_SMART_TOP_G2:
+            case DEVICE_TYPE_SMART_TOP_A2T:
             case DEVICE_TYPE_SMART_TOP_A4P:
             case DEVICE_TYPE_SMART_TOP_A4TD:
             case DEVICE_TYPE_SMART_TOP_A4TD_7S:
@@ -1580,7 +1587,8 @@ module.exports.manage = () => {
               break;
             }
             case DEVICE_TYPE_SMART_TOP_CARD_HOLDER:
-            case DEVICE_TYPE_SMART_TOP_G2: {
+            case DEVICE_TYPE_SMART_TOP_G2:
+            case DEVICE_TYPE_SMART_TOP_A2T: {
               const log = [];
               for (let i = 0; i < 2; i++) {
                 log[i] = data.readInt16BE(8 + 2 * i);

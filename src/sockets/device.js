@@ -24,6 +24,7 @@ const {
   DEVICE_TYPE_SOUNDBOX,
   INTERNAL_NETIF,
   DEVICE_TYPE_SOUNDBOX_LS,
+  DEVICE_TYPE_SMART_TOP_A2T,
 } = require("../constants");
 const socket = require("./socket");
 
@@ -73,6 +74,7 @@ device.send = (data, id) => {
     case DEVICE_TYPE_SMART_TOP_G6:
     case DEVICE_TYPE_SMART_TOP_G4:
     case DEVICE_TYPE_SMART_TOP_G2:
+    case DEVICE_TYPE_SMART_TOP_A2T:
     case DEVICE_TYPE_SMART_TOP_A4P:
     case DEVICE_TYPE_SMART_TOP_A4TD:
     case DEVICE_TYPE_SMART_TOP_A4TD_7S:

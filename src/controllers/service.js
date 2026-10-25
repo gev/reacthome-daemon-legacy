@@ -224,6 +224,7 @@ const {
   DEVICE_TYPE_DIM_12_MOSFET_AC_RS,
   DRIVER_TYPE_HCPC_H2M1C,
   DEVICE_TYPE_MIX_W,
+  DEVICE_TYPE_SMART_TOP_A2T,
 } = require("../constants");
 const { NOTIFY } = require("../notification/constants");
 const notification = require("../notification");
@@ -518,6 +519,7 @@ const run = (action) => {
           case DEVICE_TYPE_SMART_TOP_G6:
           case DEVICE_TYPE_SMART_TOP_G4:
           case DEVICE_TYPE_SMART_TOP_G2:
+          case DEVICE_TYPE_SMART_TOP_A2T:
           case DEVICE_TYPE_SMART_TOP_A4P:
           case DEVICE_TYPE_SMART_TOP_A4TD:
           case DEVICE_TYPE_SMART_TOP_A4TD_7S:
@@ -709,6 +711,7 @@ const run = (action) => {
           case DEVICE_TYPE_SMART_TOP_G6:
           case DEVICE_TYPE_SMART_TOP_G4:
           case DEVICE_TYPE_SMART_TOP_G2:
+          case DEVICE_TYPE_SMART_TOP_A2T:
           case DEVICE_TYPE_SMART_TOP_A4P:
           case DEVICE_TYPE_SMART_TOP_A4TD:
           case DEVICE_TYPE_SMART_TOP_A4TD_7S:
@@ -809,6 +812,7 @@ const run = (action) => {
           case DEVICE_TYPE_SMART_TOP_G6:
           case DEVICE_TYPE_SMART_TOP_G4:
           case DEVICE_TYPE_SMART_TOP_G2:
+          case DEVICE_TYPE_SMART_TOP_A2T:
           case DEVICE_TYPE_SMART_TOP_A4P:
           case DEVICE_TYPE_SMART_TOP_A4TD:
           case DEVICE_TYPE_SMART_TOP_A4TD_7S:
@@ -947,6 +951,7 @@ const run = (action) => {
           case DEVICE_TYPE_SMART_TOP_G6:
           case DEVICE_TYPE_SMART_TOP_G4:
           case DEVICE_TYPE_SMART_TOP_G2:
+          case DEVICE_TYPE_SMART_TOP_A2T:
           case DEVICE_TYPE_SMART_TOP_A4P:
           case DEVICE_TYPE_SMART_TOP_A4TD:
           case DEVICE_TYPE_SMART_TOP_A4TD_7S:
@@ -1424,6 +1429,7 @@ const run = (action) => {
           case DEVICE_TYPE_SMART_TOP_G6:
           case DEVICE_TYPE_SMART_TOP_G4:
           case DEVICE_TYPE_SMART_TOP_G2:
+          case DEVICE_TYPE_SMART_TOP_A2T:
           case DEVICE_TYPE_SMART_TOP_A4P:
           case DEVICE_TYPE_SMART_TOP_A4TD:
           case DEVICE_TYPE_SMART_TOP_A4TD_7S:
@@ -1664,6 +1670,7 @@ const run = (action) => {
           case DEVICE_TYPE_SMART_TOP_G6:
           case DEVICE_TYPE_SMART_TOP_G4:
           case DEVICE_TYPE_SMART_TOP_G2:
+          case DEVICE_TYPE_SMART_TOP_A2T:
           case DEVICE_TYPE_SMART_TOP_A4P:
           case DEVICE_TYPE_SMART_TOP_A4TD:
           case DEVICE_TYPE_SMART_TOP_A4TD_7S:
@@ -1868,6 +1875,7 @@ const run = (action) => {
           case DEVICE_TYPE_SMART_TOP_G6:
           case DEVICE_TYPE_SMART_TOP_G4:
           case DEVICE_TYPE_SMART_TOP_G2:
+          case DEVICE_TYPE_SMART_TOP_A2T:
           case DEVICE_TYPE_SMART_TOP_A4P:
           case DEVICE_TYPE_SMART_TOP_A4TD:
           case DEVICE_TYPE_SMART_TOP_A4TD_7S:
@@ -3285,6 +3293,7 @@ const run = (action) => {
           case DEVICE_TYPE_SMART_TOP_G6:
           case DEVICE_TYPE_SMART_TOP_G4:
           case DEVICE_TYPE_SMART_TOP_G2:
+          case DEVICE_TYPE_SMART_TOP_A2T:
           case DEVICE_TYPE_SMART_TOP_A4TD:
           case DEVICE_TYPE_SMART_TOP_A4TD_7S:
           case DEVICE_TYPE_SMART_TOP_CARD_HOLDER: {
