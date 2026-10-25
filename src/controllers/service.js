@@ -817,7 +817,7 @@ const run = (action) => {
           case DEVICE_TYPE_SMART_TOP_A4TD:
           case DEVICE_TYPE_SMART_TOP_A4TD_7S:
           case DEVICE_TYPE_SMART_TOP_CARD_HOLDER: {
-            console.warn(action);
+            // console.warn(action);
             device.sendTOP(
               Buffer.from([ACTION_RGB, palette, index, r, g, b]),
               action.id,
