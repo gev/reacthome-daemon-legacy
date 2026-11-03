@@ -2842,7 +2842,17 @@ const renderSmartTop = (id) => {
 const print = (id, value, power, intensity, image) =>
   run({ type: ACTION_PRINT, id, value, power, intensity, image });
 
-printf = (id, value, min, max, fixed, power, intensity, max_intensity, image) =>
+const printf = (
+  id,
+  value,
+  min,
+  max,
+  fixed,
+  power,
+  intensity,
+  max_intensity,
+  image,
+) =>
   print(
     id,
     format(value, min, max, fixed),
