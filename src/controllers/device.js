@@ -558,20 +558,39 @@ module.exports.manage = () => {
             case DEVICE_TYPE_MIX_F: {
               const diNum = 1;
               const valuesDI = data.readUInt8(7);
-              let valueDI = (valuesDI & (1 << (diNum - 1))) ? 1 : 0;
+              let valueDI = valuesDI & (1 << (diNum - 1)) ? 1 : 0;
               let payloadDI = Buffer.from([ACTION_DI, diNum, valueDI]);
-              handleData(Buffer.concat([dev_mac, payloadDI]), { address }, { hub });
+              handleData(
+                Buffer.concat([dev_mac, payloadDI]),
+                { address },
+                { hub },
+              );
               for (let i = 1; i <= 2; i++) {
                 let value = data.readUInt8(7 + i);
                 const channel = `${id}/${DIM}/${i}`;
                 const chan = get(channel);
-                let payload = Buffer.from([ACTION_DIMMER, i, chan.group, chan.type, value, chan.velocity]);
-                handleData(Buffer.concat([dev_mac, payload]), { address }, { hub });
+                let payload = Buffer.from([
+                  ACTION_DIMMER,
+                  i,
+                  chan.group,
+                  chan.type,
+                  value,
+                  chan.velocity,
+                ]);
+                handleData(
+                  Buffer.concat([dev_mac, payload]),
+                  { address },
+                  { hub },
+                );
               }
               const aoNum = 1;
               let valueAO = data.readUInt8(9 + aoNum);
               let payloadAO = Buffer.from([ACTION_AO, aoNum, valueAO]);
-              handleData(Buffer.concat([dev_mac, payloadAO]), { address }, { hub });
+              handleData(
+                Buffer.concat([dev_mac, payloadAO]),
+                { address },
+                { hub },
+              );
               break;
             }
             case DEVICE_TYPE_MIX_H: {
@@ -1159,15 +1178,15 @@ module.exports.manage = () => {
           }
           const dev_id =
             action === ACTION_TEMPERATURE_EXT ||
-              action === ACTION_TEMPERATURE_EXT_OLD
+            action === ACTION_TEMPERATURE_EXT_OLD
               ? Array.from(data)
-                .slice(7, 15)
-                .map((i) => i.toString(16).padStart(2, "0"))
-                .join(":")
+                  .slice(7, 15)
+                  .map((i) => i.toString(16).padStart(2, "0"))
+                  .join(":")
               : data
-                .slice(7, 15)
-                .map((i) => `0${i.toString(16)}`.slice(-2))
-                .join(":");
+                  .slice(7, 15)
+                  .map((i) => `0${i.toString(16)}`.slice(-2))
+                  .join(":");
           const temperature_raw = data.readInt16LE(15) / 100;
           const { temperature_correct = 0 } = get(dev_id) || {};
           const temperature = temperature_raw + temperature_correct;
@@ -1650,7 +1669,9 @@ const calcTemperature = (site) => {
     sensor = [],
     temperature_sensor = [],
     thermostat = [],
+    timestamp = 0,
   } = get(site) || {};
+  if (Date.now() - timestamp < 15_000) return;
   let temperature = 0;
   let n = 0;
   const s = temperature_sensor.length > 0 ? temperature_sensor : sensor;
@@ -1682,7 +1703,13 @@ const calcHumidity = (site) => {
     }
     return;
   }
-  const { sensor = [], humidity_sensor = [], hygrostat = [] } = get(site) || {};
+  const {
+    sensor = [],
+    humidity_sensor = [],
+    hygrostat = [],
+    timestamp = 0,
+  } = get(site) || {};
+  if (Date.now() - timestamp < 15_000) return;
   let humidity = 0;
   let n = 0;
   const s = humidity_sensor.length > 0 ? humidity_sensor : sensor;
@@ -1714,7 +1741,12 @@ const calcIllumination = (site) => {
     }
     return;
   }
-  const { sensor = [], illumination_sensor = [] } = get(site) || {};
+  const {
+    sensor = [],
+    illumination_sensor = [],
+    timestamp = 0,
+  } = get(site) || {};
+  if (Date.now() - timestamp < 15_000) return;
   let illumination = 0;
   let n = 0;
   const s = illumination_sensor.length > 0 ? illumination_sensor : sensor;
@@ -1739,7 +1771,13 @@ const calcCO2 = (site) => {
     }
     return;
   }
-  const { sensor = [], co2_sensor = [], co2_stat = [] } = get(site) || {};
+  const {
+    sensor = [],
+    co2_sensor = [],
+    co2_stat = [],
+    timestamp = 0,
+  } = get(site) || {};
+  if (Date.now() - timestamp < 15_000) return;
   let co2 = 0;
   let n = 0;
   const s = co2_sensor.length > 0 ? co2_sensor : sensor;
