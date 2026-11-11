@@ -9,7 +9,15 @@ const {
 const {
   TIMEOUT,
   BOILER_MODE,
-  BOILER_TEMPERATURE,
+  BOILER_RECIRCULATION,
+  DHW_SENSOR_RECIRCULATION,
+  DHW_DIFF_START_RECIRCULATION,
+  DHW_DIFF_STOP_RECIRCULATION,
+  DHW_ON_START_HEAT_RECIRCULATION,
+  DHW_ON_STOP_HEAT_RECIRCULATION,
+  DIFF_START_DEFAULT,
+  DIFF_STOP_DEFAULT,
+  DIFF_MIN_GAP,
   DHW_COOLANT_TEMP,
   DHW_SENSOR_DOMESTIC,
   DHW_HYSTERESIS_DOMESTIC,
@@ -68,25 +76,16 @@ const loop = (id) => async () => {
       : HYSTERESIS_DEFAULT;
 
     // default mode is heating; switch to DHW when domestic water is colder
-    // than the target by hysteresis, and stay in DHW until the target is reached
+    // than target - hysteresis, and stay in DHW until it reaches target + hysteresis
     let mode = HEATING;
     if (isNumber(target) && isNumber(temp)) {
-      if (temp < target - hysteresis || (prevMode === DHW && temp < target)) {
+      if (temp < target - hysteresis || (prevMode === DHW && temp < target + hysteresis)) {
         mode = DHW;
       }
     }
 
-    if (mode === DHW) {
-      const setpoint = target + hysteresis;
-      set(id, {
-        [BOILER_MODE]: mode,
-        setpoint,
-        [BOILER_TEMPERATURE]: setpoint,
-      });
-    } else {
-      // TODO: heating setpoint from the curve (coolantAt) and thermostats
-      set(id, { [BOILER_MODE]: mode });
-    }
+    // TODO: heating setpoint from the curve (coolantAt) and thermostats
+    set(id, { [BOILER_MODE]: mode });
 
     // scripts run only when the mode changes
     if (mode !== prevMode) {
@@ -97,6 +96,39 @@ const loop = (id) => async () => {
         // TODO: stub, real heating is not implemented yet
         runScript(dev[DHW_ON_STOP_HEAT_DOMESTIC]);
         runScript(dev[HEATING_ON_STOP_HEAT]);
+      }
+    }
+
+    // recirculation is independent of the mode: start when recirculation sensor
+    // is colder than domestic by more than diffStart, stop when the difference is less than diffStop
+    const prevRecirculation = dev[BOILER_RECIRCULATION];
+    const tempRecirculation = (get(dev[DHW_SENSOR_RECIRCULATION]) || {})[TEMPERATURE];
+    if (isNumber(temp) && isNumber(tempRecirculation)) {
+      const diff = temp - tempRecirculation;
+      const diffStop = isNumber(dev[DHW_DIFF_STOP_RECIRCULATION])
+        ? dev[DHW_DIFF_STOP_RECIRCULATION]
+        : DIFF_STOP_DEFAULT;
+      let diffStart = isNumber(dev[DHW_DIFF_START_RECIRCULATION])
+        ? dev[DHW_DIFF_START_RECIRCULATION]
+        : DIFF_START_DEFAULT;
+      // start must be above stop by at least DIFF_MIN_GAP, otherwise derive it from stop
+      if (diffStart - diffStop < DIFF_MIN_GAP) {
+        diffStart = diffStop + DIFF_MIN_GAP;
+      }
+      let recirculation = prevRecirculation === true;
+      if (diff > diffStart) {
+        recirculation = true;
+      } else if (diff < diffStop) {
+        recirculation = false;
+      }
+      set(id, { [BOILER_RECIRCULATION]: recirculation });
+      // scripts run only when the state changes
+      if (recirculation !== prevRecirculation) {
+        runScript(
+          recirculation
+            ? dev[DHW_ON_START_HEAT_RECIRCULATION]
+            : dev[DHW_ON_STOP_HEAT_RECIRCULATION]
+        );
       }
     }
   } catch (e) {
