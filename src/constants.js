@@ -49,6 +49,8 @@ module.exports.COLOR = "color";
 module.exports.LEVEL = "level";
 module.exports.HUMIDITY = "humidity";
 module.exports.TEMPERATURE = "temperature";
+module.exports.DHW = "dhw";
+module.exports.HEATING = "heating";
 module.exports.GROUP = "group";
 module.exports.RS485 = "rs485";
 module.exports.ARTNET = "artnet";
@@ -442,7 +444,7 @@ module.exports.DRIVER_TYPE_DMX512 = 'DMX512';
 module.exports.DRIVER_TYPE_TELEGRAM = "TELEGRAM";
 module.exports.DRIVER_TYPE_ROYAL_VENTO = "ROYAL_VENTO";
 module.exports.DRIVER_TYPE_ES_BROT_02 = 'DRIVER_TYPE_ES_BROT_02';
-module.exports.DRIVER_TYPE_BOILER_ROOM = 'DRIVER_TYPE_BOILER_ROOM';
+module.exports.DRIVER_TYPE_BOILER_ROOM = 'BOILER_ROOM';
 
 module.exports.DALI_LIGHT = 'dali_light';
 module.exports.DALI_GROUP = 'dali_group';
