@@ -9,6 +9,7 @@ const {
 const {
   TIMEOUT,
   BOILER_MODE,
+  BOILER_TEMPERATURE,
   DHW_COOLANT_TEMP,
   DHW_SENSOR_DOMESTIC,
   DHW_HYSTERESIS_DOMESTIC,
@@ -75,7 +76,12 @@ const loop = (id) => async () => {
     }
 
     if (mode === DHW) {
-      set(id, { [BOILER_MODE]: mode, setpoint: target + hysteresis });
+      const setpoint = target + hysteresis;
+      set(id, {
+        [BOILER_MODE]: mode,
+        setpoint,
+        [BOILER_TEMPERATURE]: setpoint,
+      });
     } else {
       // TODO: heating setpoint from the curve (coolantAt) and thermostats
       set(id, { [BOILER_MODE]: mode });
