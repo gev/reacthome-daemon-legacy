@@ -60,6 +60,7 @@ const loop = (id) => async () => {
     return;
   }
   try {
+    const prevMode = dev[BOILER_MODE];
     const target = dev[DHW_COOLANT_TEMP];
     const temp = (get(dev[DHW_SENSOR_DOMESTIC]) || {})[TEMPERATURE];
     const hysteresis = isNumber(dev[DHW_HYSTERESIS_DOMESTIC])
@@ -70,7 +71,7 @@ const loop = (id) => async () => {
     // than the target by hysteresis, and stay in DHW until the target is reached
     let mode = HEATING;
     if (isNumber(target) && isNumber(temp)) {
-      if (temp < target - hysteresis || (dev[BOILER_MODE] === DHW && temp < target)) {
+      if (temp < target - hysteresis || (prevMode === DHW && temp < target)) {
         mode = DHW;
       }
     }
@@ -88,8 +89,9 @@ const loop = (id) => async () => {
     }
 
     // scripts run only when the mode changes
-    if (mode !== dev[BOILER_MODE]) {
+    if (mode !== prevMode) {
       if (mode === DHW) {
+        console.log("run script", dev[DHW_ON_START_HEAT_DOMESTIC]);
         runScript(dev[DHW_ON_START_HEAT_DOMESTIC]);
       } else {
         // TODO: stub, real heating is not implemented yet
