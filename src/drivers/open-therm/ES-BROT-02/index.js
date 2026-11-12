@@ -88,7 +88,6 @@ module.exports.run = (action) => {
 module.exports.handle = (action) => {
   const offsetBufReg = (reg) => (reg - REG_R_ADAPTER_STATUS) * 2 + 2;
   const { id, data } = action;
-  console.log(data.toString("hex"));
   switch (data[0]) {
     case READ_HOLDING_REGISTERS: {
       const statusAdapter = data.readUInt16BE(offsetBufReg(REG_R_ADAPTER_STATUS));
