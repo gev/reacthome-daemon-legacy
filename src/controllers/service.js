@@ -2522,7 +2522,7 @@ const run = (action) => {
 
         const dev = get(id) || {};
         if (isTemperature) {
-          if (setpoint < 10) setpoint = 10;
+          if (setpoint < 3) setpoint = 3;
           if (setpoint > 80) setpoint = 80;
           if (dev.type === SITE) {
             const { thermostat = [] } = dev;
