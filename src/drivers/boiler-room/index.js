@@ -148,7 +148,7 @@ const loop = (id) => async () => {
     if (mode === DHW) {
       if (changed){
         runScript(dev[HEATING_ON_STOP_HEAT]);
-        console.log(stop, dev[HEATING_ON_STOP_HEAT]);
+        console.log("stop", dev[HEATING_ON_STOP_HEAT]);
       } 
       runScript(dev[DHW_ON_START_HEAT_DOMESTIC]);
     } else {
