@@ -146,10 +146,7 @@ const loop = (id) => async () => {
     // then start script of the current mode runs on every loop iteration
     const changed = mode !== prevMode;
     if (mode === DHW) {
-      if (changed){
-        runScript(dev[HEATING_ON_STOP_HEAT]);
-        console.log("stop", dev[HEATING_ON_STOP_HEAT]);
-      } 
+      if (changed) runScript(dev[HEATING_ON_STOP_HEAT]);
       runScript(dev[DHW_ON_START_HEAT_DOMESTIC]);
     } else {
       if (changed) runScript(dev[DHW_ON_STOP_HEAT_DOMESTIC]);
