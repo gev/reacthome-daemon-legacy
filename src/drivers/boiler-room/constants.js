@@ -32,6 +32,7 @@ module.exports.DHW_ON_STOP_HEAT_RECIRCULATION = "dhwOnStopHeatRecirculation";
 
 // Heating
 module.exports.HEATING_THERMOSTAT = "heatingThermostat";
+module.exports.HEATING_TEMPERATURE = "heatingTemperature"; // written by server
 module.exports.HEATING_ON_START_HEAT = "heatingOnStartHeat";
 module.exports.HEATING_ON_STOP_HEAT = "heatingOnStopHeat";
 

@@ -23,6 +23,18 @@ const {
   DHW_HYSTERESIS_DOMESTIC,
   DHW_ON_START_HEAT_DOMESTIC,
   DHW_ON_STOP_HEAT_DOMESTIC,
+  HEATING_ON_START_HEAT,
+  HEATING_THERMOSTAT,
+  HEATING_TEMPERATURE,
+  BOILER_COOLANT_MIN_TEMP,
+  BOILER_COOLANT_MAX_TEMP,
+  COOLANT_MIN,
+  COOLANT_MAX,
+  CURVE_SENSOR_OUTDOOR,
+  CURVE_OUTDOOR_TEMP_1,
+  CURVE_COOLANT_TEMP_1,
+  CURVE_OUTDOOR_TEMP_2,
+  CURVE_COOLANT_TEMP_2,
   HEATING_ON_STOP_HEAT,
   HYSTERESIS_DEFAULT,
   CURVE_FIXED,
@@ -84,19 +96,49 @@ const loop = (id) => async () => {
       }
     }
 
-    // TODO: heating setpoint from the curve (coolantAt) and thermostats
     set(id, { [BOILER_MODE]: mode });
 
-    // scripts run only when the mode changes
-    if (mode !== prevMode) {
-      if (mode === DHW) {
-        console.log("run script", dev[DHW_ON_START_HEAT_DOMESTIC]);
-        runScript(dev[DHW_ON_START_HEAT_DOMESTIC]);
-      } else {
-        // TODO: stub, real heating is not implemented yet
-        runScript(dev[DHW_ON_STOP_HEAT_DOMESTIC]);
-        runScript(dev[HEATING_ON_STOP_HEAT]);
+    if (mode === HEATING) {
+      // max setpoint of the thermostats, coolant temperature from the heating curve
+      const setpoints = (dev[HEATING_THERMOSTAT] || [])
+        .map((t) => (get(t) || {}).setpoint)
+        .filter(isNumber);
+      const outdoor = (get(dev[CURVE_SENSOR_OUTDOOR]) || {})[TEMPERATURE];
+      const coolantMin = isNumber(dev[BOILER_COOLANT_MIN_TEMP])
+        ? dev[BOILER_COOLANT_MIN_TEMP]
+        : COOLANT_MIN;
+      const coolantMax = isNumber(dev[BOILER_COOLANT_MAX_TEMP])
+        ? dev[BOILER_COOLANT_MAX_TEMP]
+        : COOLANT_MAX;
+      const calculated =
+        setpoints.length > 0
+          ? coolantAt(
+              {
+                outdoorTemp1: dev[CURVE_OUTDOOR_TEMP_1],
+                coolantTemp1: dev[CURVE_COOLANT_TEMP_1],
+                outdoorTemp2: dev[CURVE_OUTDOOR_TEMP_2],
+                coolantTemp2: dev[CURVE_COOLANT_TEMP_2],
+              },
+              outdoor,
+              Math.max(...setpoints)
+            )
+          : null;
+      if (calculated !== null) {
+        // limit by boiler min / max coolant temperature, then write
+        const coolant = Math.min(Math.max(calculated, coolantMin), coolantMax);
+        set(id, { [HEATING_TEMPERATURE]: coolant, setpoint: coolant });
       }
+    }
+
+    // modes compete: on a mode change stop the other mode first,
+    // then start script of the current mode runs on every loop iteration
+    const changed = mode !== prevMode;
+    if (mode === DHW) {
+      if (changed) runScript(dev[HEATING_ON_STOP_HEAT]);
+      runScript(dev[DHW_ON_START_HEAT_DOMESTIC]);
+    } else {
+      if (changed) runScript(dev[DHW_ON_STOP_HEAT_DOMESTIC]);
+      runScript(dev[HEATING_ON_START_HEAT]);
     }
 
     // recirculation is independent of the mode: start when recirculation sensor
@@ -122,14 +164,12 @@ const loop = (id) => async () => {
         recirculation = false;
       }
       set(id, { [BOILER_RECIRCULATION]: recirculation });
-      // scripts run only when the state changes
-      if (recirculation !== prevRecirculation) {
-        runScript(
-          recirculation
-            ? dev[DHW_ON_START_HEAT_RECIRCULATION]
-            : dev[DHW_ON_STOP_HEAT_RECIRCULATION]
-        );
-      }
+      // recirculation scripts run on every loop iteration for the current state
+      runScript(
+        recirculation
+          ? dev[DHW_ON_START_HEAT_RECIRCULATION]
+          : dev[DHW_ON_STOP_HEAT_RECIRCULATION]
+      );
     }
   } catch (e) {
     console.error(e);
