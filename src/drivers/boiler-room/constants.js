@@ -1,4 +1,4 @@
-module.exports.TIMEOUT = 5000;
+module.exports.TIMEOUT = 30000;
 
 module.exports.COOLANT_MIN = 30;
 module.exports.COOLANT_MAX = 80;
