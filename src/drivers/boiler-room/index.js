@@ -171,7 +171,7 @@ const loop = (id) => async () => {
         // write the corrected value back so studio shows the real threshold
         set(id, { [DHW_DIFF_START_RECIRCULATION]: diffStart });
       }
-      let recirculation = prevRecirculation === true;
+      let recirculation = prevRecirculation;
       if (diff > diffStart) {
         recirculation = true;
       } else if (diff < diffStop) {
@@ -180,7 +180,7 @@ const loop = (id) => async () => {
       set(id, { [BOILER_RECIRCULATION]: recirculation });
       // recirculation scripts run on every loop iteration for the current state
       runScript(
-        recirculation
+        recirculation && mode !== DHW
           ? dev[DHW_ON_START_HEAT_RECIRCULATION]
           : dev[DHW_ON_STOP_HEAT_RECIRCULATION]
       );
