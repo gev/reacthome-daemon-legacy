@@ -25,7 +25,10 @@ const {
   DHW_ON_STOP_HEAT_DOMESTIC,
   HEATING_ON_START_HEAT,
   HEATING_THERMOSTAT,
-  HEATING_TEMPERATURE,
+  HEATING_HYSTERESIS,
+  SETPOINT,
+  MIN,
+  MAX,
   BOILER_COOLANT_MIN_TEMP,
   BOILER_COOLANT_MAX_TEMP,
   COOLANT_MIN,
@@ -37,6 +40,7 @@ const {
   CURVE_COOLANT_TEMP_2,
   HEATING_ON_STOP_HEAT,
   HYSTERESIS_DEFAULT,
+  HEATING_HYSTERESIS_DEFAULT,
   CURVE_FIXED,
   CURVE_SETPOINT_MIN,
   CURVE_SETPOINT_MAX,
@@ -124,9 +128,17 @@ const loop = (id) => async () => {
             )
           : null;
       if (calculated !== null) {
-        // limit by boiler min / max coolant temperature, then write
-        const coolant = Math.min(Math.max(calculated, coolantMin), coolantMax);
-        set(id, { [HEATING_TEMPERATURE]: coolant, setpoint: coolant });
+        const limit = (value) => Math.min(Math.max(value, coolantMin), coolantMax);
+        const heatingHysteresis = isNumber(dev[HEATING_HYSTERESIS])
+          ? dev[HEATING_HYSTERESIS]
+          : HEATING_HYSTERESIS_DEFAULT;
+        const coolant = limit(calculated);
+        set(id, {
+          [SETPOINT]: coolant,
+          // min / max around the setpoint, limited by the boiler before writing
+          [MIN]: limit(coolant - heatingHysteresis),
+          [MAX]: limit(coolant + heatingHysteresis),
+        });
       }
     }
 

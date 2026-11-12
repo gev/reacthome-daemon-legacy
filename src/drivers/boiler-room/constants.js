@@ -32,7 +32,10 @@ module.exports.DHW_ON_STOP_HEAT_RECIRCULATION = "dhwOnStopHeatRecirculation";
 
 // Heating
 module.exports.HEATING_THERMOSTAT = "heatingThermostat";
-module.exports.HEATING_TEMPERATURE = "heatingTemperature"; // written by server
+module.exports.HEATING_HYSTERESIS = "heatingHysteresis";
+module.exports.SETPOINT = "setpoint"; // written by server
+module.exports.MIN = "min"; // written by server
+module.exports.MAX = "max"; // written by server
 module.exports.HEATING_ON_START_HEAT = "heatingOnStartHeat";
 module.exports.HEATING_ON_STOP_HEAT = "heatingOnStopHeat";
 
@@ -44,6 +47,7 @@ module.exports.CURVE_OUTDOOR_TEMP_2 = "curveOutdoorTemp2";
 module.exports.CURVE_COOLANT_TEMP_2 = "curveCoolantTemp2";
 
 module.exports.HYSTERESIS_DEFAULT = 3;
+module.exports.HEATING_HYSTERESIS_DEFAULT = 5;
 module.exports.DIFF_START_DEFAULT = 10;
 module.exports.DIFF_STOP_DEFAULT = 5;
 module.exports.DIFF_MIN_GAP = 2; // diffStart must be greater than diffStop at least by this value
