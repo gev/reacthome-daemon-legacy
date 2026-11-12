@@ -2574,7 +2574,14 @@ const run = (action) => {
         break;
       }
       case ACTION_SETPOINT_MIN_MAX: {
-        const { id, min, max } = action;
+        const { id, source } = action;
+        if (source) {
+          const { min, max } = get(source) || {};
+          if (typeof min !== "number" || typeof max !== "number") break;
+          action.min = min;
+          action.max = max;
+        }
+        const { min, max } = action;
         const dev = get(id) || {};
         if (dev.type === DRIVER_TYPE_ES_BROT_02){
           drivers.run(action);
