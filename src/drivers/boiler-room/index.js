@@ -168,6 +168,8 @@ const loop = (id) => async () => {
       // start must be above stop by at least DIFF_MIN_GAP, otherwise derive it from stop
       if (diffStart - diffStop < DIFF_MIN_GAP) {
         diffStart = diffStop + DIFF_MIN_GAP;
+        // write the corrected value back so studio shows the real threshold
+        set(id, { [DHW_DIFF_START_RECIRCULATION]: diffStart });
       }
       let recirculation = prevRecirculation === true;
       if (diff > diffStart) {
