@@ -2569,6 +2569,7 @@ const run = (action) => {
         const { id, source } = action;
         if (source) {
           const { min, max } = get(source) || {};
+          if (typeof min !== "number" || typeof max !== "number") break;
           action.min = min;
           action.max = max;
         }
