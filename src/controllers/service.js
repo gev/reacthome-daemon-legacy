@@ -223,6 +223,7 @@ const {
   DRIVER_TYPE_ES_BROT_02,
   DEVICE_TYPE_DIM_12_MOSFET_AC_RS,
   DRIVER_TYPE_HCPC_H2M1C,
+  DRIVER_TYPE_PLC_VENT_STROGONOVKA,
   DEVICE_TYPE_MIX_W,
   DEVICE_TYPE_SMART_TOP_A2T,
 } = require("../constants");
@@ -2534,6 +2535,7 @@ const run = (action) => {
             dev.type === DRIVER_TYPE_INTESIS_BOX ||
             dev.type === DRIVER_TYPE_MD_CCM18_AN_E ||
             dev.type === DRIVER_TYPE_HCPC_H2M1C ||
+            dev.type === DRIVER_TYPE_PLC_VENT_STROGONOVKA ||
             dev.type === DRIVER_TYPE_TICA ||
             dev.type === DRIVER_TYPE_NOVA ||
             dev.type === DRIVER_TYPE_SWIFT ||

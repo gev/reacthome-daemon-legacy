@@ -28,6 +28,7 @@ const {
   DRIVER_TYPE_ES_BROT_02,
   DRIVER_TYPE_HCPC_H2M1C,
   DRIVER_TYPE_BOILER_ROOM,
+  DRIVER_TYPE_PLC_VENT_STROGONOVKA,
 } = require("../constants");
 const { get } = require("../actions");
 const RS21 = require("./RS21");
@@ -57,6 +58,7 @@ const dmx512 = require("./dmx512");
 const royal_vento = require("./royal/vento")
 const es_brot_02 = require("./open-therm/ES-BROT-02")
 const boiler_room = require("./boiler-room")
+const plc_vent_strogonovka = require("./plc_vent_strogonovka")
 
 const mac = require("../mac");
 
@@ -82,6 +84,7 @@ module.exports.manage = () => {
   dali_dlc.clear();
   royal_vento.clear();
   boiler_room.clear();
+  plc_vent_strogonovka.clear();
 
   if (!Array.isArray(driver)) return;
   for (const id of driver) {
@@ -190,6 +193,11 @@ module.exports.manage = () => {
       case DRIVER_TYPE_BOILER_ROOM:
         instances.add(id, boiler_room);
         boiler_room.add(id);
+        break;
+      case DRIVER_TYPE_PLC_VENT_STROGONOVKA:
+        instances.add(id, plc_vent_strogonovka);
+        plc_vent_strogonovka.add(id);
+        break;
     }
   }
 };

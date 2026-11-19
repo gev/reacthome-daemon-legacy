@@ -446,6 +446,7 @@ module.exports.DRIVER_TYPE_TELEGRAM = "TELEGRAM";
 module.exports.DRIVER_TYPE_ROYAL_VENTO = "ROYAL_VENTO";
 module.exports.DRIVER_TYPE_ES_BROT_02 = 'DRIVER_TYPE_ES_BROT_02';
 module.exports.DRIVER_TYPE_BOILER_ROOM = 'BOILER_ROOM';
+module.exports.DRIVER_TYPE_PLC_VENT_STROGONOVKA = 'PLC_VENT_STROGONOVKA';
 
 module.exports.DALI_LIGHT = 'dali_light';
 module.exports.DALI_GROUP = 'dali_group';
